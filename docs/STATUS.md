@@ -1,8 +1,8 @@
 # Estado do projeto — GeoVale
 
 **Atualização:** 19/10/2026.
-**Etapa atual:** 0 — Preparação do projeto, em andamento.
-**Subetapa atual:** primeiro envio ao GitHub concluído; revisão de encerramento pendente.
+**Etapa atual:** 0 — Preparação do projeto, concluída e aprovada em 19/10/2026.
+**Subetapa atual:** encerramento registrado; aguardando autorização para iniciar a Etapa 1.
 
 Este documento registra o estado observado nesta entrega. Não há aplicação
 executável nem funcionalidades de geoprocessamento, análise multicritério ou
@@ -27,6 +27,9 @@ Machine Learning implementadas. A Etapa 1 ainda não foi iniciada.
 - Primeiro push autorizado concluído, publicando os seis commits iniciais e
   os quatro arquivos públicos previstos.
 - Branch local `main` vinculada à `origin/main` e sincronização conferida.
+- Revisão final concluída, compreensão da estrutura confirmada e encerramento
+  da Etapa 0 aprovado pelo responsável em 19/10/2026.
+- Encerramento registrado no roadmap e publicado no commit `ae80969`.
 
 ## Arquivos relevantes
 
@@ -44,7 +47,7 @@ correspondentes. Os arquivos locais excluídos permanecem fora do versionamento.
 ## Estado do Git
 
 - Branch atual: `main`.
-- Histórico anterior a esta entrega: seis commits locais já publicados, listados abaixo.
+- Histórico anterior a esta entrega: oito commits locais já publicados, listados abaixo.
 - Repositório público: [Rafael-Inacio-Silva/Geo_Vale](https://github.com/Rafael-Inacio-Silva/Geo_Vale).
 - Remoto `origin`: `https://github.com/Rafael-Inacio-Silva/Geo_Vale.git`.
 - O repositório foi criado vazio e recebeu o histórico no primeiro push.
@@ -64,9 +67,11 @@ Commits concluídos antes desta atualização:
 | `14175fe` | `docs: registra estado inicial do projeto` |
 | `15e11d0` | `docs: documenta repositório remoto` |
 | `ac71da7` | `docs: atualiza status da integração com GitHub` |
+| `90f572f` | `docs: registra primeiro envio ao GitHub` |
+| `ae80969` | `docs: registra encerramento da preparação no roadmap` |
 
 Esta atualização do status tem a mensagem de commit
-`docs: registra primeiro envio ao GitHub`. Consulte `git log --oneline` para
+`docs: registra encerramento da preparação no status`. Consulte `git log --oneline` para
 identificar seu hash e o histórico atualizado, sem depender de contagens fixas
 neste documento.
 
@@ -89,6 +94,7 @@ São verificações de configuração e documentação; não são testes da apli
 | Versionamento do status e atualização do README | Commits `14175fe` e `15e11d0` conferidos: um arquivo por commit e área de trabalho limpa ao concluir cada unidade. |
 | Integração inicial com GitHub | Na criação, proprietário, nome, visibilidade pública e repositório vazio confirmados pela consulta ao GitHub; endereço de leitura e envio do origin conferido no Git local. |
 | Primeiro envio ao GitHub | `git push -u origin main` concluído; seis commits e quatro arquivos publicados. SHA local e remoto iguais a `ac71da7`, upstream configurado, diferença de commits igual a zero e área de trabalho limpa ao final. Referência e árvore remotas conferidas pela API do GitHub. |
+| Revisão final e encerramento | Documentação inicial, Git local, exclusões e referência remota conferidos sem falhas técnicas. Encerramento aprovado pelo responsável; roadmap publicado no commit `ae80969`, preservando a Etapa 1 como não iniciada. |
 
 O conteúdo deste status foi conferido contra os arquivos existentes, o estado
 do Git e o ambiente Python. Os comandos acima foram executados com sucesso.
@@ -101,18 +107,18 @@ Resultados de funcionalidades e métricas de ML não existem nesta fase.
   preparados ou modelo de Machine Learning.
 - As dependências da aplicação e a compatibilidade da futura stack com o Python
   observado ainda não foram avaliadas.
-- A revisão documental e o versionamento inicial foram concluídos; a Etapa 0
-  ainda depende da revisão do roadmap com o responsável, da confirmação de
-  compreensão da estrutura e da aprovação de encerramento.
+- A Etapa 0 foi encerrada com aprovação; não há pendências impeditivas
+  conhecidas da preparação. As funcionalidades e decisões técnicas futuras
+  pertencem às etapas seguintes.
 - A criação do repositório, a configuração do origin e o primeiro envio foram
   autorizados e concluídos. A autenticação de envio pelo Git local funcionou.
-- O roadmap ainda mantém pendências de revisão com o responsável, próximos
-  passos de integração e aprovação de encerramento. Qualquer atualização do
-  checklist deverá ser uma tarefa separada e aprovada.
+- O roadmap já registra a conclusão da Etapa 0. A Etapa 1 permanece não
+  iniciada e depende de autorização específica.
 
 ## Decisões ainda necessárias
 
-- Aprovar o encerramento da Etapa 0 antes de iniciar os requisitos de negócio.
+- Autorizar o início da Etapa 1 e combinar sua primeira unidade: definição
+  do problema de negócio, sem implementar funcionalidades.
 - Na Etapa 4, escolher stack e versão suportada de Python, avaliando a proposta
   de Streamlit e a separação entre frontend na Vercel e backend no Railway.
 - Na Etapa 6, selecionar a região de estudo em Minas Gerais e as fontes públicas.
@@ -136,8 +142,8 @@ reproduzível serão detalhadas após a definição da stack.
 
 ## Próxima tarefa recomendada
 
-Revisar com o responsável as entregas e as pendências da Etapa 0, explicar
-a estrutura atual e confirmar sua compreensão antes de propor o encerramento.
-A revisão não altera arquivos nem inicia a Etapa 1. Atualizações do roadmap e
-o registro de encerramento serão unidades separadas, com autorização para
-alterações, commits e publicação. Não avançar automaticamente para requisitos.
+Apresentar a proposta da Etapa 1 — Engenharia de requisitos de negócio e
+solicitar autorização para iniciar. A primeira pequena unidade recomendada é
+discutir o problema de negócio no chat, antes de criar ou alterar documentos.
+Não iniciar a etapa automaticamente. Requisitos, documentos, commits e envios
+continuam sujeitos às aprovações correspondentes.
