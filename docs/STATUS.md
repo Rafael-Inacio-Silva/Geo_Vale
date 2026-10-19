@@ -1,12 +1,14 @@
 # Estado do projeto — GeoVale
 
 **Atualização:** 19/10/2026.
-**Etapa atual:** 0 — Preparação do projeto, concluída e aprovada em 19/10/2026.
-**Subetapa atual:** encerramento registrado; aguardando autorização para iniciar a Etapa 1.
+**Etapa atual:** 1 — Engenharia de requisitos de negócio, em andamento.
+**Subetapa atual:** RNG-01 validado, documentado e publicado; objetivo do sistema ainda pendente.
 
 Este documento registra o estado observado nesta entrega. Não há aplicação
 executável nem funcionalidades de geoprocessamento, análise multicritério ou
-Machine Learning implementadas. A Etapa 1 ainda não foi iniciada.
+Machine Learning implementadas. A Etapa 0 foi concluída e aprovada em
+19/10/2026. A Etapa 1 foi iniciada com autorização do responsável; somente o
+problema de negócio foi validado até o momento.
 
 ## Entregas concluídas
 
@@ -30,6 +32,11 @@ Machine Learning implementadas. A Etapa 1 ainda não foi iniciada.
 - Revisão final concluída, compreensão da estrutura confirmada e encerramento
   da Etapa 0 aprovado pelo responsável em 19/10/2026.
 - Encerramento registrado no roadmap e publicado no commit `ae80969`.
+- Encerramento da preparação registrado no status e publicado no commit `2607df6`.
+- Etapa 1 iniciada com autorização; RNG-01 — Problema de negócio validado pelo
+  responsável, documentado e publicado em `docs/REQUISITOS.md` no commit `cf9a0d3`.
+- GeoVale incluído no README do perfil público, seguindo o padrão dos demais
+  projetos e identificado como em desenvolvimento.
 
 ## Arquivos relevantes
 
@@ -39,22 +46,24 @@ Machine Learning implementadas. A Etapa 1 ainda não foi iniciada.
 | `README.md` | Apresentar objetivo, escopo planejado, limitações e ambiente atual. |
 | `docs/ROADMAP.md` | Organizar etapas, entregas e critérios de conclusão. |
 | `docs/STATUS.md` | Registrar progresso real, verificações e pendências. |
+| `docs/REQUISITOS.md` | Registrar o RNG-01 aprovado e os requisitos discutidos gradualmente. |
 
-Os caminhos são relativos à raiz do projeto. Os documentos de requisitos,
-arquitetura e decisões ainda não existem; serão criados gradualmente nas etapas
-correspondentes. Os arquivos locais excluídos permanecem fora do versionamento.
+Os caminhos são relativos à raiz do projeto. O documento de requisitos está
+em elaboração incremental; arquitetura e decisões ainda não possuem documentos
+próprios e serão tratadas nas etapas correspondentes. Os arquivos locais
+excluídos permanecem fora do versionamento.
 
 ## Estado do Git
 
 - Branch atual: `main`.
-- Histórico anterior a esta entrega: oito commits locais já publicados, listados abaixo.
+- Histórico anterior a esta entrega: dez commits locais já publicados, listados abaixo.
 - Repositório público: [Rafael-Inacio-Silva/Geo_Vale](https://github.com/Rafael-Inacio-Silva/Geo_Vale).
 - Remoto `origin`: `https://github.com/Rafael-Inacio-Silva/Geo_Vale.git`.
 - O repositório foi criado vazio e recebeu o histórico no primeiro push.
 - Marco do primeiro envio: `ac71da7`, confirmado na branch remota `main`.
 - A branch local acompanha `origin/main`; a sincronização foi verificada após o envio.
-- Arquivos destinados ao histórico desta preparação: `.gitignore`, `README.md`,
-  `docs/ROADMAP.md` e `docs/STATUS.md`.
+- Arquivos públicos versionados: `.gitignore`, `README.md`, `docs/ROADMAP.md`,
+  `docs/STATUS.md` e `docs/REQUISITOS.md`.
 - Primeiro envio ao GitHub realizado; nenhuma implantação da aplicação efetuada.
 
 Commits concluídos antes desta atualização:
@@ -69,15 +78,18 @@ Commits concluídos antes desta atualização:
 | `ac71da7` | `docs: atualiza status da integração com GitHub` |
 | `90f572f` | `docs: registra primeiro envio ao GitHub` |
 | `ae80969` | `docs: registra encerramento da preparação no roadmap` |
+| `2607df6` | `docs: registra encerramento da preparação no status` |
+| `cf9a0d3` | `docs: registra problema de negócio do GeoVale` |
 
 Esta atualização do status tem a mensagem de commit
-`docs: registra encerramento da preparação no status`. Consulte `git log --oneline` para
+`docs: registra início dos requisitos de negócio`. Consulte `git log --oneline` para
 identificar seu hash e o histórico atualizado, sem depender de contagens fixas
 neste documento.
 
 ## Verificações realizadas
 
-As verificações abaixo foram executadas durante a preparação em 19/10/2026.
+As verificações abaixo foram executadas durante a preparação e a documentação
+inicial dos requisitos em 19/10/2026.
 São verificações de configuração e documentação; não são testes da aplicação.
 
 | Verificação | Resultado observado |
@@ -94,7 +106,9 @@ São verificações de configuração e documentação; não são testes da apli
 | Versionamento do status e atualização do README | Commits `14175fe` e `15e11d0` conferidos: um arquivo por commit e área de trabalho limpa ao concluir cada unidade. |
 | Integração inicial com GitHub | Na criação, proprietário, nome, visibilidade pública e repositório vazio confirmados pela consulta ao GitHub; endereço de leitura e envio do origin conferido no Git local. |
 | Primeiro envio ao GitHub | `git push -u origin main` concluído; seis commits e quatro arquivos publicados. SHA local e remoto iguais a `ac71da7`, upstream configurado, diferença de commits igual a zero e área de trabalho limpa ao final. Referência e árvore remotas conferidas pela API do GitHub. |
-| Revisão final e encerramento | Documentação inicial, Git local, exclusões e referência remota conferidos sem falhas técnicas. Encerramento aprovado pelo responsável; roadmap publicado no commit `ae80969`, preservando a Etapa 1 como não iniciada. |
+| Revisão final e encerramento | Documentação inicial, Git local, exclusões e referência remota conferidos sem falhas técnicas. Encerramento aprovado pelo responsável; roadmap publicado no commit `ae80969`, antes do início da Etapa 1. |
+| RNG-01 — Problema de negócio | Descrição comparada com a formulação aprovada; somente o RNG-01 registrado. Commit `cf9a0d3` contém apenas `docs/REQUISITOS.md`; sincronização com o GitHub confirmada. |
+| README do perfil | Uma entrada do GeoVale adicionada no padrão existente, com funcionalidades apresentadas como previstas; conteúdo publicado conferido e demais entradas preservadas. |
 
 O conteúdo deste status foi conferido contra os arquivos existentes, o estado
 do Git e o ambiente Python. Os comandos acima foram executados com sucesso.
@@ -112,13 +126,16 @@ Resultados de funcionalidades e métricas de ML não existem nesta fase.
   pertencem às etapas seguintes.
 - A criação do repositório, a configuração do origin e o primeiro envio foram
   autorizados e concluídos. A autenticação de envio pelo Git local funcionou.
-- O roadmap já registra a conclusão da Etapa 0. A Etapa 1 permanece não
-  iniciada e depende de autorização específica.
+- A Etapa 1 está em andamento. Objetivo do sistema, público-alvo, benefícios,
+  escopo, limitações e critérios de sucesso ainda precisam ser detalhados e validados.
+- Os resumos de andamento do README e do roadmap ainda refletem a preparação;
+  sua sincronização será tratada em unidades próprias. Este status e o documento
+  de requisitos registram o progresso atual.
 
 ## Decisões ainda necessárias
 
-- Autorizar o início da Etapa 1 e combinar sua primeira unidade: definição
-  do problema de negócio, sem implementar funcionalidades.
+- Validar o objetivo do sistema como próxima pequena unidade da Etapa 1
+  (proposta de identificador RNG-02), antes de registrá-lo como aprovado.
 - Na Etapa 4, escolher stack e versão suportada de Python, avaliando a proposta
   de Streamlit e a separação entre frontend na Vercel e backend no Railway.
 - Na Etapa 6, selecionar a região de estudo em Minas Gerais e as fontes públicas.
@@ -142,8 +159,8 @@ reproduzível serão detalhadas após a definição da stack.
 
 ## Próxima tarefa recomendada
 
-Apresentar a proposta da Etapa 1 — Engenharia de requisitos de negócio e
-solicitar autorização para iniciar. A primeira pequena unidade recomendada é
-discutir o problema de negócio no chat, antes de criar ou alterar documentos.
-Não iniciar a etapa automaticamente. Requisitos, documentos, commits e envios
+Propor e discutir no chat o RNG-02 — Objetivo do sistema, tomando o problema
+de negócio aprovado como referência. Validar a formulação com o responsável
+antes de propor sua inclusão em `docs/REQUISITOS.md`. Não alterar arquivos nem
+avançar para outros requisitos automaticamente. Documentação, commits e envios
 continuam sujeitos às aprovações correspondentes.
