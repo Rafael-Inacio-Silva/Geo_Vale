@@ -1,7 +1,9 @@
 # Roadmap do GeoVale
 
-Este documento organiza as entregas do MVP demonstrativo. O projeto está na
-**Etapa 0 — Preparação do projeto**; as demais etapas ainda não foram iniciadas.
+Este documento organiza as entregas do MVP demonstrativo. A
+**Etapa 0 — Preparação do projeto foi concluída e aprovada em 19/10/2026**.
+A **Etapa 1 — Engenharia de requisitos de negócio ainda não foi iniciada**;
+as demais etapas também permanecem previstas.
 As entregas previstas não representam funcionalidades já implementadas.
 
 ## Forma de execução
@@ -30,11 +32,11 @@ Verificações e entregas já realizadas:
 - [x] Registro inicial de progresso criado e verificado em `docs/STATUS.md`.
 - [x] Diferenças dos arquivos revisadas e primeiros commits propostos para autorização.
 
-Pendências desta etapa:
+Verificações finais concluídas:
 
-- [ ] Revisar e verificar este roadmap com o responsável pelo projeto.
-- [ ] Definir os próximos passos de integração com GitHub, sem publicação automática.
-- [ ] Confirmar a compreensão da estrutura e aprovar o encerramento da etapa.
+- [x] Roadmap revisado e verificado com o responsável pelo projeto.
+- [x] Integração com GitHub definida; repositório público criado e primeiros envios concluídos com autorização.
+- [x] Compreensão da estrutura confirmada e encerramento aprovado pelo responsável em 19/10/2026.
 
 **Entrega:** ambiente preparado, Git funcional e documentação inicial de orientação.
 **Conclusão:** estrutura compreendida, verificações registradas e encerramento aprovado.
