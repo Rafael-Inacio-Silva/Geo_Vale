@@ -40,7 +40,9 @@ O projeto está na **Etapa 0 — Preparação do projeto**.
 - Exclusões de arquivos locais configuradas no `.gitignore`.
 - Ambiente virtual Python existente e verificado.
 - Nenhuma funcionalidade da aplicação implementada.
-- Nenhum repositório remoto ou serviço implantado.
+- Repositório público [Rafael-Inacio-Silva/Geo_Vale](https://github.com/Rafael-Inacio-Silva/Geo_Vale)
+  criado no GitHub e configurado como remoto `origin` no Git local.
+- Nenhum serviço implantado.
 
 A arquitetura, as bibliotecas e as versões das dependências da aplicação ainda
 serão avaliadas e documentadas. Não há interface, servidor ou suíte de testes
