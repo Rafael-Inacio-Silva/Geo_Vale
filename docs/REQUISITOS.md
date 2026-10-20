@@ -1127,3 +1127,48 @@ implementação da análise, do dashboard e do relatório. O cenário com
 treinamento sintético será verificado após a integração do ML na Etapa 8,
 incluída no MVP final. Este registro especifica a regra; ainda não existem
 essas funcionalidades implementadas para verificar seu atendimento.
+
+### RN-03 — Distinção entre indisponibilidade de dados e ausência de ocorrência
+
+**Estado:** definição aprovada pelo responsável pelo projeto em 20/10/2026;
+critérios de disponibilidade dos dados e forma de apresentação ainda pendentes
+de detalhamento.
+
+**Origem:** distinção prevista no RF-05, apresentação das informações
+indisponíveis no RF-10 e limitações da qualidade dos dados no RNG-06.
+
+**Prioridade:** essencial.
+
+**Descrição aprovada:**
+
+A indisponibilidade dos dados necessários não deverá ser apresentada como
+ausência de uma ocorrência. A ausência somente poderá ser indicada como
+resultado de uma análise válida realizada com os dados necessários, limitada
+aos dados analisados. Quando não for possível avaliar uma ocorrência por
+indisponibilidade desses dados, o resultado deverá identificar essa situação.
+O dashboard deverá preservar a distinção entre a ausência identificada na
+análise e a indisponibilidade dos dados necessários.
+
+**Critérios de aceitação:**
+
+| Cenário | Resultado esperado |
+| --- | --- |
+| Análise válida com os dados necessários disponíveis, sem ocorrência no cenário de referência | Identificar a ausência como resultado limitado aos dados analisados. |
+| Dados necessários indisponíveis para avaliar uma ocorrência | Informar a indisponibilidade e não apresentar a ocorrência como ausente. |
+| Consulta no dashboard de resultados com ausência identificada e dados indisponíveis | Distinguir as duas situações, mantendo correspondência com os resultados da análise. |
+
+**Dependências e detalhamento pendente:**
+
+A regra orienta a análise do RF-05 e a apresentação do RF-10. Os critérios de
+disponibilidade dos dados e a forma de apresentação deverão ser detalhados e
+aprovados antes da implementação e da preparação dos cenários de teste
+correspondentes, considerando as bases selecionadas e suas limitações.
+As demais regras específicas de tratamento de dados ausentes e as pendências
+dos requisitos anteriores permanecem em aberto.
+
+**Momento de verificação:**
+
+A distinção será verificada durante a implementação da análise e do dashboard,
+com cenários de dados disponíveis sem ocorrência e de dados necessários
+indisponíveis. Este registro especifica a regra; essas funcionalidades ainda
+não foram implementadas e os cenários ainda não foram testados.
