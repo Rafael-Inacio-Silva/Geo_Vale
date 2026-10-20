@@ -131,9 +131,9 @@ Os atores representam os papéis das pessoas que utilizarão o GeoVale:
 
 ### RF-01 — Envio e validação do arquivo geográfico
 
-**Estado:** definição e formato inicial aprovados pelo responsável pelo
-projeto em 20/10/2026; estrutura aceita pelo MVP, limites de entrada, regras
-de geometria e tratamento de múltiplas áreas ainda pendentes de detalhamento.
+**Estado:** definição, formato inicial e estrutura aprovados pelo responsável
+pelo projeto em 20/10/2026; limites de entrada, regras de geometria e tratamento
+de múltiplas áreas ainda pendentes de detalhamento.
 
 **Ator:** AT-01 — Engenheiro/analista.
 
@@ -155,6 +155,15 @@ A validação deverá conferir a extensão e o conteúdo; a extensão isolada n�
 será suficiente para considerar o arquivo válido. Um arquivo que atenda ao
 formato inicial poderá prosseguir às demais validações de entrada.
 
+A estrutura inicial aceita pelo MVP será um objeto `FeatureCollection`, cujo
+campo `features` deverá ser uma lista não vazia composta somente por objetos
+`Feature`. Cada `Feature` deverá conter `geometry` como objeto de geometria
+não nulo e `properties` como objeto de atributos ou `null`. Essas condições
+são restrições de entrada do GeoVale; a RFC admite coleções vazias e geometrias
+nulas, que serão rejeitadas nessa entrada do MVP. A aprovação estrutural
+permitirá prosseguir às demais validações, sem resolver as regras pendentes
+de geometria, limites ou tratamento de múltiplas áreas.
+
 **Critérios de aceitação:**
 
 | Cenário | Resultado esperado |
@@ -168,14 +177,20 @@ formato inicial poderá prosseguir às demais validações de entrada.
 | Arquivo `.geojson` vazio ou com JSON malformado | Rejeitar o arquivo com mensagem compreensível. |
 | Arquivo `.geojson` contendo JSON válido que não represente GeoJSON | Rejeitar o arquivo como conteúdo incompatível, com mensagem compreensível. |
 | Arquivo com extensão não aceita | Rejeitar o arquivo e informar que o formato inicial aceito é `.geojson`. |
+| Objeto `FeatureCollection` com os campos estruturais exigidos | Prosseguir às demais validações de entrada. |
+| Objeto principal de outro tipo | Rejeitar o arquivo e informar que a estrutura inicial aceita pelo MVP é `FeatureCollection`. |
+| Campo `features` ausente, diferente de lista ou vazio | Rejeitar o arquivo com mensagem compreensível. |
+| Item de `features` que não seja `Feature`, ou com `geometry` ausente, nula ou diferente de objeto de geometria | Rejeitar o arquivo com mensagem compreensível. |
+| Campo `properties` ausente ou cujo valor não seja um objeto nem `null` | Rejeitar o arquivo com mensagem compreensível. |
 
 **Dependências e detalhamento pendente:**
 
-O formato inicial está definido como GeoJSON com extensão `.geojson`. A
-estrutura aceita pelo MVP, os limites de entrada, as regras de geometria e
-o tratamento de arquivos com múltiplas áreas ainda deverão ser especificados
-e aprovados antes da implementação e da preparação dos arquivos de teste
-válidos e inválidos. A definição do formato não resolve essas pendências.
+O formato inicial e a estrutura aceita estão definidos como GeoJSON com
+extensão `.geojson` e objeto principal `FeatureCollection`, conforme as
+condições acima. Os limites de entrada, as regras de geometria e o tratamento
+de arquivos com múltiplas áreas ainda deverão ser especificados e aprovados
+antes da implementação e da preparação dos arquivos de teste válidos e
+inválidos. A definição da estrutura não resolve essas pendências.
 
 **Momento de verificação:**
 
