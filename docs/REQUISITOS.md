@@ -465,3 +465,49 @@ Os critérios serão testados durante a implementação da funcionalidade. Este
 registro especifica o comportamento esperado; a funcionalidade ainda não foi
 implementada e os testes de configuração de critérios, notas e pesos ainda
 não foram executados.
+
+### RF-09 — Cálculo multicritério por soma ponderada
+
+**Estado:** definição aprovada pelo responsável pelo projeto em 20/10/2026;
+regras de normalização, precisão, empates e valores ausentes ainda pendentes
+de definição.
+
+**Ator:** AT-01 — Engenheiro/analista.
+
+**Origem:** comparação por critérios, notas e pesos prevista no RNG-05 e
+comparação explicável com restrições separadas prevista no RNG-07.
+
+**Prioridade:** essencial para o fluxo principal do MVP.
+
+**Descrição aprovada:**
+
+O sistema deverá calcular a pontuação das alternativas somando as notas
+multiplicadas pelos respectivos pesos e apresentar sua classificação.
+As notas e os pesos utilizados deverão ser identificáveis. As restrições
+eliminatórias deverão permanecer separadas da pontuação, sem permitir sua
+compensação por uma nota alta. Entradas inconsistentes deverão ser informadas
+com mensagem compreensível.
+
+**Critérios de aceitação:**
+
+| Cenário | Resultado esperado |
+| --- | --- |
+| Cálculo com entradas válidas | Calcular as pontuações por soma ponderada e apresentar a classificação das alternativas. |
+| Conferência com um cálculo de referência | As pontuações e a classificação deverão corresponder ao esperado conforme as regras e a precisão especificadas. |
+| Consulta das entradas utilizadas no cálculo | Identificar as notas e os respectivos pesos utilizados. |
+| Alternativa com restrição eliminatória e pontuação alta | Manter a restrição separada da pontuação, sem permitir sua compensação pela nota. |
+| Entradas inconsistentes | Informar o problema com mensagem compreensível. |
+
+**Dependências e detalhamento pendente:**
+
+O requisito depende das regras do RF-06, das alternativas do RF-07 e dos
+critérios, notas e pesos do RF-08. As regras de normalização, precisão,
+empates e valores ausentes deverão ser definidas e aprovadas antes da
+implementação e da preparação dos cenários de teste com cálculo de referência.
+As pendências dos requisitos anteriores permanecem em aberto.
+
+**Momento de verificação:**
+
+Os critérios serão testados durante a implementação da funcionalidade. Este
+registro especifica o comportamento esperado; a funcionalidade ainda não foi
+implementada e os testes de cálculo multicritério ainda não foram executados.
