@@ -1039,3 +1039,46 @@ Os cálculos, as unidades, a compatibilização e os bloqueios serão verificado
 na implementação das funcionalidades correspondentes. Este registro especifica
 o requisito; ainda não existem bases preparadas nem cálculos implementados
 para verificar seu atendimento.
+
+### RN-01 — Restrições eliminatórias na comparação de alternativas
+
+**Estado:** definição aprovada pelo responsável pelo projeto em 20/10/2026;
+condições e parâmetros das regras demonstrativas ainda pendentes de detalhamento.
+
+**Origem:** separação das restrições prevista nos RNG-05 e RNG-07 e aplicação
+nas funcionalidades dos RF-06, RF-09 e RF-13.
+
+**Prioridade:** essencial.
+
+**Descrição aprovada:**
+
+Uma restrição eliminatória identificada para uma alternativa deverá permanecer
+separada de sua pontuação multicritério. Pontuações altas e previsões favoráveis
+de Machine Learning não poderão compensar, substituir ou remover essa restrição.
+A comparação deverá manter identificáveis a regra aplicada e a justificativa
+da restrição, inclusive após a integração da previsão ao cálculo multicritério.
+
+**Critérios de aceitação:**
+
+| Cenário | Resultado esperado |
+| --- | --- |
+| Alternativa com restrição eliminatória e pontuação multicritério alta | Preservar a restrição separada da pontuação, sem permitir sua compensação pela nota. |
+| Alternativa com restrição eliminatória e previsão favorável de ML utilizada na comparação | Preservar a restrição, sem permitir sua compensação, substituição ou remoção pela previsão. |
+| Consulta da restrição na comparação de alternativas | Identificar a regra aplicada e a justificativa da restrição. |
+
+**Dependências e detalhamento pendente:**
+
+A regra orienta a aplicação das restrições no RF-06, a comparação do RF-09 e
+a integração de ML do RF-13. As condições e os parâmetros das regras
+demonstrativas deverão ser detalhados e aprovados antes da implementação e
+da preparação dos cenários de teste correspondentes. As pendências dos
+requisitos anteriores, incluindo o tratamento de dados ausentes, permanecem
+em aberto.
+
+**Momento de verificação:**
+
+A preservação das restrições e sua justificativa serão verificadas durante
+a implementação dos RF-06 e RF-09. O cenário com previsão favorável será
+verificado após a integração do ML na Etapa 8, incluída no MVP final.
+Este registro especifica a regra; ainda não existem comparação multicritério
+nem modelo implementados para verificar seu atendimento.
