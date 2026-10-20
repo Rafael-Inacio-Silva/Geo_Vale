@@ -131,10 +131,10 @@ Os atores representam os papéis das pessoas que utilizarão o GeoVale:
 
 ### RF-01 — Envio e validação do arquivo geográfico
 
-**Estado:** definição, formato inicial, estrutura e tipos de geometria
-aprovados pelo responsável pelo projeto em 20/10/2026; limites de entrada,
-regras adicionais de validade das geometrias e tratamento de múltiplas áreas
-ainda pendentes de detalhamento.
+**Estado:** definição, formato inicial, estrutura, tipos de geometria e
+regras de validade das geometrias aprovados pelo responsável pelo projeto
+em 20/10/2026; limites de entrada e tratamento de múltiplas áreas ainda
+pendentes de detalhamento.
 
 **Ator:** AT-01 — Engenheiro/analista.
 
@@ -163,8 +163,8 @@ não nulo e `properties` como objeto de atributos ou `null`. Essas condições
 são restrições de entrada do GeoVale; a RFC admite coleções vazias e geometrias
 nulas, que serão rejeitadas nessa entrada do MVP. A aprovação estrutural
 permitirá prosseguir às demais validações, incluindo a conferência dos tipos
-de geometria definidos abaixo, sem resolver as regras adicionais de validade,
-limites ou tratamento de múltiplas áreas.
+e das regras de validade das geometrias definidos abaixo, sem resolver os
+limites ou o tratamento de múltiplas áreas.
 
 Os tipos de geometria aceitos para representar a área de estudo serão
 `Polygon` e `MultiPolygon`. Um `Polygon` representa uma área contínua; um
@@ -175,9 +175,46 @@ ao cálculo da extensão do terreno previsto no RF-03.
 Geometrias dos tipos `Point`, `MultiPoint`, `LineString`, `MultiLineString`
 e `GeometryCollection` serão rejeitadas nessa entrada do MVP. A rejeição de
 `GeometryCollection` também se aplica quando seus componentes forem somente
-polígonos. A aceitação do tipo não comprova a validade completa da geometria
-nem define como tratar arquivos com mais de uma `Feature`; essas regras
-permanecem pendentes nos RF-01 e RF-02.
+polígonos. A aceitação do tipo não dispensa as verificações de validade
+definidas a seguir nem define como tratar arquivos com mais de uma `Feature`;
+esse tratamento permanece pendente nos RF-01 e RF-02.
+
+A geometria deverá ser não vazia, com `coordinates` presente, não vazio e
+com a estrutura de listas correspondente a `Polygon` ou `MultiPolygon`.
+Cada posição deverá conter dois ou três valores numéricos finitos: longitude
+e latitude, nessa ordem, com altitude opcional. A entrada será interpretada
+em WGS 84, em graus, com longitude entre −180° e 180° e latitude entre −90°
+e 90°, inclusive. A altitude, quando informada, não participará das
+verificações e dos cálculos em duas dimensões; seu valor também deverá ser
+numérico e finito. A quantidade de dois ou três valores e os intervalos
+aceitos são condições de entrada do MVP, compatíveis com a representação
+geográfica da RFC 7946.
+
+Cada anel deverá estar fechado no arquivo recebido, com pelo menos quatro
+posições contando o fechamento e pelo menos três vértices distintos. A
+última posição deverá repetir os valores da primeira, conforme a
+[RFC 7946, seção 3.1.6](https://www.rfc-editor.org/rfc/rfc7946.html#section-3.1.6).
+Contornos que cruzem a si mesmos ou se reduzam a uma linha ou ponto serão
+rejeitados. Em um `Polygon`, o primeiro anel representará o contorno externo
+e os demais, quando presentes, os recortes internos. Recortes serão aceitos
+quando corretamente posicionados e quando a geometria completa for válida.
+
+Em um `MultiPolygon`, cada parte e o conjunto deverão ser válidos. Partes
+com sobreposição de superfície ou compartilhamento de um trecho de borda
+serão rejeitadas. Contatos isolados em pontos poderão ser aceitos somente
+quando a geometria completa continuar válida. Essas verificações seguem
+as condições de validade geométrica exemplificadas na
+[documentação do Shapely](https://shapely.readthedocs.io/en/stable/manual.html#object.is_valid);
+a referência não define a biblioteca da implementação, cuja escolha pertence
+à etapa de arquitetura. O sentido de percurso dos vértices, isoladamente,
+não será motivo de rejeição, conforme a orientação de compatibilidade da
+RFC 7946.
+
+Qualquer falha nessas verificações deverá rejeitar o arquivo, bloquear a
+análise e apresentar mensagem compreensível sobre o problema identificado.
+O sistema não corrigirá automaticamente a geometria recebida. A referência
+de entrada em graus não substitui a definição do sistema adequado aos
+cálculos de área e distância exigida no RF-03 e no RT-02.
 
 **Critérios de aceitação:**
 
@@ -201,17 +238,26 @@ permanecem pendentes nos RF-01 e RF-02.
 | Geometria do tipo `MultiPolygon` | Prosseguir às demais validações de entrada. |
 | Geometria do tipo `Point`, `MultiPoint`, `LineString` ou `MultiLineString` | Rejeitar o arquivo e informar que os tipos aceitos são `Polygon` e `MultiPolygon`. |
 | Geometria do tipo `GeometryCollection`, mesmo contendo somente polígonos | Rejeitar o arquivo e informar que os tipos aceitos são `Polygon` e `MultiPolygon`. |
+| `Polygon` ou `MultiPolygon` não vazio, com coordenadas e geometria válidas | Prosseguir às demais validações de entrada. |
+| Coordenadas ausentes, vazias ou com estrutura incompatível com o tipo de geometria | Rejeitar o arquivo e informar o problema com mensagem compreensível. |
+| Posição com valores não numéricos ou não finitos, ou quantidade diferente de dois ou três valores | Rejeitar o arquivo com mensagem compreensível; aceitar longitude e latitude com altitude opcional, que não participa dos cálculos em duas dimensões. |
+| Longitude fora de −180° a 180° ou latitude fora de −90° a 90° | Rejeitar o arquivo com mensagem compreensível; interpretar a entrada em WGS 84, em graus. |
+| Anel aberto, com menos de quatro posições contando o fechamento ou com menos de três vértices distintos | Rejeitar o arquivo com mensagem compreensível; a última posição deve repetir os valores da primeira. |
+| Contorno que cruza a si mesmo ou se reduz a uma linha ou ponto | Rejeitar o arquivo com mensagem compreensível. |
+| Polígono com recortes internos | Prosseguir às demais validações quando os recortes estiverem corretamente posicionados e a geometria completa for válida; caso contrário, rejeitar o arquivo com mensagem compreensível. |
+| Partes de um `MultiPolygon` com sobreposição de superfície ou compartilhamento de um trecho de borda | Rejeitar o arquivo com mensagem compreensível; contatos isolados em pontos poderão ser aceitos somente quando a geometria completa continuar válida. |
+| Somente o sentido de percurso dos vértices está invertido, com as demais condições de validade atendidas | Não rejeitar somente pelo sentido de percurso; prosseguir às demais validações de entrada. |
 
 **Dependências e detalhamento pendente:**
 
-O formato inicial, a estrutura e os tipos de geometria estão definidos como
-GeoJSON com extensão `.geojson`, objeto principal `FeatureCollection` e
-geometrias `Polygon` ou `MultiPolygon`, conforme as condições acima. Os
-limites de entrada, as regras adicionais de validade das geometrias, incluindo
-coordenadas e topologia, e o tratamento de arquivos com múltiplas áreas ou
-mais de uma `Feature` ainda deverão ser especificados e aprovados antes da
-implementação e da preparação dos arquivos de teste válidos e inválidos.
-A definição dos tipos de geometria não resolve essas pendências.
+O formato inicial, a estrutura, os tipos de geometria e as regras de validade
+estão definidos conforme as condições acima: GeoJSON com extensão `.geojson`,
+objeto principal `FeatureCollection` e geometrias `Polygon` ou `MultiPolygon`
+com coordenadas e topologia válidas. Os limites de entrada e o tratamento
+de arquivos com múltiplas áreas ou mais de uma `Feature` ainda deverão ser
+especificados e aprovados antes da implementação e da preparação dos arquivos
+de teste válidos e inválidos. A definição da validade geométrica não resolve
+essas pendências nem as definições de cálculo do RF-03 e do RT-02.
 
 **Momento de verificação:**
 
