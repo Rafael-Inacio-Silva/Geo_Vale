@@ -29,3 +29,16 @@ A comparação deverá permitir ao especialista consultar as informações utili
 **Resultado esperado:**
 
 O resultado esperado é que o usuário consiga compreender quais alternativas foram avaliadas, como foram comparadas e por que receberam determinada classificação.
+
+### RNG-03 — Público-alvo
+
+**Estado:** aprovado pelo responsável pelo projeto em 19/10/2026.
+
+**Descrição aprovada:**
+
+- **Público principal:** engenheiros e profissionais técnicos envolvidos na avaliação e no planejamento de usos futuros de áreas pós-mineração. Utilizarão o sistema para organizar informações da área, configurar critérios e comparar alternativas.
+- **Público interessado nos resultados:** gestores e responsáveis pelo planejamento dessas áreas, que consultarão mapas, comparações e relatórios para compreender as alternativas avaliadas e subsidiar decisões.
+
+**Cenário de demonstração:**
+
+No cenário de demonstração, esses grupos serão representados pelo **engenheiro que realiza a análise** e pelo **gestor da Vale que avalia os resultados apresentados**.
