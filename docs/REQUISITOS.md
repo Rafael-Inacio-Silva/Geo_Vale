@@ -410,8 +410,9 @@ implementada e os testes de cálculo ainda não foram executados.
 
 ### RF-04 — Cruzamento com as bases geográficas
 
-**Estado:** definição aprovada pelo responsável pelo projeto em 20/10/2026;
-bases e operações específicas ainda pendentes de detalhamento.
+**Estado:** definição e cruzamentos iniciais aprovados pelo responsável pelo
+projeto em 20/10/2026; fontes definitivas, preparação das bases e demais
+detalhamentos técnicos ainda pendentes.
 
 **Ator:** AT-01 — Engenheiro/analista.
 
@@ -426,6 +427,40 @@ camadas geográficas públicas preparadas, identificando as fontes utilizadas.
 Falhas no cruzamento ou indisponibilidade de dados deverão ser informadas
 com mensagem compreensível.
 
+Os cruzamentos iniciais abrangerão três grupos de camadas públicas de
+referência, preparados separadamente do arquivo enviado pelo engenheiro:
+
+- Unidades de conservação, incluindo RPPN: identificar os polígonos com
+  alguma parte em comum com a área de estudo.
+- Rios e trechos de drenagem: identificar as linhas que atravessem ou toquem
+  a área de estudo.
+- Massas d’água: identificar os polígonos de água com alguma parte em comum
+  com a área de estudo.
+
+O cruzamento deverá considerar a geometria completa identificada pelo RF-02,
+incluindo todas as partes de um `MultiPolygon` e respeitando os recortes
+internos. Deverá identificar os elementos encontrados e suas camadas e fontes.
+Para camadas poligonais, deverá distinguir a sobreposição de superfície do
+contato somente na borda ou em um ponto. Um contato sem superfície comum não
+será apresentado como sobreposição de área. Interseção inclui os contatos,
+conforme a [referência técnica do Shapely](https://shapely.readthedocs.io/en/stable/reference/shapely.intersects.html);
+essa referência não define a biblioteca de implementação, cuja escolha
+pertence à Etapa 4.
+
+A ausência de ocorrência somente poderá ser informada após um cruzamento
+válido, limitada à camada e à cobertura efetivamente analisadas. Camada
+ausente, inválida ou incompleta deverá gerar indicação compreensível de
+indisponibilidade para o cruzamento afetado, sem concluir ausência de
+ocorrência. A seleção das fontes e a preparação dos dados deverão permitir
+avaliar essa cobertura. O tratamento dos resultados parciais e da falta de
+dados necessários à comparação seguirá a RN-03.
+
+Este detalhamento identifica relações espaciais. As medidas de área de
+sobreposição e distância serão detalhadas no RF-05, e as regras demonstrativas
+de restrição no RF-06. Terreno e declividade continuam no planejamento,
+dependendo da preparação de dados adequados; não são resolvidos pelos três
+grupos de camadas acima.
+
 **Critérios de aceitação:**
 
 | Cenário | Resultado esperado |
@@ -434,14 +469,28 @@ com mensagem compreensível.
 | Consulta das informações utilizadas no cruzamento | Identificar as camadas e suas fontes. |
 | Falha na execução do cruzamento | Informar o problema com mensagem compreensível. |
 | Dados necessários indisponíveis | Informar a indisponibilidade com mensagem compreensível. |
+| Polígono de unidade de conservação, incluindo RPPN, ou de massa d’água com superfície em comum com a área estudada | Identificar o elemento, sua camada e fonte e a ocorrência de sobreposição de superfície. |
+| Polígono de referência com contato somente na borda ou em um ponto da área estudada | Identificar o contato, a camada e a fonte, sem apresentá-lo como sobreposição de área. |
+| Rio ou trecho de drenagem que atravesse ou toque a área estudada | Identificar a interseção com a linha, sua camada e fonte. |
+| Cruzamento válido sem ocorrência na camada e cobertura analisadas | Informar a ausência de ocorrência limitada àquela camada e cobertura; respeitar os recortes internos da área. |
+| Camada necessária ao cruzamento ausente, inválida ou incompleta | Informar a indisponibilidade do cruzamento afetado com mensagem compreensível, sem concluir ausência de ocorrência; seguir a RN-03 quanto aos resultados parciais e à comparação. |
+| Ocorrência em outra parte de um `MultiPolygon`, além da primeira | Identificar a ocorrência considerando todas as partes e seus recortes internos, sem analisar somente a primeira parte. |
 
 **Dependências e detalhamento pendente:**
 
 O requisito depende da geometria disponibilizada pelo RF-02, das camadas
-geográficas preparadas e de sistemas de coordenadas compatíveis. As bases e
-as operações específicas deverão ser detalhadas e aprovadas antes da
-implementação e da preparação do cenário de referência. As pendências dos
-requisitos anteriores permanecem em aberto.
+geográficas preparadas e de sistemas de coordenadas compatíveis, conforme
+o RT-02. Os três grupos de camadas e os cruzamentos iniciais estão definidos
+acima. As fontes definitivas, os metadados e as condições de uso do RT-01,
+a cobertura e a preparação das bases serão detalhados na Etapa 6. As
+medições, as tolerâncias e as condições dos alertas permanecem pendentes no
+RF-05; o alcance de consulta necessário às distâncias também deverá ser
+definido antes de sua implementação. A lista de dados necessários à
+comparação e os critérios de disponibilidade permanecem pendentes na RN-03.
+Dados de terreno e declividade, demais operações e cenários de referência
+precisam ser detalhados e aprovados nas unidades correspondentes antes da
+implementação e da preparação dos testes. As amostras exploratórias não
+substituem essa preparação nem comprovam os testes funcionais do GeoVale.
 
 **Momento de verificação:**
 
