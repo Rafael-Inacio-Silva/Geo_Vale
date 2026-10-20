@@ -600,3 +600,49 @@ As pendências dos requisitos anteriores permanecem em aberto.
 Os critérios serão testados durante a implementação da funcionalidade. Este
 registro especifica o comportamento esperado; a persistência e a consulta
 ainda não foram implementadas e seus testes ainda não foram executados.
+
+### RF-12 — Exportação de relatório
+
+**Estado:** definição aprovada pelo responsável pelo projeto em 20/10/2026;
+formato e estrutura do relatório ainda pendentes de definição.
+
+**Atores:** AT-01 — Engenheiro/analista exporta; AT-02 — Gestor consulta o relatório.
+
+**Origem:** exportação de relatório prevista no RNG-05 e fluxo completo e
+rastreabilidade previstos no RNG-07.
+
+**Prioridade:** essencial para o fluxo principal do MVP.
+
+**Descrição aprovada:**
+
+O sistema deverá permitir exportar os resultados da análise em um relatório
+com identificação da área, alternativas, classificação, restrições, fontes,
+parâmetros e limitações. Informações simuladas deverão ser identificadas.
+Falhas de geração deverão ser informadas com mensagem compreensível.
+As previsões de Machine Learning integrarão o relatório do MVP final.
+
+**Critérios de aceitação:**
+
+| Cenário | Resultado esperado |
+| --- | --- |
+| Exportação bem-sucedida | Gerar um arquivo que possa ser aberto para consulta. |
+| Conferência do relatório com a análise | Apresentar identificação da área, alternativas, classificação, restrições, fontes, parâmetros e limitações correspondentes à análise. |
+| Relatório com informações simuladas | Identificar explicitamente essas informações. |
+| Falha na geração do relatório | Informar o problema com mensagem compreensível. |
+| Relatório do MVP final após a integração da Etapa 8 | Incluir as previsões de ML correspondentes à análise. |
+
+**Dependências e detalhamento pendente:**
+
+O requisito depende dos dados e resultados da análise e da definição do formato
+e da estrutura do relatório. Essas definições deverão ser aprovadas antes da
+implementação e da preparação dos cenários de teste correspondentes. A inclusão
+das previsões depende da integração de ML prevista na Etapa 8, incluída na
+entrega final do MVP. As pendências dos requisitos anteriores permanecem em
+aberto.
+
+**Momento de verificação:**
+
+Os critérios serão testados durante a implementação da funcionalidade e,
+para as previsões, após a integração do ML. Este registro especifica o
+comportamento esperado; a exportação ainda não foi implementada e seus testes
+ainda não foram executados.
