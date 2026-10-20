@@ -2,7 +2,7 @@
 
 **Atualização:** 20/10/2026.
 **Etapa atual:** 2 — Engenharia de requisitos do sistema, iniciada com autorização em 20/10/2026.
-**Subetapa atual:** atores AT-01 e AT-02, definições dos RF-01 a RF-13 e RNF-01 a RNF-06 aprovados, documentados e publicados; detalhamentos de entrada, análise geográfica, regras, comparação, apresentação, armazenamento, relatório e ML ainda pendentes.
+**Subetapa atual:** atores AT-01 e AT-02, definições dos RF-01 a RF-13 e RNF-01 a RNF-06 aprovados, documentados e publicados; revisão documental dos seis RNF concluída, com detalhamentos e registro explícito das licenças das bases geográficas ainda pendentes.
 
 Este documento registra o estado observado nesta entrega. Não há aplicação
 executável nem funcionalidades de geoprocessamento, análise multicritério ou
@@ -48,7 +48,13 @@ ambiente, dados demonstrativos, operações avaliadas e limites de tempo ainda
 precisam ser definidos e aprovados antes das medições, que ocorrerão após
 a implementação. O RNF-06 foi aprovado e publicado; arquitetura e convenções
 específicas serão definidas e aprovadas na Etapa 4. A organização, os nomes
-e a documentação do código serão revisados durante a implementação.
+e a documentação do código serão revisados durante a implementação. A revisão
+documental dos seis RNF foi concluída e apresentada ao responsável: não foram
+encontradas contradições entre eles, mas os critérios ainda dependem dos
+detalhamentos registrados. O planejamento exige registrar as licenças das
+bases geográficas; essa obrigação ainda precisa aparecer explicitamente nos
+critérios do documento de requisitos. A revisão documental não comprova o
+atendimento dos requisitos pela aplicação.
 
 ## Entregas concluídas
 
@@ -218,6 +224,11 @@ e a documentação do código serão revisados durante a implementação.
   Prevê separação de responsabilidades, nomes descritivos, docstrings em todas
   as funções e classes e comentários relevantes em português. Arquitetura e
   convenções específicas pendentes na Etapa 4; revisões durante a implementação.
+- Revisão documental dos RNF-01 a RNF-06 concluída e apresentada no chat, com
+  conferência de cobertura, prioridades, 23 cenários de aceitação, pendências
+  e momentos de verificação. Nenhuma contradição encontrada entre os seis
+  requisitos; lacuna sobre o registro explícito das licenças identificada
+  para detalhamento técnico. A revisão foi realizada sem alterar arquivos.
 
 ## Arquivos relevantes
 
@@ -237,7 +248,7 @@ excluídos permanecem fora do versionamento.
 ## Estado do Git
 
 - Branch atual: `main`.
-- Histórico anterior a esta entrega: sessenta e nove commits locais já publicados, listados abaixo.
+- Histórico anterior a esta entrega: setenta commits locais já publicados, listados abaixo.
 - Repositório público: [Rafael-Inacio-Silva/Geo_Vale](https://github.com/Rafael-Inacio-Silva/Geo_Vale).
 - Remoto `origin`: `https://github.com/Rafael-Inacio-Silva/Geo_Vale.git`.
 - O repositório foi criado vazio e recebeu o histórico no primeiro push.
@@ -320,9 +331,10 @@ Commits concluídos antes desta atualização:
 | `0d60a9c` | `docs: especifica desempenho no cenário demonstrativo` |
 | `8659167` | `docs: registra definição e medições futuras do RNF-05 no status` |
 | `e488333` | `docs: especifica organização e manutenção do código` |
+| `51870cd` | `docs: registra definição e revisão futura do RNF-06 no status` |
 
 Esta atualização do status tem a mensagem de commit
-`docs: registra definição e revisão futura do RNF-06 no status`. Consulte `git log --oneline` para
+`docs: registra revisão dos requisitos não funcionais no status`. Consulte `git log --oneline` para
 identificar seu hash e o histórico atualizado, sem depender de contagens fixas
 neste documento.
 
@@ -381,6 +393,7 @@ São verificações de configuração e documentação; não são testes da apli
 | RNF-04 — Tratamento de falhas | Definição comparada com a proposta aprovada, os RF-01, RF-11 e RF-12 e o RNF-01. Commit `7b234b3` contém somente `docs/REQUISITOS.md`; conteúdo anterior preservado integralmente, cinco cenários de aceitação, preservação das análises, nova tentativa, proteção das mensagens e registros e verificações futuras explícitos, diff sem erros de espaços e publicação confirmada com Git limpo e sincronizado. Cenários de falha ainda não testados, pois o tratamento de falhas da aplicação não foi implementado. |
 | RNF-05 — Desempenho no cenário demonstrativo | Definição comparada com a proposta aprovada, o RNG-07 e a Etapa 9 do roadmap. Commit `0d60a9c` contém somente `docs/REQUISITOS.md`; conteúdo anterior preservado integralmente, quatro cenários de aceitação, medições das operações e do fluxo completo, condições de medição, comparação com limites e pendências explícitos, diff sem erros de espaços e publicação confirmada com Git limpo e sincronizado. Tempos da aplicação ainda não medidos, pois não existe aplicação executável. |
 | RNF-06 — Organização e manutenção do código | Definição comparada com a proposta aprovada e a separação de responsabilidades prevista na Etapa 4 do planejamento. Commit `e488333` contém somente `docs/REQUISITOS.md`; conteúdo anterior preservado integralmente, quatro cenários de aceitação, nomes descritivos, docstrings e comentários em português, revisões futuras e pendências explícitos, diff sem erros de espaços e publicação confirmada com Git limpo e sincronizado. Atendimento ainda não verificado, pois não existe código da aplicação para revisão. |
+| Revisão documental dos seis RNF | Conferidos com o planejamento, o roadmap e os requisitos existentes: todos possuem estado, origem, prioridade, descrição, critérios de aceitação, forma e momento de verificação; 23 cenários no total. Cinco RNF são essenciais e o RNF-05 é importante para a demonstração. Não foram encontradas contradições entre eles; detalhamentos continuam pendentes, incluindo limites mensuráveis de desempenho. Identificada a ausência do registro explícito das licenças nos critérios do documento de requisitos, embora previsto no planejamento. Nenhum arquivo foi alterado durante a revisão e o Git permaneceu limpo; nenhum teste da aplicação foi executado. |
 
 Os registros de preparação do ambiente Python são históricos. Nesta revisão,
 foram conferidos os documentos, os commits e o estado do Git; as verificações
@@ -483,8 +496,14 @@ Resultados de funcionalidades e métricas de ML não existem nesta fase.
   e aprovadas na Etapa 4, antes da implementação correspondente. A estrutura,
   os nomes, as docstrings e os comentários serão revisados durante a
   implementação; ainda não existe código da aplicação para essa verificação.
+- A revisão documental dos seis RNF foi concluída. O registro das licenças
+  das bases geográficas, previsto no planejamento, ainda não aparece
+  explicitamente nos critérios do documento de requisitos. A lacuna permanece
+  aberta e deverá ser tratada ao detalhar os requisitos técnicos dos dados.
+- O RNF-05 ainda não possui limites de tempo mensuráveis para aprovação do
+  desempenho; eles precisam ser definidos antes da avaliação.
 - Os 13 RF do escopo atual e os RNF-01 a RNF-06 estão documentados. Refinamentos,
-  demais requisitos não funcionais, requisitos técnicos e regras de negócio, com
+  eventuais complementos dos RNF, requisitos técnicos e regras de negócio, com
   prioridades, dependências e critérios de aceitação, ainda serão detalhados
   em pequenas unidades. A Etapa 2 permanece em andamento.
 - Os resumos do README e do roadmap ainda antecedem o início da Etapa 2;
@@ -529,9 +548,10 @@ Resultados de funcionalidades e métricas de ML não existem nesta fase.
   limites de tempo do RNF-05 antes das medições.
 - Definir e aprovar arquitetura e convenções específicas do RNF-06 na Etapa 4,
   antes da implementação correspondente.
-- Revisar a cobertura e a consistência dos RNF-01 a RNF-06, identificando
-  eventuais lacunas antes de propor novos requisitos ou detalhamentos
-  da Etapa 2.
+- Especificar e aprovar o registro das licenças das bases geográficas nos
+  requisitos técnicos dos dados, tratando a lacuna identificada na revisão
+  dos RNF. Próxima proposta: RT-01 — Registro da origem e das condições de uso
+  das bases geográficas.
 - Na Etapa 4, escolher stack e versão suportada de Python, avaliando a proposta
   de Streamlit e a separação entre frontend na Vercel e backend no Railway.
 - Na Etapa 6, selecionar a região de estudo em Minas Gerais e as fontes públicas.
@@ -555,9 +575,11 @@ reproduzível serão detalhadas após a definição da stack.
 
 ## Próxima tarefa recomendada
 
-Revisar a cobertura e a consistência dos RNF-01 a RNF-06 em relação ao
-planejamento e aos requisitos existentes. Conferir prioridades, critérios de
-aceitação, pendências e momentos de verificação, identificando eventuais
-lacunas antes de propor novos requisitos ou detalhamentos. Apresentar o
-resultado no chat, sem alterar arquivos nessa revisão. A Etapa 2 permanece
-em andamento; futuras alterações, commits e publicação dependem de autorização.
+Apresentar para discussão o RT-01 — Registro da origem e das condições de uso
+das bases geográficas, contemplando fontes, datas de obtenção, versões
+disponíveis, licenças e limitações. Propor descrição, prioridade e critérios
+de aceitação, incluindo a identificação de metadados indisponíveis. Após
+aprovação, registrar somente essa pequena unidade em `docs/REQUISITOS.md`.
+A estrutura de armazenamento será detalhada nas etapas correspondentes.
+A Etapa 2 permanece em andamento; alterações, commits e publicação dependem
+de autorização.
