@@ -250,3 +250,44 @@ com área de referência. As pendências dos RF-01 e RF-02 permanecem em aberto.
 Os critérios serão testados durante a implementação da funcionalidade. Este
 registro especifica o comportamento esperado; a funcionalidade ainda não foi
 implementada e os testes de cálculo ainda não foram executados.
+
+### RF-04 — Cruzamento com as bases geográficas
+
+**Estado:** definição aprovada pelo responsável pelo projeto em 20/10/2026;
+bases e operações específicas ainda pendentes de detalhamento.
+
+**Ator:** AT-01 — Engenheiro/analista.
+
+**Origem:** análise geográfica com camadas públicas prevista no RNG-05.
+
+**Prioridade:** essencial para o fluxo principal do MVP.
+
+**Descrição aprovada:**
+
+O sistema deverá cruzar a geometria da área identificada pelo RF-02 com as
+camadas geográficas públicas preparadas, identificando as fontes utilizadas.
+Falhas no cruzamento ou indisponibilidade de dados deverão ser informadas
+com mensagem compreensível.
+
+**Critérios de aceitação:**
+
+| Cenário | Resultado esperado |
+| --- | --- |
+| Cruzamento em um cenário de referência | O resultado deverá corresponder ao esperado para as bases e operações especificadas no cenário. |
+| Consulta das informações utilizadas no cruzamento | Identificar as camadas e suas fontes. |
+| Falha na execução do cruzamento | Informar o problema com mensagem compreensível. |
+| Dados necessários indisponíveis | Informar a indisponibilidade com mensagem compreensível. |
+
+**Dependências e detalhamento pendente:**
+
+O requisito depende da geometria disponibilizada pelo RF-02, das camadas
+geográficas preparadas e de sistemas de coordenadas compatíveis. As bases e
+as operações específicas deverão ser detalhadas e aprovadas antes da
+implementação e da preparação do cenário de referência. As pendências dos
+requisitos anteriores permanecem em aberto.
+
+**Momento de verificação:**
+
+Os critérios serão testados durante a implementação da funcionalidade. Este
+registro especifica o comportamento esperado; a funcionalidade ainda não foi
+implementada e os testes de cruzamento ainda não foram executados.
