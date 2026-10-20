@@ -904,3 +904,45 @@ As pendências dos requisitos anteriores permanecem em aberto.
 As medições ocorrerão após a implementação das funcionalidades correspondentes.
 Este registro especifica a qualidade esperada; ainda não existe aplicação
 executável e os tempos de processamento da aplicação ainda não foram medidos.
+
+### RNF-06 — Organização e manutenção do código
+
+**Estado:** definição aprovada pelo responsável pelo projeto em 20/10/2026;
+arquitetura e convenções específicas ainda pendentes de definição na Etapa 4.
+
+**Origem:** necessidade de compreensão e manutenção do projeto e separação de
+responsabilidades prevista na Etapa 4 do planejamento.
+
+**Prioridade:** essencial.
+
+**Descrição aprovada:**
+
+O código do GeoVale deverá organizar as responsabilidades de interface, regras
+de negócio, processamento geográfico, Machine Learning e persistência em
+componentes identificáveis. Deverá utilizar nomes descritivos, docstrings em
+português em todas as funções e classes e comentários relevantes em português
+para explicar regras e decisões técnicas, favorecendo a compreensão e a
+manutenção pelo responsável pelo projeto.
+
+**Critérios de aceitação:**
+
+| Cenário | Resultado esperado |
+| --- | --- |
+| Revisão da organização de uma funcionalidade implementada | Identificar os componentes responsáveis pela interface, regras de negócio, processamento geográfico, ML e persistência envolvidos, conforme a arquitetura aprovada. |
+| Revisão dos nomes no código desenvolvido | Identificar a finalidade dos componentes, funções, classes e variáveis por nomes descritivos. |
+| Revisão da documentação do código desenvolvido | Encontrar docstrings em português em todas as funções e classes e comentários relevantes em português que expliquem as regras e decisões técnicas. |
+| Revisão durante a implementação | Registrar os pontos observados na organização e na documentação e corrigir as divergências em relação às definições aprovadas. |
+
+**Forma de verificação e detalhamento:**
+
+A verificação ocorrerá por revisão da estrutura e do código desenvolvido,
+conferindo a separação de responsabilidades, os nomes, as docstrings e os
+comentários. A arquitetura e as convenções específicas serão definidas e
+aprovadas na Etapa 4, antes da implementação correspondente. As pendências
+dos requisitos anteriores permanecem em aberto.
+
+**Momento de verificação:**
+
+As revisões ocorrerão durante a implementação dos componentes correspondentes.
+Este registro especifica a qualidade esperada; ainda não existe código da
+aplicação para verificar o atendimento a este requisito.
