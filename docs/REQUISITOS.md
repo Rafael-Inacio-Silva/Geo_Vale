@@ -131,8 +131,9 @@ Os atores representam os papéis das pessoas que utilizarão o GeoVale:
 
 ### RF-01 — Envio e validação do arquivo geográfico
 
-**Estado:** definição aprovada pelo responsável pelo projeto em 20/10/2026;
-detalhamento técnico das validações pendente.
+**Estado:** definição e formato inicial aprovados pelo responsável pelo
+projeto em 20/10/2026; estrutura aceita pelo MVP, limites de entrada, regras
+de geometria e tratamento de múltiplas áreas ainda pendentes de detalhamento.
 
 **Ator:** AT-01 — Engenheiro/analista.
 
@@ -148,6 +149,12 @@ Um arquivo válido permitirá prosseguir; arquivos vazios, corrompidos ou
 incompatíveis deverão ser rejeitados com mensagem compreensível. Falhas de
 validação deverão impedir o processamento da análise.
 
+O formato inicial aceito será GeoJSON, conforme a
+[RFC 7946](https://www.rfc-editor.org/rfc/rfc7946), com extensão `.geojson`.
+A validação deverá conferir a extensão e o conteúdo; a extensão isolada não
+será suficiente para considerar o arquivo válido. Um arquivo que atenda ao
+formato inicial poderá prosseguir às demais validações de entrada.
+
 **Critérios de aceitação:**
 
 | Cenário | Resultado esperado |
@@ -157,13 +164,18 @@ validação deverão impedir o processamento da análise.
 | Arquivo corrompido | Rejeitar o arquivo e informar o problema com mensagem compreensível. |
 | Arquivo incompatível com as regras de entrada especificadas | Rejeitar o arquivo e informar o problema com mensagem compreensível. |
 | Falha em uma validação | Impedir o processamento da análise a partir do arquivo rejeitado. |
+| Arquivo `.geojson` com conteúdo GeoJSON válido | Prosseguir às demais validações de entrada. |
+| Arquivo `.geojson` vazio ou com JSON malformado | Rejeitar o arquivo com mensagem compreensível. |
+| Arquivo `.geojson` contendo JSON válido que não represente GeoJSON | Rejeitar o arquivo como conteúdo incompatível, com mensagem compreensível. |
+| Arquivo com extensão não aceita | Rejeitar o arquivo e informar que o formato inicial aceito é `.geojson`. |
 
 **Dependências e detalhamento pendente:**
 
-Os formatos aceitos, os limites de entrada e as regras de geometria deverão
-ser especificados e aprovados antes da implementação. Esses detalhes ainda
-estão pendentes; sua definição permitirá preparar arquivos de teste válidos
-e inválidos para os cenários acima.
+O formato inicial está definido como GeoJSON com extensão `.geojson`. A
+estrutura aceita pelo MVP, os limites de entrada, as regras de geometria e
+o tratamento de arquivos com múltiplas áreas ainda deverão ser especificados
+e aprovados antes da implementação e da preparação dos arquivos de teste
+válidos e inválidos. A definição do formato não resolve essas pendências.
 
 **Momento de verificação:**
 
