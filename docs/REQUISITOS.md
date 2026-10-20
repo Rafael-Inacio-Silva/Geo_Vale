@@ -210,3 +210,43 @@ As pendências técnicas do RF-01 permanecem em aberto.
 Os critérios serão testados durante a implementação da funcionalidade. Este
 registro especifica o comportamento esperado; a funcionalidade ainda não foi
 implementada e os testes funcionais ainda não foram executados.
+
+### RF-03 — Cálculo da extensão do terreno
+
+**Estado:** definição aprovada pelo responsável pelo projeto em 20/10/2026;
+sistema de coordenadas adequado, precisão e tolerância de comparação ainda
+pendentes de definição.
+
+**Ator:** AT-01 — Engenheiro/analista.
+
+**Origem:** análise das características da área prevista no RNG-05.
+
+**Prioridade:** essencial para o fluxo principal do MVP.
+
+**Descrição aprovada:**
+
+O sistema deverá calcular a área da geometria identificada pelo RF-02 e
+apresentar o resultado em metros quadrados (m²) e hectares (ha), utilizando
+um sistema de coordenadas adequado ao cálculo. Quando não for possível
+calcular a área, deverá apresentar uma mensagem compreensível sobre o problema.
+
+**Critérios de aceitação:**
+
+| Cenário | Resultado esperado |
+| --- | --- |
+| Cálculo realizado com sucesso | Apresentar o valor da área em m² e hectares, com as unidades identificadas. |
+| Conferência com uma área de referência | O resultado deverá corresponder ao valor de referência dentro da precisão e da tolerância de comparação especificadas. |
+| Impossibilidade de calcular a área | Apresentar mensagem compreensível sobre o problema. |
+
+**Dependências e detalhamento pendente:**
+
+O requisito depende da geometria disponibilizada pelo RF-02. O sistema de
+coordenadas adequado, a precisão e a tolerância de comparação deverão ser
+especificados e aprovados antes da implementação e da preparação dos testes
+com área de referência. As pendências dos RF-01 e RF-02 permanecem em aberto.
+
+**Momento de verificação:**
+
+Os critérios serão testados durante a implementação da funcionalidade. Este
+registro especifica o comportamento esperado; a funcionalidade ainda não foi
+implementada e os testes de cálculo ainda não foram executados.
