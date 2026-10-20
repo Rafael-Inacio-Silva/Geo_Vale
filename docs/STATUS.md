@@ -2,7 +2,7 @@
 
 **Atualização:** 20/10/2026.
 **Etapa atual:** 2 — Engenharia de requisitos do sistema, iniciada com autorização em 20/10/2026.
-**Subetapa atual:** atores AT-01 e AT-02 e definição do RF-01 aprovados, documentados e publicados; formatos, limites de entrada e regras de geometria do RF-01 ainda pendentes.
+**Subetapa atual:** atores AT-01 e AT-02 e definições dos RF-01 e RF-02 aprovados, documentados e publicados; detalhes técnicos de entrada e regras para arquivos com múltiplas áreas ainda pendentes.
 
 Este documento registra o estado observado nesta entrega. Não há aplicação
 executável nem funcionalidades de geoprocessamento, análise multicritério ou
@@ -16,8 +16,9 @@ o encerramento da Etapa 1 em 20/10/2026. Os benefícios são pretendidos e o
 atendimento aos critérios será verificado após a implementação. O ML integra
 o escopo do MVP final, com desenvolvimento previsto na Etapa 8; ainda não foi
 implementado. A Etapa 2 foi iniciada com autorização em 20/10/2026, com a
-identificação dos atores e de suas responsabilidades. A definição do RF-01
-foi aprovada e publicada; seu detalhamento técnico permanece pendente.
+identificação dos atores e de suas responsabilidades. As definições dos
+RF-01 e RF-02 foram aprovadas e publicadas; os detalhes técnicos de entrada e
+as regras para arquivos com múltiplas áreas permanecem pendentes.
 
 ## Entregas concluídas
 
@@ -84,6 +85,10 @@ foi aprovada e publicada; seu detalhamento técnico permanece pendente.
   commit `50314a4`, com ator, origem, prioridade, descrição, cinco cenários de
   aceitação e dependências. Formatos, limites de entrada e regras de geometria
   permanecem pendentes; a funcionalidade ainda não foi implementada.
+- RF-02 — Leitura do arquivo e identificação da área aprovado e publicado no
+  commit `d125d07`, com ator, origem, prioridade, descrição e três cenários de
+  aceitação. Depende do RF-01 e das regras ainda pendentes para arquivos com
+  múltiplas áreas; a funcionalidade ainda não foi implementada.
 
 ## Arquivos relevantes
 
@@ -93,7 +98,7 @@ foi aprovada e publicada; seu detalhamento técnico permanece pendente.
 | `README.md` | Apresentar objetivo, escopo planejado, limitações e ambiente atual. |
 | `docs/ROADMAP.md` | Organizar etapas, entregas e critérios de conclusão. |
 | `docs/STATUS.md` | Registrar progresso real, verificações e pendências. |
-| `docs/REQUISITOS.md` | Registrar os RNG-01 a RNG-07, os atores AT-01 e AT-02 e a definição do RF-01 aprovados; detalhamento técnico e demais requisitos serão tratados em unidades posteriores. |
+| `docs/REQUISITOS.md` | Registrar os RNG-01 a RNG-07, os atores AT-01 e AT-02 e as definições dos RF-01 e RF-02 aprovados; detalhamento técnico e demais requisitos serão tratados em unidades posteriores. |
 
 Os caminhos são relativos à raiz do projeto. O documento de requisitos está
 em elaboração incremental; arquitetura e decisões ainda não possuem documentos
@@ -103,7 +108,7 @@ excluídos permanecem fora do versionamento.
 ## Estado do Git
 
 - Branch atual: `main`.
-- Histórico anterior a esta entrega: trinta e três commits locais já publicados, listados abaixo.
+- Histórico anterior a esta entrega: trinta e cinco commits locais já publicados, listados abaixo.
 - Repositório público: [Rafael-Inacio-Silva/Geo_Vale](https://github.com/Rafael-Inacio-Silva/Geo_Vale).
 - Remoto `origin`: `https://github.com/Rafael-Inacio-Silva/Geo_Vale.git`.
 - O repositório foi criado vazio e recebeu o histórico no primeiro push.
@@ -150,9 +155,11 @@ Commits concluídos antes desta atualização:
 | `5eeb0ed` | `docs: identifica atores e responsabilidades do GeoVale` |
 | `c279da9` | `docs: registra início da etapa 2 e atores no status` |
 | `50314a4` | `docs: especifica envio e validação do arquivo geográfico` |
+| `2d9ff6a` | `docs: registra definição e pendências do RF-01 no status` |
+| `d125d07` | `docs: especifica leitura do arquivo e identificação da área` |
 
 Esta atualização do status tem a mensagem de commit
-`docs: registra definição e pendências do RF-01 no status`. Consulte `git log --oneline` para
+`docs: registra definição e pendências do RF-02 no status`. Consulte `git log --oneline` para
 identificar seu hash e o histórico atualizado, sem depender de contagens fixas
 neste documento.
 
@@ -193,6 +200,7 @@ São verificações de configuração e documentação; não são testes da apli
 | Registro do encerramento no README | Commit `100ea80` contém somente `README.md`; conclusão e data consistentes com o status e o roadmap, Etapa 2 ainda não iniciada naquele momento, diff sem erros de espaços e publicação confirmada com Git limpo e sincronizado. |
 | Atores da Etapa 2 | Commit `5eeb0ed` contém somente `docs/REQUISITOS.md`; AT-01 e AT-02 conferidos com o RNG-03, sete requisitos de negócio preservados integralmente, diff sem erros de espaços e publicação confirmada com Git limpo e sincronizado. |
 | RF-01 — Envio e validação | Definição comparada com a proposta aprovada e com o RNG-05. Commit `50314a4` contém somente `docs/REQUISITOS.md`; conteúdo anterior preservado integralmente, cenários válidos, inválidos e de falha registrados, pendências técnicas explícitas, diff sem erros de espaços e publicação confirmada com Git limpo e sincronizado. Testes funcionais ainda não executados, pois a funcionalidade não foi implementada. |
+| RF-02 — Leitura e identificação da área | Definição comparada com a proposta aprovada, o RF-01 e o escopo do RNG-05. Commit `d125d07` contém somente `docs/REQUISITOS.md`; conteúdo anterior preservado integralmente, três cenários de aceitação e dependências explícitas, diff sem erros de espaços e publicação confirmada com Git limpo e sincronizado. Testes funcionais ainda não executados, pois a funcionalidade não foi implementada. |
 
 Os registros de preparação do ambiente Python são históricos. Nesta revisão,
 foram conferidos os documentos, os commits e o estado do Git; as verificações
@@ -220,10 +228,13 @@ Resultados de funcionalidades e métricas de ML não existem nesta fase.
 - As inconsistências identificadas na revisão foram corrigidas e publicadas.
   Status, roadmap e README registram o encerramento aprovado da Etapa 1;
   não há pendência de sincronização desse marco.
-- A Etapa 2 foi iniciada; atores e definição do RF-01 foram documentados.
+- A Etapa 2 foi iniciada; atores e definições dos RF-01 e RF-02 foram documentados.
   Formatos aceitos, limites de entrada e regras de geometria do RF-01 precisam
   ser especificados e aprovados antes de sua implementação e da preparação
   dos arquivos de teste.
+- As regras para arquivos com múltiplas áreas do RF-02 precisam ser
+  especificadas e aprovadas antes da implementação e da preparação dos
+  cenários de teste correspondentes. A dependência do RF-01 permanece aberta.
 - Demais requisitos funcionais, não funcionais, técnicos, regras de negócio,
   prioridades, dependências e critérios de aceitação serão detalhados em
   pequenas unidades.
@@ -235,8 +246,10 @@ Resultados de funcionalidades e métricas de ML não existem nesta fase.
 
 - Especificar e aprovar os detalhes técnicos pendentes do RF-01 antes de
   implementar a funcionalidade.
+- Especificar e aprovar as regras para arquivos com múltiplas áreas do RF-02
+  antes da implementação.
 - Discutir e aprovar os demais requisitos do sistema em pequenas unidades;
-  próxima proposta: RF-02 — Leitura do arquivo e identificação da área.
+  próxima proposta: RF-03 — Cálculo da extensão do terreno.
 - Na Etapa 4, escolher stack e versão suportada de Python, avaliando a proposta
   de Streamlit e a separação entre frontend na Vercel e backend no Railway.
 - Na Etapa 6, selecionar a região de estudo em Minas Gerais e as fontes públicas.
@@ -260,10 +273,9 @@ reproduzível serão detalhadas após a definição da stack.
 
 ## Próxima tarefa recomendada
 
-Apresentar para discussão o RF-02 — Leitura do arquivo e identificação da
-área, com ator, descrição, prioridade, dependências e critérios de aceitação.
-Após a aprovação do conteúdo, registrar somente essa pequena unidade em
-`docs/REQUISITOS.md`, preservando os requisitos e os atores existentes.
-Manter as pendências técnicas do RF-01 explícitas. Alterações, commits e
-publicação dependem de autorização. Não implementar funcionalidades nesta
-unidade.
+Apresentar para discussão o RF-03 — Cálculo da extensão do terreno, com ator,
+descrição, prioridade, dependências e critérios de aceitação. Após a aprovação
+do conteúdo, registrar somente essa pequena unidade em `docs/REQUISITOS.md`,
+preservando os requisitos e os atores existentes. Manter as pendências dos
+RF-01 e RF-02 explícitas. Alterações, commits e publicação dependem de
+autorização. Não implementar funcionalidades nesta unidade.
