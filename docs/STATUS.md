@@ -2,7 +2,7 @@
 
 **Atualização:** 20/10/2026.
 **Etapa atual:** 2 — Engenharia de requisitos do sistema, iniciada com autorização em 20/10/2026.
-**Subetapa atual:** atores AT-01 e AT-02 e definições dos RF-01 a RF-07 aprovados, documentados e publicados; detalhes técnicos de entrada, análise geográfica, regras de negócio e cadastro de alternativas ainda pendentes.
+**Subetapa atual:** atores AT-01 e AT-02 e definições dos RF-01 a RF-08 aprovados, documentados e publicados; detalhes técnicos de entrada, análise geográfica, regras de negócio, alternativas e configuração da comparação ainda pendentes.
 
 Este documento registra o estado observado nesta entrega. Não há aplicação
 executável nem funcionalidades de geoprocessamento, análise multicritério ou
@@ -17,7 +17,7 @@ atendimento aos critérios será verificado após a implementação. O ML integr
 o escopo do MVP final, com desenvolvimento previsto na Etapa 8; ainda não foi
 implementado. A Etapa 2 foi iniciada com autorização em 20/10/2026, com a
 identificação dos atores e de suas responsabilidades. As definições dos
-RF-01 a RF-07 foram aprovadas e publicadas. Permanecem pendentes os detalhes
+RF-01 a RF-08 foram aprovadas e publicadas. Permanecem pendentes os detalhes
 técnicos de entrada, as regras para arquivos com múltiplas áreas e a definição
 do sistema de coordenadas adequado, da precisão e da tolerância do cálculo
 da área. Para o RF-04, as bases e operações específicas ainda precisam ser
@@ -25,6 +25,8 @@ detalhadas. Para o RF-05, medições, tolerâncias e condições dos alertas tam
 permanecem pendentes. Para o RF-06, as regras de negócio, os parâmetros e o
 tratamento de dados ausentes ainda precisam ser especificados. Para o RF-07,
 os campos e as regras de validação do cadastro também permanecem pendentes.
+Para o RF-08, escalas, limites, validação dos pesos e tratamento de valores
+ausentes ainda precisam ser definidos.
 
 ## Entregas concluídas
 
@@ -123,6 +125,12 @@ os campos e as regras de validação do cadastro também permanecem pendentes.
   pelo menos duas alternativas distintas para iniciar a comparação. Campos
   e regras de validação do cadastro permanecem pendentes; a funcionalidade
   ainda não foi implementada.
+- RF-08 — Definição de critérios, notas e pesos aprovado e publicado no commit
+  `4471b22`, com ator, origem, prioridade, descrição e quatro cenários de
+  aceitação. Prevê consulta da configuração, associação de cada nota à
+  alternativa e ao critério correspondentes e rejeição de valores inválidos.
+  Escalas, limites, validação dos pesos e tratamento de valores ausentes
+  permanecem pendentes; a funcionalidade ainda não foi implementada.
 
 ## Arquivos relevantes
 
@@ -132,7 +140,7 @@ os campos e as regras de validação do cadastro também permanecem pendentes.
 | `README.md` | Apresentar objetivo, escopo planejado, limitações e ambiente atual. |
 | `docs/ROADMAP.md` | Organizar etapas, entregas e critérios de conclusão. |
 | `docs/STATUS.md` | Registrar progresso real, verificações e pendências. |
-| `docs/REQUISITOS.md` | Registrar os RNG-01 a RNG-07, os atores AT-01 e AT-02 e as definições dos RF-01 a RF-07 aprovados; detalhamento técnico e demais requisitos serão tratados em unidades posteriores. |
+| `docs/REQUISITOS.md` | Registrar os RNG-01 a RNG-07, os atores AT-01 e AT-02 e as definições dos RF-01 a RF-08 aprovados; detalhamento técnico e demais requisitos serão tratados em unidades posteriores. |
 
 Os caminhos são relativos à raiz do projeto. O documento de requisitos está
 em elaboração incremental; arquitetura e decisões ainda não possuem documentos
@@ -142,7 +150,7 @@ excluídos permanecem fora do versionamento.
 ## Estado do Git
 
 - Branch atual: `main`.
-- Histórico anterior a esta entrega: quarenta e cinco commits locais já publicados, listados abaixo.
+- Histórico anterior a esta entrega: quarenta e sete commits locais já publicados, listados abaixo.
 - Repositório público: [Rafael-Inacio-Silva/Geo_Vale](https://github.com/Rafael-Inacio-Silva/Geo_Vale).
 - Remoto `origin`: `https://github.com/Rafael-Inacio-Silva/Geo_Vale.git`.
 - O repositório foi criado vazio e recebeu o histórico no primeiro push.
@@ -201,9 +209,11 @@ Commits concluídos antes desta atualização:
 | `828f4ac` | `docs: especifica aplicação de regras de negócio demonstrativas` |
 | `a43dc48` | `docs: registra definição e pendências do RF-06 no status` |
 | `f6c0ec4` | `docs: especifica cadastro e seleção de alternativas de uso futuro` |
+| `d613513` | `docs: registra definição e pendências do RF-07 no status` |
+| `4471b22` | `docs: especifica definição de critérios, notas e pesos` |
 
 Esta atualização do status tem a mensagem de commit
-`docs: registra definição e pendências do RF-07 no status`. Consulte `git log --oneline` para
+`docs: registra definição e pendências do RF-08 no status`. Consulte `git log --oneline` para
 identificar seu hash e o histórico atualizado, sem depender de contagens fixas
 neste documento.
 
@@ -250,6 +260,7 @@ São verificações de configuração e documentação; não são testes da apli
 | RF-05 — Distâncias, sobreposições e alertas | Definição comparada com a proposta aprovada, o RF-04 e o escopo do RNG-05. Commit `c9574e4` contém somente `docs/REQUISITOS.md`; conteúdo anterior preservado integralmente, cinco cenários de aceitação, unidades, fontes, parâmetros e pendências explícitos, diff sem erros de espaços e publicação confirmada com Git limpo e sincronizado. Testes de medições e alertas ainda não executados, pois a funcionalidade não foi implementada. |
 | RF-06 — Aplicação de regras demonstrativas | Definição comparada com a proposta aprovada, o RF-05 e os RNG-05 e RNG-06. Commit `828f4ac` contém somente `docs/REQUISITOS.md`; conteúdo anterior preservado integralmente, cinco cenários de aceitação, justificativas, restrições separadas das pontuações e pendências explícitas, diff sem erros de espaços e publicação confirmada com Git limpo e sincronizado. Testes de aplicação das regras ainda não executados, pois a funcionalidade não foi implementada. |
 | RF-07 — Cadastro e seleção de alternativas | Definição comparada com a proposta aprovada, o RF-02 e os RNG-05 e RNG-07. Commit `f6c0ec4` contém somente `docs/REQUISITOS.md`; conteúdo anterior preservado integralmente, cinco cenários de aceitação, mínimo de duas alternativas distintas e pendências explícitos, diff sem erros de espaços e publicação confirmada com Git limpo e sincronizado. Testes de cadastro e seleção ainda não executados, pois a funcionalidade não foi implementada. |
+| RF-08 — Critérios, notas e pesos | Definição comparada com a proposta aprovada, o RF-07 e os RNG-05 e RNG-07. Commit `4471b22` contém somente `docs/REQUISITOS.md`; conteúdo anterior preservado integralmente, quatro cenários de aceitação, associação das notas e pendências explícitas, diff sem erros de espaços e publicação confirmada com Git limpo e sincronizado. Testes de configuração ainda não executados, pois a funcionalidade não foi implementada. |
 
 Os registros de preparação do ambiente Python são históricos. Nesta revisão,
 foram conferidos os documentos, os commits e o estado do Git; as verificações
@@ -277,7 +288,7 @@ Resultados de funcionalidades e métricas de ML não existem nesta fase.
 - As inconsistências identificadas na revisão foram corrigidas e publicadas.
   Status, roadmap e README registram o encerramento aprovado da Etapa 1;
   não há pendência de sincronização desse marco.
-- A Etapa 2 foi iniciada; atores e definições dos RF-01 a RF-07 foram documentados.
+- A Etapa 2 foi iniciada; atores e definições dos RF-01 a RF-08 foram documentados.
   Formatos aceitos, limites de entrada e regras de geometria do RF-01 precisam
   ser especificados e aprovados antes de sua implementação e da preparação
   dos arquivos de teste.
@@ -305,6 +316,10 @@ Resultados de funcionalidades e métricas de ML não existem nesta fase.
   especificados e aprovados antes da implementação e da preparação dos
   cenários de teste. A dependência da área identificada pelo RF-02 e as
   pendências anteriores permanecem em aberto.
+- Para o RF-08, escalas, limites, validação dos pesos e tratamento de valores
+  ausentes precisam ser definidos e aprovados antes da implementação e da
+  preparação dos cenários de teste. A dependência do RF-07 e as pendências
+  anteriores permanecem em aberto.
 - Demais requisitos funcionais, não funcionais, técnicos, regras de negócio,
   prioridades, dependências e critérios de aceitação serão detalhados em
   pequenas unidades.
@@ -328,8 +343,10 @@ Resultados de funcionalidades e métricas de ML não existem nesta fase.
   ausentes do RF-06 antes da implementação.
 - Especificar e aprovar campos e regras de validação do cadastro do RF-07
   antes da implementação.
+- Definir e aprovar escalas, limites, validação dos pesos e tratamento de
+  valores ausentes do RF-08 antes da implementação.
 - Discutir e aprovar os demais requisitos do sistema em pequenas unidades;
-  próxima proposta: RF-08 — Definição de critérios, notas e pesos.
+  próxima proposta: RF-09 — Cálculo multicritério por soma ponderada.
 - Na Etapa 4, escolher stack e versão suportada de Python, avaliando a proposta
   de Streamlit e a separação entre frontend na Vercel e backend no Railway.
 - Na Etapa 6, selecionar a região de estudo em Minas Gerais e as fontes públicas.
@@ -353,10 +370,10 @@ reproduzível serão detalhadas após a definição da stack.
 
 ## Próxima tarefa recomendada
 
-Apresentar para discussão o RF-08 — Definição de critérios, notas e pesos,
+Apresentar para discussão o RF-09 — Cálculo multicritério por soma ponderada,
 com ator, descrição, prioridade, dependências e critérios de aceitação.
 Após a aprovação do conteúdo, registrar somente essa pequena unidade em
 `docs/REQUISITOS.md`, preservando os requisitos e os atores existentes.
-Manter as pendências dos RF-01 a RF-07 explícitas. Alterações, commits e
+Manter as pendências dos RF-01 a RF-08 explícitas. Alterações, commits e
 publicação dependem de autorização. Não implementar funcionalidades nesta
 unidade.
