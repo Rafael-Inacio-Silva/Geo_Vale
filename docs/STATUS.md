@@ -2,7 +2,7 @@
 
 **Atualização:** 20/10/2026.
 **Etapa atual:** 2 — Engenharia de requisitos do sistema, iniciada com autorização em 20/10/2026.
-**Subetapa atual:** atores AT-01 e AT-02, definições dos RF-01 a RF-13, RNF-01 a RNF-06 e RT-01 aprovadas, documentadas e publicadas; revisão documental dos seis RNF concluída e exigência das licenças explícita no RT-01; detalhamentos técnicos e verificações da aplicação ainda pendentes.
+**Subetapa atual:** atores AT-01 e AT-02, definições dos RF-01 a RF-13, RNF-01 a RNF-06 e RT-01 a RT-02 aprovadas, documentadas e publicadas; revisão documental dos seis RNF concluída e exigência das licenças explícita no RT-01; detalhamentos técnicos e verificações da aplicação ainda pendentes.
 
 Este documento registra o estado observado nesta entrega. Não há aplicação
 executável nem funcionalidades de geoprocessamento, análise multicritério ou
@@ -58,7 +58,12 @@ publicado. O requisito define fontes, datas de obtenção, versões disponíveis
 licenças, limitações e indicação de informações indisponíveis. A estrutura de
 armazenamento e os metadados das bases concretas ainda serão detalhados; sua
 conferência ocorrerá na preparação dos dados e na implementação. A revisão
-documental não comprova o atendimento dos requisitos pela aplicação.
+documental não comprova o atendimento dos requisitos pela aplicação. O RT-02
+foi aprovado e publicado, especificando referências espaciais e unidades
+adequadas, compatibilização quando necessária e bloqueio de cálculos cuja
+referência não possa ser validada. Sistemas concretos, procedimentos de
+compatibilização, unidades de distância, precisão e tolerâncias ainda precisam
+ser definidos e aprovados antes da implementação e da preparação dos testes.
 
 ## Entregas concluídas
 
@@ -240,6 +245,13 @@ documental não comprova o atendimento dos requisitos pela aplicação.
   obtenção, versões disponíveis, limitações e metadados indisponíveis.
   Estrutura de armazenamento e metadados das bases concretas ainda pendentes;
   verificações futuras na preparação dos dados e na implementação.
+- RT-02 — Sistemas de coordenadas e unidades dos cálculos geográficos aprovado
+  e publicado no commit `bacc27f`, com origem, prioridade essencial e cinco
+  cenários de aceitação. Prevê identificação das referências e unidades,
+  compatibilização quando necessária, área em m² e hectares, bloqueio sem
+  referência validada e comparação com valores de referência. Sistemas
+  concretos, procedimentos, unidades de distância, precisão e tolerâncias
+  pendentes; verificações futuras na preparação dos dados e na implementação.
 
 ## Arquivos relevantes
 
@@ -249,7 +261,7 @@ documental não comprova o atendimento dos requisitos pela aplicação.
 | `README.md` | Apresentar objetivo, escopo planejado, limitações e ambiente atual. |
 | `docs/ROADMAP.md` | Organizar etapas, entregas e critérios de conclusão. |
 | `docs/STATUS.md` | Registrar progresso real, verificações e pendências. |
-| `docs/REQUISITOS.md` | Registrar os RNG-01 a RNG-07, os atores AT-01 e AT-02 e as definições dos RF-01 a RF-13, dos RNF-01 a RNF-06 e do RT-01 aprovados; detalhamento técnico e demais requisitos serão tratados em unidades posteriores. |
+| `docs/REQUISITOS.md` | Registrar os RNG-01 a RNG-07, os atores AT-01 e AT-02 e as definições dos RF-01 a RF-13, dos RNF-01 a RNF-06 e dos RT-01 a RT-02 aprovados; detalhamento técnico e demais requisitos serão tratados em unidades posteriores. |
 
 Os caminhos são relativos à raiz do projeto. O documento de requisitos está
 em elaboração incremental; arquitetura e decisões ainda não possuem documentos
@@ -259,7 +271,7 @@ excluídos permanecem fora do versionamento.
 ## Estado do Git
 
 - Branch atual: `main`.
-- Histórico anterior a esta entrega: setenta e dois commits locais já publicados, listados abaixo.
+- Histórico anterior a esta entrega: setenta e quatro commits locais já publicados, listados abaixo.
 - Repositório público: [Rafael-Inacio-Silva/Geo_Vale](https://github.com/Rafael-Inacio-Silva/Geo_Vale).
 - Remoto `origin`: `https://github.com/Rafael-Inacio-Silva/Geo_Vale.git`.
 - O repositório foi criado vazio e recebeu o histórico no primeiro push.
@@ -345,9 +357,11 @@ Commits concluídos antes desta atualização:
 | `51870cd` | `docs: registra definição e revisão futura do RNF-06 no status` |
 | `908e49f` | `docs: registra revisão dos requisitos não funcionais no status` |
 | `cf710ab` | `docs: especifica origem e condições de uso das bases geográficas` |
+| `58b6253` | `docs: registra definição e verificação futura do RT-01 no status` |
+| `bacc27f` | `docs: especifica referências espaciais e unidades dos cálculos` |
 
 Esta atualização do status tem a mensagem de commit
-`docs: registra definição e verificação futura do RT-01 no status`. Consulte `git log --oneline` para
+`docs: registra definição e verificação futura do RT-02 no status`. Consulte `git log --oneline` para
 identificar seu hash e o histórico atualizado, sem depender de contagens fixas
 neste documento.
 
@@ -408,6 +422,7 @@ São verificações de configuração e documentação; não são testes da apli
 | RNF-06 — Organização e manutenção do código | Definição comparada com a proposta aprovada e a separação de responsabilidades prevista na Etapa 4 do planejamento. Commit `e488333` contém somente `docs/REQUISITOS.md`; conteúdo anterior preservado integralmente, quatro cenários de aceitação, nomes descritivos, docstrings e comentários em português, revisões futuras e pendências explícitos, diff sem erros de espaços e publicação confirmada com Git limpo e sincronizado. Atendimento ainda não verificado, pois não existe código da aplicação para revisão. |
 | Revisão documental dos seis RNF | Conferidos com o planejamento, o roadmap e os requisitos existentes: todos possuem estado, origem, prioridade, descrição, critérios de aceitação, forma e momento de verificação; 23 cenários no total. Cinco RNF são essenciais e o RNF-05 é importante para a demonstração. Não foram encontradas contradições entre eles; detalhamentos continuam pendentes, incluindo limites mensuráveis de desempenho. Identificada a ausência do registro explícito das licenças nos critérios do documento de requisitos, embora previsto no planejamento. Nenhum arquivo foi alterado durante a revisão e o Git permaneceu limpo; nenhum teste da aplicação foi executado. |
 | RT-01 — Origem e condições de uso das bases geográficas | Definição comparada com a proposta aprovada, o RNF-02 e a Etapa 6 do planejamento. Commit `cf710ab` contém somente `docs/REQUISITOS.md`; conteúdo anterior preservado integralmente, quatro cenários de aceitação, referência das fontes e condições de uso, identificação de metadados indisponíveis e correspondência com a base utilizada explícitos. Exigência das licenças incluída nos critérios; diff sem erros de espaços e publicação confirmada com Git limpo e sincronizado. Atendimento ainda não verificado, pois não existem bases preparadas nem armazenamento implementado. |
+| RT-02 — Sistemas de coordenadas e unidades dos cálculos geográficos | Definição comparada com a proposta aprovada e os RF-03 a RF-05. Commit `bacc27f` contém somente `docs/REQUISITOS.md`; conteúdo anterior preservado integralmente, cinco cenários de aceitação, referências e unidades identificáveis, compatibilização, bloqueio de cálculos sem referência validada, comparação com valores de referência e pendências explícitos. Diff sem erros de espaços e publicação confirmada com Git limpo e sincronizado. Atendimento ainda não verificado, pois não existem bases preparadas nem cálculos implementados. |
 
 Os registros de preparação do ambiente Python são históricos. Nesta revisão,
 foram conferidos os documentos, os commits e o estado do Git; as verificações
@@ -519,9 +534,15 @@ Resultados de funcionalidades e métricas de ML não existem nesta fase.
   registros serão conferidos na preparação das bases na Etapa 6 e sua
   correspondência com os dados utilizados será verificada na implementação.
   Nenhuma base concreta teve seus metadados verificados nesta entrega.
+- Para o RT-02, sistemas concretos, procedimentos de compatibilização,
+  unidades de distância, precisão e tolerâncias precisam ser definidos e
+  aprovados antes da implementação e da preparação dos testes correspondentes.
+  As referências serão conferidas na preparação dos dados na Etapa 6; os
+  cálculos, as unidades, a compatibilização e os bloqueios serão verificados
+  durante a implementação. Nenhum cálculo foi testado nesta entrega.
 - O RNF-05 ainda não possui limites de tempo mensuráveis para aprovação do
   desempenho; eles precisam ser definidos antes da avaliação.
-- Os 13 RF do escopo atual, os RNF-01 a RNF-06 e o RT-01 estão documentados.
+- Os 13 RF do escopo atual, os RNF-01 a RNF-06 e os RT-01 a RT-02 estão documentados.
   Refinamentos, eventuais complementos dos RNF, requisitos técnicos e regras
   de negócio, com
   prioridades, dependências e critérios de aceitação, ainda serão detalhados
@@ -569,9 +590,12 @@ Resultados de funcionalidades e métricas de ML não existem nesta fase.
   limites de tempo do RNF-05 antes das medições.
 - Definir e aprovar arquitetura e convenções específicas do RNF-06 na Etapa 4,
   antes da implementação correspondente.
+- Definir e aprovar sistemas concretos, procedimentos de compatibilização,
+  unidades de distância, precisão e tolerâncias do RT-02 antes da implementação
+  e da preparação dos testes correspondentes.
 - Discutir e aprovar os demais requisitos técnicos e as regras de negócio
-  da Etapa 2. Próxima proposta: RT-02 — Sistemas de coordenadas e unidades
-  dos cálculos geográficos.
+  da Etapa 2. Próxima proposta: RN-01 — Restrições eliminatórias na comparação
+  de alternativas.
 - Na Etapa 4, escolher stack e versão suportada de Python, avaliando a proposta
   de Streamlit e a separação entre frontend na Vercel e backend no Railway.
 - Na Etapa 6, selecionar a região de estudo em Minas Gerais e as fontes públicas.
@@ -595,12 +619,11 @@ reproduzível serão detalhadas após a definição da stack.
 
 ## Próxima tarefa recomendada
 
-Apresentar para discussão o RT-02 — Sistemas de coordenadas e unidades dos
-cálculos geográficos, com descrição, prioridade e critérios de aceitação.
-Contemplar a identificação do sistema de coordenadas, a adequação das
-referências e unidades aos cálculos de área e distância e o tratamento de
-referências ausentes ou incompatíveis. A escolha dos sistemas concretos e
-das tolerâncias permanecerá pendente de detalhamento e aprovação. Após
-aprovação, registrar somente essa unidade em `docs/REQUISITOS.md`.
-A Etapa 2 permanece em andamento; alterações, commits e publicação dependem
-de autorização.
+Apresentar para discussão a RN-01 — Restrições eliminatórias na comparação
+de alternativas, com descrição, prioridade e critérios de aceitação.
+Formalizar que pontuações altas e previsões favoráveis de ML não compensam
+restrições eliminatórias, mantendo identificáveis a regra e a justificativa.
+Condições e parâmetros das regras demonstrativas ainda precisarão ser
+detalhados e aprovados. Após aprovação, registrar somente essa pequena
+unidade em `docs/REQUISITOS.md`. A Etapa 2 permanece em andamento;
+alterações, commits e publicação dependem de autorização.
