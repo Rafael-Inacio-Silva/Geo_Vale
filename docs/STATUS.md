@@ -1,8 +1,8 @@
 # Estado do projeto — GeoVale
 
 **Atualização:** 20/10/2026.
-**Etapa atual:** 1 — Engenharia de requisitos de negócio, em andamento.
-**Subetapa atual:** revisão final concluída, RNG-01 a RNG-07 validados e publicados, README e roadmap sincronizados; encerramento da Etapa 1 pendente de aprovação.
+**Etapa atual:** 1 — Engenharia de requisitos de negócio, concluída e com encerramento aprovado em 20/10/2026.
+**Subetapa atual:** encerramento registrado neste status; RNG-01 a RNG-07 validados, revisados e publicados. Etapa 2 ainda não iniciada.
 
 Este documento registra o estado observado nesta entrega. Não há aplicação
 executável nem funcionalidades de geoprocessamento, análise multicritério ou
@@ -11,10 +11,11 @@ Machine Learning implementadas. A Etapa 0 foi concluída e aprovada em
 de negócio, o objetivo do sistema, o público-alvo, os benefícios esperados e
 o escopo, as limitações e os critérios de sucesso do MVP foram definidos e
 validados. A revisão final foi concluída e as inconsistências de andamento
-no README e no roadmap foram corrigidas e publicadas. A aprovação de
-encerramento da Etapa 1 continua pendente. Os benefícios são pretendidos e o
-atendimento aos critérios será verificado após a implementação. O ML integra o escopo do MVP final, com
-desenvolvimento previsto na Etapa 8; ainda não foi implementado.
+no README e no roadmap foram corrigidas e publicadas. O responsável aprovou
+o encerramento da Etapa 1 em 20/10/2026. Os benefícios são pretendidos e o
+atendimento aos critérios será verificado após a implementação. O ML integra
+o escopo do MVP final, com desenvolvimento previsto na Etapa 8; ainda não foi
+implementado. A Etapa 2 não foi iniciada.
 
 ## Entregas concluídas
 
@@ -65,7 +66,11 @@ desenvolvimento previsto na Etapa 8; ainda não foi implementado.
 - README sincronizado no commit `1d8a926`: Etapa 1 em revisão final e ML
   integrado, testado e documentado na entrega final, ainda como escopo previsto.
 - Roadmap sincronizado no commit `9888fcf`: sete requisitos aprovados e
-  encerramento da Etapa 1 pendente, sem antecipar as etapas seguintes.
+  encerramento da Etapa 1 pendente naquele momento, sem antecipar as etapas seguintes.
+- Revisão final e correções documentais registradas no status e publicadas
+  no commit `0057554`.
+- Encerramento da Etapa 1 aprovado pelo responsável em 20/10/2026 e registrado
+  neste status; requisitos de negócio concluídos, sem iniciar a Etapa 2.
 
 ## Arquivos relevantes
 
@@ -85,7 +90,7 @@ excluídos permanecem fora do versionamento.
 ## Estado do Git
 
 - Branch atual: `main`.
-- Histórico anterior a esta entrega: vinte e cinco commits locais já publicados, listados abaixo.
+- Histórico anterior a esta entrega: vinte e seis commits locais já publicados, listados abaixo.
 - Repositório público: [Rafael-Inacio-Silva/Geo_Vale](https://github.com/Rafael-Inacio-Silva/Geo_Vale).
 - Remoto `origin`: `https://github.com/Rafael-Inacio-Silva/Geo_Vale.git`.
 - O repositório foi criado vazio e recebeu o histórico no primeiro push.
@@ -124,9 +129,10 @@ Commits concluídos antes desta atualização:
 | `70e09eb` | `docs: registra conclusão dos critérios de sucesso no status` |
 | `1d8a926` | `docs: sincroniza apresentação com requisitos de negócio` |
 | `9888fcf` | `docs: sincroniza roadmap com requisitos de negócio` |
+| `0057554` | `docs: registra revisão final dos requisitos de negócio` |
 
 Esta atualização do status tem a mensagem de commit
-`docs: registra revisão final dos requisitos de negócio`. Consulte `git log --oneline` para
+`docs: registra encerramento dos requisitos de negócio`. Consulte `git log --oneline` para
 identificar seu hash e o histórico atualizado, sem depender de contagens fixas
 neste documento.
 
@@ -159,9 +165,10 @@ São verificações de configuração e documentação; não são testes da apli
 | RNG-06 — Limitações do MVP | Cinco limitações comparadas com a proposta aprovada; requisitos anteriores e ML no MVP final preservados. Commit `52ce5e5` contém somente `docs/REQUISITOS.md`; publicação e sincronização conferidas. |
 | RNG-07 — Critérios de sucesso do MVP | Sete critérios e evidências comparados com a proposta aprovada, com comprovação futura explícita; requisitos anteriores preservados. Commit `f90218f` contém somente `docs/REQUISITOS.md`; publicação e sincronização conferidas. |
 | README do perfil | Uma entrada do GeoVale adicionada no padrão existente, com funcionalidades apresentadas como previstas; conteúdo publicado conferido e demais entradas preservadas. |
-| Revisão final da Etapa 1 | RNG-01 a RNG-07 comparados com o roteiro original. Identificadas duas inconsistências documentais: andamento desatualizado no README e no roadmap, com ML apresentado como possibilidade no README. Correções publicadas nas unidades abaixo; encerramento ainda depende de aprovação. |
+| Revisão final da Etapa 1 | RNG-01 a RNG-07 comparados com o roteiro original. Identificadas duas inconsistências documentais: andamento desatualizado no README e no roadmap, com ML apresentado como possibilidade no README. Correções publicadas nas unidades abaixo; na ocasião, o encerramento ainda dependia de aprovação. |
 | Sincronização do README | Commit `1d8a926` contém somente `README.md`: etapa atual e participação do ML no MVP final conferidas com os requisitos; diff sem erros de espaços, demais arquivos preservados e sincronização com o GitHub confirmada. |
 | Sincronização do roadmap | Commit `9888fcf` contém somente `docs/ROADMAP.md`: andamento conferido com os requisitos e o README, etapas seguintes preservadas, diff sem erros de espaços e sincronização com o GitHub confirmada. |
+| Encerramento da Etapa 1 | Responsável aprovou o encerramento em 20/10/2026 após a revisão dos sete requisitos e as correções documentais. Registro de conclusão conferido com a aprovação; Etapa 2 permanece não iniciada. |
 
 Os registros de preparação do ambiente Python são históricos. Nesta revisão,
 foram conferidos os documentos, os commits e o estado do Git; as verificações
@@ -180,20 +187,21 @@ Resultados de funcionalidades e métricas de ML não existem nesta fase.
   pertencem às etapas seguintes.
 - A criação do repositório, a configuração do origin e o primeiro envio foram
   autorizados e concluídos. A autenticação de envio pelo Git local funcionou.
-- Os sete requisitos de negócio foram validados e publicados. A Etapa 1
-  teve sua revisão final concluída e aguarda aprovação de encerramento.
+- Os sete requisitos de negócio foram validados, revisados e publicados.
+  A Etapa 1 foi encerrada com aprovação em 20/10/2026.
 - O atendimento aos critérios do RNG-07 será verificado na validação e na
   demonstração do MVP, após sua implementação.
 - Os benefícios registrados no RNG-04 ainda serão verificados na demonstração;
   não há medições de ganhos de tempo ou custo nesta fase.
-- As inconsistências de andamento do README e do roadmap foram corrigidas
-  e publicadas. Não foram identificadas outras pendências documentais
-  impeditivas na revisão da Etapa 1; seu encerramento ainda não foi aprovado.
+- As inconsistências identificadas na revisão foram corrigidas e publicadas.
+  O README e o roadmap ainda descrevem o encerramento como pendente, pois
+  antecedem a aprovação agora registrada; a atualização desse marco será feita
+  em unidades documentais separadas. Este status registra a aprovação atual.
 
 ## Decisões ainda necessárias
 
-- Confirmar a compreensão do responsável e obter sua aprovação de encerramento
-  da Etapa 1 antes de iniciar a Etapa 2.
+- Autorizar o início e a primeira pequena unidade da Etapa 2, após a
+  sincronização documental do encerramento da Etapa 1.
 - Na Etapa 4, escolher stack e versão suportada de Python, avaliando a proposta
   de Streamlit e a separação entre frontend na Vercel e backend no Railway.
 - Na Etapa 6, selecionar a região de estudo em Minas Gerais e as fontes públicas.
@@ -217,8 +225,8 @@ reproduzível serão detalhadas após a definição da stack.
 
 ## Próxima tarefa recomendada
 
-Apresentar o resultado da revisão e obter a aprovação do responsável para
-encerrar a Etapa 1. Após essa aprovação, registrar o encerramento em pequenas
-unidades documentais autorizadas, com as aprovações correspondentes para
-commits e publicação, e enviar no chat o resumo da etapa concluída.
-Não iniciar a Etapa 2 automaticamente.
+Propor a atualização somente de `docs/ROADMAP.md` para registrar o encerramento
+aprovado da Etapa 1, preservando as etapas seguintes. Depois, tratar a
+atualização do README em unidade própria. Alterações, commits e publicação
+dependem das respectivas aprovações. Enviar no chat o resumo da Etapa 1
+concluída. Não iniciar a Etapa 2 automaticamente.
