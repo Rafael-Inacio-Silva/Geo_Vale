@@ -2,7 +2,7 @@
 
 **Atualização:** 20/10/2026.
 **Etapa atual:** 2 — Engenharia de requisitos do sistema, iniciada com autorização em 20/10/2026.
-**Subetapa atual:** atores AT-01 e AT-02, definições dos RF-01 a RF-13, RNF-01 a RNF-06, RT-01 a RT-02 e RN-01 a RN-03 aprovadas, documentadas e publicadas; revisões documentais dos seis RNF, dos dois RT e das três RN concluídas; exigência das licenças explícita no RT-01 e classificação da RN-01 detalhada para dados necessários disponíveis e efeitos da indisponibilidade detalhados na RN-03; sincronização da referência na RN-01, demais detalhamentos técnicos e verificações da aplicação ainda pendentes.
+**Subetapa atual:** atores AT-01 e AT-02, definições dos RF-01 a RF-13, RNF-01 a RNF-06, RT-01 a RT-02 e RN-01 a RN-03 aprovadas, documentadas e publicadas; revisões documentais dos seis RNF, dos dois RT e das três RN concluídas; exigência das licenças explícita no RT-01 e classificação da RN-01 detalhada para dados necessários disponíveis e efeitos da indisponibilidade detalhados na RN-03; referência entre RN-01 e RN-03 sincronizada; demais detalhamentos técnicos e verificações da aplicação ainda pendentes.
 
 Este documento registra o estado observado nesta entrega. Não há aplicação
 executável nem funcionalidades de geoprocessamento, análise multicritério ou
@@ -93,7 +93,9 @@ válidos são preservados com a indisponibilidade e o bloqueio identificados
 no dashboard e no relatório. Dados ausentes não são substituídos
 automaticamente por zero nem tratados como ausência de ocorrência. A lista
 dos dados necessários, os critérios de disponibilidade e a apresentação
-continuam pendentes, assim como a sincronização da referência na RN-01.
+continuam pendentes. A referência da RN-01 ao tratamento da indisponibilidade
+foi sincronizada com a RN-03 e publicada, preservando a classificação e os
+critérios de aceitação das regras.
 
 ## Entregas concluídas
 
@@ -322,6 +324,11 @@ continuam pendentes, assim como a sincronização da referência na RN-01.
   cenários acrescentados, totalizando seis na RN-03; demais seções preservadas.
   Lista de dados necessários, critérios, apresentação e sincronização da
   referência na RN-01 pendentes; testes futuros durante a implementação.
+- Referência da RN-01 ao tratamento da indisponibilidade da RN-03 sincronizada
+  e publicada no commit `301539a`. Alterado somente o parágrafo de dependências
+  da RN-01, preservando a classificação, os critérios de aceitação e todas
+  as demais seções. Lista dos dados necessários, critérios de disponibilidade
+  e condições e parâmetros demonstrativos continuam pendentes.
 
 ## Arquivos relevantes
 
@@ -341,7 +348,7 @@ excluídos permanecem fora do versionamento.
 ## Estado do Git
 
 - Branch atual: `main`.
-- Histórico anterior a esta entrega: oitenta e cinco commits locais já publicados, listados abaixo.
+- Histórico anterior a esta entrega: oitenta e sete commits locais já publicados, listados abaixo.
 - Repositório público: [Rafael-Inacio-Silva/Geo_Vale](https://github.com/Rafael-Inacio-Silva/Geo_Vale).
 - Remoto `origin`: `https://github.com/Rafael-Inacio-Silva/Geo_Vale.git`.
 - O repositório foi criado vazio e recebeu o histórico no primeiro push.
@@ -440,9 +447,11 @@ Commits concluídos antes desta atualização:
 | `64979eb` | `docs: detalha classificação das alternativas com restrição` |
 | `6efd4c6` | `docs: registra detalhamento da classificação na RN-01 no status` |
 | `37909e5` | `docs: detalha efeitos de dados indisponíveis na comparação e no relatório` |
+| `bb3adcb` | `docs: registra detalhamento da indisponibilidade na RN-03 no status` |
+| `301539a` | `docs: sincroniza referência da RN-01 ao tratamento da RN-03` |
 
 Esta atualização do status tem a mensagem de commit
-`docs: registra detalhamento da indisponibilidade na RN-03 no status`. Consulte `git log --oneline` para
+`docs: registra sincronização entre RN-01 e RN-03 no status`. Consulte `git log --oneline` para
 identificar seu hash e o histórico atualizado, sem depender de contagens fixas
 neste documento.
 
@@ -510,6 +519,7 @@ São verificações de configuração e documentação; não são testes da apli
 | Revisão documental dos dois RT e das três RN | Conferidos com o planejamento, o roadmap e os requisitos existentes: cinco itens com estado, origem, prioridade essencial, descrição, critérios de aceitação, dependências e momento de verificação; 19 cenários no total. Não foram encontradas contradições entre as definições e a exigência das licenças está explícita no RT-01. Identificados refinamentos pendentes para alternativas restritas na classificação, incluindo todas restritas, e para efeitos da indisponibilidade na comparação e sua preservação no relatório. Cinco arquivos versionados preservados integralmente e Git limpo durante a revisão; nenhum teste da aplicação executado. |
 | Refinamento da classificação da RN-01 | Conferido com a proposta aprovada e os RF-06, RF-09 e RF-13. Commit `64979eb` altera somente a seção RN-01 em `docs/REQUISITOS.md`; demais seções preservadas integralmente. Dois cenários acrescentados, totalizando cinco: classificação apenas das alternativas sem restrição identificada, apresentação separada das restritas com regra e justificativa e nenhuma alternativa elegível quando todas estiverem restritas, para dados necessários disponíveis. Pendências preservadas, diff sem erros de espaços e publicação confirmada com Git limpo e sincronizado. Cenários ainda não testados, pois a comparação não foi implementada. |
 | Refinamento dos efeitos da indisponibilidade na RN-03 | Conferido com a proposta aprovada, os RF-05, RF-09, RF-10 e RF-12 e a classificação da RN-01. Commit `37909e5` altera somente a seção RN-03 em `docs/REQUISITOS.md`; demais seções preservadas integralmente. Três cenários acrescentados, totalizando seis, com bloqueio do ranking por dados necessários indisponíveis, preservação de resultados parciais, identificação no dashboard e no relatório e ausência de substituição automática por zero. Pendências preservadas, diff sem erros de espaços e publicação confirmada com Git limpo e sincronizado. Identificada remissão desatualizada na RN-01, a sincronizar em unidade própria. Testes da aplicação ainda não executados. |
+| Sincronização da referência entre RN-01 e RN-03 | Commit `301539a` altera somente o parágrafo de dependências da RN-01 em `docs/REQUISITOS.md`, substituindo a pendência desatualizada pela referência ao tratamento já aprovado na RN-03. Correspondência entre as regras conferida; classificação, critérios de aceitação e conteúdo fora do parágrafo preservados integralmente. Pendências sobre dados necessários, disponibilidade e condições demonstrativas mantidas. Diff sem erros de espaços e publicação confirmada com Git limpo e sincronizado. Verificação documental, sem testes da aplicação. |
 
 Os registros de preparação do ambiente Python são históricos. Nesta revisão,
 foram conferidos os documentos, os commits e o estado do Git; as verificações
@@ -630,7 +640,7 @@ Resultados de funcionalidades e métricas de ML não existem nesta fase.
 - Para a RN-01, condições e parâmetros das regras demonstrativas precisam
   ser detalhados e aprovados antes da implementação e da preparação dos
   cenários de teste. O tratamento geral da indisponibilidade está definido
-  na RN-03; a referência ainda precisa ser sincronizada na RN-01. A
+  na RN-03, com referência sincronizada na RN-01. A
   preservação das restrições e sua justificativa serão verificadas nos RF-06
   e RF-09; o cenário com previsão favorável será testado após a integração
   do ML na Etapa 8. Nenhum desses testes foi executado nesta entrega.
@@ -653,10 +663,10 @@ Resultados de funcionalidades e métricas de ML não existem nesta fase.
   mistos e de todas as alternativas restritas serão verificados durante a
   implementação. Condições e parâmetros demonstrativos continuam pendentes.
 - Os efeitos gerais da indisponibilidade na comparação e no relatório foram
-  detalhados e aprovados na RN-03. A RN-01 ainda afirma que esse comportamento
-  precisa ser definido; essa referência deve ser sincronizada com a RN-03
-  em uma pequena unidade documental própria. Nenhuma regra da RN-01 foi
-  alterada na entrega do refinamento da RN-03.
+  detalhados e aprovados na RN-03. A referência desatualizada na RN-01 foi
+  corrigida e publicada em unidade própria no commit `301539a`; essa pendência
+  documental está resolvida. As definições concretas sobre dados necessários
+  e disponibilidade continuam pendentes, conforme os registros anteriores.
 - O RNF-05 ainda não possui limites de tempo mensuráveis para aprovação do
   desempenho; eles precisam ser definidos antes da avaliação.
 - Os 13 RF do escopo atual, os RNF-01 a RNF-06, os RT-01 a RT-02 e as RN-01 a RN-03
@@ -718,8 +728,9 @@ Resultados de funcionalidades e métricas de ML não existem nesta fase.
 - Detalhar e aprovar a lista dos dados necessários, os critérios de
   disponibilidade e a forma de apresentação da RN-03 antes da implementação
   e da preparação dos testes.
-- Sincronizar na RN-01 a referência ao tratamento da indisponibilidade já
-  definido e aprovado na RN-03; próxima unidade documental proposta.
+- Mapear as pendências para o encerramento da Etapa 2, distinguindo decisões
+  sobre o comportamento do sistema de detalhamentos previstos nas etapas
+  seguintes; apresentar a proposta de próximas unidades para aprovação.
 - Discutir e aprovar os demais detalhamentos da Etapa 2.
 - Na Etapa 4, escolher stack e versão suportada de Python, avaliando a proposta
   de Streamlit e a separação entre frontend na Vercel e backend no Railway.
@@ -744,11 +755,10 @@ reproduzível serão detalhadas após a definição da stack.
 
 ## Próxima tarefa recomendada
 
-Sincronizar somente o parágrafo de dependências da RN-01 em
-`docs/REQUISITOS.md`, substituindo a afirmação de que o comportamento diante
-da indisponibilidade ainda precisa ser definido pela referência ao tratamento
-já aprovado na RN-03. Preservar a classificação e os critérios de aceitação
-da RN-01, as demais seções e as pendências sobre dados necessários, critérios
-de disponibilidade e condições demonstrativas. Conferir a correspondência
-entre as duas regras. A Etapa 2 permanece em andamento; alterações, commits
-e publicação dependem de autorização.
+Mapear as pendências necessárias para encerrar a Etapa 2, conferindo o
+planejamento, os requisitos e este status. Identificar as decisões sobre o
+comportamento do sistema ainda abertas e os detalhamentos previstos nas
+etapas seguintes, propondo a sequência de pequenas unidades. Apresentar o
+resultado no chat, sem alterar arquivos ou encerrar a etapa nessa revisão.
+A Etapa 2 permanece em andamento; futuras alterações, commits, publicação
+e encerramento dependem de autorização.
