@@ -1,8 +1,10 @@
 # Requisitos do GeoVale
 
-Este documento está em elaboração incremental na Etapa 1 — Engenharia de
-requisitos de negócio. As definições registradas abaixo foram validadas; os demais
-requisitos serão discutidos e registrados em entregas posteriores.
+Os requisitos de negócio da Etapa 1 foram validados, revisados e tiveram seu
+encerramento aprovado em 20/10/2026. A Etapa 2 — Engenharia de requisitos do
+sistema foi iniciada com a identificação dos atores. Este documento permanece
+em elaboração incremental; os demais requisitos serão discutidos e registrados
+em entregas posteriores.
 
 ## Requisitos de negócio
 
@@ -111,3 +113,18 @@ Dados geográficos públicos serão utilizados quando disponíveis. Áreas, regr
 **Momento de verificação:**
 
 A comprovação de atendimento desses critérios ocorrerá durante a validação e a demonstração do MVP, após sua implementação. Os critérios definem as evidências esperadas; os resultados das verificações serão registrados quando executadas.
+
+## Requisitos do sistema
+
+### Atores e responsabilidades
+
+**Estado:** aprovado pelo responsável pelo projeto em 20/10/2026.
+
+**Origem:** público-alvo e cenário de demonstração definidos no RNG-03.
+
+Os atores representam os papéis das pessoas que utilizarão o GeoVale:
+
+| Identificador | Ator | Responsabilidades previstas |
+| --- | --- | --- |
+| **AT-01** | **Engenheiro/analista** | Fornecer o arquivo geográfico da área, configurar a análise e comparar alternativas de uso futuro. |
+| **AT-02** | **Gestor** | Consultar mapas, resultados e relatórios para compreender as alternativas avaliadas e apoiar decisões. |
