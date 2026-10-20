@@ -42,3 +42,16 @@ O resultado esperado é que o usuário consiga compreender quais alternativas fo
 **Cenário de demonstração:**
 
 No cenário de demonstração, esses grupos serão representados pelo **engenheiro que realiza a análise** e pelo **gestor da Vale que avalia os resultados apresentados**.
+
+### RNG-04 — Benefícios esperados
+
+**Estado:** aprovado pelo responsável pelo projeto em 19/10/2026.
+
+**Descrição aprovada:**
+
+1. **Organização das informações:** reunir dados da área, fontes e critérios utilizados, facilitando sua consulta.
+2. **Comparação estruturada:** avaliar alternativas com critérios e pesos explícitos, mantendo as restrições eliminatórias separadas das pontuações.
+3. **Rastreabilidade da análise:** permitir compreender como os resultados foram obtidos, quais informações foram utilizadas e quais limitações existem.
+4. **Comunicação técnica:** apresentar mapas, comparações e relatórios compreensíveis, facilitando a discussão entre profissionais técnicos e gestores.
+
+Esses são **benefícios pretendidos**, que deverão ser verificados na demonstração do MVP. Ainda não representam resultados comprovados nem ganhos medidos de tempo ou custo.
