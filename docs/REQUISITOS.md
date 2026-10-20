@@ -132,9 +132,9 @@ Os atores representam os papéis das pessoas que utilizarão o GeoVale:
 ### RF-01 — Envio e validação do arquivo geográfico
 
 **Estado:** definição, formato inicial, estrutura, tipos de geometria,
-regras de validade das geometrias e limites de entrada aprovados pelo
-responsável pelo projeto em 20/10/2026; tratamento de múltiplas áreas ainda
-pendente de detalhamento.
+regras de validade das geometrias, limites de entrada e tratamento de
+múltiplas partes e registros aprovados pelo responsável pelo projeto
+em 20/10/2026.
 
 **Ator:** AT-01 — Engenheiro/analista.
 
@@ -157,14 +157,14 @@ será suficiente para considerar o arquivo válido. Um arquivo que atenda ao
 formato inicial poderá prosseguir às demais validações de entrada.
 
 A estrutura inicial aceita pelo MVP será um objeto `FeatureCollection`, cujo
-campo `features` deverá ser uma lista não vazia composta somente por objetos
-`Feature`. Cada `Feature` deverá conter `geometry` como objeto de geometria
-não nulo e `properties` como objeto de atributos ou `null`. Essas condições
-são restrições de entrada do GeoVale; a RFC admite coleções vazias e geometrias
-nulas, que serão rejeitadas nessa entrada do MVP. A aprovação estrutural
-permitirá prosseguir às demais validações, incluindo a conferência dos tipos,
-das regras de validade das geometrias e dos limites definidos abaixo, sem
-resolver o tratamento de múltiplas áreas.
+campo `features` deverá ser uma lista com exatamente um objeto `Feature`,
+representando a única área de estudo da análise. Essa `Feature` deverá conter
+`geometry` como objeto de geometria não nulo e `properties` como objeto de
+atributos ou `null`. Essas condições são restrições de entrada do GeoVale;
+a RFC admite coleções vazias, várias `Feature` e geometrias nulas, mas essa
+entrada do MVP exige um único registro com geometria não nula. A aprovação
+estrutural permitirá prosseguir às demais validações, incluindo a conferência
+dos tipos, das regras de validade das geometrias e dos limites definidos abaixo.
 
 Os tipos de geometria aceitos para representar a área de estudo serão
 `Polygon` e `MultiPolygon`. Um `Polygon` representa uma área contínua; um
@@ -172,12 +172,26 @@ Os tipos de geometria aceitos para representar a área de estudo serão
 representar partes separadas. Esses tipos representam superfícies adequadas
 ao cálculo da extensão do terreno previsto no RF-03.
 
+O engenheiro/analista deverá preparar a área antes do envio. Quando uma mesma
+área possuir partes separadas, elas poderão ser representadas por um único
+`MultiPolygon` dentro da única `Feature`, respeitando a validade geométrica
+e os limites de entrada. Essas partes comporão uma única área para análise
+conjunta no RF-02. Para estudos independentes, deverão ser enviados arquivos
+separados, em análises distintas.
+
+Arquivos com duas ou mais `Feature` serão rejeitados integralmente, mesmo
+quando seus registros representarem partes da mesma mina. A mensagem deverá
+explicar a exigência de uma única `Feature` e orientar a preparação da área
+antes de um novo envio. O GeoVale não selecionará automaticamente o primeiro
+registro nem unirá registros para adequar o arquivo. A quantidade de
+`Feature` é uma condição de organização da entrada; não comprova que os
+polígonos pertencem à mesma mina.
+
 Geometrias dos tipos `Point`, `MultiPoint`, `LineString`, `MultiLineString`
 e `GeometryCollection` serão rejeitadas nessa entrada do MVP. A rejeição de
 `GeometryCollection` também se aplica quando seus componentes forem somente
 polígonos. A aceitação do tipo não dispensa as verificações de validade
-definidas a seguir nem define como tratar arquivos com mais de uma `Feature`;
-esse tratamento permanece pendente nos RF-01 e RF-02.
+definidas a seguir nem a exigência de exatamente uma `Feature` por arquivo.
 
 A geometria deverá ser não vazia, com `coordinates` presente, não vazio e
 com a estrutura de listas correspondente a `Polygon` ou `MultiPolygon`.
@@ -278,18 +292,22 @@ o RNF-05.
 | Arquivo com exatamente 20.000 posições e no máximo 1.048.576 bytes | Não rejeitar pela contagem; prosseguir às demais validações de entrada, somando todas as partes e anéis, incluindo os fechamentos. |
 | Arquivo com 20.001 posições ou mais, somadas todas as partes e anéis, incluindo os fechamentos | Rejeitar o arquivo inteiro, bloquear a análise e informar o limite de 20.000 posições, sem remover posições ou simplificar automaticamente. |
 | Arquivo dentro dos dois limites, mas com geometria inválida | Rejeitar o arquivo e bloquear a análise conforme as regras de validade, com mensagem compreensível. |
+| Exatamente uma `Feature` com `Polygon` | Prosseguir às demais validações para uma única área de estudo. |
+| Exatamente uma `Feature` com `MultiPolygon` contendo várias partes válidas | Prosseguir às demais validações, considerando todas as partes como uma única área de estudo para análise conjunta. |
+| Duas ou mais `Feature`, mesmo representando partes da mesma mina | Rejeitar o arquivo inteiro e bloquear a análise, com mensagem que exija uma única `Feature` e oriente a preparação da área antes do envio; não selecionar o primeiro registro nem unir registros automaticamente. |
 
 **Dependências e detalhamento pendente:**
 
-O formato inicial, a estrutura, os tipos de geometria, as regras de validade
-e os limites de entrada estão definidos conforme as condições acima: GeoJSON
-com extensão `.geojson`, objeto principal `FeatureCollection`, geometrias
-`Polygon` ou `MultiPolygon` com coordenadas e topologia válidas e arquivo de
-até 1 MiB (1.048.576 bytes) e 20.000 posições. O tratamento de arquivos com
-múltiplas áreas ou mais de uma `Feature` ainda deverá ser especificado e
-aprovado antes da implementação e da preparação dos arquivos de teste válidos
-e inválidos. Os limites não resolvem essa pendência nem as definições de
-cálculo do RF-03 e do RT-02 ou a verificação de desempenho do RNF-05.
+O formato inicial, a estrutura, os tipos de geometria, as regras de validade,
+os limites e o tratamento de múltiplas partes e registros estão definidos
+conforme as condições acima: GeoJSON com extensão `.geojson`, objeto principal
+`FeatureCollection` com exatamente uma `Feature`, geometria `Polygon` ou
+`MultiPolygon` válida e arquivo de até 1 MiB (1.048.576 bytes) e 20.000 posições.
+Várias partes válidas de um `MultiPolygon` comporão a área única identificada
+no RF-02; arquivos com várias `Feature` serão rejeitados. As definições de
+cálculo do RF-03 e do RT-02 e a verificação de desempenho do RNF-05 continuam
+pendentes. A preparação dos arquivos de teste válidos e inválidos e a
+verificação funcional ocorrerão nas etapas correspondentes.
 
 **Momento de verificação:**
 
@@ -299,8 +317,8 @@ implementada e os testes funcionais ainda não foram executados.
 
 ### RF-02 — Leitura do arquivo e identificação da área
 
-**Estado:** definição aprovada pelo responsável pelo projeto em 20/10/2026;
-regras para arquivos com múltiplas áreas ainda pendentes.
+**Estado:** definição e tratamento de múltiplas partes e registros aprovados
+pelo responsável pelo projeto em 20/10/2026.
 
 **Ator:** AT-01 — Engenheiro/analista.
 
@@ -316,6 +334,16 @@ seguintes. Falhas de leitura ou a impossibilidade de identificar a área
 deverão ser informadas com mensagem compreensível e impedir o prosseguimento
 para as análises seguintes.
 
+A área será identificada pela geometria da única `Feature` admitida no
+RF-01. Um `Polygon` representará uma área contínua; um `MultiPolygon` poderá
+representar várias partes válidas, que serão disponibilizadas em conjunto
+como uma única área de estudo. O sistema deverá preservar todas essas partes,
+sem escolher apenas uma nem criar análises independentes automaticamente.
+Arquivos com mais de uma `Feature` serão rejeitados pelo RF-01, mesmo quando
+representarem a mesma mina; sua seleção ou união automática não fará parte
+dessa entrada do MVP. Para analisar áreas independentemente, o engenheiro
+preparará arquivos separados para análises distintas.
+
 **Critérios de aceitação:**
 
 | Cenário | Resultado esperado |
@@ -323,13 +351,16 @@ para as análises seguintes.
 | Leitura bem-sucedida e área identificada conforme as regras de entrada | Disponibilizar a geometria da área às análises seguintes. |
 | Falha de leitura do arquivo | Apresentar mensagem compreensível e impedir o prosseguimento para as análises seguintes. |
 | Impossibilidade de identificar a área no arquivo | Apresentar mensagem compreensível e impedir o prosseguimento para as análises seguintes. |
+| Arquivo aprovado pelo RF-01 com uma única `Feature` contendo `Polygon` | Identificar e disponibilizar a geometria como a única área de estudo da análise. |
+| Arquivo aprovado pelo RF-01 com uma única `Feature` contendo `MultiPolygon` com várias partes | Disponibilizar todas as partes em conjunto como uma única área de estudo, sem descartar partes ou criar análises independentes automaticamente. |
 
 **Dependências e detalhamento pendente:**
 
-O requisito depende do RF-01 e da definição das regras para arquivos com
-múltiplas áreas. Essas regras deverão ser especificadas e aprovadas antes da
-implementação e da preparação dos cenários de teste correspondentes.
-As pendências técnicas do RF-01 permanecem em aberto.
+O requisito depende da validação do RF-01, incluindo exatamente uma `Feature`,
+os tipos aceitos, a validade geométrica e os limites de entrada. O tratamento
+de múltiplas partes e registros está definido acima. A preparação dos cenários
+de teste e a verificação funcional permanecem futuras; as definições de
+cálculo dos RF-03 e RT-02 não são resolvidas por essa identificação da área.
 
 **Momento de verificação:**
 
