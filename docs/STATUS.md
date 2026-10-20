@@ -2,7 +2,7 @@
 
 **Atualização:** 20/10/2026.
 **Etapa atual:** 2 — Engenharia de requisitos do sistema, iniciada com autorização em 20/10/2026.
-**Subetapa atual:** atores AT-01 e AT-02 e definições dos RF-01 a RF-04 aprovados, documentados e publicados; detalhes técnicos de entrada, múltiplas áreas, cálculo da área e cruzamento geográfico ainda pendentes.
+**Subetapa atual:** atores AT-01 e AT-02 e definições dos RF-01 a RF-05 aprovados, documentados e publicados; detalhes técnicos de entrada, múltiplas áreas, cálculo da área, cruzamento, medições e alertas ainda pendentes.
 
 Este documento registra o estado observado nesta entrega. Não há aplicação
 executável nem funcionalidades de geoprocessamento, análise multicritério ou
@@ -17,11 +17,12 @@ atendimento aos critérios será verificado após a implementação. O ML integr
 o escopo do MVP final, com desenvolvimento previsto na Etapa 8; ainda não foi
 implementado. A Etapa 2 foi iniciada com autorização em 20/10/2026, com a
 identificação dos atores e de suas responsabilidades. As definições dos
-RF-01 a RF-04 foram aprovadas e publicadas. Permanecem pendentes os detalhes
+RF-01 a RF-05 foram aprovadas e publicadas. Permanecem pendentes os detalhes
 técnicos de entrada, as regras para arquivos com múltiplas áreas e a definição
 do sistema de coordenadas adequado, da precisão e da tolerância do cálculo
 da área. Para o RF-04, as bases e operações específicas ainda precisam ser
-detalhadas.
+detalhadas. Para o RF-05, medições, tolerâncias e condições dos alertas também
+permanecem pendentes.
 
 ## Entregas concluídas
 
@@ -102,6 +103,12 @@ detalhadas.
   aceitação. Prevê cruzamento com camadas públicas, identificação das fontes
   e mensagens para falhas ou indisponibilidade de dados. Bases e operações
   específicas ainda pendentes; a funcionalidade ainda não foi implementada.
+- RF-05 — Identificação de distâncias, sobreposições e alertas aprovado e
+  publicado no commit `c9574e4`, com ator, origem, prioridade, descrição e
+  cinco cenários de aceitação. Prevê unidades, fontes, parâmetros e distinção
+  entre ausência de ocorrência e indisponibilidade de dados. Medições,
+  tolerâncias e condições dos alertas permanecem pendentes; a funcionalidade
+  ainda não foi implementada.
 
 ## Arquivos relevantes
 
@@ -111,7 +118,7 @@ detalhadas.
 | `README.md` | Apresentar objetivo, escopo planejado, limitações e ambiente atual. |
 | `docs/ROADMAP.md` | Organizar etapas, entregas e critérios de conclusão. |
 | `docs/STATUS.md` | Registrar progresso real, verificações e pendências. |
-| `docs/REQUISITOS.md` | Registrar os RNG-01 a RNG-07, os atores AT-01 e AT-02 e as definições dos RF-01 a RF-04 aprovados; detalhamento técnico e demais requisitos serão tratados em unidades posteriores. |
+| `docs/REQUISITOS.md` | Registrar os RNG-01 a RNG-07, os atores AT-01 e AT-02 e as definições dos RF-01 a RF-05 aprovados; detalhamento técnico e demais requisitos serão tratados em unidades posteriores. |
 
 Os caminhos são relativos à raiz do projeto. O documento de requisitos está
 em elaboração incremental; arquitetura e decisões ainda não possuem documentos
@@ -121,7 +128,7 @@ excluídos permanecem fora do versionamento.
 ## Estado do Git
 
 - Branch atual: `main`.
-- Histórico anterior a esta entrega: trinta e nove commits locais já publicados, listados abaixo.
+- Histórico anterior a esta entrega: quarenta e um commits locais já publicados, listados abaixo.
 - Repositório público: [Rafael-Inacio-Silva/Geo_Vale](https://github.com/Rafael-Inacio-Silva/Geo_Vale).
 - Remoto `origin`: `https://github.com/Rafael-Inacio-Silva/Geo_Vale.git`.
 - O repositório foi criado vazio e recebeu o histórico no primeiro push.
@@ -174,9 +181,11 @@ Commits concluídos antes desta atualização:
 | `e75fde6` | `docs: especifica cálculo da extensão do terreno` |
 | `eb32bc4` | `docs: registra definição e pendências do RF-03 no status` |
 | `8b9e763` | `docs: especifica cruzamento com as bases geográficas` |
+| `bfa80cc` | `docs: registra definição e pendências do RF-04 no status` |
+| `c9574e4` | `docs: especifica distâncias, sobreposições e alertas` |
 
 Esta atualização do status tem a mensagem de commit
-`docs: registra definição e pendências do RF-04 no status`. Consulte `git log --oneline` para
+`docs: registra definição e pendências do RF-05 no status`. Consulte `git log --oneline` para
 identificar seu hash e o histórico atualizado, sem depender de contagens fixas
 neste documento.
 
@@ -220,6 +229,7 @@ São verificações de configuração e documentação; não são testes da apli
 | RF-02 — Leitura e identificação da área | Definição comparada com a proposta aprovada, o RF-01 e o escopo do RNG-05. Commit `d125d07` contém somente `docs/REQUISITOS.md`; conteúdo anterior preservado integralmente, três cenários de aceitação e dependências explícitas, diff sem erros de espaços e publicação confirmada com Git limpo e sincronizado. Testes funcionais ainda não executados, pois a funcionalidade não foi implementada. |
 | RF-03 — Cálculo da extensão do terreno | Definição comparada com a proposta aprovada, o RF-02 e o escopo do RNG-05. Commit `e75fde6` contém somente `docs/REQUISITOS.md`; conteúdo anterior preservado integralmente, unidades em m² e hectares, referência para conferência e pendências técnicas explícitas, diff sem erros de espaços e publicação confirmada com Git limpo e sincronizado. Testes de cálculo ainda não executados, pois a funcionalidade não foi implementada. |
 | RF-04 — Cruzamento com as bases geográficas | Definição comparada com a proposta aprovada, o RF-02 e o escopo do RNG-05. Commit `8b9e763` contém somente `docs/REQUISITOS.md`; conteúdo anterior preservado integralmente, fontes, quatro cenários de aceitação e dependências explícitas, diff sem erros de espaços e publicação confirmada com Git limpo e sincronizado. Testes de cruzamento ainda não executados, pois a funcionalidade não foi implementada. |
+| RF-05 — Distâncias, sobreposições e alertas | Definição comparada com a proposta aprovada, o RF-04 e o escopo do RNG-05. Commit `c9574e4` contém somente `docs/REQUISITOS.md`; conteúdo anterior preservado integralmente, cinco cenários de aceitação, unidades, fontes, parâmetros e pendências explícitos, diff sem erros de espaços e publicação confirmada com Git limpo e sincronizado. Testes de medições e alertas ainda não executados, pois a funcionalidade não foi implementada. |
 
 Os registros de preparação do ambiente Python são históricos. Nesta revisão,
 foram conferidos os documentos, os commits e o estado do Git; as verificações
@@ -247,7 +257,7 @@ Resultados de funcionalidades e métricas de ML não existem nesta fase.
 - As inconsistências identificadas na revisão foram corrigidas e publicadas.
   Status, roadmap e README registram o encerramento aprovado da Etapa 1;
   não há pendência de sincronização desse marco.
-- A Etapa 2 foi iniciada; atores e definições dos RF-01 a RF-04 foram documentados.
+- A Etapa 2 foi iniciada; atores e definições dos RF-01 a RF-05 foram documentados.
   Formatos aceitos, limites de entrada e regras de geometria do RF-01 precisam
   ser especificados e aprovados antes de sua implementação e da preparação
   dos arquivos de teste.
@@ -263,6 +273,10 @@ Resultados de funcionalidades e métricas de ML não existem nesta fase.
   O cruzamento depende da geometria do RF-02, de camadas preparadas e de
   sistemas de coordenadas compatíveis. As pendências anteriores continuam
   em aberto.
+- Para o RF-05, medições, tolerâncias e condições dos alertas precisam ser
+  especificadas e aprovadas antes da implementação e da preparação dos
+  cenários de referência. A dependência do RF-04 e as pendências anteriores
+  continuam em aberto.
 - Demais requisitos funcionais, não funcionais, técnicos, regras de negócio,
   prioridades, dependências e critérios de aceitação serão detalhados em
   pequenas unidades.
@@ -280,8 +294,10 @@ Resultados de funcionalidades e métricas de ML não existem nesta fase.
   de comparação do RF-03 antes da implementação.
 - Detalhar e aprovar as bases e operações específicas do RF-04 antes da
   implementação.
+- Especificar e aprovar medições, tolerâncias e condições dos alertas do RF-05
+  antes da implementação.
 - Discutir e aprovar os demais requisitos do sistema em pequenas unidades;
-  próxima proposta: RF-05 — Identificação de distâncias, sobreposições e alertas.
+  próxima proposta: RF-06 — Aplicação de regras de negócio demonstrativas.
 - Na Etapa 4, escolher stack e versão suportada de Python, avaliando a proposta
   de Streamlit e a separação entre frontend na Vercel e backend no Railway.
 - Na Etapa 6, selecionar a região de estudo em Minas Gerais e as fontes públicas.
@@ -305,11 +321,10 @@ reproduzível serão detalhadas após a definição da stack.
 
 ## Próxima tarefa recomendada
 
-Apresentar para discussão o RF-05 — Identificação de distâncias, sobreposições
-e alertas, com ator, descrição, prioridade, dependências e critérios de
-aceitação.
-Após a aprovação do conteúdo, registrar somente essa pequena unidade em
-`docs/REQUISITOS.md`, preservando os requisitos e os atores existentes.
-Manter as pendências dos RF-01 a RF-04 explícitas. Alterações, commits e
+Apresentar para discussão o RF-06 — Aplicação de regras de negócio
+demonstrativas, com ator, descrição, prioridade, dependências e critérios de
+aceitação. Após a aprovação do conteúdo, registrar somente essa pequena
+unidade em `docs/REQUISITOS.md`, preservando os requisitos e os atores existentes.
+Manter as pendências dos RF-01 a RF-05 explícitas. Alterações, commits e
 publicação dependem de autorização. Não implementar funcionalidades nesta
 unidade.
