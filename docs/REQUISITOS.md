@@ -511,3 +511,49 @@ As pendências dos requisitos anteriores permanecem em aberto.
 Os critérios serão testados durante a implementação da funcionalidade. Este
 registro especifica o comportamento esperado; a funcionalidade ainda não foi
 implementada e os testes de cálculo multicritério ainda não foram executados.
+
+### RF-10 — Apresentação dos resultados no dashboard
+
+**Estado:** definição aprovada pelo responsável pelo projeto em 20/10/2026;
+detalhamento da apresentação ainda pendente.
+
+**Atores:** AT-01 — Engenheiro/analista e AT-02 — Gestor.
+
+**Origem:** dashboard previsto no RNG-05 e comunicação compreensível dos
+resultados prevista no RNG-07.
+
+**Prioridade:** essencial para o fluxo principal do MVP.
+
+**Descrição aprovada:**
+
+O sistema deverá apresentar no dashboard o mapa, as características da área,
+os alertas, as restrições e a classificação das alternativas, com fontes,
+parâmetros e limitações. A apresentação deverá distinguir informações reais,
+simuladas e indisponíveis e permitir compreender os fatores da classificação.
+As previsões de Machine Learning serão incorporadas na Etapa 8 e estarão
+presentes no dashboard do MVP final.
+
+**Critérios de aceitação:**
+
+| Cenário | Resultado esperado |
+| --- | --- |
+| Consulta dos resultados de uma análise | Apresentar mapa, características da área, alertas, restrições e classificação consistentes com os resultados da análise. |
+| Consulta das informações que fundamentam os resultados | Permitir consultar fontes, parâmetros e limitações. |
+| Exibição de informações reais, simuladas ou indisponíveis | Distinguir claramente essas situações na apresentação. |
+| Compreensão da classificação pelo responsável pelo projeto | Permitir identificar as alternativas avaliadas e os fatores da classificação. |
+| Dashboard do MVP final após a integração da Etapa 8 | Apresentar as previsões de ML consistentes com os resultados do modelo integrado. |
+
+**Dependências e detalhamento pendente:**
+
+O requisito depende dos resultados dos requisitos anteriores e do detalhamento
+da apresentação, que deverá ser aprovado antes da implementação e da
+preparação dos cenários de teste correspondentes. A apresentação das previsões
+depende da integração de ML prevista na Etapa 8, incluída na entrega final do
+MVP. As pendências dos requisitos anteriores permanecem em aberto.
+
+**Momento de verificação:**
+
+Os critérios serão testados durante a implementação da funcionalidade e,
+para as previsões, após a integração do ML. Este registro especifica o
+comportamento esperado; o dashboard ainda não foi implementado e seus testes
+ainda não foram executados.
