@@ -646,3 +646,55 @@ Os critérios serão testados durante a implementação da funcionalidade e,
 para as previsões, após a integração do ML. Este registro especifica o
 comportamento esperado; a exportação ainda não foi implementada e seus testes
 ainda não foram executados.
+
+### RF-13 — Previsão demonstrativa de aptidão física por ML
+
+**Estado:** definição aprovada pelo responsável pelo projeto em 20/10/2026;
+alvo, atributos, treinamento, avaliação e conversão da previsão em entrada
+multicritério ainda pendentes de definição.
+
+**Atores:** AT-01 — Engenheiro/analista utiliza a previsão; AT-02 — Gestor consulta os resultados.
+
+**Origem:** ML demonstrativo previsto no RNG-05, limitações do modelo no RNG-06
+e integração com testes reproduzíveis no RNG-07.
+
+**Prioridade:** essencial para o MVP final.
+
+**Descrição aprovada:**
+
+O sistema deverá receber atributos da análise geográfica, produzir uma previsão
+demonstrativa de aptidão física e utilizá-la como uma das entradas da comparação
+multicritério do RF-09. A previsão deverá integrar o dashboard do RF-10 e o
+relatório do RF-12, com entradas, origem do treinamento e limitações identificadas.
+Entradas inválidas deverão ser informadas com mensagem compreensível. As
+restrições eliminatórias deverão permanecer preservadas, sem serem substituídas
+ou compensadas pela previsão.
+
+Quando houver treinamento com dados sintéticos, o resultado demonstrará o
+funcionamento do algoritmo, sem comprovar capacidade preditiva em áreas reais.
+
+**Critérios de aceitação:**
+
+| Cenário | Resultado esperado |
+| --- | --- |
+| Previsão com atributos válidos conforme as regras especificadas | Produzir a previsão e permitir identificar os atributos utilizados e o resultado obtido. |
+| Integração da previsão ao MVP final | Utilizar a previsão como entrada da comparação e apresentá-la no dashboard e no relatório. |
+| Consulta da origem e das limitações do modelo | Disponibilizar a origem dos dados de treinamento e as limitações, identificando treinamento sintético quando utilizado. |
+| Reprodução dos testes do modelo | Permitir reproduzir os testes conforme os dados, procedimentos e critérios de avaliação documentados. |
+| Entradas inválidas | Informar o problema com mensagem compreensível. |
+| Previsão favorável acompanhada de restrição eliminatória | Preservar a restrição, sem permitir sua substituição ou compensação pela previsão. |
+
+**Dependências e detalhamento pendente:**
+
+O requisito depende dos atributos provenientes da análise geográfica e da
+definição do alvo, dos atributos, do treinamento, da avaliação e da conversão
+da previsão em entrada multicritério. Essas definições deverão ser aprovadas
+antes da implementação e da preparação dos testes correspondentes. As
+pendências dos requisitos anteriores permanecem em aberto.
+
+**Momento de implementação e verificação:**
+
+O requisito é especificado na Etapa 2. Sua implementação, integração e testes
+permanecem previstos na Etapa 8, após o fluxo principal, e fazem parte da
+entrega final do MVP. O modelo ainda não foi implementado; treinamento,
+avaliação e testes ainda não foram executados.
