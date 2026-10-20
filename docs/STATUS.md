@@ -2,7 +2,7 @@
 
 **Atualização:** 20/10/2026.
 **Etapa atual:** 2 — Engenharia de requisitos do sistema, iniciada com autorização em 20/10/2026.
-**Subetapa atual:** atores AT-01 e AT-02, definições dos RF-01 a RF-13, RNF-01 a RNF-06, RT-01 a RT-02 e RN-01 a RN-03 aprovadas, documentadas e publicadas; revisões documentais dos seis RNF, dos dois RT e das três RN concluídas; exigência das licenças explícita no RT-01 e classificação da RN-01 detalhada para dados necessários disponíveis e efeitos da indisponibilidade detalhados na RN-03; referência entre RN-01 e RN-03 sincronizada; levantamento das pendências de encerramento organizado em seis blocos e formato inicial GeoJSON `.geojson`, estrutura `FeatureCollection`, tipos `Polygon` e `MultiPolygon` e regras de validade das geometrias aprovados no RF-01; demais decisões de comportamento, demais detalhamentos técnicos e verificações da aplicação ainda pendentes.
+**Subetapa atual:** atores AT-01 e AT-02, definições dos RF-01 a RF-13, RNF-01 a RNF-06, RT-01 a RT-02 e RN-01 a RN-03 aprovadas, documentadas e publicadas; revisões documentais dos seis RNF, dos dois RT e das três RN concluídas; exigência das licenças explícita no RT-01 e classificação da RN-01 detalhada para dados necessários disponíveis e efeitos da indisponibilidade detalhados na RN-03; referência entre RN-01 e RN-03 sincronizada; levantamento das pendências de encerramento organizado em seis blocos e formato inicial GeoJSON `.geojson`, estrutura `FeatureCollection`, tipos `Polygon` e `MultiPolygon`, regras de validade das geometrias e limites de 1 MiB e 20.000 posições por arquivo aprovados no RF-01; demais decisões de comportamento, demais detalhamentos técnicos e verificações da aplicação ainda pendentes.
 
 Este documento registra o estado observado nesta entrega. Não há aplicação
 executável nem funcionalidades de geoprocessamento, análise multicritério ou
@@ -112,7 +112,7 @@ linhas e `GeometryCollection`, mesmo contendo somente polígonos, serão
 rejeitados. Quatro cenários foram acrescentados, totalizando 18 naquele
 momento. As regras de validade das geometrias também foram aprovadas e
 publicadas no commit `fa0601c`, com nove cenários adicionais, totalizando
-27 no RF-01. A entrada deverá ter coordenadas finitas em WGS 84, longitude
+27 naquele momento. A entrada deverá ter coordenadas finitas em WGS 84, longitude
 e latitude com altitude opcional, anéis fechados e geometria válida em duas
 dimensões. Foram especificados cruzamentos, recortes internos, relações
 entre partes de um `MultiPolygon` e aceitação do sentido de percurso
@@ -120,9 +120,18 @@ invertido quando as demais condições forem atendidas. Falhas rejeitam o
 arquivo e bloqueiam a análise, sem correção automática da geometria. A
 altitude não participa dos cálculos em duas dimensões; a referência de
 entrada não substitui a definição do sistema adequado aos cálculos do
-RF-03 e do RT-02. Limites de entrada e tratamento de múltiplas áreas ou
-`Feature` continuam pendentes de definição antes da implementação e dos
-testes. A validade ainda não foi implementada nem testada funcionalmente.
+RF-03 e do RT-02. Os limites de entrada também foram aprovados e publicados
+no commit `a8a1b48`: até 1 MiB (1.048.576 bytes) e 20.000 posições por arquivo,
+contando todas as partes e anéis, inclusive os fechamentos. Os limites são
+inclusivos e simultâneos; exceder qualquer um rejeita o arquivo inteiro e
+bloqueia a análise, com mensagem compreensível e sem simplificação ou remoção
+automática de posições. Seis cenários foram acrescentados, totalizando 33 no
+RF-01. São limites iniciais de escopo, apoiados em comparação exploratória de
+arquivos reais, sem comprovar capacidade máxima ou desempenho da aplicação.
+As bases ambientais serão preparadas separadamente. A infraestrutura será
+avaliada na Etapa 4, e o desempenho seguirá o RNF-05. O tratamento de múltiplas
+áreas ou `Feature` continua pendente de definição antes da implementação e
+dos testes. A validação ainda não foi implementada nem testada funcionalmente.
 
 ## Entregas concluídas
 
@@ -389,6 +398,21 @@ testes. A validade ainda não foi implementada nem testada funcionalmente.
   alterada, com os 18 cenários anteriores, demais seções e arquivos preservados.
   Erros bloqueiam a análise, sem correção automática. Limites e tratamento de
   múltiplas áreas ou `Feature` permanecem pendentes; testes funcionais futuros.
+- Limites iniciais do RF-01 aprovados e publicados no commit `a8a1b48`: até
+  1 MiB (1.048.576 bytes) e 20.000 posições por arquivo, incluindo todos os
+  anéis, partes e fechamentos. Limites inclusivos; exceder qualquer um rejeita
+  o arquivo e bloqueia a análise, sem simplificação automática. Seis cenários
+  acrescentados, totalizando 33, com os 27 anteriores preservados. Somente o
+  RF-01 foi alterado; múltiplas áreas ou `Feature` continuam pendentes.
+- Comparação exploratória local de três arquivos reais apresentada ao
+  responsável para apoiar a decisão: Águas Claras, 11.017 bytes e 410 posições;
+  extração mapeada em Itabira, 3.099 bytes e 103 posições; APA Sul RMBH,
+  312.924 bytes e 11.231 posições, somente como teste auxiliar de volume,
+  não minerário. As posições incluem o fechamento. Fontes OpenStreetMap
+  (ODbL 1.0) e IDE-Sisema (CC BY 4.0 para essa camada), sem simplificar os
+  contornos. A comparação não seleciona a região final, não comprova o fluxo
+  da aplicação nem encerra a preparação de dados da Etapa 6. Arquivos e
+  relatórios exploratórios permanecem locais, fora do repositório.
 
 ## Arquivos relevantes
 
@@ -408,7 +432,7 @@ excluídos permanecem fora do versionamento.
 ## Estado do Git
 
 - Branch atual: `main`.
-- Histórico anterior a esta entrega: noventa e seis commits locais já publicados, listados abaixo.
+- Histórico anterior a esta entrega: noventa e oito commits locais já publicados, listados abaixo.
 - Repositório público: [Rafael-Inacio-Silva/Geo_Vale](https://github.com/Rafael-Inacio-Silva/Geo_Vale).
 - Remoto `origin`: `https://github.com/Rafael-Inacio-Silva/Geo_Vale.git`.
 - O repositório foi criado vazio e recebeu o histórico no primeiro push.
@@ -518,9 +542,11 @@ Commits concluídos antes desta atualização:
 | `a08f135` | `docs: define tipos de geometria aceitos no RF-01` |
 | `4164f56` | `docs: registra tipos de geometria do RF-01 no status` |
 | `fa0601c` | `docs: especifica validade das geometrias no RF-01` |
+| `9854ec2` | `docs: registra validade das geometrias do RF-01 no status` |
+| `a8a1b48` | `docs: define limites de entrada do RF-01` |
 
 Esta atualização do status tem a mensagem de commit
-`docs: registra validade das geometrias do RF-01 no status`. Consulte `git log --oneline` para
+`docs: registra limites de entrada do RF-01 no status`. Consulte `git log --oneline` para
 identificar seu hash e o histórico atualizado, sem depender de contagens fixas
 neste documento.
 
@@ -528,7 +554,8 @@ neste documento.
 
 As verificações abaixo foram executadas durante a preparação, a documentação
 e a revisão dos requisitos entre 19/10/2026 e 20/10/2026.
-São verificações de configuração e documentação; não são testes da aplicação.
+São verificações de configuração e documentação e ensaios exploratórios
+locais com dados reais; não são testes da aplicação.
 
 | Verificação | Resultado observado |
 | --- | --- |
@@ -594,6 +621,8 @@ São verificações de configuração e documentação; não são testes da apli
 | Estrutura inicial do RF-01 | Conferida com a proposta aprovada e a RFC 7946. Commit `0d8835e` altera somente a seção RF-01 em `docs/REQUISITOS.md`; demais seções preservadas integralmente. Cinco critérios estruturais acrescentados, totalizando 14 no RF-01: objeto principal `FeatureCollection`, lista `features` não vazia com itens `Feature`, geometria não nula e `properties` como objeto ou `null`. Restrições do MVP distinguidas das possibilidades da RFC; pendências preservadas. Diff sem erros de espaços e publicação confirmada com Git limpo e sincronizado. Validação ainda não implementada nem testada funcionalmente. |
 | Tipos de geometria do RF-01 | Commit `a08f135` conferido contra a proposta aprovada: `Polygon` e `MultiPolygon` seguem às demais validações; pontos, linhas e `GeometryCollection` são rejeitados, inclusive quando a coleção contém somente polígonos. Quatro cenários acrescentados, totalizando 18. Somente a seção RF-01 de `docs/REQUISITOS.md` foi alterada; demais seções e arquivos preservados. Pendências de validade, limites e múltiplas áreas mantidas. Diff sem erros de espaços, diretório limpo e igualdade entre HEAD, origin/main e referência consultada no GitHub confirmados após o envio. Validação ainda não implementada nem testada funcionalmente. |
 | Validade das geometrias do RF-01 | Commit `fa0601c` conferido contra a proposta aprovada: nove cenários acrescentados, totalizando 27; os 18 anteriores foram preservados. Condições de coordenadas, fechamento dos anéis, cruzamentos, recortes, relações entre partes e sentido de percurso registradas, com rejeição e bloqueio sem correção automática. Apenas a seção RF-01 de `docs/REQUISITOS.md` foi alterada; demais seções e arquivos preservados. Limites, múltiplas áreas e definições de cálculo do RF-03 e do RT-02 continuam pendentes. Diff sem erros de espaços e publicação confirmada, com igualdade entre HEAD, origin/main e referência consultada no GitHub e diretório limpo. Conferência documental; validação ainda não implementada nem testada funcionalmente. |
+| Comparação exploratória de arquivos reais para os limites do RF-01 | Três GeoJSON conferidos localmente quanto à estrutura e à validade geométrica, com 410, 103 e 11.231 posições e 11.017, 3.099 e 312.924 bytes, respectivamente. Águas Claras e Itabira são contornos de extração mapeados no OpenStreetMap; não representam perímetros oficiais. A APA Sul RMBH, obtida da camada estadual de unidades de conservação da IDE-Sisema, foi somente teste auxiliar não minerário. Leituras, validade, reprojeção e área foram exercitadas em ambiente exploratório separado; não houve teste do GeoVale, comprovação de capacidade máxima ou aprovação do desempenho do RNF-05. |
+| Limites de entrada do RF-01 | Commit `a8a1b48` conferido contra a proposta aprovada: máximo de 1 MiB (1.048.576 bytes) e 20.000 posições por arquivo, incluindo partes, recortes e fechamentos, com os dois limites inclusivos. Seis cenários acrescentados, totalizando 33; os 27 anteriores preservados. Rejeição integral e bloqueio ao exceder qualquer limite, sem simplificação automática, e prosseguimento às demais validações quando dentro dos limites. Somente RF-01 alterado, demais seções e arquivos preservados; múltiplas áreas e definições de cálculo e desempenho continuam pendentes. Diff sem erros de espaços e publicação confirmada, com HEAD, origin/main e referência consultada no GitHub iguais e diretório limpo. Conferência documental; validação ainda não implementada nem testada funcionalmente. |
 
 Os registros de preparação do ambiente Python são históricos. Nesta revisão,
 foram conferidos os documentos, os commits e o estado do Git; as verificações
@@ -603,8 +632,9 @@ Resultados de funcionalidades e métricas de ML não existem nesta fase.
 ## Pendências e problemas conhecidos
 
 - Nenhuma falha foi encontrada nas verificações de preparação executadas.
-- Ainda não há suíte de testes, interface, servidor, banco, dados geográficos
-  preparados ou modelo de Machine Learning.
+- Ainda não há suíte de testes, interface, servidor, banco, conjunto de dados
+  geográficos integrado à aplicação ou modelo de Machine Learning. As amostras
+  exploratórias locais não constituem a preparação final dos dados da Etapa 6.
 - As dependências da aplicação e a compatibilidade da futura stack com o Python
   observado ainda não foram avaliadas.
 - A Etapa 0 foi encerrada com aprovação; não há pendências impeditivas
@@ -624,11 +654,13 @@ Resultados de funcionalidades e métricas de ML não existem nesta fase.
 - A Etapa 2 foi iniciada; atores e definições dos RF-01 a RF-13 foram documentados.
   O formato inicial do RF-01 está definido como GeoJSON com extensão `.geojson`
   e estrutura `FeatureCollection`, com tipos de geometria `Polygon` e
-  `MultiPolygon` e regras de validade das geometrias aprovadas no requisito.
-  Limites de entrada e tratamento de múltiplas áreas ou `Feature` precisam ser
-  detalhados e aprovados antes da implementação e da preparação dos arquivos
-  de teste. As condições de validade já especificadas serão verificadas na
-  implementação; ainda não foram testadas funcionalmente.
+  `MultiPolygon`, regras de validade das geometrias e limites de até 1 MiB
+  (1.048.576 bytes) e 20.000 posições por arquivo aprovados no requisito.
+  O tratamento de múltiplas áreas ou `Feature` precisa ser detalhado e aprovado
+  antes da implementação e da preparação dos arquivos de teste. As condições
+  de validade e os limites já especificados serão verificados na implementação;
+  ainda não foram testados funcionalmente. Os ensaios exploratórios locais não
+  comprovam a capacidade máxima ou o desempenho do fluxo completo.
 - As regras para arquivos com múltiplas áreas do RF-02 precisam ser
   especificadas e aprovadas antes da implementação e da preparação dos
   cenários de teste correspondentes. A dependência do RF-01 permanece aberta.
@@ -766,7 +798,7 @@ Este plano não define os comportamentos pendentes nem encerra a etapa.
 
 | Ordem | Bloco | Decisões ainda necessárias |
 | --- | --- | --- |
-| 1 | Arquivo e área — RF-01 e RF-02 | Formato GeoJSON `.geojson`, estrutura `FeatureCollection`, tipos `Polygon` e `MultiPolygon` e regras de validade das geometrias definidos. Pendentes limites de entrada e tratamento de arquivos com múltiplas áreas ou `Feature`. |
+| 1 | Arquivo e área — RF-01 e RF-02 | Formato GeoJSON `.geojson`, estrutura `FeatureCollection`, tipos `Polygon` e `MultiPolygon`, regras de validade das geometrias e limites de até 1 MiB (1.048.576 bytes) e 20.000 posições por arquivo definidos. Pendente o tratamento de arquivos com múltiplas áreas ou `Feature`. |
 | 2 | Análise e restrições — RF-04 a RF-06 e RN-01/RN-03 | Medições esperadas, condições demonstrativas de alertas e restrições e identificação dos dados necessários. |
 | 3 | Comparação — RF-07 a RF-09 | Campos das alternativas, critérios, escalas, pesos, normalização, empates e precisão da pontuação. |
 | 4 | Resultados — RF-10 a RF-12 | Confirmar informações mínimas para consulta e persistência, formato do relatório e apresentação dos resultados completos ou parciais. |
@@ -795,8 +827,9 @@ O encerramento depende de revisão e aprovação do responsável pelo projeto.
 
 ## Decisões ainda necessárias
 
-- Especificar e aprovar os detalhes técnicos pendentes do RF-01 antes de
-  implementar a funcionalidade.
+- Especificar e aprovar o tratamento de arquivos com múltiplas áreas ou mais
+  de uma `Feature` nos RF-01 e RF-02 antes de implementar a funcionalidade;
+  os limites de tamanho e de posições já estão definidos.
 - Especificar e aprovar as regras para arquivos com múltiplas áreas do RF-02
   antes da implementação.
 - Especificar e aprovar sistema de coordenadas adequado, precisão e tolerância
@@ -843,8 +876,8 @@ O encerramento depende de revisão e aprovação do responsável pelo projeto.
   disponibilidade e a forma de apresentação da RN-03 antes da implementação
   e da preparação dos testes.
 - Discutir e aprovar os conteúdos das pequenas unidades da sequência
-  registrada no plano de pendências; próxima proposta: limites de entrada
-  do RF-01.
+  registrada no plano de pendências; próxima proposta: tratamento de múltiplas
+  áreas ou `Feature` nos RF-01 e RF-02.
 - Discutir e aprovar os demais detalhamentos da Etapa 2.
 - Na Etapa 4, escolher stack e versão suportada de Python, avaliando a proposta
   de Streamlit e a separação entre frontend na Vercel e backend no Railway.
@@ -869,11 +902,11 @@ reproduzível serão detalhadas após a definição da stack.
 
 ## Próxima tarefa recomendada
 
-Discutir os limites de entrada do RF-01, incluindo tamanho do arquivo e
-complexidade das geometrias, considerando o cenário demonstrativo e o
-RNF-05. Apresentar a proposta, sua justificativa, as unidades de medida e
-os cenários de aceitação no chat, sem alterar arquivos nessa discussão nem
-antecipar medições de desempenho. O tratamento de múltiplas áreas ou
-`Feature` será detalhado em unidade própria.
+Discutir o tratamento de arquivos com múltiplas áreas ou mais de uma
+`Feature` nos RF-01 e RF-02. Apresentar no chat a proposta, sua justificativa,
+a distinção entre uma `Feature` com `MultiPolygon` e várias `Feature` e os
+cenários de aceitação e rejeição, sem alterar arquivos nessa discussão.
+Preservar as regras e os limites de entrada já aprovados, sem antecipar
+implementação, seleção definitiva da região ou medições de desempenho.
 A Etapa 2 permanece em andamento; alterações, commits, publicação e
 encerramento dependem de autorização.
