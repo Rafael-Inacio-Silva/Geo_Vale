@@ -55,3 +55,27 @@ No cenário de demonstração, esses grupos serão representados pelo **engenhei
 4. **Comunicação técnica:** apresentar mapas, comparações e relatórios compreensíveis, facilitando a discussão entre profissionais técnicos e gestores.
 
 Esses são **benefícios pretendidos**, que deverão ser verificados na demonstração do MVP. Ainda não representam resultados comprovados nem ganhos medidos de tempo ou custo.
+
+### RNG-05 — Escopo do MVP
+
+**Estado:** aprovado pelo responsável pelo projeto em 20/10/2026.
+
+**Descrição aprovada:**
+
+O GeoVale contemplará um fluxo demonstrativo de avaliação de uma área de estudo em Minas Gerais, incluindo:
+
+1. **Envio e validação:** receber um arquivo geográfico e identificar a área informada.
+2. **Análise geográfica:** calcular características da área e cruzar camadas públicas para identificar distâncias, sobreposições e alertas.
+3. **Comparação de alternativas:** cadastrar possíveis usos futuros e compará-los com critérios, notas e pesos definidos, aplicando restrições eliminatórias separadamente das pontuações.
+4. **Dashboard:** apresentar mapa, características, alertas e classificação das alternativas, com fontes, parâmetros e limitações identificados.
+5. **Persistência:** salvar e recuperar análises, incluindo os parâmetros utilizados e seus resultados.
+6. **Relatório:** exportar os resultados para consulta e apresentação técnica.
+7. **Machine Learning demonstrativo:** estimar aptidão física e utilizar a previsão como uma das entradas da comparação, identificando a origem dos dados de treinamento e as limitações do modelo.
+
+**Sequência de implementação e entrega do ML:**
+
+O fluxo principal será desenvolvido primeiro. O Machine Learning será desenvolvido na Etapa 8, após o funcionamento do fluxo principal, e integrará a versão final do MVP apresentada na demonstração, com o ML integrado, testado e documentado.
+
+**Dados do cenário demonstrativo:**
+
+Dados geográficos públicos serão utilizados quando disponíveis. Áreas, regras, notas e dados simulados serão claramente identificados.
