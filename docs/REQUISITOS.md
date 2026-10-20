@@ -91,3 +91,23 @@ Dados geográficos públicos serão utilizados quando disponíveis. Áreas, regr
 3. **Informações demonstrativas:** regras, notas, custos e benefícios poderão ser simulados quando faltarem informações reais, com identificação explícita. A classificação refletirá os dados e parâmetros utilizados.
 4. **Limitação do ML:** o modelo integrará o MVP final. Quando treinado com dados sintéticos, demonstrará o funcionamento técnico do algoritmo, sem comprovar capacidade preditiva em áreas reais.
 5. **Responsabilidade pela decisão:** os resultados apoiarão a análise de especialistas e não substituirão estudos ou avaliações ambientais, legais e de segurança, nem constituirão autorização para utilizar uma área.
+
+### RNG-07 — Critérios de sucesso do MVP
+
+**Estado:** aprovado pelo responsável pelo projeto em 20/10/2026.
+
+**Descrição aprovada:**
+
+| Critério | Evidência esperada |
+| --- | --- |
+| **Fluxo completo** | Executar o cenário demonstrativo desde o envio do arquivo geográfico até a apresentação dos resultados e a exportação do relatório. |
+| **Comparação explicável** | Comparar pelo menos duas alternativas, apresentando critérios, notas, pesos e classificação. Demonstrar que uma restrição eliminatória não é compensada por uma pontuação alta. |
+| **Rastreabilidade** | Consultar fontes, datas, parâmetros e limitações da análise, identificando claramente informações reais e simuladas. |
+| **ML integrado** | O modelo receber atributos da análise geográfica, retornar uma previsão e utilizá-la na comparação. Origem do treinamento, avaliação e limitações deverão estar documentadas, com testes reproduzíveis. |
+| **Persistência** | Salvar uma análise e recuperá-la com seus parâmetros e resultados preservados. |
+| **Comunicação compreensível** | O responsável pelo projeto conseguir identificar, no dashboard e no relatório, as alternativas avaliadas, os fatores da classificação e as limitações dos resultados. |
+| **Execução reproduzível** | Instalar e executar o sistema em um ambiente limpo seguindo a documentação, com os testes previstos executados e seus resultados registrados. |
+
+**Momento de verificação:**
+
+A comprovação de atendimento desses critérios ocorrerá durante a validação e a demonstração do MVP, após sua implementação. Os critérios definem as evidências esperadas; os resultados das verificações serão registrados quando executadas.
