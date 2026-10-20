@@ -131,10 +131,10 @@ Os atores representam os papéis das pessoas que utilizarão o GeoVale:
 
 ### RF-01 — Envio e validação do arquivo geográfico
 
-**Estado:** definição, formato inicial, estrutura, tipos de geometria e
-regras de validade das geometrias aprovados pelo responsável pelo projeto
-em 20/10/2026; limites de entrada e tratamento de múltiplas áreas ainda
-pendentes de detalhamento.
+**Estado:** definição, formato inicial, estrutura, tipos de geometria,
+regras de validade das geometrias e limites de entrada aprovados pelo
+responsável pelo projeto em 20/10/2026; tratamento de múltiplas áreas ainda
+pendente de detalhamento.
 
 **Ator:** AT-01 — Engenheiro/analista.
 
@@ -162,9 +162,9 @@ campo `features` deverá ser uma lista não vazia composta somente por objetos
 não nulo e `properties` como objeto de atributos ou `null`. Essas condições
 são restrições de entrada do GeoVale; a RFC admite coleções vazias e geometrias
 nulas, que serão rejeitadas nessa entrada do MVP. A aprovação estrutural
-permitirá prosseguir às demais validações, incluindo a conferência dos tipos
-e das regras de validade das geometrias definidos abaixo, sem resolver os
-limites ou o tratamento de múltiplas áreas.
+permitirá prosseguir às demais validações, incluindo a conferência dos tipos,
+das regras de validade das geometrias e dos limites definidos abaixo, sem
+resolver o tratamento de múltiplas áreas.
 
 Os tipos de geometria aceitos para representar a área de estudo serão
 `Polygon` e `MultiPolygon`. Um `Polygon` representa uma área contínua; um
@@ -216,6 +216,31 @@ O sistema não corrigirá automaticamente a geometria recebida. A referência
 de entrada em graus não substitui a definição do sistema adequado aos
 cálculos de área e distância exigida no RF-03 e no RT-02.
 
+O arquivo de entrada deverá ter no máximo **1 MiB (1.048.576 bytes)** e
+**20.000 posições**, atendendo aos dois limites simultaneamente. O tamanho
+será medido em bytes do arquivo completo recebido, incluindo seus atributos
+e demais conteúdos. A contagem de posições somará todas as geometrias do
+arquivo, todas as partes poligonais e todos os anéis externos e internos,
+incluindo as posições repetidas para fechamento. Cada conjunto de longitude,
+latitude e altitude opcional contará como uma posição; seus valores numéricos
+não serão contados separadamente.
+
+Os limites serão inclusivos: um arquivo com exatamente 1.048.576 bytes ou
+20.000 posições poderá prosseguir às demais validações, desde que também
+respeite o outro limite. Exceder qualquer um deles deverá rejeitar o arquivo
+inteiro, bloquear a análise e apresentar mensagem compreensível com o limite
+excedido e seu máximo permitido. O sistema não simplificará geometrias nem
+removerá posições automaticamente para adequar o arquivo aos limites.
+Permanecer dentro dos limites não dispensa nenhuma outra validação.
+
+Esses limites se aplicam ao arquivo da área de estudo enviado pelo
+engenheiro/analista. As bases ambientais de referência serão preparadas
+separadamente. São limites iniciais de escopo do MVP, definidos após a
+comparação exploratória de arquivos reais; não comprovam a capacidade máxima
+nem o desempenho do fluxo completo da aplicação. A compatibilidade com a
+infraestrutura será avaliada na Etapa 4, e a verificação de desempenho seguirá
+o RNF-05.
+
 **Critérios de aceitação:**
 
 | Cenário | Resultado esperado |
@@ -247,17 +272,24 @@ cálculos de área e distância exigida no RF-03 e no RT-02.
 | Polígono com recortes internos | Prosseguir às demais validações quando os recortes estiverem corretamente posicionados e a geometria completa for válida; caso contrário, rejeitar o arquivo com mensagem compreensível. |
 | Partes de um `MultiPolygon` com sobreposição de superfície ou compartilhamento de um trecho de borda | Rejeitar o arquivo com mensagem compreensível; contatos isolados em pontos poderão ser aceitos somente quando a geometria completa continuar válida. |
 | Somente o sentido de percurso dos vértices está invertido, com as demais condições de validade atendidas | Não rejeitar somente pelo sentido de percurso; prosseguir às demais validações de entrada. |
+| Arquivo abaixo de 1.048.576 bytes e de 20.000 posições | Prosseguir às demais validações de entrada. |
+| Arquivo com exatamente 1.048.576 bytes e no máximo 20.000 posições | Não rejeitar pelo tamanho; prosseguir às demais validações de entrada. |
+| Arquivo com 1.048.577 bytes ou mais | Rejeitar o arquivo inteiro, bloquear a análise e informar o limite de 1 MiB (1.048.576 bytes), sem simplificação automática. |
+| Arquivo com exatamente 20.000 posições e no máximo 1.048.576 bytes | Não rejeitar pela contagem; prosseguir às demais validações de entrada, somando todas as partes e anéis, incluindo os fechamentos. |
+| Arquivo com 20.001 posições ou mais, somadas todas as partes e anéis, incluindo os fechamentos | Rejeitar o arquivo inteiro, bloquear a análise e informar o limite de 20.000 posições, sem remover posições ou simplificar automaticamente. |
+| Arquivo dentro dos dois limites, mas com geometria inválida | Rejeitar o arquivo e bloquear a análise conforme as regras de validade, com mensagem compreensível. |
 
 **Dependências e detalhamento pendente:**
 
-O formato inicial, a estrutura, os tipos de geometria e as regras de validade
-estão definidos conforme as condições acima: GeoJSON com extensão `.geojson`,
-objeto principal `FeatureCollection` e geometrias `Polygon` ou `MultiPolygon`
-com coordenadas e topologia válidas. Os limites de entrada e o tratamento
-de arquivos com múltiplas áreas ou mais de uma `Feature` ainda deverão ser
-especificados e aprovados antes da implementação e da preparação dos arquivos
-de teste válidos e inválidos. A definição da validade geométrica não resolve
-essas pendências nem as definições de cálculo do RF-03 e do RT-02.
+O formato inicial, a estrutura, os tipos de geometria, as regras de validade
+e os limites de entrada estão definidos conforme as condições acima: GeoJSON
+com extensão `.geojson`, objeto principal `FeatureCollection`, geometrias
+`Polygon` ou `MultiPolygon` com coordenadas e topologia válidas e arquivo de
+até 1 MiB (1.048.576 bytes) e 20.000 posições. O tratamento de arquivos com
+múltiplas áreas ou mais de uma `Feature` ainda deverá ser especificado e
+aprovado antes da implementação e da preparação dos arquivos de teste válidos
+e inválidos. Os limites não resolvem essa pendência nem as definições de
+cálculo do RF-03 e do RT-02 ou a verificação de desempenho do RNF-05.
 
 **Momento de verificação:**
 
