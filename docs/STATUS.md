@@ -1,8 +1,8 @@
 # Estado do projeto — GeoVale
 
 **Atualização:** 20/10/2026.
-**Etapa atual:** 1 — Engenharia de requisitos de negócio, concluída e com encerramento aprovado em 20/10/2026.
-**Subetapa atual:** encerramento registrado no status, no roadmap e no README; RNG-01 a RNG-07 validados, revisados e publicados. Etapa 2 ainda não iniciada.
+**Etapa atual:** 2 — Engenharia de requisitos do sistema, iniciada com autorização em 20/10/2026.
+**Subetapa atual:** AT-01 — Engenheiro/analista e AT-02 — Gestor aprovados, documentados e publicados; demais requisitos do sistema ainda pendentes de detalhamento.
 
 Este documento registra o estado observado nesta entrega. Não há aplicação
 executável nem funcionalidades de geoprocessamento, análise multicritério ou
@@ -15,7 +15,8 @@ no README e no roadmap foram corrigidas e publicadas. O responsável aprovou
 o encerramento da Etapa 1 em 20/10/2026. Os benefícios são pretendidos e o
 atendimento aos critérios será verificado após a implementação. O ML integra
 o escopo do MVP final, com desenvolvimento previsto na Etapa 8; ainda não foi
-implementado. A Etapa 2 não foi iniciada.
+implementado. A Etapa 2 foi iniciada com autorização em 20/10/2026, com a
+identificação dos atores e de suas responsabilidades.
 
 ## Entregas concluídas
 
@@ -74,6 +75,10 @@ implementado. A Etapa 2 não foi iniciada.
   a Etapa 2.
 - Encerramento registrado também no roadmap no commit `00633ea` e no README
   no commit `100ea80`, com data e situação conferidas contra este status.
+- Etapa 2 iniciada com autorização do responsável em 20/10/2026.
+- AT-01 — Engenheiro/analista e AT-02 — Gestor aprovados e publicados em
+  `docs/REQUISITOS.md` no commit `5eeb0ed`, com responsabilidades baseadas no
+  RNG-03 e preservação integral dos sete requisitos de negócio.
 
 ## Arquivos relevantes
 
@@ -83,7 +88,7 @@ implementado. A Etapa 2 não foi iniciada.
 | `README.md` | Apresentar objetivo, escopo planejado, limitações e ambiente atual. |
 | `docs/ROADMAP.md` | Organizar etapas, entregas e critérios de conclusão. |
 | `docs/STATUS.md` | Registrar progresso real, verificações e pendências. |
-| `docs/REQUISITOS.md` | Registrar os RNG-01 a RNG-07 aprovados; requisitos do sistema serão detalhados na Etapa 2 após autorização. |
+| `docs/REQUISITOS.md` | Registrar os RNG-01 a RNG-07 e os atores AT-01 e AT-02 aprovados; demais requisitos do sistema serão detalhados em unidades posteriores. |
 
 Os caminhos são relativos à raiz do projeto. O documento de requisitos está
 em elaboração incremental; arquitetura e decisões ainda não possuem documentos
@@ -93,7 +98,7 @@ excluídos permanecem fora do versionamento.
 ## Estado do Git
 
 - Branch atual: `main`.
-- Histórico anterior a esta entrega: vinte e nove commits locais já publicados, listados abaixo.
+- Histórico anterior a esta entrega: trinta e um commits locais já publicados, listados abaixo.
 - Repositório público: [Rafael-Inacio-Silva/Geo_Vale](https://github.com/Rafael-Inacio-Silva/Geo_Vale).
 - Remoto `origin`: `https://github.com/Rafael-Inacio-Silva/Geo_Vale.git`.
 - O repositório foi criado vazio e recebeu o histórico no primeiro push.
@@ -136,9 +141,11 @@ Commits concluídos antes desta atualização:
 | `f73136d` | `docs: registra encerramento dos requisitos de negócio` |
 | `00633ea` | `docs: registra encerramento da etapa 1 no roadmap` |
 | `100ea80` | `docs: registra encerramento da etapa 1 no README` |
+| `5ca1290` | `docs: consolida registros de encerramento da etapa 1` |
+| `5eeb0ed` | `docs: identifica atores e responsabilidades do GeoVale` |
 
 Esta atualização do status tem a mensagem de commit
-`docs: consolida registros de encerramento da etapa 1`. Consulte `git log --oneline` para
+`docs: registra início da etapa 2 e atores no status`. Consulte `git log --oneline` para
 identificar seu hash e o histórico atualizado, sem depender de contagens fixas
 neste documento.
 
@@ -174,9 +181,10 @@ São verificações de configuração e documentação; não são testes da apli
 | Revisão final da Etapa 1 | RNG-01 a RNG-07 comparados com o roteiro original. Identificadas duas inconsistências documentais: andamento desatualizado no README e no roadmap, com ML apresentado como possibilidade no README. Correções publicadas nas unidades abaixo; na ocasião, o encerramento ainda dependia de aprovação. |
 | Sincronização do README | Commit `1d8a926` contém somente `README.md`: etapa atual e participação do ML no MVP final conferidas com os requisitos; diff sem erros de espaços, demais arquivos preservados e sincronização com o GitHub confirmada. |
 | Sincronização do roadmap | Commit `9888fcf` contém somente `docs/ROADMAP.md`: andamento conferido com os requisitos e o README, etapas seguintes preservadas, diff sem erros de espaços e sincronização com o GitHub confirmada. |
-| Encerramento da Etapa 1 | Responsável aprovou o encerramento em 20/10/2026 após a revisão dos sete requisitos e as correções documentais. Registro de conclusão conferido com a aprovação; Etapa 2 permanece não iniciada. |
+| Encerramento da Etapa 1 | Responsável aprovou o encerramento em 20/10/2026 após a revisão dos sete requisitos e as correções documentais. Registro de conclusão conferido com a aprovação; naquele momento, a Etapa 2 ainda não havia sido iniciada. |
 | Registro do encerramento no roadmap | Commit `00633ea` contém somente `docs/ROADMAP.md`; aprovação e data conferidas com o status, etapas seguintes preservadas, diff sem erros de espaços e publicação confirmada com Git limpo e sincronizado. |
-| Registro do encerramento no README | Commit `100ea80` contém somente `README.md`; conclusão e data consistentes com o status e o roadmap, Etapa 2 ainda não iniciada, diff sem erros de espaços e publicação confirmada com Git limpo e sincronizado. |
+| Registro do encerramento no README | Commit `100ea80` contém somente `README.md`; conclusão e data consistentes com o status e o roadmap, Etapa 2 ainda não iniciada naquele momento, diff sem erros de espaços e publicação confirmada com Git limpo e sincronizado. |
+| Atores da Etapa 2 | Commit `5eeb0ed` contém somente `docs/REQUISITOS.md`; AT-01 e AT-02 conferidos com o RNG-03, sete requisitos de negócio preservados integralmente, diff sem erros de espaços e publicação confirmada com Git limpo e sincronizado. |
 
 Os registros de preparação do ambiente Python são históricos. Nesta revisão,
 foram conferidos os documentos, os commits e o estado do Git; as verificações
@@ -204,11 +212,17 @@ Resultados de funcionalidades e métricas de ML não existem nesta fase.
 - As inconsistências identificadas na revisão foram corrigidas e publicadas.
   Status, roadmap e README registram o encerramento aprovado da Etapa 1;
   não há pendência de sincronização desse marco.
+- A Etapa 2 foi iniciada e os atores foram documentados. Requisitos funcionais,
+  não funcionais, técnicos, regras de negócio, prioridades, dependências e
+  critérios de aceitação ainda serão detalhados em pequenas unidades.
+- Os resumos do README e do roadmap ainda antecedem o início da Etapa 2;
+  sua atualização será tratada em unidades documentais próprias. Este status
+  e o documento de requisitos registram o andamento atual.
 
 ## Decisões ainda necessárias
 
-- Autorizar o início e a primeira pequena unidade da Etapa 2; a sincronização
-  documental do encerramento da Etapa 1 foi concluída.
+- Discutir e aprovar os requisitos do sistema em pequenas unidades, começando
+  pela proposta de RF-01 — Envio e validação do arquivo geográfico.
 - Na Etapa 4, escolher stack e versão suportada de Python, avaliando a proposta
   de Streamlit e a separação entre frontend na Vercel e backend no Railway.
 - Na Etapa 6, selecionar a região de estudo em Minas Gerais e as fontes públicas.
@@ -232,9 +246,9 @@ reproduzível serão detalhadas após a definição da stack.
 
 ## Próxima tarefa recomendada
 
-Propor o início da Etapa 2 pela identificação dos atores do sistema e de
-suas responsabilidades, com base no público-alvo já aprovado no RNG-03.
-Apresentar o conteúdo antes de registrar a pequena unidade em
-`docs/REQUISITOS.md`, preservando os requisitos de negócio. Aguardar aprovação
-para iniciar a etapa e alterar o arquivo; commits e publicação também
-dependem de autorização. Não implementar funcionalidades nesta unidade.
+Apresentar para discussão o RF-01 — Envio e validação do arquivo geográfico,
+com ator, descrição, prioridade, dependências e critérios de aceitação.
+Após a aprovação do conteúdo, registrar somente essa pequena unidade em
+`docs/REQUISITOS.md`, preservando os requisitos e os atores existentes.
+Alterações, commits e publicação dependem de autorização. Não implementar
+a funcionalidade nesta unidade.
