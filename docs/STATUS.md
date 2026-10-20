@@ -2,13 +2,15 @@
 
 **Atualização:** 19/10/2026.
 **Etapa atual:** 1 — Engenharia de requisitos de negócio, em andamento.
-**Subetapa atual:** RNG-01, RNG-02 e RNG-03 validados, documentados e publicados; benefícios esperados ainda pendentes.
+**Subetapa atual:** RNG-01 a RNG-04 validados, documentados e publicados; escopo do MVP ainda pendente.
 
 Este documento registra o estado observado nesta entrega. Não há aplicação
 executável nem funcionalidades de geoprocessamento, análise multicritério ou
 Machine Learning implementadas. A Etapa 0 foi concluída e aprovada em
 19/10/2026. A Etapa 1 foi iniciada com autorização do responsável; o problema
-de negócio, o objetivo do sistema e o público-alvo foram validados até o momento.
+de negócio, o objetivo do sistema, o público-alvo e os benefícios esperados
+foram validados até o momento. Os benefícios são pretendidos e ainda dependem
+de verificação na demonstração do MVP.
 
 ## Entregas concluídas
 
@@ -40,6 +42,9 @@ de negócio, o objetivo do sistema e o público-alvo foram validados até o mome
 - RNG-03 — Público-alvo validado pelo responsável, documentado com os grupos de
   usuários e o cenário de demonstração, e publicado no commit `4d82d0a`,
   preservando os requisitos anteriores.
+- RNG-04 — Benefícios esperados validado pelo responsável, documentado e
+  publicado no commit `d638bfe`; os quatro benefícios foram identificados como
+  pretendidos, sem apresentar ganhos medidos ou resultados comprovados.
 - GeoVale incluído no README do perfil público, seguindo o padrão dos demais
   projetos e identificado como em desenvolvimento.
 
@@ -51,7 +56,7 @@ de negócio, o objetivo do sistema e o público-alvo foram validados até o mome
 | `README.md` | Apresentar objetivo, escopo planejado, limitações e ambiente atual. |
 | `docs/ROADMAP.md` | Organizar etapas, entregas e critérios de conclusão. |
 | `docs/STATUS.md` | Registrar progresso real, verificações e pendências. |
-| `docs/REQUISITOS.md` | Registrar os RNG-01, RNG-02 e RNG-03 aprovados e os demais requisitos discutidos gradualmente. |
+| `docs/REQUISITOS.md` | Registrar os RNG-01 a RNG-04 aprovados e os demais requisitos discutidos gradualmente. |
 
 Os caminhos são relativos à raiz do projeto. O documento de requisitos está
 em elaboração incremental; arquitetura e decisões ainda não possuem documentos
@@ -61,7 +66,7 @@ excluídos permanecem fora do versionamento.
 ## Estado do Git
 
 - Branch atual: `main`.
-- Histórico anterior a esta entrega: quatorze commits locais já publicados, listados abaixo.
+- Histórico anterior a esta entrega: dezesseis commits locais já publicados, listados abaixo.
 - Repositório público: [Rafael-Inacio-Silva/Geo_Vale](https://github.com/Rafael-Inacio-Silva/Geo_Vale).
 - Remoto `origin`: `https://github.com/Rafael-Inacio-Silva/Geo_Vale.git`.
 - O repositório foi criado vazio e recebeu o histórico no primeiro push.
@@ -89,9 +94,11 @@ Commits concluídos antes desta atualização:
 | `e5a6794` | `docs: registra objetivo do GeoVale` |
 | `3714069` | `docs: registra progresso dos requisitos de negócio` |
 | `4d82d0a` | `docs: registra público-alvo do GeoVale` |
+| `f4e5963` | `docs: registra conclusão do público-alvo no status` |
+| `d638bfe` | `docs: registra benefícios esperados do GeoVale` |
 
 Esta atualização do status tem a mensagem de commit
-`docs: registra conclusão do público-alvo no status`. Consulte `git log --oneline` para
+`docs: registra conclusão dos benefícios no status`. Consulte `git log --oneline` para
 identificar seu hash e o histórico atualizado, sem depender de contagens fixas
 neste documento.
 
@@ -119,6 +126,7 @@ São verificações de configuração e documentação; não são testes da apli
 | RNG-01 — Problema de negócio | Descrição comparada com a formulação aprovada; somente o RNG-01 registrado nessa entrega. Commit `cf9a0d3` contém apenas `docs/REQUISITOS.md`; sincronização com o GitHub confirmada. |
 | RNG-02 — Objetivo do sistema | Descrição e resultado esperado comparados com a formulação aprovada; RNG-01 preservado e demais arquivos sem alteração. Commit `e5a6794` contém somente `docs/REQUISITOS.md`; publicação e sincronização conferidas. |
 | RNG-03 — Público-alvo | Grupos de usuários e cenário de demonstração comparados com a proposta aprovada; requisitos anteriores preservados. Commit `4d82d0a` contém somente `docs/REQUISITOS.md`; publicação e sincronização conferidas. |
+| RNG-04 — Benefícios esperados | Quatro benefícios e ressalva de resultados pretendidos comparados com o texto aprovado; requisitos anteriores preservados. Commit `d638bfe` contém somente `docs/REQUISITOS.md`; publicação e sincronização conferidas. |
 | README do perfil | Uma entrada do GeoVale adicionada no padrão existente, com funcionalidades apresentadas como previstas; conteúdo publicado conferido e demais entradas preservadas. |
 
 O conteúdo deste status foi conferido contra os arquivos existentes, o estado
@@ -137,16 +145,18 @@ Resultados de funcionalidades e métricas de ML não existem nesta fase.
   pertencem às etapas seguintes.
 - A criação do repositório, a configuração do origin e o primeiro envio foram
   autorizados e concluídos. A autenticação de envio pelo Git local funcionou.
-- A Etapa 1 está em andamento. Benefícios esperados, escopo, limitações e
-  critérios de sucesso ainda precisam ser detalhados e validados.
+- A Etapa 1 está em andamento. Escopo do MVP, limitações e critérios de
+  sucesso ainda precisam ser detalhados e validados.
+- Os benefícios registrados no RNG-04 ainda serão verificados na demonstração;
+  não há medições de ganhos de tempo ou custo nesta fase.
 - Os resumos de andamento do README e do roadmap ainda refletem a preparação;
   sua sincronização será tratada em unidades próprias. Este status e o documento
   de requisitos registram o progresso atual.
 
 ## Decisões ainda necessárias
 
-- Definir e validar os benefícios esperados como próxima pequena unidade da
-  Etapa 1 (proposta de identificador RNG-04), antes de registrá-los como aprovados.
+- Definir e validar o escopo do MVP como próxima pequena unidade da Etapa 1
+  (proposta de identificador RNG-05), antes de registrá-lo como aprovado.
 - Na Etapa 4, escolher stack e versão suportada de Python, avaliando a proposta
   de Streamlit e a separação entre frontend na Vercel e backend no Railway.
 - Na Etapa 6, selecionar a região de estudo em Minas Gerais e as fontes públicas.
@@ -170,9 +180,10 @@ reproduzível serão detalhadas após a definição da stack.
 
 ## Próxima tarefa recomendada
 
-Propor e discutir no chat o RNG-04 — Benefícios esperados, tomando o problema
-de negócio, o objetivo e o público-alvo aprovados como referência. Diferenciar
-benefícios pretendidos de resultados já comprovados. Validar a formulação com
-o responsável antes de propor sua inclusão em `docs/REQUISITOS.md`. Não alterar
-arquivos nem avançar para outros requisitos automaticamente. Documentação,
-commits e envios continuam sujeitos às aprovações correspondentes.
+Propor e discutir no chat o RNG-05 — Escopo do MVP, tomando as definições de
+negócio aprovadas como referência. Delimitar as capacidades previstas e o cenário
+de demonstração, sem implementar funcionalidades ou antecipar decisões de stack.
+Validar a formulação com o responsável antes de propor sua inclusão em
+`docs/REQUISITOS.md`. Não alterar arquivos nem avançar para outros requisitos
+automaticamente. Documentação, commits e envios continuam sujeitos às aprovações
+correspondentes.
