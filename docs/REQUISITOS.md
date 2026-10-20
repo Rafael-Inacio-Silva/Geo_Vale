@@ -333,3 +333,47 @@ requisitos anteriores permanecem em aberto.
 Os critérios serão testados durante a implementação da funcionalidade. Este
 registro especifica o comportamento esperado; a funcionalidade ainda não foi
 implementada e os testes de medições e alertas ainda não foram executados.
+
+### RF-06 — Aplicação de regras de negócio demonstrativas
+
+**Estado:** definição aprovada pelo responsável pelo projeto em 20/10/2026;
+regras de negócio, parâmetros e tratamento de dados ausentes ainda pendentes
+de especificação.
+
+**Ator:** AT-01 — Engenheiro/analista.
+
+**Origem:** comparação com restrições eliminatórias prevista no RNG-05 e
+identificação de informações demonstrativas prevista no RNG-06.
+
+**Prioridade:** essencial para o fluxo principal do MVP.
+
+**Descrição aprovada:**
+
+O sistema deverá aplicar regras de negócio demonstrativas aos dados da
+análise, identificando a regra utilizada e a justificativa de cada resultado.
+As restrições eliminatórias deverão permanecer separadas das pontuações;
+uma pontuação alta não poderá compensar uma restrição eliminatória.
+As regras simuladas deverão ser explicitamente identificadas.
+
+**Critérios de aceitação:**
+
+| Cenário | Resultado esperado |
+| --- | --- |
+| Cenário de referência com restrição eliminatória | Identificar a restrição conforme a regra especificada e apresentar a justificativa do resultado. |
+| Cenário de referência sem restrição eliminatória | Apresentar o resultado esperado conforme a regra especificada e sua justificativa. |
+| Restrição eliminatória acompanhada de pontuação alta | Manter a restrição separada da pontuação, sem permitir sua compensação pela nota. |
+| Consulta do resultado de uma regra | Identificar a regra utilizada e a justificativa do resultado. |
+| Aplicação de regra simulada | Identificar explicitamente seu caráter simulado. |
+
+**Dependências e detalhamento pendente:**
+
+O requisito depende do RF-05 e da especificação das regras de negócio, de
+seus parâmetros e do tratamento de dados ausentes. Essas definições deverão
+ser aprovadas antes da implementação e da preparação dos cenários de teste.
+As pendências dos requisitos anteriores permanecem em aberto.
+
+**Momento de verificação:**
+
+Os critérios serão testados durante a implementação da funcionalidade. Este
+registro especifica o comportamento esperado; a funcionalidade ainda não foi
+implementada e os testes de aplicação das regras ainda não foram executados.
