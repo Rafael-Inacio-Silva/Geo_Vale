@@ -557,3 +557,46 @@ Os critérios serão testados durante a implementação da funcionalidade e,
 para as previsões, após a integração do ML. Este registro especifica o
 comportamento esperado; o dashboard ainda não foi implementado e seus testes
 ainda não foram executados.
+
+### RF-11 — Persistência e consulta das análises
+
+**Estado:** definição aprovada pelo responsável pelo projeto em 20/10/2026;
+modelo e regras de armazenamento ainda pendentes de definição na Etapa 5.
+
+**Atores:** AT-01 — Engenheiro/analista salva e consulta; AT-02 — Gestor consulta.
+
+**Origem:** persistência prevista no RNG-05 e recuperação de parâmetros e
+resultados prevista no RNG-07.
+
+**Prioridade:** essencial para o fluxo principal do MVP.
+
+**Descrição aprovada:**
+
+O sistema deverá permitir salvar análises com seus parâmetros e resultados,
+identificar as análises salvas e recuperá-las posteriormente. A recuperação
+em uma nova sessão deverá preservar os parâmetros e os resultados salvos.
+Falhas de gravação ou leitura e análises não encontradas deverão ser
+informadas com mensagem compreensível.
+
+**Critérios de aceitação:**
+
+| Cenário | Resultado esperado |
+| --- | --- |
+| Salvamento bem-sucedido de uma análise | Permitir identificar a análise salva com seus parâmetros e resultados. |
+| Recuperação da análise em uma nova sessão | Recuperar os parâmetros e resultados preservados conforme o conteúdo salvo. |
+| Falha de gravação | Informar o problema com mensagem compreensível. |
+| Falha de leitura | Informar o problema com mensagem compreensível. |
+| Análise solicitada não encontrada | Informar que a análise não foi encontrada com mensagem compreensível. |
+
+**Dependências e detalhamento pendente:**
+
+O requisito depende dos dados e resultados da análise e da definição do modelo
+e das regras de armazenamento, a detalhar na Etapa 5. Essas definições deverão
+ser aprovadas antes da implementação e da preparação dos cenários de teste.
+As pendências dos requisitos anteriores permanecem em aberto.
+
+**Momento de verificação:**
+
+Os critérios serão testados durante a implementação da funcionalidade. Este
+registro especifica o comportamento esperado; a persistência e a consulta
+ainda não foram implementadas e seus testes ainda não foram executados.
