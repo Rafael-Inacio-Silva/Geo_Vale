@@ -2,9 +2,9 @@
 
 Este documento organiza as entregas do MVP demonstrativo. A
 **Etapa 0 — Preparação do projeto foi concluída e aprovada em 19/10/2026**.
-A **Etapa 1 — Engenharia de requisitos de negócio está em revisão final**,
-com os RNG-01 a RNG-07 aprovados e publicados; seu encerramento ainda depende
-de aprovação do responsável. As Etapas 2 a 11 permanecem previstas.
+A **Etapa 1 — Engenharia de requisitos de negócio foi concluída e teve seu
+encerramento aprovado em 20/10/2026**, com os RNG-01 a RNG-07 validados,
+revisados e publicados. As Etapas 2 a 11 permanecem previstas.
 As entregas previstas não representam funcionalidades já implementadas.
 
 ## Forma de execução
@@ -47,8 +47,9 @@ Não implementar funcionalidades da aplicação nesta etapa.
 
 **Estado atual:** RNG-01 a RNG-07 aprovados e registrados em `docs/REQUISITOS.md`,
 abrangendo problema, objetivo, público-alvo, benefícios esperados, escopo,
-limitações e critérios de sucesso do MVP. Revisão final em andamento;
-encerramento pendente de aprovação.
+limitações e critérios de sucesso do MVP. Revisão final concluída e
+encerramento aprovado pelo responsável em 20/10/2026. A Etapa 2 ainda não
+foi iniciada.
 
 **Objetivo:** definir problema, público-alvo, benefícios, escopo e limites do MVP.
 **Entrega:** visão e requisitos de negócio em `docs/REQUISITOS.md`, com identificadores `RNG-01`, `RNG-02` etc.
