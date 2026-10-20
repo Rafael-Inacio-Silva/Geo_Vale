@@ -291,3 +291,45 @@ requisitos anteriores permanecem em aberto.
 Os critérios serão testados durante a implementação da funcionalidade. Este
 registro especifica o comportamento esperado; a funcionalidade ainda não foi
 implementada e os testes de cruzamento ainda não foram executados.
+
+### RF-05 — Identificação de distâncias, sobreposições e alertas
+
+**Estado:** definição aprovada pelo responsável pelo projeto em 20/10/2026;
+medições, tolerâncias e condições dos alertas ainda pendentes de definição.
+
+**Ator:** AT-01 — Engenheiro/analista.
+
+**Origem:** identificação de distâncias, sobreposições e alertas prevista no RNG-05.
+
+**Prioridade:** essencial para o fluxo principal do MVP.
+
+**Descrição aprovada:**
+
+O sistema deverá identificar distâncias e sobreposições relevantes a partir
+do cruzamento previsto no RF-04 e apresentar os alertas associados, com as
+fontes e os parâmetros utilizados. Os resultados deverão apresentar suas
+unidades e distinguir a ausência de uma ocorrência da indisponibilidade dos
+dados necessários. Falhas deverão ser informadas com mensagem compreensível.
+
+**Critérios de aceitação:**
+
+| Cenário | Resultado esperado |
+| --- | --- |
+| Conferência de distâncias, sobreposições e alertas em cenários de referência | Os resultados deverão corresponder ao esperado conforme as medições, tolerâncias e condições de alerta especificadas. |
+| Consulta das medições e dos alertas obtidos | Apresentar as unidades das medições e identificar as fontes e os parâmetros utilizados. |
+| Ausência de uma ocorrência nos dados analisados | Identificar essa ausência como resultado da análise realizada. |
+| Dados necessários indisponíveis | Informar a indisponibilidade de forma distinta da ausência de ocorrência. |
+| Falha na identificação das distâncias, sobreposições ou alertas | Informar o problema com mensagem compreensível. |
+
+**Dependências e detalhamento pendente:**
+
+O requisito depende do RF-04. As medições, as tolerâncias e as condições de
+emissão dos alertas deverão ser especificadas e aprovadas antes da
+implementação e da preparação dos cenários de referência. As pendências dos
+requisitos anteriores permanecem em aberto.
+
+**Momento de verificação:**
+
+Os critérios serão testados durante a implementação da funcionalidade. Este
+registro especifica o comportamento esperado; a funcionalidade ainda não foi
+implementada e os testes de medições e alertas ainda não foram executados.
