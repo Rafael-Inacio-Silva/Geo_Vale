@@ -820,3 +820,47 @@ As verificações ocorrerão nas etapas de implementação e validação, com a
 execução em ambiente limpo também conferida na preparação da entrega. Este
 registro especifica a qualidade esperada; ainda não existe aplicação executável
 e essas verificações da aplicação ainda não foram realizadas.
+
+### RNF-04 — Tratamento de falhas
+
+**Estado:** definição aprovada pelo responsável pelo projeto em 20/10/2026;
+detalhes de recuperação e registro ainda pendentes de definição.
+
+**Origem:** falhas de entrada, persistência e exportação previstas nos RF-01,
+RF-11 e RF-12 e clareza das mensagens prevista no RNF-01.
+
+**Prioridade:** essencial.
+
+**Descrição aprovada:**
+
+O GeoVale deverá tratar erros de arquivos, entradas e processamento de forma
+controlada, informando o problema. Operações com falha não deverão ser
+apresentadas como concluídas. As análises já salvas deverão ser preservadas,
+e uma nova tentativa deverá ser possível após a correção da causa da falha.
+As mensagens e os registros deverão evitar a exposição de informações sensíveis.
+
+**Critérios de aceitação:**
+
+| Cenário | Resultado esperado |
+| --- | --- |
+| Erro de arquivo, entrada ou processamento previsto para uma funcionalidade | Informar o problema de forma controlada. |
+| Falha durante uma operação | Não apresentar a operação com falha como concluída. |
+| Falha com análises previamente salvas | Preservar as análises já salvas. |
+| Nova tentativa após a correção da causa da falha | Permitir executar novamente a operação. |
+| Consulta das mensagens e dos registros produzidos por uma falha | Evitar a exposição de informações sensíveis. |
+
+**Forma de verificação e detalhamento:**
+
+A verificação utilizará cenários de erro definidos para cada funcionalidade,
+conferindo as mensagens, o estado da operação, as análises previamente salvas
+e a nova tentativa após a correção da causa. Os detalhes de recuperação e
+registro deverão ser definidos e aprovados antes da implementação e da
+preparação dos cenários correspondentes. As pendências dos requisitos
+anteriores permanecem em aberto.
+
+**Momento de verificação:**
+
+Os cenários de falha serão testados após a implementação das funcionalidades
+correspondentes. Este registro especifica a qualidade esperada; o tratamento
+de falhas da aplicação ainda não foi implementado e suas verificações ainda
+não foram executadas.
