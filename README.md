@@ -4,8 +4,8 @@
 
 Projeto demonstrativo em desenvolvimento para apoiar a comparação de possíveis
 usos futuros de áreas pós-mineração, combinando geoprocessamento, análise de
-dados e análise multicritério. A integração de Machine Learning está prevista
-para uma etapa posterior.
+dados, análise multicritério e Machine Learning demonstrativo. O modelo será
+integrado, testado e documentado na versão final do MVP.
 
 ## Objetivo
 
@@ -28,13 +28,19 @@ implementadas:
 5. Apresentar mapa, características e ranking em um dashboard.
 6. Exportar um relatório com resultados, fontes, parâmetros e limitações.
 
-Após o fluxo principal funcionar, será avaliada a integração de uma Árvore de
-Decisão demonstrativa para estimar aptidão física como uma das entradas da
-análise multicritério.
+Após o fluxo principal funcionar, será desenvolvida e integrada, na Etapa 8,
+uma Árvore de Decisão demonstrativa para estimar aptidão física como uma das
+entradas da análise multicritério. O ML fará parte da demonstração final do MVP.
 
 ## Estado atual
 
-O projeto está na **Etapa 0 — Preparação do projeto**.
+O projeto está na **Etapa 1 — Engenharia de requisitos de negócio**, em revisão
+final, com encerramento ainda pendente de aprovação. A Etapa 0 foi concluída
+e aprovada em 19/10/2026.
+
+Os requisitos de negócio **RNG-01 a RNG-07** foram aprovados e registrados em
+[docs/REQUISITOS.md](docs/REQUISITOS.md): problema, objetivo, público-alvo,
+benefícios esperados, escopo, limitações e critérios de sucesso do MVP.
 
 - Repositório Git local inicializado na branch `main`.
 - Exclusões de arquivos locais configuradas no `.gitignore`.
@@ -86,7 +92,7 @@ de instalação e execução serão adicionadas quando a stack for definida.
 
 ## Evolução prevista
 
-Após a preparação, serão detalhados os requisitos de negócio e do sistema,
-a modelagem e a arquitetura. A implementação seguirá com persistência, dados
-geográficos, funcionalidades do fluxo principal, Machine Learning, validação
-final, implantação e preparação da demonstração.
+Após o encerramento aprovado da Etapa 1, serão detalhados os requisitos do
+sistema, a modelagem e a arquitetura. A implementação seguirá com persistência,
+dados geográficos, funcionalidades do fluxo principal, Machine Learning,
+validação final, implantação e preparação da demonstração.
