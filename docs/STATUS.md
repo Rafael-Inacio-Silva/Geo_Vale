@@ -2,7 +2,7 @@
 
 **Atualização:** 20/10/2026.
 **Etapa atual:** 2 — Engenharia de requisitos do sistema, iniciada com autorização em 20/10/2026.
-**Subetapa atual:** AT-01 — Engenheiro/analista e AT-02 — Gestor aprovados, documentados e publicados; demais requisitos do sistema ainda pendentes de detalhamento.
+**Subetapa atual:** atores AT-01 e AT-02 e definição do RF-01 aprovados, documentados e publicados; formatos, limites de entrada e regras de geometria do RF-01 ainda pendentes.
 
 Este documento registra o estado observado nesta entrega. Não há aplicação
 executável nem funcionalidades de geoprocessamento, análise multicritério ou
@@ -16,7 +16,8 @@ o encerramento da Etapa 1 em 20/10/2026. Os benefícios são pretendidos e o
 atendimento aos critérios será verificado após a implementação. O ML integra
 o escopo do MVP final, com desenvolvimento previsto na Etapa 8; ainda não foi
 implementado. A Etapa 2 foi iniciada com autorização em 20/10/2026, com a
-identificação dos atores e de suas responsabilidades.
+identificação dos atores e de suas responsabilidades. A definição do RF-01
+foi aprovada e publicada; seu detalhamento técnico permanece pendente.
 
 ## Entregas concluídas
 
@@ -79,6 +80,10 @@ identificação dos atores e de suas responsabilidades.
 - AT-01 — Engenheiro/analista e AT-02 — Gestor aprovados e publicados em
   `docs/REQUISITOS.md` no commit `5eeb0ed`, com responsabilidades baseadas no
   RNG-03 e preservação integral dos sete requisitos de negócio.
+- RF-01 — Envio e validação do arquivo geográfico aprovado e publicado no
+  commit `50314a4`, com ator, origem, prioridade, descrição, cinco cenários de
+  aceitação e dependências. Formatos, limites de entrada e regras de geometria
+  permanecem pendentes; a funcionalidade ainda não foi implementada.
 
 ## Arquivos relevantes
 
@@ -88,7 +93,7 @@ identificação dos atores e de suas responsabilidades.
 | `README.md` | Apresentar objetivo, escopo planejado, limitações e ambiente atual. |
 | `docs/ROADMAP.md` | Organizar etapas, entregas e critérios de conclusão. |
 | `docs/STATUS.md` | Registrar progresso real, verificações e pendências. |
-| `docs/REQUISITOS.md` | Registrar os RNG-01 a RNG-07 e os atores AT-01 e AT-02 aprovados; demais requisitos do sistema serão detalhados em unidades posteriores. |
+| `docs/REQUISITOS.md` | Registrar os RNG-01 a RNG-07, os atores AT-01 e AT-02 e a definição do RF-01 aprovados; detalhamento técnico e demais requisitos serão tratados em unidades posteriores. |
 
 Os caminhos são relativos à raiz do projeto. O documento de requisitos está
 em elaboração incremental; arquitetura e decisões ainda não possuem documentos
@@ -98,7 +103,7 @@ excluídos permanecem fora do versionamento.
 ## Estado do Git
 
 - Branch atual: `main`.
-- Histórico anterior a esta entrega: trinta e um commits locais já publicados, listados abaixo.
+- Histórico anterior a esta entrega: trinta e três commits locais já publicados, listados abaixo.
 - Repositório público: [Rafael-Inacio-Silva/Geo_Vale](https://github.com/Rafael-Inacio-Silva/Geo_Vale).
 - Remoto `origin`: `https://github.com/Rafael-Inacio-Silva/Geo_Vale.git`.
 - O repositório foi criado vazio e recebeu o histórico no primeiro push.
@@ -143,9 +148,11 @@ Commits concluídos antes desta atualização:
 | `100ea80` | `docs: registra encerramento da etapa 1 no README` |
 | `5ca1290` | `docs: consolida registros de encerramento da etapa 1` |
 | `5eeb0ed` | `docs: identifica atores e responsabilidades do GeoVale` |
+| `c279da9` | `docs: registra início da etapa 2 e atores no status` |
+| `50314a4` | `docs: especifica envio e validação do arquivo geográfico` |
 
 Esta atualização do status tem a mensagem de commit
-`docs: registra início da etapa 2 e atores no status`. Consulte `git log --oneline` para
+`docs: registra definição e pendências do RF-01 no status`. Consulte `git log --oneline` para
 identificar seu hash e o histórico atualizado, sem depender de contagens fixas
 neste documento.
 
@@ -185,6 +192,7 @@ São verificações de configuração e documentação; não são testes da apli
 | Registro do encerramento no roadmap | Commit `00633ea` contém somente `docs/ROADMAP.md`; aprovação e data conferidas com o status, etapas seguintes preservadas, diff sem erros de espaços e publicação confirmada com Git limpo e sincronizado. |
 | Registro do encerramento no README | Commit `100ea80` contém somente `README.md`; conclusão e data consistentes com o status e o roadmap, Etapa 2 ainda não iniciada naquele momento, diff sem erros de espaços e publicação confirmada com Git limpo e sincronizado. |
 | Atores da Etapa 2 | Commit `5eeb0ed` contém somente `docs/REQUISITOS.md`; AT-01 e AT-02 conferidos com o RNG-03, sete requisitos de negócio preservados integralmente, diff sem erros de espaços e publicação confirmada com Git limpo e sincronizado. |
+| RF-01 — Envio e validação | Definição comparada com a proposta aprovada e com o RNG-05. Commit `50314a4` contém somente `docs/REQUISITOS.md`; conteúdo anterior preservado integralmente, cenários válidos, inválidos e de falha registrados, pendências técnicas explícitas, diff sem erros de espaços e publicação confirmada com Git limpo e sincronizado. Testes funcionais ainda não executados, pois a funcionalidade não foi implementada. |
 
 Os registros de preparação do ambiente Python são históricos. Nesta revisão,
 foram conferidos os documentos, os commits e o estado do Git; as verificações
@@ -212,17 +220,23 @@ Resultados de funcionalidades e métricas de ML não existem nesta fase.
 - As inconsistências identificadas na revisão foram corrigidas e publicadas.
   Status, roadmap e README registram o encerramento aprovado da Etapa 1;
   não há pendência de sincronização desse marco.
-- A Etapa 2 foi iniciada e os atores foram documentados. Requisitos funcionais,
-  não funcionais, técnicos, regras de negócio, prioridades, dependências e
-  critérios de aceitação ainda serão detalhados em pequenas unidades.
+- A Etapa 2 foi iniciada; atores e definição do RF-01 foram documentados.
+  Formatos aceitos, limites de entrada e regras de geometria do RF-01 precisam
+  ser especificados e aprovados antes de sua implementação e da preparação
+  dos arquivos de teste.
+- Demais requisitos funcionais, não funcionais, técnicos, regras de negócio,
+  prioridades, dependências e critérios de aceitação serão detalhados em
+  pequenas unidades.
 - Os resumos do README e do roadmap ainda antecedem o início da Etapa 2;
   sua atualização será tratada em unidades documentais próprias. Este status
   e o documento de requisitos registram o andamento atual.
 
 ## Decisões ainda necessárias
 
-- Discutir e aprovar os requisitos do sistema em pequenas unidades, começando
-  pela proposta de RF-01 — Envio e validação do arquivo geográfico.
+- Especificar e aprovar os detalhes técnicos pendentes do RF-01 antes de
+  implementar a funcionalidade.
+- Discutir e aprovar os demais requisitos do sistema em pequenas unidades;
+  próxima proposta: RF-02 — Leitura do arquivo e identificação da área.
 - Na Etapa 4, escolher stack e versão suportada de Python, avaliando a proposta
   de Streamlit e a separação entre frontend na Vercel e backend no Railway.
 - Na Etapa 6, selecionar a região de estudo em Minas Gerais e as fontes públicas.
@@ -246,9 +260,10 @@ reproduzível serão detalhadas após a definição da stack.
 
 ## Próxima tarefa recomendada
 
-Apresentar para discussão o RF-01 — Envio e validação do arquivo geográfico,
-com ator, descrição, prioridade, dependências e critérios de aceitação.
+Apresentar para discussão o RF-02 — Leitura do arquivo e identificação da
+área, com ator, descrição, prioridade, dependências e critérios de aceitação.
 Após a aprovação do conteúdo, registrar somente essa pequena unidade em
 `docs/REQUISITOS.md`, preservando os requisitos e os atores existentes.
-Alterações, commits e publicação dependem de autorização. Não implementar
-a funcionalidade nesta unidade.
+Manter as pendências técnicas do RF-01 explícitas. Alterações, commits e
+publicação dependem de autorização. Não implementar funcionalidades nesta
+unidade.
