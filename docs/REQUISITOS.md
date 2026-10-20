@@ -776,3 +776,47 @@ As pendências dos requisitos anteriores permanecem em aberto.
 A verificação ocorrerá após a implementação das funcionalidades correspondentes.
 Este registro especifica a qualidade esperada; a rastreabilidade ainda não foi
 implementada e sua verificação funcional ainda não foi executada.
+
+### RNF-03 — Execução e testes reproduzíveis
+
+**Estado:** definição aprovada pelo responsável pelo projeto em 20/10/2026;
+stack, versões, conjuntos de referência e condições de reprodução ainda
+pendentes de definição.
+
+**Origem:** execução reproduzível e testes previstos no RNG-07, incluindo os
+testes do ML integrado.
+
+**Prioridade:** essencial.
+
+**Descrição aprovada:**
+
+O GeoVale deverá permitir instalação, execução e verificação seguindo a
+documentação do projeto. As versões, os dados e os parâmetros necessários
+deverão ser identificados. A repetição de um cenário de referência deverá
+produzir resultados compatíveis com as tolerâncias definidas, incluindo as
+condições de reprodução do ML. Os resultados reais dos testes deverão ser
+registrados.
+
+**Critérios de aceitação:**
+
+| Cenário | Resultado esperado |
+| --- | --- |
+| Instalação e execução em ambiente limpo | Conseguir instalar e executar o GeoVale seguindo a documentação. |
+| Consulta das condições necessárias à execução e aos testes | Identificar as versões, os dados e os parâmetros necessários. |
+| Repetição de um cenário de referência nas condições documentadas | Obter resultados compatíveis com as tolerâncias definidas, incluindo o ML quando integrado. |
+| Execução dos testes previstos | Registrar os resultados reais observados. |
+
+**Forma de verificação e detalhamento:**
+
+A verificação utilizará um ambiente limpo e cenários de referência, seguindo
+os procedimentos documentados. A stack, as versões, os conjuntos de referência,
+as tolerâncias e as condições de reprodução, incluindo o ML, deverão ser
+definidos e aprovados nas etapas correspondentes antes da execução dessas
+verificações. As pendências dos requisitos anteriores permanecem em aberto.
+
+**Momento de verificação:**
+
+As verificações ocorrerão nas etapas de implementação e validação, com a
+execução em ambiente limpo também conferida na preparação da entrega. Este
+registro especifica a qualidade esperada; ainda não existe aplicação executável
+e essas verificações da aplicação ainda não foram realizadas.
