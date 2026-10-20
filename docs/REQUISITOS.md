@@ -377,3 +377,46 @@ As pendências dos requisitos anteriores permanecem em aberto.
 Os critérios serão testados durante a implementação da funcionalidade. Este
 registro especifica o comportamento esperado; a funcionalidade ainda não foi
 implementada e os testes de aplicação das regras ainda não foram executados.
+
+### RF-07 — Cadastro e seleção de alternativas de uso futuro
+
+**Estado:** definição aprovada pelo responsável pelo projeto em 20/10/2026;
+campos e regras de validação do cadastro ainda pendentes de definição.
+
+**Ator:** AT-01 — Engenheiro/analista.
+
+**Origem:** cadastro e comparação de alternativas previstos no RNG-05 e
+comparação de pelo menos duas alternativas prevista no RNG-07.
+
+**Prioridade:** essencial para o fluxo principal do MVP.
+
+**Descrição aprovada:**
+
+O sistema deverá permitir cadastrar alternativas de uso futuro e selecionar
+quais serão comparadas para a área em análise. As alternativas cadastradas e
+as selecionadas deverão ser identificáveis. Para iniciar a comparação,
+deverão estar selecionadas pelo menos duas alternativas distintas. Dados de
+cadastro inválidos deverão ser informados com mensagem compreensível.
+
+**Critérios de aceitação:**
+
+| Cenário | Resultado esperado |
+| --- | --- |
+| Cadastro com dados válidos conforme as regras especificadas | Permitir cadastrar e identificar a alternativa. |
+| Seleção de alternativas cadastradas | Permitir conferir quais alternativas foram selecionadas para a comparação da área em análise. |
+| Seleção de pelo menos duas alternativas distintas | Atender ao mínimo de alternativas necessário para iniciar a comparação. |
+| Seleção de menos de duas alternativas distintas | Impedir o início da comparação e informar a necessidade de selecionar pelo menos duas alternativas distintas. |
+| Dados de cadastro inválidos | Informar o problema com mensagem compreensível. |
+
+**Dependências e detalhamento pendente:**
+
+O requisito depende da área identificada pelo RF-02 e da definição dos campos
+e das regras de validação do cadastro. Essas definições deverão ser
+especificadas e aprovadas antes da implementação e da preparação dos cenários
+de teste. As pendências dos requisitos anteriores permanecem em aberto.
+
+**Momento de verificação:**
+
+Os critérios serão testados durante a implementação da funcionalidade. Este
+registro especifica o comportamento esperado; a funcionalidade ainda não foi
+implementada e os testes de cadastro e seleção ainda não foram executados.
