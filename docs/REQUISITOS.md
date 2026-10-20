@@ -79,3 +79,15 @@ O fluxo principal será desenvolvido primeiro. O Machine Learning será desenvol
 **Dados do cenário demonstrativo:**
 
 Dados geográficos públicos serão utilizados quando disponíveis. Áreas, regras, notas e dados simulados serão claramente identificados.
+
+### RNG-06 — Limitações do MVP
+
+**Estado:** aprovado pelo responsável pelo projeto em 20/10/2026.
+
+**Descrição aprovada:**
+
+1. **Cenário delimitado:** a demonstração será validada em uma área de estudo em Minas Gerais. A aplicação em outras áreas exigirá conferir os dados e a adequação das regras utilizadas.
+2. **Qualidade dos dados:** os resultados dependerão da cobertura, resolução, atualização e qualidade das bases disponíveis. Fontes, datas e limitações conhecidas deverão ser registradas.
+3. **Informações demonstrativas:** regras, notas, custos e benefícios poderão ser simulados quando faltarem informações reais, com identificação explícita. A classificação refletirá os dados e parâmetros utilizados.
+4. **Limitação do ML:** o modelo integrará o MVP final. Quando treinado com dados sintéticos, demonstrará o funcionamento técnico do algoritmo, sem comprovar capacidade preditiva em áreas reais.
+5. **Responsabilidade pela decisão:** os resultados apoiarão a análise de especialistas e não substituirão estudos ou avaliações ambientais, legais e de segurança, nem constituirão autorização para utilizar uma área.
