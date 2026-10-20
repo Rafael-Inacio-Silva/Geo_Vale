@@ -2,17 +2,18 @@
 
 **Atualização:** 20/10/2026.
 **Etapa atual:** 1 — Engenharia de requisitos de negócio, em andamento.
-**Subetapa atual:** RNG-01 a RNG-06 validados, documentados e publicados; critérios de sucesso ainda pendentes.
+**Subetapa atual:** RNG-01 a RNG-07 validados, documentados e publicados; revisão final da Etapa 1 pendente.
 
 Este documento registra o estado observado nesta entrega. Não há aplicação
 executável nem funcionalidades de geoprocessamento, análise multicritério ou
 Machine Learning implementadas. A Etapa 0 foi concluída e aprovada em
 19/10/2026. A Etapa 1 foi iniciada com autorização do responsável; o problema
 de negócio, o objetivo do sistema, o público-alvo, os benefícios esperados e
-o escopo e as limitações do MVP foram validados até o momento. Os benefícios
-são pretendidos e ainda dependem de verificação na demonstração. O ML integra
-o escopo do MVP final, com desenvolvimento previsto na Etapa 8; ainda não foi
-implementado.
+o escopo, as limitações e os critérios de sucesso do MVP foram definidos e
+validados. A revisão final e a aprovação de encerramento da Etapa 1 ainda
+estão pendentes. Os benefícios são pretendidos e o atendimento aos critérios
+será verificado após a implementação. O ML integra o escopo do MVP final, com
+desenvolvimento previsto na Etapa 8; ainda não foi implementado.
 
 ## Entregas concluídas
 
@@ -53,6 +54,9 @@ implementado.
 - RNG-06 — Limitações do MVP validado pelo responsável e publicado no commit
   `52ce5e5`, registrando cinco limitações relativas ao cenário, aos dados, às
   informações demonstrativas, ao ML e à responsabilidade pela decisão.
+- RNG-07 — Critérios de sucesso do MVP validado pelo responsável e publicado no
+  commit `f90218f`, com sete critérios e suas evidências esperadas. A comprovação
+  de atendimento ocorrerá após a implementação; nenhum resultado foi antecipado.
 - GeoVale incluído no README do perfil público, seguindo o padrão dos demais
   projetos e identificado como em desenvolvimento.
 
@@ -64,7 +68,7 @@ implementado.
 | `README.md` | Apresentar objetivo, escopo planejado, limitações e ambiente atual. |
 | `docs/ROADMAP.md` | Organizar etapas, entregas e critérios de conclusão. |
 | `docs/STATUS.md` | Registrar progresso real, verificações e pendências. |
-| `docs/REQUISITOS.md` | Registrar os RNG-01 a RNG-06 aprovados e os demais requisitos discutidos gradualmente. |
+| `docs/REQUISITOS.md` | Registrar os RNG-01 a RNG-07 aprovados; requisitos do sistema serão detalhados na Etapa 2 após autorização. |
 
 Os caminhos são relativos à raiz do projeto. O documento de requisitos está
 em elaboração incremental; arquitetura e decisões ainda não possuem documentos
@@ -74,7 +78,7 @@ excluídos permanecem fora do versionamento.
 ## Estado do Git
 
 - Branch atual: `main`.
-- Histórico anterior a esta entrega: vinte commits locais já publicados, listados abaixo.
+- Histórico anterior a esta entrega: vinte e dois commits locais já publicados, listados abaixo.
 - Repositório público: [Rafael-Inacio-Silva/Geo_Vale](https://github.com/Rafael-Inacio-Silva/Geo_Vale).
 - Remoto `origin`: `https://github.com/Rafael-Inacio-Silva/Geo_Vale.git`.
 - O repositório foi criado vazio e recebeu o histórico no primeiro push.
@@ -108,9 +112,11 @@ Commits concluídos antes desta atualização:
 | `768de4d` | `docs: registra escopo do MVP GeoVale` |
 | `6027cda` | `docs: registra conclusão do escopo no status` |
 | `52ce5e5` | `docs: registra limitações do MVP GeoVale` |
+| `00ce0f2` | `docs: registra conclusão das limitações no status` |
+| `f90218f` | `docs: registra critérios de sucesso do MVP` |
 
 Esta atualização do status tem a mensagem de commit
-`docs: registra conclusão das limitações no status`. Consulte `git log --oneline` para
+`docs: registra conclusão dos critérios de sucesso no status`. Consulte `git log --oneline` para
 identificar seu hash e o histórico atualizado, sem depender de contagens fixas
 neste documento.
 
@@ -141,6 +147,7 @@ São verificações de configuração e documentação; não são testes da apli
 | RNG-04 — Benefícios esperados | Quatro benefícios e ressalva de resultados pretendidos comparados com o texto aprovado; requisitos anteriores preservados. Commit `d638bfe` contém somente `docs/REQUISITOS.md`; publicação e sincronização conferidas. |
 | RNG-05 — Escopo do MVP | Em 20/10/2026, sete capacidades e sequência do ML conferidas com a proposta aprovada; ML explícito na entrega final e requisitos anteriores preservados. Commit `768de4d` contém somente `docs/REQUISITOS.md`; publicação e sincronização conferidas. |
 | RNG-06 — Limitações do MVP | Cinco limitações comparadas com a proposta aprovada; requisitos anteriores e ML no MVP final preservados. Commit `52ce5e5` contém somente `docs/REQUISITOS.md`; publicação e sincronização conferidas. |
+| RNG-07 — Critérios de sucesso do MVP | Sete critérios e evidências comparados com a proposta aprovada, com comprovação futura explícita; requisitos anteriores preservados. Commit `f90218f` contém somente `docs/REQUISITOS.md`; publicação e sincronização conferidas. |
 | README do perfil | Uma entrada do GeoVale adicionada no padrão existente, com funcionalidades apresentadas como previstas; conteúdo publicado conferido e demais entradas preservadas. |
 
 O conteúdo deste status foi conferido contra os arquivos existentes, o estado
@@ -159,8 +166,10 @@ Resultados de funcionalidades e métricas de ML não existem nesta fase.
   pertencem às etapas seguintes.
 - A criação do repositório, a configuração do origin e o primeiro envio foram
   autorizados e concluídos. A autenticação de envio pelo Git local funcionou.
-- A Etapa 1 está em andamento. Os critérios de sucesso do MVP ainda precisam
-  ser detalhados e validados; o encerramento da etapa não foi solicitado.
+- Os sete requisitos de negócio foram validados e publicados. A Etapa 1
+  continua em andamento, aguardando revisão final e aprovação de encerramento.
+- O atendimento aos critérios do RNG-07 será verificado na validação e na
+  demonstração do MVP, após sua implementação.
 - Os benefícios registrados no RNG-04 ainda serão verificados na demonstração;
   não há medições de ganhos de tempo ou custo nesta fase.
 - Os resumos de andamento do README e do roadmap ainda refletem a preparação;
@@ -169,8 +178,8 @@ Resultados de funcionalidades e métricas de ML não existem nesta fase.
 
 ## Decisões ainda necessárias
 
-- Definir e validar os critérios de sucesso como próxima pequena unidade da
-  Etapa 1 (proposta de identificador RNG-07), antes de registrá-los como aprovados.
+- Revisar a consistência dos RNG-01 a RNG-07 com o responsável e obter sua
+  aprovação de encerramento da Etapa 1 antes de iniciar a Etapa 2.
 - Na Etapa 4, escolher stack e versão suportada de Python, avaliando a proposta
   de Streamlit e a separação entre frontend na Vercel e backend no Railway.
 - Na Etapa 6, selecionar a região de estudo em Minas Gerais e as fontes públicas.
@@ -194,10 +203,9 @@ reproduzível serão detalhadas após a definição da stack.
 
 ## Próxima tarefa recomendada
 
-Propor e discutir no chat o RNG-07 — Critérios de sucesso do MVP, tomando
-o objetivo, os benefícios, o escopo e as limitações aprovados como referência.
-Definir evidências verificáveis para avaliar a demonstração, sem declarar
-resultados ou métricas ainda não obtidos. Validar a formulação com o responsável
-antes de propor sua inclusão em `docs/REQUISITOS.md`. Não alterar arquivos,
-encerrar a Etapa 1 ou avançar de etapa automaticamente. Documentação, commits e
-envios continuam sujeitos às aprovações correspondentes.
+Propor uma revisão final da Etapa 1 somente por leitura: conferir os RNG-01
+a RNG-07, o roteiro aprovado e o estado do Git; identificar inconsistências ou
+pendências e confirmar a compreensão do responsável. Não encerrar a etapa nem
+iniciar a Etapa 2 automaticamente. Eventuais correções e os registros de
+encerramento serão unidades separadas, com as aprovações correspondentes para
+alterações, commits e publicação.
