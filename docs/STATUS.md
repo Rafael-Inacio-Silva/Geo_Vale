@@ -2,7 +2,7 @@
 
 **Atualização:** 20/10/2026.
 **Etapa atual:** 2 — Engenharia de requisitos do sistema, iniciada com autorização em 20/10/2026.
-**Subetapa atual:** atores AT-01 e AT-02, definições dos RF-01 a RF-13, RNF-01 a RNF-06, RT-01 a RT-02 e RN-01 a RN-02 aprovadas, documentadas e publicadas; revisão documental dos seis RNF concluída e exigência das licenças explícita no RT-01; detalhamentos técnicos e verificações da aplicação ainda pendentes.
+**Subetapa atual:** atores AT-01 e AT-02, definições dos RF-01 a RF-13, RNF-01 a RNF-06, RT-01 a RT-02 e RN-01 a RN-03 aprovadas, documentadas e publicadas; revisão documental dos seis RNF concluída e exigência das licenças explícita no RT-01; detalhamentos técnicos e verificações da aplicação ainda pendentes.
 
 Este documento registra o estado observado nesta entrega. Não há aplicação
 executável nem funcionalidades de geoprocessamento, análise multicritério ou
@@ -73,7 +73,11 @@ A RN-02 foi aprovada e publicada, exigindo a identificação das informações
 simuladas na análise, no dashboard e no relatório, incluindo o treinamento
 sintético após a integração do ML. A forma de apresentação permanece
 pendente; a regra será verificada durante a implementação e, para o ML,
-após sua integração na Etapa 8.
+após sua integração na Etapa 8. A RN-03 foi aprovada e publicada, distinguindo
+a indisponibilidade dos dados necessários da ausência identificada em uma
+análise válida, limitada aos dados analisados. Critérios de disponibilidade
+e forma de apresentação continuam pendentes; os cenários serão testados
+durante a implementação da análise e do dashboard.
 
 ## Entregas concluídas
 
@@ -274,6 +278,12 @@ após sua integração na Etapa 8.
   e dados de treinamento simulados, com correspondência na análise, no
   dashboard e no relatório. Forma de apresentação ainda pendente; testes
   futuros durante a implementação e após a integração do ML na Etapa 8.
+- RN-03 — Distinção entre indisponibilidade de dados e ausência de ocorrência
+  aprovada e publicada no commit `a60e897`, com origem, prioridade essencial
+  e três cenários de aceitação. Prevê ausência como resultado de análise
+  válida limitada aos dados analisados, identificação da indisponibilidade
+  e distinção das situações no dashboard. Critérios de disponibilidade e
+  apresentação pendentes; testes futuros durante a implementação.
 
 ## Arquivos relevantes
 
@@ -283,7 +293,7 @@ após sua integração na Etapa 8.
 | `README.md` | Apresentar objetivo, escopo planejado, limitações e ambiente atual. |
 | `docs/ROADMAP.md` | Organizar etapas, entregas e critérios de conclusão. |
 | `docs/STATUS.md` | Registrar progresso real, verificações e pendências. |
-| `docs/REQUISITOS.md` | Registrar os RNG-01 a RNG-07, os atores AT-01 e AT-02 e as definições dos RF-01 a RF-13, dos RNF-01 a RNF-06, dos RT-01 a RT-02 e das RN-01 a RN-02 aprovados; detalhamento técnico e demais requisitos serão tratados em unidades posteriores. |
+| `docs/REQUISITOS.md` | Registrar os RNG-01 a RNG-07, os atores AT-01 e AT-02 e as definições dos RF-01 a RF-13, dos RNF-01 a RNF-06, dos RT-01 a RT-02 e das RN-01 a RN-03 aprovados; detalhamento técnico e demais requisitos serão tratados em unidades posteriores. |
 
 Os caminhos são relativos à raiz do projeto. O documento de requisitos está
 em elaboração incremental; arquitetura e decisões ainda não possuem documentos
@@ -293,7 +303,7 @@ excluídos permanecem fora do versionamento.
 ## Estado do Git
 
 - Branch atual: `main`.
-- Histórico anterior a esta entrega: setenta e oito commits locais já publicados, listados abaixo.
+- Histórico anterior a esta entrega: oitenta commits locais já publicados, listados abaixo.
 - Repositório público: [Rafael-Inacio-Silva/Geo_Vale](https://github.com/Rafael-Inacio-Silva/Geo_Vale).
 - Remoto `origin`: `https://github.com/Rafael-Inacio-Silva/Geo_Vale.git`.
 - O repositório foi criado vazio e recebeu o histórico no primeiro push.
@@ -385,9 +395,11 @@ Commits concluídos antes desta atualização:
 | `645e4ea` | `docs: especifica restrições eliminatórias na comparação` |
 | `073b158` | `docs: registra definição e verificação futura da RN-01 no status` |
 | `fe12768` | `docs: especifica identificação de informações simuladas` |
+| `07dd5c3` | `docs: registra definição e verificação futura da RN-02 no status` |
+| `a60e897` | `docs: distingue dados indisponíveis de ausência de ocorrência` |
 
 Esta atualização do status tem a mensagem de commit
-`docs: registra definição e verificação futura da RN-02 no status`. Consulte `git log --oneline` para
+`docs: registra definição e verificação futura da RN-03 no status`. Consulte `git log --oneline` para
 identificar seu hash e o histórico atualizado, sem depender de contagens fixas
 neste documento.
 
@@ -451,6 +463,7 @@ São verificações de configuração e documentação; não são testes da apli
 | RT-02 — Sistemas de coordenadas e unidades dos cálculos geográficos | Definição comparada com a proposta aprovada e os RF-03 a RF-05. Commit `bacc27f` contém somente `docs/REQUISITOS.md`; conteúdo anterior preservado integralmente, cinco cenários de aceitação, referências e unidades identificáveis, compatibilização, bloqueio de cálculos sem referência validada, comparação com valores de referência e pendências explícitos. Diff sem erros de espaços e publicação confirmada com Git limpo e sincronizado. Atendimento ainda não verificado, pois não existem bases preparadas nem cálculos implementados. |
 | RN-01 — Restrições eliminatórias na comparação de alternativas | Definição comparada com a proposta aprovada e os RF-06, RF-09 e RF-13. Commit `645e4ea` contém somente `docs/REQUISITOS.md`; conteúdo anterior preservado integralmente, três cenários de aceitação, preservação das restrições diante de pontuação alta e previsão favorável, identificação da regra e da justificativa e pendências explícitos. Diff sem erros de espaços e publicação confirmada com Git limpo e sincronizado. Atendimento ainda não verificado, pois a comparação multicritério e o modelo não foram implementados. |
 | RN-02 — Identificação de informações simuladas | Definição comparada com a proposta aprovada, os RNG-05 a RNG-07, o RNF-02 e os RF-10, RF-12 e RF-13. Commit `fe12768` contém somente `docs/REQUISITOS.md`; conteúdo anterior preservado integralmente, quatro cenários de aceitação, identificação das informações simuladas, correspondência entre análise, dashboard e relatório, treinamento sintético e pendências explícitos. Diff sem erros de espaços e publicação confirmada com Git limpo e sincronizado. Atendimento ainda não verificado, pois as funcionalidades correspondentes não foram implementadas. |
+| RN-03 — Indisponibilidade de dados e ausência de ocorrência | Definição comparada com a proposta aprovada, os RF-05 e RF-10 e o RNG-06. Commit `a60e897` contém somente `docs/REQUISITOS.md`; conteúdo anterior preservado integralmente, três cenários de aceitação, ausência limitada aos dados analisados, identificação da indisponibilidade, correspondência no dashboard e pendências explícitos. Diff sem erros de espaços e publicação confirmada com Git limpo e sincronizado. Atendimento ainda não verificado, pois a análise e o dashboard não foram implementados. |
 
 Os registros de preparação do ambiente Python são históricos. Nesta revisão,
 foram conferidos os documentos, os commits e o estado do Git; as verificações
@@ -580,9 +593,15 @@ Resultados de funcionalidades e métricas de ML não existem nesta fase.
   verificada durante a implementação da análise, do dashboard e do relatório;
   o cenário com treinamento sintético será testado após a integração do ML
   na Etapa 8. Nenhum desses testes foi executado nesta entrega.
+- Para a RN-03, critérios de disponibilidade dos dados e forma de apresentação
+  precisam ser detalhados e aprovados antes da implementação e da preparação
+  dos cenários de teste, considerando as bases e suas limitações. As demais
+  regras específicas de tratamento de dados ausentes permanecem em aberto.
+  Os cenários de dados disponíveis sem ocorrência e de dados indisponíveis
+  serão testados durante a implementação da análise e do dashboard.
 - O RNF-05 ainda não possui limites de tempo mensuráveis para aprovação do
   desempenho; eles precisam ser definidos antes da avaliação.
-- Os 13 RF do escopo atual, os RNF-01 a RNF-06, os RT-01 a RT-02 e as RN-01 a RN-02
+- Os 13 RF do escopo atual, os RNF-01 a RNF-06, os RT-01 a RT-02 e as RN-01 a RN-03
   estão documentados.
   Refinamentos, eventuais complementos dos RNF, requisitos técnicos e regras
   de negócio, com
@@ -638,9 +657,11 @@ Resultados de funcionalidades e métricas de ML não existem nesta fase.
   da RN-01 antes da implementação e da preparação dos testes correspondentes.
 - Detalhar e aprovar a forma de apresentação da identificação das informações
   simuladas da RN-02 antes da implementação e da preparação dos testes.
-- Discutir e aprovar os demais requisitos técnicos e as regras de negócio
-  da Etapa 2. Próxima proposta: RN-03 — Distinção entre indisponibilidade de
-  dados e ausência de ocorrência.
+- Detalhar e aprovar os critérios de disponibilidade dos dados e a forma de
+  apresentação da RN-03 antes da implementação e da preparação dos testes.
+- Revisar a cobertura e a consistência dos RT-01 a RT-02 e das RN-01 a RN-03,
+  identificando eventuais lacunas antes de propor novos requisitos técnicos,
+  regras de negócio ou detalhamentos da Etapa 2.
 - Na Etapa 4, escolher stack e versão suportada de Python, avaliando a proposta
   de Streamlit e a separação entre frontend na Vercel e backend no Railway.
 - Na Etapa 6, selecionar a região de estudo em Minas Gerais e as fontes públicas.
@@ -664,11 +685,9 @@ reproduzível serão detalhadas após a definição da stack.
 
 ## Próxima tarefa recomendada
 
-Apresentar para discussão a RN-03 — Distinção entre indisponibilidade de dados
-e ausência de ocorrência, com descrição, prioridade e critérios de aceitação.
-Formalizar que a indisponibilidade dos dados necessários não comprova a
-ausência de uma ocorrência e deve ser identificada como tal nos resultados.
-Conferir a consistência com os RF-05 e RF-10 e com as limitações dos dados.
-Após aprovação, registrar somente essa pequena unidade em `docs/REQUISITOS.md`.
-A Etapa 2 permanece em andamento; alterações, commits e publicação dependem
-de autorização.
+Revisar a cobertura e a consistência dos RT-01 a RT-02 e das RN-01 a RN-03 em
+relação ao planejamento e aos requisitos existentes. Conferir prioridades,
+critérios de aceitação, dependências, pendências e momentos de verificação,
+identificando eventuais lacunas antes de propor novas unidades. Apresentar
+o resultado no chat, sem alterar arquivos nessa revisão. A Etapa 2 permanece
+em andamento; futuras alterações, commits e publicação dependem de autorização.
