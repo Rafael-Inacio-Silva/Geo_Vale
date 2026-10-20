@@ -737,3 +737,42 @@ O checklist será aplicado quando a interface e os fluxos correspondentes
 estiverem implementados. Este registro especifica a qualidade esperada; a
 interface ainda não foi implementada e a verificação de usabilidade ainda
 não foi executada.
+
+### RNF-02 — Rastreabilidade da análise
+
+**Estado:** definição aprovada pelo responsável pelo projeto em 20/10/2026;
+metadados e seu armazenamento ainda pendentes de definição.
+
+**Origem:** rastreabilidade prevista no RNG-02, limitações dos dados no RNG-06
+e evidências de rastreabilidade previstas no RNG-07.
+
+**Prioridade:** essencial.
+
+**Descrição aprovada:**
+
+Cada análise deverá permitir identificar as fontes, as datas, as versões
+disponíveis, os parâmetros e as limitações associados aos seus resultados,
+incluindo a identificação de informações simuladas. Essas informações deverão
+manter correspondência entre a análise, sua consulta e o relatório exportado.
+
+**Critérios de aceitação:**
+
+| Cenário | Resultado esperado |
+| --- | --- |
+| Conferência de uma análise de referência | Permitir identificar as fontes, datas, versões disponíveis, parâmetros e limitações correspondentes aos resultados da análise. |
+| Análise de referência com informações simuladas | Permitir identificar quais informações são simuladas. |
+| Consulta da análise e conferência do relatório exportado | Manter a correspondência das informações de rastreabilidade com a análise de referência. |
+
+**Forma de verificação e detalhamento:**
+
+A verificação utilizará uma análise de referência para conferir as informações
+de rastreabilidade e sua correspondência na consulta e no relatório. Os
+metadados e seu armazenamento serão definidos e aprovados nas etapas
+correspondentes, antes da implementação e da preparação do cenário de teste.
+As pendências dos requisitos anteriores permanecem em aberto.
+
+**Momento de verificação:**
+
+A verificação ocorrerá após a implementação das funcionalidades correspondentes.
+Este registro especifica a qualidade esperada; a rastreabilidade ainda não foi
+implementada e sua verificação funcional ainda não foi executada.
