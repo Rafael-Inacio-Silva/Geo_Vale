@@ -1144,12 +1144,14 @@ essas funcionalidades implementadas para verificar seu atendimento.
 
 ### RN-03 — Distinção entre indisponibilidade de dados e ausência de ocorrência
 
-**Estado:** definição aprovada pelo responsável pelo projeto em 20/10/2026;
+**Estado:** definição e detalhamento dos efeitos na comparação e no relatório
+aprovados pelo responsável pelo projeto em 20/10/2026;
 critérios de disponibilidade dos dados e forma de apresentação ainda pendentes
 de detalhamento.
 
 **Origem:** distinção prevista no RF-05, apresentação das informações
-indisponíveis no RF-10 e limitações da qualidade dos dados no RNG-06.
+indisponíveis no RF-10, comparação prevista no RF-09, relatório do RF-12 e
+limitações da qualidade dos dados no RNG-06.
 
 **Prioridade:** essencial.
 
@@ -1163,6 +1165,14 @@ indisponibilidade desses dados, o resultado deverá identificar essa situação.
 O dashboard deverá preservar a distinção entre a ausência identificada na
 análise e a indisponibilidade dos dados necessários.
 
+Quando faltar um dado necessário para avaliar restrições ou calcular a
+comparação, o ranking deverá ser bloqueado e a pendência deverá ser informada.
+Os resultados parciais válidos deverão ser preservados, com a indisponibilidade
+e o bloqueio do ranking identificados no dashboard e no relatório. Dados
+ausentes não deverão ser substituídos automaticamente por zero nem tratados
+como ausência de ocorrência. Esse tratamento complementa a classificação
+prevista na RN-01.
+
 **Critérios de aceitação:**
 
 | Cenário | Resultado esperado |
@@ -1170,19 +1180,26 @@ análise e a indisponibilidade dos dados necessários.
 | Análise válida com os dados necessários disponíveis, sem ocorrência no cenário de referência | Identificar a ausência como resultado limitado aos dados analisados. |
 | Dados necessários indisponíveis para avaliar uma ocorrência | Informar a indisponibilidade e não apresentar a ocorrência como ausente. |
 | Consulta no dashboard de resultados com ausência identificada e dados indisponíveis | Distinguir as duas situações, mantendo correspondência com os resultados da análise. |
+| Falta de dado necessário para avaliar restrições ou calcular a comparação | Bloquear o ranking e informar a pendência correspondente. |
+| Consulta do dashboard e do relatório com resultados parciais válidos e ranking bloqueado | Preservar os resultados parciais válidos e identificar a indisponibilidade e o bloqueio do ranking de forma correspondente à análise. |
+| Dado numérico necessário ausente | Identificar o dado como ausente, sem substituí-lo automaticamente por zero. |
 
 **Dependências e detalhamento pendente:**
 
-A regra orienta a análise do RF-05 e a apresentação do RF-10. Os critérios de
-disponibilidade dos dados e a forma de apresentação deverão ser detalhados e
-aprovados antes da implementação e da preparação dos cenários de teste
-correspondentes, considerando as bases selecionadas e suas limitações.
+A regra orienta a análise do RF-05, a comparação do RF-09, a apresentação do
+RF-10 e o relatório do RF-12, complementando a RN-01. A lista dos dados
+necessários para avaliar restrições e calcular a comparação, os critérios de
+disponibilidade e a forma de apresentação deverão ser detalhados e aprovados
+antes da implementação e da preparação dos cenários de teste correspondentes,
+considerando as bases selecionadas e suas limitações.
 As demais regras específicas de tratamento de dados ausentes e as pendências
 dos requisitos anteriores permanecem em aberto.
 
 **Momento de verificação:**
 
-A distinção será verificada durante a implementação da análise e do dashboard,
-com cenários de dados disponíveis sem ocorrência e de dados necessários
+A distinção, o bloqueio do ranking, a preservação dos resultados parciais e
+a ausência de substituição automática por zero serão verificados durante a
+implementação da análise, da comparação, do dashboard e do relatório, com
+cenários de dados disponíveis sem ocorrência e de dados necessários
 indisponíveis. Este registro especifica a regra; essas funcionalidades ainda
 não foram implementadas e os cenários ainda não foram testados.
