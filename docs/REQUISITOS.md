@@ -1042,7 +1042,8 @@ para verificar seu atendimento.
 
 ### RN-01 — Restrições eliminatórias na comparação de alternativas
 
-**Estado:** definição aprovada pelo responsável pelo projeto em 20/10/2026;
+**Estado:** definição e detalhamento da classificação aprovados pelo
+responsável pelo projeto em 20/10/2026;
 condições e parâmetros das regras demonstrativas ainda pendentes de detalhamento.
 
 **Origem:** separação das restrições prevista nos RNG-05 e RNG-07 e aplicação
@@ -1058,6 +1059,14 @@ de Machine Learning não poderão compensar, substituir ou remover essa restriç
 A comparação deverá manter identificáveis a regra aplicada e a justificativa
 da restrição, inclusive após a integração da previsão ao cálculo multicritério.
 
+Nos cenários com os dados necessários disponíveis, a classificação deverá
+conter somente alternativas sem restrição eliminatória identificada. As
+alternativas restritas deverão ser apresentadas separadamente, com a regra
+e a justificativa, sem posição no ranking. Quando todas as alternativas
+estiverem restritas, o resultado deverá informar que nenhuma é elegível
+segundo as regras demonstrativas, sem gerar classificação de alternativas
+elegíveis.
+
 **Critérios de aceitação:**
 
 | Cenário | Resultado esperado |
@@ -1065,6 +1074,8 @@ da restrição, inclusive após a integração da previsão ao cálculo multicri
 | Alternativa com restrição eliminatória e pontuação multicritério alta | Preservar a restrição separada da pontuação, sem permitir sua compensação pela nota. |
 | Alternativa com restrição eliminatória e previsão favorável de ML utilizada na comparação | Preservar a restrição, sem permitir sua compensação, substituição ou remoção pela previsão. |
 | Consulta da restrição na comparação de alternativas | Identificar a regra aplicada e a justificativa da restrição. |
+| Cenário com dados necessários disponíveis e alternativas com e sem restrição eliminatória identificada | Classificar somente as alternativas sem restrição identificada e apresentar as restritas separadamente, com regra e justificativa, sem posição no ranking. |
+| Cenário com dados necessários disponíveis e todas as alternativas restritas | Informar que nenhuma alternativa é elegível segundo as regras demonstrativas, sem gerar classificação de alternativas elegíveis. |
 
 **Dependências e detalhamento pendente:**
 
@@ -1073,12 +1084,15 @@ a integração de ML do RF-13. As condições e os parâmetros das regras
 demonstrativas deverão ser detalhados e aprovados antes da implementação e
 da preparação dos cenários de teste correspondentes. As pendências dos
 requisitos anteriores, incluindo o tratamento de dados ausentes, permanecem
-em aberto.
+em aberto. O detalhamento da classificação acima se aplica aos cenários com
+os dados necessários disponíveis; o comportamento diante de indisponibilidade
+ainda precisa ser definido e aprovado.
 
 **Momento de verificação:**
 
-A preservação das restrições e sua justificativa serão verificadas durante
-a implementação dos RF-06 e RF-09. O cenário com previsão favorável será
+A preservação das restrições, sua justificativa e os cenários de classificação
+com alternativas mistas ou todas restritas serão verificados durante a
+implementação dos RF-06 e RF-09. O cenário com previsão favorável será
 verificado após a integração do ML na Etapa 8, incluída no MVP final.
 Este registro especifica a regra; ainda não existem comparação multicritério
 nem modelo implementados para verificar seu atendimento.
