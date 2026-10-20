@@ -946,3 +946,48 @@ dos requisitos anteriores permanecem em aberto.
 As revisões ocorrerão durante a implementação dos componentes correspondentes.
 Este registro especifica a qualidade esperada; ainda não existe código da
 aplicação para verificar o atendimento a este requisito.
+
+### RT-01 — Registro da origem e das condições de uso das bases geográficas
+
+**Estado:** definição aprovada pelo responsável pelo projeto em 20/10/2026;
+estrutura de armazenamento e metadados das bases concretas ainda pendentes
+de detalhamento nas etapas correspondentes.
+
+**Origem:** rastreabilidade prevista no RNF-02 e registro de fontes, datas,
+licenças e limitações previsto na Etapa 6 do planejamento.
+
+**Prioridade:** essencial.
+
+**Descrição aprovada:**
+
+Cada base geográfica utilizada pelo GeoVale deverá possuir um registro que
+identifique sua fonte, a data de obtenção, a versão disponível, a licença e
+as limitações conhecidas. A fonte e as condições de uso deverão permitir
+identificar a referência consultada. Os metadados deverão corresponder à
+base efetivamente utilizada. Informações indisponíveis deverão ser indicadas
+explicitamente, sem preenchimento com valores presumidos.
+
+**Critérios de aceitação:**
+
+| Cenário | Resultado esperado |
+| --- | --- |
+| Consulta dos metadados de uma base geográfica de referência | Identificar fonte, data de obtenção, versão disponível, licença e limitações conhecidas da base. |
+| Conferência da licença e das condições de uso disponíveis | Identificar a referência consultada e registrar as condições de uso informadas pela fonte. |
+| Metadado indisponível na fonte consultada | Indicar explicitamente a informação indisponível, sem apresentar um valor presumido como conhecido. |
+| Conferência dos metadados com a base utilizada | Manter a correspondência entre o registro e a base efetivamente utilizada. |
+
+**Dependências e detalhamento pendente:**
+
+O requisito complementa o RNF-02 e depende da seleção e da preparação das
+bases geográficas na Etapa 6. A estrutura de armazenamento será definida e
+aprovada nas etapas correspondentes, antes da implementação. Os metadados
+das bases concretas serão conferidos com suas fontes durante a preparação
+dos dados. As pendências dos requisitos anteriores permanecem em aberto.
+
+**Momento de verificação:**
+
+Os registros serão conferidos durante a preparação das bases na Etapa 6 e
+sua correspondência com os dados utilizados será verificada na implementação
+das funcionalidades correspondentes. Este registro especifica o requisito;
+ainda não existem bases preparadas nem armazenamento implementado para
+verificar seu atendimento.
