@@ -991,3 +991,51 @@ sua correspondência com os dados utilizados será verificada na implementação
 das funcionalidades correspondentes. Este registro especifica o requisito;
 ainda não existem bases preparadas nem armazenamento implementado para
 verificar seu atendimento.
+
+### RT-02 — Sistemas de coordenadas e unidades dos cálculos geográficos
+
+**Estado:** definição aprovada pelo responsável pelo projeto em 20/10/2026;
+sistemas de coordenadas concretos, procedimentos de compatibilização,
+unidades de distância, precisão e tolerâncias ainda pendentes de definição.
+
+**Origem:** adequação do cálculo de área prevista no RF-03, compatibilidade
+das camadas prevista no RF-04 e medições com unidades previstas no RF-05.
+
+**Prioridade:** essencial.
+
+**Descrição aprovada:**
+
+O GeoVale deverá identificar os sistemas de coordenadas dos dados utilizados
+e empregar referências espaciais e unidades adequadas aos cálculos de área
+e distância. Quando necessário, as referências deverão ser compatibilizadas
+antes das operações correspondentes. Os resultados deverão permitir identificar
+a referência e as unidades utilizadas, com a área apresentada em m² e hectares,
+conforme o RF-03. Cálculos cuja referência espacial não possa ser validada
+deverão ser impedidos, com mensagem compreensível sobre o problema.
+
+**Critérios de aceitação:**
+
+| Cenário | Resultado esperado |
+| --- | --- |
+| Consulta das condições de um cálculo geográfico | Identificar o sistema de coordenadas e as unidades utilizados no cálculo. |
+| Cálculo com referência espacial validada e adequada | Apresentar a área em m² e hectares e as distâncias nas unidades especificadas, identificando as unidades dos resultados. |
+| Dados com referências diferentes que possam ser compatibilizadas | Validar a compatibilização antes de executar as operações correspondentes. |
+| Referência ausente ou que não possa ser validada para o cálculo | Impedir os cálculos afetados e informar o problema com mensagem compreensível. |
+| Conferência de área e distância em cenários de referência | Obter resultados compatíveis com os valores de referência, dentro da precisão e das tolerâncias especificadas. |
+
+**Dependências e detalhamento pendente:**
+
+O requisito depende da geometria do RF-02 e das camadas geográficas preparadas
+para os RF-04 e RF-05. Os sistemas de coordenadas concretos, os procedimentos
+de compatibilização, as unidades de distância, a precisão e as tolerâncias
+deverão ser definidos e aprovados antes da implementação e da preparação
+dos cenários de teste correspondentes, considerando a região e os dados
+selecionados. As pendências dos requisitos anteriores permanecem em aberto.
+
+**Momento de verificação:**
+
+As referências dos dados serão conferidas durante sua preparação na Etapa 6.
+Os cálculos, as unidades, a compatibilização e os bloqueios serão verificados
+na implementação das funcionalidades correspondentes. Este registro especifica
+o requisito; ainda não existem bases preparadas nem cálculos implementados
+para verificar seu atendimento.
