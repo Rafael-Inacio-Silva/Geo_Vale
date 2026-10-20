@@ -420,3 +420,48 @@ de teste. As pendências dos requisitos anteriores permanecem em aberto.
 Os critérios serão testados durante a implementação da funcionalidade. Este
 registro especifica o comportamento esperado; a funcionalidade ainda não foi
 implementada e os testes de cadastro e seleção ainda não foram executados.
+
+### RF-08 — Definição de critérios, notas e pesos
+
+**Estado:** definição aprovada pelo responsável pelo projeto em 20/10/2026;
+escalas, limites, validação dos pesos e tratamento de valores ausentes ainda
+pendentes de definição.
+
+**Ator:** AT-01 — Engenheiro/analista.
+
+**Origem:** comparação por critérios, notas e pesos prevista no RNG-05 e
+comparação explicável prevista no RNG-07.
+
+**Prioridade:** essencial para o fluxo principal do MVP.
+
+**Descrição aprovada:**
+
+O sistema deverá permitir definir os critérios da comparação, atribuir notas
+às alternativas e configurar os pesos dos critérios. Os critérios, as notas
+e os pesos configurados deverão poder ser consultados. Cada nota deverá estar
+associada à alternativa e ao critério correspondentes. Valores inválidos
+deverão ser rejeitados com mensagem compreensível.
+
+**Critérios de aceitação:**
+
+| Cenário | Resultado esperado |
+| --- | --- |
+| Configuração com valores válidos conforme as regras especificadas | Permitir definir critérios, atribuir notas às alternativas e configurar os pesos dos critérios. |
+| Consulta da configuração da comparação | Apresentar os critérios, as notas e os pesos configurados. |
+| Consulta de uma nota atribuída | Identificar a alternativa e o critério correspondentes. |
+| Informação de valores inválidos | Rejeitar os valores e informar o problema com mensagem compreensível. |
+
+**Dependências e detalhamento pendente:**
+
+O requisito depende das alternativas do RF-07 e da definição das escalas, dos
+limites, da validação dos pesos e do tratamento de valores ausentes. Essas
+definições deverão ser especificadas e aprovadas antes da implementação e da
+preparação dos cenários de teste. As pendências dos requisitos anteriores
+permanecem em aberto.
+
+**Momento de verificação:**
+
+Os critérios serão testados durante a implementação da funcionalidade. Este
+registro especifica o comportamento esperado; a funcionalidade ainda não foi
+implementada e os testes de configuração de critérios, notas e pesos ainda
+não foram executados.
