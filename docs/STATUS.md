@@ -2,7 +2,7 @@
 
 **Atualização:** 20/10/2026.
 **Etapa atual:** 2 — Engenharia de requisitos do sistema, iniciada com autorização em 20/10/2026.
-**Subetapa atual:** atores AT-01 e AT-02 e definições dos RF-01 a RF-12 aprovados, documentados e publicados; detalhes técnicos de entrada, análise geográfica, regras de negócio, comparação, apresentação, armazenamento e relatório ainda pendentes.
+**Subetapa atual:** atores AT-01 e AT-02 e definições dos RF-01 a RF-13 aprovados, documentados e publicados; detalhamentos de entrada, análise geográfica, regras, comparação, apresentação, armazenamento, relatório e ML ainda pendentes.
 
 Este documento registra o estado observado nesta entrega. Não há aplicação
 executável nem funcionalidades de geoprocessamento, análise multicritério ou
@@ -17,7 +17,7 @@ atendimento aos critérios será verificado após a implementação. O ML integr
 o escopo do MVP final, com desenvolvimento previsto na Etapa 8; ainda não foi
 implementado. A Etapa 2 foi iniciada com autorização em 20/10/2026, com a
 identificação dos atores e de suas responsabilidades. As definições dos
-RF-01 a RF-12 foram aprovadas e publicadas. Permanecem pendentes os detalhes
+RF-01 a RF-13 foram aprovadas e publicadas. Permanecem pendentes os detalhes
 técnicos de entrada, as regras para arquivos com múltiplas áreas e a definição
 do sistema de coordenadas adequado, da precisão e da tolerância do cálculo
 da área. Para o RF-04, as bases e operações específicas ainda precisam ser
@@ -32,7 +32,10 @@ RF-10, falta detalhar a apresentação; as previsões de ML serão incorporadas
 na Etapa 8 e estarão presentes no dashboard do MVP final. Para o RF-11,
 o modelo e as regras de armazenamento serão detalhados na Etapa 5. Para o
 RF-12, formato e estrutura do relatório permanecem pendentes; as previsões
-de ML integrarão o relatório do MVP final.
+de ML integrarão o relatório do MVP final. O RF-13 formaliza a previsão
+demonstrativa, com implementação, integração e testes na Etapa 8. Alvo,
+atributos, treinamento, avaliação e conversão da previsão em entrada
+multicritério permanecem pendentes.
 
 ## Entregas concluídas
 
@@ -162,6 +165,15 @@ de ML integrarão o relatório do MVP final.
   fontes, parâmetros, limitações, informações simuladas e tratamento de
   falhas. Formato e estrutura pendentes; previsões de ML incluídas no
   relatório do MVP final. A exportação ainda não foi implementada.
+- RF-13 — Previsão demonstrativa de aptidão física por ML aprovado e publicado
+  no commit `bfdb6be`, com atores, origem, prioridade e seis cenários de
+  aceitação. Prevê integração à comparação, ao dashboard e ao relatório,
+  origem do treinamento, limitações, testes reproduzíveis e preservação das
+  restrições eliminatórias. Implementação prevista na Etapa 8, incluída no
+  MVP final; alvo, atributos, treinamento, avaliação e conversão da previsão
+  em entrada multicritério permanecem pendentes. O modelo não foi implementado.
+- O escopo funcional atual possui 13 RF documentados, do RF-01 ao RF-13,
+  sujeitos aos detalhamentos pendentes e à revisão da Etapa 2.
 
 ## Arquivos relevantes
 
@@ -171,7 +183,7 @@ de ML integrarão o relatório do MVP final.
 | `README.md` | Apresentar objetivo, escopo planejado, limitações e ambiente atual. |
 | `docs/ROADMAP.md` | Organizar etapas, entregas e critérios de conclusão. |
 | `docs/STATUS.md` | Registrar progresso real, verificações e pendências. |
-| `docs/REQUISITOS.md` | Registrar os RNG-01 a RNG-07, os atores AT-01 e AT-02 e as definições dos RF-01 a RF-12 aprovados; detalhamento técnico e demais requisitos serão tratados em unidades posteriores. |
+| `docs/REQUISITOS.md` | Registrar os RNG-01 a RNG-07, os atores AT-01 e AT-02 e as definições dos RF-01 a RF-13 aprovados; detalhamento técnico e demais requisitos serão tratados em unidades posteriores. |
 
 Os caminhos são relativos à raiz do projeto. O documento de requisitos está
 em elaboração incremental; arquitetura e decisões ainda não possuem documentos
@@ -181,7 +193,7 @@ excluídos permanecem fora do versionamento.
 ## Estado do Git
 
 - Branch atual: `main`.
-- Histórico anterior a esta entrega: cinquenta e cinco commits locais já publicados, listados abaixo.
+- Histórico anterior a esta entrega: cinquenta e sete commits locais já publicados, listados abaixo.
 - Repositório público: [Rafael-Inacio-Silva/Geo_Vale](https://github.com/Rafael-Inacio-Silva/Geo_Vale).
 - Remoto `origin`: `https://github.com/Rafael-Inacio-Silva/Geo_Vale.git`.
 - O repositório foi criado vazio e recebeu o histórico no primeiro push.
@@ -250,9 +262,11 @@ Commits concluídos antes desta atualização:
 | `412158e` | `docs: especifica persistência e consulta das análises` |
 | `7d3715f` | `docs: registra definição e pendências do RF-11 no status` |
 | `734cddf` | `docs: especifica exportação de relatório` |
+| `ec19ef6` | `docs: registra definição e pendências do RF-12 no status` |
+| `bfdb6be` | `docs: especifica previsão demonstrativa de aptidão física por ML` |
 
 Esta atualização do status tem a mensagem de commit
-`docs: registra definição e pendências do RF-12 no status`. Consulte `git log --oneline` para
+`docs: registra definição e pendências do RF-13 no status`. Consulte `git log --oneline` para
 identificar seu hash e o histórico atualizado, sem depender de contagens fixas
 neste documento.
 
@@ -304,6 +318,7 @@ São verificações de configuração e documentação; não são testes da apli
 | RF-10 — Dashboard | Definição comparada com a proposta aprovada, os requisitos anteriores e os RNG-05 e RNG-07. Commit `87f58c7` contém somente `docs/REQUISITOS.md`; conteúdo anterior preservado integralmente, dois atores, cinco cenários de aceitação, fontes, parâmetros, limitações e ML no MVP final explícitos, diff sem erros de espaços e publicação confirmada com Git limpo e sincronizado. Testes do dashboard ainda não executados, pois a funcionalidade não foi implementada. |
 | RF-11 — Persistência e consulta | Definição comparada com a proposta aprovada e os RNG-05 e RNG-07. Commit `412158e` contém somente `docs/REQUISITOS.md`; conteúdo anterior preservado integralmente, atores, cinco cenários de aceitação, recuperação em nova sessão e pendências explícitos, diff sem erros de espaços e publicação confirmada com Git limpo e sincronizado. Testes de persistência e consulta ainda não executados, pois a funcionalidade não foi implementada. |
 | RF-12 — Exportação de relatório | Definição comparada com a proposta aprovada e os RNG-05 e RNG-07. Commit `734cddf` contém somente `docs/REQUISITOS.md`; conteúdo anterior preservado integralmente, atores, cinco cenários de aceitação, rastreabilidade, identificação de informações simuladas e ML no relatório final explícitos, diff sem erros de espaços e publicação confirmada com Git limpo e sincronizado. Testes de exportação ainda não executados, pois a funcionalidade não foi implementada. |
+| RF-13 — Previsão demonstrativa por ML | Definição comparada com a proposta aprovada e os RNG-05, RNG-06 e RNG-07. Commit `bfdb6be` contém somente `docs/REQUISITOS.md`; conteúdo anterior preservado integralmente, atores, seis cenários de aceitação, integração, origem, limitações, restrições e implementação na Etapa 8 explícitos, diff sem erros de espaços e publicação confirmada com Git limpo e sincronizado. Treinamento, avaliação e testes ainda não executados, pois o modelo não foi implementado. |
 
 Os registros de preparação do ambiente Python são históricos. Nesta revisão,
 foram conferidos os documentos, os commits e o estado do Git; as verificações
@@ -331,7 +346,7 @@ Resultados de funcionalidades e métricas de ML não existem nesta fase.
 - As inconsistências identificadas na revisão foram corrigidas e publicadas.
   Status, roadmap e README registram o encerramento aprovado da Etapa 1;
   não há pendência de sincronização desse marco.
-- A Etapa 2 foi iniciada; atores e definições dos RF-01 a RF-12 foram documentados.
+- A Etapa 2 foi iniciada; atores e definições dos RF-01 a RF-13 foram documentados.
   Formatos aceitos, limites de entrada e regras de geometria do RF-01 precisam
   ser especificados e aprovados antes de sua implementação e da preparação
   dos arquivos de teste.
@@ -380,9 +395,15 @@ Resultados de funcionalidades e métricas de ML não existem nesta fase.
   A exportação depende dos dados e resultados da análise; a inclusão das
   previsões depende da integração de ML prevista na Etapa 8, incluída na
   entrega final do MVP.
-- Demais requisitos funcionais, não funcionais, técnicos, regras de negócio,
-  prioridades, dependências e critérios de aceitação serão detalhados em
-  pequenas unidades.
+- Para o RF-13, alvo, atributos, treinamento, avaliação e conversão da previsão
+  em entrada multicritério precisam ser definidos e aprovados antes da
+  implementação e da preparação dos testes. O modelo depende dos atributos da
+  análise geográfica; implementação, integração e testes permanecem na Etapa 8
+  e incluídos no MVP final.
+- Os 13 RF do escopo atual estão documentados. Seus refinamentos, os requisitos
+  não funcionais, os técnicos e as regras de negócio, com prioridades,
+  dependências e critérios de aceitação, ainda serão detalhados em pequenas
+  unidades. A Etapa 2 permanece em andamento.
 - Os resumos do README e do roadmap ainda antecedem o início da Etapa 2;
   sua atualização será tratada em unidades documentais próprias. Este status
   e o documento de requisitos registram o andamento atual.
@@ -412,8 +433,10 @@ Resultados de funcionalidades e métricas de ML não existem nesta fase.
   antes da implementação.
 - Definir e aprovar formato e estrutura do relatório do RF-12 antes da
   implementação.
-- Discutir e aprovar os demais requisitos do sistema em pequenas unidades;
-  próxima proposta: RF-13 — Previsão demonstrativa de aptidão física por ML.
+- Definir e aprovar alvo, atributos, treinamento, avaliação e conversão da
+  previsão em entrada multicritério do RF-13 antes da implementação.
+- Discutir e aprovar os requisitos não funcionais e os demais detalhamentos
+  da Etapa 2; próxima proposta: RNF-01 — Clareza da interface e das mensagens.
 - Na Etapa 4, escolher stack e versão suportada de Python, avaliando a proposta
   de Streamlit e a separação entre frontend na Vercel e backend no Railway.
 - Na Etapa 6, selecionar a região de estudo em Minas Gerais e as fontes públicas.
@@ -437,12 +460,9 @@ reproduzível serão detalhadas após a definição da stack.
 
 ## Próxima tarefa recomendada
 
-Apresentar para discussão o RF-13 — Previsão demonstrativa de aptidão física
-por ML, com atores, descrição, prioridade, dependências e critérios de
-aceitação. O requisito será especificado na Etapa 2; sua implementação
-permanece prevista na Etapa 8 e incluída no MVP final.
-Após a aprovação do conteúdo, registrar somente essa pequena unidade em
-`docs/REQUISITOS.md`, preservando os requisitos e os atores existentes.
-Manter as pendências dos RF-01 a RF-12 explícitas. Alterações, commits e
-publicação dependem de autorização. Não implementar funcionalidades nesta
-unidade.
+Apresentar para discussão o RNF-01 — Clareza da interface e das mensagens,
+com descrição, prioridade e critérios de aceitação. Após a aprovação do
+conteúdo, registrar somente essa pequena unidade em `docs/REQUISITOS.md`,
+preservando os requisitos e os atores existentes. Manter as pendências dos
+RF-01 a RF-13 explícitas. Alterações, commits e publicação dependem de
+autorização. Não implementar funcionalidades nesta unidade.
