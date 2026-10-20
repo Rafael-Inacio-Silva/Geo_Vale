@@ -170,3 +170,43 @@ e inválidos para os cenários acima.
 Os critérios serão testados durante a implementação da funcionalidade. Este
 registro especifica o comportamento esperado; a funcionalidade ainda não foi
 implementada e os testes funcionais ainda não foram executados.
+
+### RF-02 — Leitura do arquivo e identificação da área
+
+**Estado:** definição aprovada pelo responsável pelo projeto em 20/10/2026;
+regras para arquivos com múltiplas áreas ainda pendentes.
+
+**Ator:** AT-01 — Engenheiro/analista.
+
+**Origem:** identificação da área informada prevista no RNG-05.
+
+**Prioridade:** essencial para o fluxo principal do MVP.
+
+**Descrição aprovada:**
+
+O sistema deverá ler o arquivo geográfico aprovado pela validação do RF-01,
+identificar a geometria da área de estudo e disponibilizá-la às análises
+seguintes. Falhas de leitura ou a impossibilidade de identificar a área
+deverão ser informadas com mensagem compreensível e impedir o prosseguimento
+para as análises seguintes.
+
+**Critérios de aceitação:**
+
+| Cenário | Resultado esperado |
+| --- | --- |
+| Leitura bem-sucedida e área identificada conforme as regras de entrada | Disponibilizar a geometria da área às análises seguintes. |
+| Falha de leitura do arquivo | Apresentar mensagem compreensível e impedir o prosseguimento para as análises seguintes. |
+| Impossibilidade de identificar a área no arquivo | Apresentar mensagem compreensível e impedir o prosseguimento para as análises seguintes. |
+
+**Dependências e detalhamento pendente:**
+
+O requisito depende do RF-01 e da definição das regras para arquivos com
+múltiplas áreas. Essas regras deverão ser especificadas e aprovadas antes da
+implementação e da preparação dos cenários de teste correspondentes.
+As pendências técnicas do RF-01 permanecem em aberto.
+
+**Momento de verificação:**
+
+Os critérios serão testados durante a implementação da funcionalidade. Este
+registro especifica o comportamento esperado; a funcionalidade ainda não foi
+implementada e os testes funcionais ainda não foram executados.
