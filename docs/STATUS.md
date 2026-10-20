@@ -2,7 +2,7 @@
 
 **Atualização:** 20/10/2026.
 **Etapa atual:** 2 — Engenharia de requisitos do sistema, iniciada com autorização em 20/10/2026.
-**Subetapa atual:** atores AT-01 e AT-02, definições dos RF-01 a RF-13, RNF-01 a RNF-06, RT-01 a RT-02 e RN-01 a RN-03 aprovadas, documentadas e publicadas; revisões documentais dos seis RNF, dos dois RT e das três RN concluídas; exigência das licenças explícita no RT-01; detalhamentos técnicos e verificações da aplicação ainda pendentes.
+**Subetapa atual:** atores AT-01 e AT-02, definições dos RF-01 a RF-13, RNF-01 a RNF-06, RT-01 a RT-02 e RN-01 a RN-03 aprovadas, documentadas e publicadas; revisões documentais dos seis RNF, dos dois RT e das três RN concluídas; exigência das licenças explícita no RT-01 e classificação da RN-01 detalhada para cenários com dados necessários disponíveis; demais detalhamentos técnicos e verificações da aplicação ainda pendentes.
 
 Este documento registra o estado observado nesta entrega. Não há aplicação
 executável nem funcionalidades de geoprocessamento, análise multicritério ou
@@ -80,10 +80,14 @@ e forma de apresentação continuam pendentes; os cenários serão testados
 durante a implementação da análise e do dashboard. A revisão documental dos
 dois RT e das três RN foi concluída e apresentada ao responsável, com 19
 cenários de aceitação e prioridade essencial nos cinco itens. Não foram
-encontradas contradições entre suas definições. Permanecem necessários o
-detalhamento das alternativas restritas na classificação, incluindo o caso
-em que todas estejam restritas, e a definição dos efeitos da indisponibilidade
-de dados na comparação e de sua preservação no relatório.
+encontradas contradições entre suas definições. O refinamento da classificação
+da RN-01 foi aprovado e publicado: com os dados necessários disponíveis,
+somente alternativas sem restrição identificada integram o ranking; as
+restritas aparecem separadamente, com regra e justificativa. Se todas
+estiverem restritas, o resultado informa que nenhuma é elegível segundo as
+regras demonstrativas, sem classificação de alternativas elegíveis. A RN-01
+agora possui cinco cenários de aceitação. Condições, parâmetros e efeitos
+da indisponibilidade de dados na comparação e no relatório continuam pendentes.
 
 ## Entregas concluídas
 
@@ -297,6 +301,13 @@ de dados na comparação e de sua preservação no relatório.
   licenças no RT-01. Identificados refinamentos sobre alternativas restritas
   na classificação e efeitos da indisponibilidade na comparação e no
   relatório. A revisão foi realizada sem alterar arquivos.
+- Refinamento da classificação da RN-01 aprovado e publicado no commit
+  `64979eb`. Para dados necessários disponíveis, define ranking somente de
+  alternativas sem restrição identificada, apresentação separada das
+  restritas e ausência de alternativas elegíveis quando todas estiverem
+  restritas. Dois cenários acrescentados, totalizando cinco na RN-01; demais
+  seções de requisitos preservadas. Condições, parâmetros e tratamento da
+  indisponibilidade continuam pendentes; testes futuros na implementação.
 
 ## Arquivos relevantes
 
@@ -316,7 +327,7 @@ excluídos permanecem fora do versionamento.
 ## Estado do Git
 
 - Branch atual: `main`.
-- Histórico anterior a esta entrega: oitenta e um commits locais já publicados, listados abaixo.
+- Histórico anterior a esta entrega: oitenta e três commits locais já publicados, listados abaixo.
 - Repositório público: [Rafael-Inacio-Silva/Geo_Vale](https://github.com/Rafael-Inacio-Silva/Geo_Vale).
 - Remoto `origin`: `https://github.com/Rafael-Inacio-Silva/Geo_Vale.git`.
 - O repositório foi criado vazio e recebeu o histórico no primeiro push.
@@ -411,9 +422,11 @@ Commits concluídos antes desta atualização:
 | `07dd5c3` | `docs: registra definição e verificação futura da RN-02 no status` |
 | `a60e897` | `docs: distingue dados indisponíveis de ausência de ocorrência` |
 | `cc15488` | `docs: registra definição e verificação futura da RN-03 no status` |
+| `2f1ded1` | `docs: registra revisão dos requisitos técnicos e regras de negócio no status` |
+| `64979eb` | `docs: detalha classificação das alternativas com restrição` |
 
 Esta atualização do status tem a mensagem de commit
-`docs: registra revisão dos requisitos técnicos e regras de negócio no status`. Consulte `git log --oneline` para
+`docs: registra detalhamento da classificação na RN-01 no status`. Consulte `git log --oneline` para
 identificar seu hash e o histórico atualizado, sem depender de contagens fixas
 neste documento.
 
@@ -479,6 +492,7 @@ São verificações de configuração e documentação; não são testes da apli
 | RN-02 — Identificação de informações simuladas | Definição comparada com a proposta aprovada, os RNG-05 a RNG-07, o RNF-02 e os RF-10, RF-12 e RF-13. Commit `fe12768` contém somente `docs/REQUISITOS.md`; conteúdo anterior preservado integralmente, quatro cenários de aceitação, identificação das informações simuladas, correspondência entre análise, dashboard e relatório, treinamento sintético e pendências explícitos. Diff sem erros de espaços e publicação confirmada com Git limpo e sincronizado. Atendimento ainda não verificado, pois as funcionalidades correspondentes não foram implementadas. |
 | RN-03 — Indisponibilidade de dados e ausência de ocorrência | Definição comparada com a proposta aprovada, os RF-05 e RF-10 e o RNG-06. Commit `a60e897` contém somente `docs/REQUISITOS.md`; conteúdo anterior preservado integralmente, três cenários de aceitação, ausência limitada aos dados analisados, identificação da indisponibilidade, correspondência no dashboard e pendências explícitos. Diff sem erros de espaços e publicação confirmada com Git limpo e sincronizado. Atendimento ainda não verificado, pois a análise e o dashboard não foram implementados. |
 | Revisão documental dos dois RT e das três RN | Conferidos com o planejamento, o roadmap e os requisitos existentes: cinco itens com estado, origem, prioridade essencial, descrição, critérios de aceitação, dependências e momento de verificação; 19 cenários no total. Não foram encontradas contradições entre as definições e a exigência das licenças está explícita no RT-01. Identificados refinamentos pendentes para alternativas restritas na classificação, incluindo todas restritas, e para efeitos da indisponibilidade na comparação e sua preservação no relatório. Cinco arquivos versionados preservados integralmente e Git limpo durante a revisão; nenhum teste da aplicação executado. |
+| Refinamento da classificação da RN-01 | Conferido com a proposta aprovada e os RF-06, RF-09 e RF-13. Commit `64979eb` altera somente a seção RN-01 em `docs/REQUISITOS.md`; demais seções preservadas integralmente. Dois cenários acrescentados, totalizando cinco: classificação apenas das alternativas sem restrição identificada, apresentação separada das restritas com regra e justificativa e nenhuma alternativa elegível quando todas estiverem restritas, para dados necessários disponíveis. Pendências preservadas, diff sem erros de espaços e publicação confirmada com Git limpo e sincronizado. Cenários ainda não testados, pois a comparação não foi implementada. |
 
 Os registros de preparação do ambiente Python são históricos. Nesta revisão,
 foram conferidos os documentos, os commits e o estado do Git; as verificações
@@ -614,10 +628,11 @@ Resultados de funcionalidades e métricas de ML não existem nesta fase.
   regras específicas de tratamento de dados ausentes permanecem em aberto.
   Os cenários de dados disponíveis sem ocorrência e de dados indisponíveis
   serão testados durante a implementação da análise e do dashboard.
-- A revisão documental dos dois RT e das três RN foi concluída; seus
-  detalhamentos continuam pendentes. É necessário definir como alternativas
-  com restrição aparecerão na classificação e o comportamento quando todas
-  estiverem restritas. O comportamento concreto ainda precisa ser aprovado.
+- A revisão documental dos dois RT e das três RN foi concluída. O tratamento
+  das alternativas restritas na classificação foi detalhado na RN-01, aprovado
+  e publicado, para cenários com os dados necessários disponíveis. Cenários
+  mistos e de todas as alternativas restritas serão verificados durante a
+  implementação. Condições e parâmetros demonstrativos continuam pendentes.
 - É necessário detalhar como a indisponibilidade dos dados afetará a
   comparação e será preservada no relatório. A RN-03 já distingue essa
   situação na análise e no dashboard; a revisão não definiu a política
@@ -682,12 +697,11 @@ Resultados de funcionalidades e métricas de ML não existem nesta fase.
   simuladas da RN-02 antes da implementação e da preparação dos testes.
 - Detalhar e aprovar os critérios de disponibilidade dos dados e a forma de
   apresentação da RN-03 antes da implementação e da preparação dos testes.
-- Definir e aprovar o tratamento das alternativas com restrição na
-  classificação, incluindo o caso em que todas estejam restritas.
 - Definir e aprovar os efeitos da indisponibilidade dos dados na comparação
   e sua preservação no relatório.
 - Discutir os demais detalhamentos da Etapa 2; próxima proposta: refinar a
-  RN-01 quanto ao tratamento das alternativas restritas na classificação.
+  RN-03 quanto aos efeitos da indisponibilidade dos dados na comparação e
+  sua preservação no relatório.
 - Na Etapa 4, escolher stack e versão suportada de Python, avaliando a proposta
   de Streamlit e a separação entre frontend na Vercel e backend no Railway.
 - Na Etapa 6, selecionar a região de estudo em Minas Gerais e as fontes públicas.
@@ -711,11 +725,12 @@ reproduzível serão detalhadas após a definição da stack.
 
 ## Próxima tarefa recomendada
 
-Discutir o detalhamento da RN-01 para definir o tratamento das alternativas
-com restrição na classificação e o comportamento quando todas estejam
-restritas. Apresentar o comportamento proposto e seus critérios de aceitação,
-conferindo a consistência com os RF-06, RF-09 e RF-13. Após aprovação,
-alterar somente essa regra em `docs/REQUISITOS.md`, preservando os demais
-requisitos e as pendências sobre condições e parâmetros demonstrativos.
+Discutir o detalhamento da RN-03 para definir como a indisponibilidade dos
+dados necessários afeta a comparação e deve ser preservada no relatório.
+Apresentar o comportamento proposto e seus critérios de aceitação, conferindo
+a consistência com os RF-05, RF-09, RF-10 e RF-12 e com a RN-01. Após aprovação,
+alterar somente a RN-03 em `docs/REQUISITOS.md`, preservando os demais requisitos.
+Critérios de disponibilidade e identificação dos dados necessários ainda
+precisarão ser detalhados antes da implementação e da preparação dos testes.
 A Etapa 2 permanece em andamento; alterações, commits e publicação dependem
 de autorização.
