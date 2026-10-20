@@ -698,3 +698,42 @@ O requisito é especificado na Etapa 2. Sua implementação, integração e test
 permanecem previstos na Etapa 8, após o fluxo principal, e fazem parte da
 entrega final do MVP. O modelo ainda não foi implementado; treinamento,
 avaliação e testes ainda não foram executados.
+
+### RNF-01 — Clareza da interface e das mensagens
+
+**Estado:** definição aprovada pelo responsável pelo projeto em 20/10/2026.
+
+**Origem:** compreensão e rastreabilidade previstas no RNG-02 e comunicação
+compreensível prevista no RNG-07.
+
+**Prioridade:** essencial.
+
+**Descrição aprovada:**
+
+A interface e suas mensagens deverão apresentar textos em português, campos
+identificáveis e orientações compreensíveis. A apresentação deverá permitir
+identificar a ação esperada e compreender os resultados. Em situações de erro,
+a mensagem deverá permitir entender o problema e a orientação de correção,
+quando aplicável.
+
+**Critérios de aceitação:**
+
+| Cenário | Resultado esperado |
+| --- | --- |
+| Uso da interface em um cenário válido | Os textos e campos deverão permitir ao responsável pelo projeto identificar a ação esperada, com apresentação em português. |
+| Consulta dos resultados | O responsável pelo projeto deverá conseguir compreender os resultados apresentados. |
+| Situação de erro prevista no fluxo | A mensagem deverá permitir ao responsável pelo projeto entender o problema e a orientação de correção, quando aplicável. |
+
+**Forma de verificação e detalhamento:**
+
+A verificação utilizará um checklist em cenários válidos e de erro, registrando
+os pontos observados pelo responsável pelo projeto. Os fluxos e a interface
+serão detalhados nas etapas correspondentes; os cenários do checklist deverão
+ser definidos e aprovados antes da verificação.
+
+**Momento de verificação:**
+
+O checklist será aplicado quando a interface e os fluxos correspondentes
+estiverem implementados. Este registro especifica a qualidade esperada; a
+interface ainda não foi implementada e a verificação de usabilidade ainda
+não foi executada.
