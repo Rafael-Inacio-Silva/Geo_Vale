@@ -34,9 +34,10 @@ entradas da análise multicritério. O ML fará parte da demonstração final do
 
 ## Estado atual
 
-O projeto está na **Etapa 1 — Engenharia de requisitos de negócio**, em revisão
-final, com encerramento ainda pendente de aprovação. A Etapa 0 foi concluída
-e aprovada em 19/10/2026.
+A **Etapa 1 — Engenharia de requisitos de negócio foi concluída e teve seu
+encerramento aprovado em 20/10/2026**. A Etapa 0 foi concluída e aprovada em
+19/10/2026. A Etapa 2 — Engenharia de requisitos do sistema ainda não foi
+iniciada e depende de autorização.
 
 Os requisitos de negócio **RNG-01 a RNG-07** foram aprovados e registrados em
 [docs/REQUISITOS.md](docs/REQUISITOS.md): problema, objetivo, público-alvo,
@@ -92,7 +93,7 @@ de instalação e execução serão adicionadas quando a stack for definida.
 
 ## Evolução prevista
 
-Após o encerramento aprovado da Etapa 1, serão detalhados os requisitos do
-sistema, a modelagem e a arquitetura. A implementação seguirá com persistência,
+A próxima etapa prevista é o detalhamento dos requisitos do sistema, seguido
+pela modelagem e pela arquitetura. A implementação seguirá com persistência,
 dados geográficos, funcionalidades do fluxo principal, Machine Learning,
 validação final, implantação e preparação da demonstração.
