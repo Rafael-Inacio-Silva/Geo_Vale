@@ -2,7 +2,7 @@
 
 **Atualização:** 20/10/2026.
 **Etapa atual:** 1 — Engenharia de requisitos de negócio, concluída e com encerramento aprovado em 20/10/2026.
-**Subetapa atual:** encerramento registrado neste status; RNG-01 a RNG-07 validados, revisados e publicados. Etapa 2 ainda não iniciada.
+**Subetapa atual:** encerramento registrado no status, no roadmap e no README; RNG-01 a RNG-07 validados, revisados e publicados. Etapa 2 ainda não iniciada.
 
 Este documento registra o estado observado nesta entrega. Não há aplicação
 executável nem funcionalidades de geoprocessamento, análise multicritério ou
@@ -70,7 +70,10 @@ implementado. A Etapa 2 não foi iniciada.
 - Revisão final e correções documentais registradas no status e publicadas
   no commit `0057554`.
 - Encerramento da Etapa 1 aprovado pelo responsável em 20/10/2026 e registrado
-  neste status; requisitos de negócio concluídos, sem iniciar a Etapa 2.
+  no status no commit `f73136d`; requisitos de negócio concluídos, sem iniciar
+  a Etapa 2.
+- Encerramento registrado também no roadmap no commit `00633ea` e no README
+  no commit `100ea80`, com data e situação conferidas contra este status.
 
 ## Arquivos relevantes
 
@@ -90,7 +93,7 @@ excluídos permanecem fora do versionamento.
 ## Estado do Git
 
 - Branch atual: `main`.
-- Histórico anterior a esta entrega: vinte e seis commits locais já publicados, listados abaixo.
+- Histórico anterior a esta entrega: vinte e nove commits locais já publicados, listados abaixo.
 - Repositório público: [Rafael-Inacio-Silva/Geo_Vale](https://github.com/Rafael-Inacio-Silva/Geo_Vale).
 - Remoto `origin`: `https://github.com/Rafael-Inacio-Silva/Geo_Vale.git`.
 - O repositório foi criado vazio e recebeu o histórico no primeiro push.
@@ -130,9 +133,12 @@ Commits concluídos antes desta atualização:
 | `1d8a926` | `docs: sincroniza apresentação com requisitos de negócio` |
 | `9888fcf` | `docs: sincroniza roadmap com requisitos de negócio` |
 | `0057554` | `docs: registra revisão final dos requisitos de negócio` |
+| `f73136d` | `docs: registra encerramento dos requisitos de negócio` |
+| `00633ea` | `docs: registra encerramento da etapa 1 no roadmap` |
+| `100ea80` | `docs: registra encerramento da etapa 1 no README` |
 
 Esta atualização do status tem a mensagem de commit
-`docs: registra encerramento dos requisitos de negócio`. Consulte `git log --oneline` para
+`docs: consolida registros de encerramento da etapa 1`. Consulte `git log --oneline` para
 identificar seu hash e o histórico atualizado, sem depender de contagens fixas
 neste documento.
 
@@ -169,6 +175,8 @@ São verificações de configuração e documentação; não são testes da apli
 | Sincronização do README | Commit `1d8a926` contém somente `README.md`: etapa atual e participação do ML no MVP final conferidas com os requisitos; diff sem erros de espaços, demais arquivos preservados e sincronização com o GitHub confirmada. |
 | Sincronização do roadmap | Commit `9888fcf` contém somente `docs/ROADMAP.md`: andamento conferido com os requisitos e o README, etapas seguintes preservadas, diff sem erros de espaços e sincronização com o GitHub confirmada. |
 | Encerramento da Etapa 1 | Responsável aprovou o encerramento em 20/10/2026 após a revisão dos sete requisitos e as correções documentais. Registro de conclusão conferido com a aprovação; Etapa 2 permanece não iniciada. |
+| Registro do encerramento no roadmap | Commit `00633ea` contém somente `docs/ROADMAP.md`; aprovação e data conferidas com o status, etapas seguintes preservadas, diff sem erros de espaços e publicação confirmada com Git limpo e sincronizado. |
+| Registro do encerramento no README | Commit `100ea80` contém somente `README.md`; conclusão e data consistentes com o status e o roadmap, Etapa 2 ainda não iniciada, diff sem erros de espaços e publicação confirmada com Git limpo e sincronizado. |
 
 Os registros de preparação do ambiente Python são históricos. Nesta revisão,
 foram conferidos os documentos, os commits e o estado do Git; as verificações
@@ -194,14 +202,13 @@ Resultados de funcionalidades e métricas de ML não existem nesta fase.
 - Os benefícios registrados no RNG-04 ainda serão verificados na demonstração;
   não há medições de ganhos de tempo ou custo nesta fase.
 - As inconsistências identificadas na revisão foram corrigidas e publicadas.
-  O README e o roadmap ainda descrevem o encerramento como pendente, pois
-  antecedem a aprovação agora registrada; a atualização desse marco será feita
-  em unidades documentais separadas. Este status registra a aprovação atual.
+  Status, roadmap e README registram o encerramento aprovado da Etapa 1;
+  não há pendência de sincronização desse marco.
 
 ## Decisões ainda necessárias
 
-- Autorizar o início e a primeira pequena unidade da Etapa 2, após a
-  sincronização documental do encerramento da Etapa 1.
+- Autorizar o início e a primeira pequena unidade da Etapa 2; a sincronização
+  documental do encerramento da Etapa 1 foi concluída.
 - Na Etapa 4, escolher stack e versão suportada de Python, avaliando a proposta
   de Streamlit e a separação entre frontend na Vercel e backend no Railway.
 - Na Etapa 6, selecionar a região de estudo em Minas Gerais e as fontes públicas.
@@ -225,8 +232,9 @@ reproduzível serão detalhadas após a definição da stack.
 
 ## Próxima tarefa recomendada
 
-Propor a atualização somente de `docs/ROADMAP.md` para registrar o encerramento
-aprovado da Etapa 1, preservando as etapas seguintes. Depois, tratar a
-atualização do README em unidade própria. Alterações, commits e publicação
-dependem das respectivas aprovações. Enviar no chat o resumo da Etapa 1
-concluída. Não iniciar a Etapa 2 automaticamente.
+Propor o início da Etapa 2 pela identificação dos atores do sistema e de
+suas responsabilidades, com base no público-alvo já aprovado no RNG-03.
+Apresentar o conteúdo antes de registrar a pequena unidade em
+`docs/REQUISITOS.md`, preservando os requisitos de negócio. Aguardar aprovação
+para iniciar a etapa e alterar o arquivo; commits e publicação também
+dependem de autorização. Não implementar funcionalidades nesta unidade.
