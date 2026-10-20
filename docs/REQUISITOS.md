@@ -864,3 +864,43 @@ Os cenários de falha serão testados após a implementação das funcionalidade
 correspondentes. Este registro especifica a qualidade esperada; o tratamento
 de falhas da aplicação ainda não foi implementado e suas verificações ainda
 não foram executadas.
+
+### RNF-05 — Desempenho no cenário demonstrativo
+
+**Estado:** definição aprovada pelo responsável pelo projeto em 20/10/2026;
+ambiente, dados demonstrativos, operações avaliadas e limites de tempo ainda
+pendentes de definição.
+
+**Origem:** cenário de demonstração e fluxo completo previstos no RNG-07 e
+verificação de desempenho básico prevista na Etapa 9 do roadmap.
+
+**Prioridade:** importante para a demonstração.
+
+**Descrição aprovada:**
+
+O GeoVale deverá executar o cenário de demonstração dentro de limites de tempo
+previamente aprovados. Os tempos das operações e do fluxo completo deverão
+ser medidos, com registro do ambiente de execução, do volume dos dados e dos
+resultados observados, permitindo comparar as medições com os limites definidos.
+
+**Critérios de aceitação:**
+
+| Cenário | Resultado esperado |
+| --- | --- |
+| Execução das operações avaliadas no cenário demonstrativo | Medir e registrar os tempos observados das operações. |
+| Execução do fluxo completo da demonstração | Medir e registrar o tempo observado do fluxo completo. |
+| Consulta das condições das medições | Identificar o ambiente de execução e o volume dos dados utilizados. |
+| Comparação das medições com os limites aprovados | Verificar o atendimento aos limites de tempo e registrar os resultados reais observados. |
+
+**Forma de verificação e detalhamento:**
+
+As medições utilizarão o ambiente de execução e os dados demonstrativos
+especificados. O ambiente, os dados, as operações avaliadas e os limites de
+tempo aceitáveis deverão ser definidos e aprovados antes das medições.
+As pendências dos requisitos anteriores permanecem em aberto.
+
+**Momento de verificação:**
+
+As medições ocorrerão após a implementação das funcionalidades correspondentes.
+Este registro especifica a qualidade esperada; ainda não existe aplicação
+executável e os tempos de processamento da aplicação ainda não foram medidos.
