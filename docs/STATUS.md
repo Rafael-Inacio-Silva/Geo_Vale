@@ -2,7 +2,7 @@
 
 **Atualização:** 20/10/2026.
 **Etapa atual:** 2 — Engenharia de requisitos do sistema, iniciada com autorização em 20/10/2026.
-**Subetapa atual:** atores AT-01 e AT-02, definições dos RF-01 a RF-13, RNF-01 a RNF-06, RT-01 a RT-02 e RN-01 a RN-03 aprovadas, documentadas e publicadas; revisões documentais dos seis RNF, dos dois RT e das três RN concluídas; exigência das licenças explícita no RT-01 e classificação da RN-01 detalhada para dados necessários disponíveis e efeitos da indisponibilidade detalhados na RN-03; referência entre RN-01 e RN-03 sincronizada; demais detalhamentos técnicos e verificações da aplicação ainda pendentes.
+**Subetapa atual:** atores AT-01 e AT-02, definições dos RF-01 a RF-13, RNF-01 a RNF-06, RT-01 a RT-02 e RN-01 a RN-03 aprovadas, documentadas e publicadas; revisões documentais dos seis RNF, dos dois RT e das três RN concluídas; exigência das licenças explícita no RT-01 e classificação da RN-01 detalhada para dados necessários disponíveis e efeitos da indisponibilidade detalhados na RN-03; referência entre RN-01 e RN-03 sincronizada; levantamento das pendências de encerramento organizado em seis blocos; decisões de comportamento, demais detalhamentos técnicos e verificações da aplicação ainda pendentes.
 
 Este documento registra o estado observado nesta entrega. Não há aplicação
 executável nem funcionalidades de geoprocessamento, análise multicritério ou
@@ -95,7 +95,11 @@ automaticamente por zero nem tratados como ausência de ocorrência. A lista
 dos dados necessários, os critérios de disponibilidade e a apresentação
 continuam pendentes. A referência da RN-01 ao tratamento da indisponibilidade
 foi sincronizada com a RN-03 e publicada, preservando a classificação e os
-critérios de aceitação das regras.
+critérios de aceitação das regras. O levantamento das pendências para concluir
+a Etapa 2 foi apresentado ao responsável e organizado em seis blocos de
+decisões, com sequência proposta e identificação dos detalhamentos previstos
+para etapas posteriores. As decisões abertas continuam pendentes de aprovação;
+a Etapa 2 não foi encerrada.
 
 ## Entregas concluídas
 
@@ -329,6 +333,12 @@ critérios de aceitação das regras.
   da RN-01, preservando a classificação, os critérios de aceitação e todas
   as demais seções. Lista dos dados necessários, critérios de disponibilidade
   e condições e parâmetros demonstrativos continuam pendentes.
+- Levantamento das pendências de encerramento da Etapa 2 concluído e
+  apresentado no chat: seis blocos de decisões de comportamento, distinção
+  dos detalhamentos previstos para etapas posteriores e sequência proposta
+  de pequenas entregas. Conferidos os 13 RF, seis RNF, dois RT e três RN,
+  sem identificadores repetidos. Levantamento realizado sem alterar arquivos;
+  cinco arquivos versionados preservados integralmente e Git limpo.
 
 ## Arquivos relevantes
 
@@ -348,7 +358,7 @@ excluídos permanecem fora do versionamento.
 ## Estado do Git
 
 - Branch atual: `main`.
-- Histórico anterior a esta entrega: oitenta e sete commits locais já publicados, listados abaixo.
+- Histórico anterior a esta entrega: oitenta e oito commits locais já publicados, listados abaixo.
 - Repositório público: [Rafael-Inacio-Silva/Geo_Vale](https://github.com/Rafael-Inacio-Silva/Geo_Vale).
 - Remoto `origin`: `https://github.com/Rafael-Inacio-Silva/Geo_Vale.git`.
 - O repositório foi criado vazio e recebeu o histórico no primeiro push.
@@ -449,9 +459,10 @@ Commits concluídos antes desta atualização:
 | `37909e5` | `docs: detalha efeitos de dados indisponíveis na comparação e no relatório` |
 | `bb3adcb` | `docs: registra detalhamento da indisponibilidade na RN-03 no status` |
 | `301539a` | `docs: sincroniza referência da RN-01 ao tratamento da RN-03` |
+| `d1d5d35` | `docs: registra sincronização entre RN-01 e RN-03 no status` |
 
 Esta atualização do status tem a mensagem de commit
-`docs: registra sincronização entre RN-01 e RN-03 no status`. Consulte `git log --oneline` para
+`docs: organiza pendências para concluir a etapa 2 no status`. Consulte `git log --oneline` para
 identificar seu hash e o histórico atualizado, sem depender de contagens fixas
 neste documento.
 
@@ -520,6 +531,7 @@ São verificações de configuração e documentação; não são testes da apli
 | Refinamento da classificação da RN-01 | Conferido com a proposta aprovada e os RF-06, RF-09 e RF-13. Commit `64979eb` altera somente a seção RN-01 em `docs/REQUISITOS.md`; demais seções preservadas integralmente. Dois cenários acrescentados, totalizando cinco: classificação apenas das alternativas sem restrição identificada, apresentação separada das restritas com regra e justificativa e nenhuma alternativa elegível quando todas estiverem restritas, para dados necessários disponíveis. Pendências preservadas, diff sem erros de espaços e publicação confirmada com Git limpo e sincronizado. Cenários ainda não testados, pois a comparação não foi implementada. |
 | Refinamento dos efeitos da indisponibilidade na RN-03 | Conferido com a proposta aprovada, os RF-05, RF-09, RF-10 e RF-12 e a classificação da RN-01. Commit `37909e5` altera somente a seção RN-03 em `docs/REQUISITOS.md`; demais seções preservadas integralmente. Três cenários acrescentados, totalizando seis, com bloqueio do ranking por dados necessários indisponíveis, preservação de resultados parciais, identificação no dashboard e no relatório e ausência de substituição automática por zero. Pendências preservadas, diff sem erros de espaços e publicação confirmada com Git limpo e sincronizado. Identificada remissão desatualizada na RN-01, a sincronizar em unidade própria. Testes da aplicação ainda não executados. |
 | Sincronização da referência entre RN-01 e RN-03 | Commit `301539a` altera somente o parágrafo de dependências da RN-01 em `docs/REQUISITOS.md`, substituindo a pendência desatualizada pela referência ao tratamento já aprovado na RN-03. Correspondência entre as regras conferida; classificação, critérios de aceitação e conteúdo fora do parágrafo preservados integralmente. Pendências sobre dados necessários, disponibilidade e condições demonstrativas mantidas. Diff sem erros de espaços e publicação confirmada com Git limpo e sincronizado. Verificação documental, sem testes da aplicação. |
+| Levantamento das pendências para encerrar a Etapa 2 | Planejamento original, requisitos, roadmap e status comparados. Confirmados 13 RF, seis RNF, dois RT e três RN, com identificadores únicos. Identificados seis blocos de decisões de comportamento e detalhamentos previstos para etapas posteriores; propostas revisão final e atualização do andamento no README e no roadmap antes do encerramento. Nenhum arquivo alterado durante o levantamento, cinco arquivos versionados preservados integralmente e Git limpo. Sem testes da aplicação e sem encerramento da etapa. |
 
 Os registros de preparação do ambiente Python são históricos. Nesta revisão,
 foram conferidos os documentos, os commits e o estado do Git; as verificações
@@ -679,6 +691,42 @@ Resultados de funcionalidades e métricas de ML não existem nesta fase.
   sua atualização será tratada em unidades documentais próprias. Este status
   e o documento de requisitos registram o andamento atual.
 
+## Plano de pendências para encerramento da Etapa 2
+
+O levantamento foi apresentado ao responsável pelo projeto em 20/10/2026.
+A sequência abaixo organiza as decisões ainda abertas; cada bloco será dividido
+em pequenas entregas, com conteúdo e alterações aprovados antes do registro.
+Este plano não define os comportamentos pendentes nem encerra a etapa.
+
+| Ordem | Bloco | Decisões ainda necessárias |
+| --- | --- | --- |
+| 1 | Arquivo e área — RF-01 e RF-02 | Formatos aceitos, limites, geometrias válidas e tratamento de arquivos com múltiplas áreas. |
+| 2 | Análise e restrições — RF-04 a RF-06 e RN-01/RN-03 | Medições esperadas, condições demonstrativas de alertas e restrições e identificação dos dados necessários. |
+| 3 | Comparação — RF-07 a RF-09 | Campos das alternativas, critérios, escalas, pesos, normalização, empates e precisão da pontuação. |
+| 4 | Resultados — RF-10 a RF-12 | Confirmar informações mínimas para consulta e persistência, formato do relatório e apresentação dos resultados completos ou parciais. |
+| 5 | ML — RF-13 | Significado da aptidão prevista e forma de utilização da previsão na pontuação. |
+| 6 | Aceitação | Completar critérios verificáveis e estabelecer quando serão fixadas as metas dependentes do ambiente e dos dados, especialmente desempenho. |
+
+Detalhamentos previstos para as etapas posteriores, conforme o planejamento:
+
+| Etapa | Detalhamento previsto |
+| --- | --- |
+| 3 — Análise e modelagem | Casos de uso, fluxos e backlog. |
+| 4 — Arquitetura e tecnologias | Arquitetura, stack, versões, convenções e compatibilidade da implantação. |
+| 5 — Banco de dados | Modelo do banco e estrutura de armazenamento. |
+| 6 — Dados geográficos | Região, bases concretas, metadados, referências espaciais e conjuntos de teste. |
+| 8 — Machine Learning | Treinamento, avaliação e integração do ML, obrigatório no MVP final. |
+
+Essa organização preserva as dependências: os detalhamentos precisam ser
+aprovados antes da implementação e da preparação dos testes correspondentes.
+A definição do significado da saída e de sua utilização na comparação pertence
+aos requisitos; o treinamento e a integração permanecem na Etapa 8.
+
+Antes do encerramento, será necessário revisar a especificação e atualizar o
+andamento no README e no roadmap, que ainda apresentam a Etapa 2 como não
+iniciada. Essas atualizações serão tratadas em unidades documentais próprias.
+O encerramento depende de revisão e aprovação do responsável pelo projeto.
+
 ## Decisões ainda necessárias
 
 - Especificar e aprovar os detalhes técnicos pendentes do RF-01 antes de
@@ -728,9 +776,9 @@ Resultados de funcionalidades e métricas de ML não existem nesta fase.
 - Detalhar e aprovar a lista dos dados necessários, os critérios de
   disponibilidade e a forma de apresentação da RN-03 antes da implementação
   e da preparação dos testes.
-- Mapear as pendências para o encerramento da Etapa 2, distinguindo decisões
-  sobre o comportamento do sistema de detalhamentos previstos nas etapas
-  seguintes; apresentar a proposta de próximas unidades para aprovação.
+- Discutir e aprovar os conteúdos das pequenas unidades da sequência
+  registrada no plano de pendências; próxima proposta: formato inicial
+  aceito para o arquivo geográfico do RF-01.
 - Discutir e aprovar os demais detalhamentos da Etapa 2.
 - Na Etapa 4, escolher stack e versão suportada de Python, avaliando a proposta
   de Streamlit e a separação entre frontend na Vercel e backend no Railway.
@@ -755,10 +803,10 @@ reproduzível serão detalhadas após a definição da stack.
 
 ## Próxima tarefa recomendada
 
-Mapear as pendências necessárias para encerrar a Etapa 2, conferindo o
-planejamento, os requisitos e este status. Identificar as decisões sobre o
-comportamento do sistema ainda abertas e os detalhamentos previstos nas
-etapas seguintes, propondo a sequência de pequenas unidades. Apresentar o
-resultado no chat, sem alterar arquivos ou encerrar a etapa nessa revisão.
-A Etapa 2 permanece em andamento; futuras alterações, commits, publicação
-e encerramento dependem de autorização.
+Discutir o formato inicial aceito para o arquivo geográfico do RF-01,
+comparando as opções com a simplicidade do MVP e os comportamentos de entrada
+previstos. Apresentar a proposta, sua justificativa e os cenários de aceitação
+no chat, sem alterar arquivos nessa discussão. Limites, geometrias e arquivos
+com múltiplas áreas serão tratados em unidades próprias. A Etapa 2 permanece
+em andamento; alterações, commits, publicação e encerramento dependem de
+autorização.
