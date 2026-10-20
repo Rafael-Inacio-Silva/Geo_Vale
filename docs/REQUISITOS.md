@@ -128,3 +128,45 @@ Os atores representam os papéis das pessoas que utilizarão o GeoVale:
 | --- | --- | --- |
 | **AT-01** | **Engenheiro/analista** | Fornecer o arquivo geográfico da área, configurar a análise e comparar alternativas de uso futuro. |
 | **AT-02** | **Gestor** | Consultar mapas, resultados e relatórios para compreender as alternativas avaliadas e apoiar decisões. |
+
+### RF-01 — Envio e validação do arquivo geográfico
+
+**Estado:** definição aprovada pelo responsável pelo projeto em 20/10/2026;
+detalhamento técnico das validações pendente.
+
+**Ator:** AT-01 — Engenheiro/analista.
+
+**Origem:** capacidade de envio e validação definida no RNG-05.
+
+**Prioridade:** essencial para o fluxo principal do MVP.
+
+**Descrição aprovada:**
+
+O sistema deverá permitir que o engenheiro/analista envie o arquivo geográfico
+da área de estudo e verificar sua adequação antes de iniciar a análise.
+Um arquivo válido permitirá prosseguir; arquivos vazios, corrompidos ou
+incompatíveis deverão ser rejeitados com mensagem compreensível. Falhas de
+validação deverão impedir o processamento da análise.
+
+**Critérios de aceitação:**
+
+| Cenário | Resultado esperado |
+| --- | --- |
+| Arquivo válido conforme as regras de entrada especificadas | Permitir prosseguir para a análise. |
+| Arquivo vazio | Rejeitar o arquivo e informar o problema com mensagem compreensível. |
+| Arquivo corrompido | Rejeitar o arquivo e informar o problema com mensagem compreensível. |
+| Arquivo incompatível com as regras de entrada especificadas | Rejeitar o arquivo e informar o problema com mensagem compreensível. |
+| Falha em uma validação | Impedir o processamento da análise a partir do arquivo rejeitado. |
+
+**Dependências e detalhamento pendente:**
+
+Os formatos aceitos, os limites de entrada e as regras de geometria deverão
+ser especificados e aprovados antes da implementação. Esses detalhes ainda
+estão pendentes; sua definição permitirá preparar arquivos de teste válidos
+e inválidos para os cenários acima.
+
+**Momento de verificação:**
+
+Os critérios serão testados durante a implementação da funcionalidade. Este
+registro especifica o comportamento esperado; a funcionalidade ainda não foi
+implementada e os testes funcionais ainda não foram executados.
