@@ -131,9 +131,10 @@ Os atores representam os papéis das pessoas que utilizarão o GeoVale:
 
 ### RF-01 — Envio e validação do arquivo geográfico
 
-**Estado:** definição, formato inicial e estrutura aprovados pelo responsável
-pelo projeto em 20/10/2026; limites de entrada, regras de geometria e tratamento
-de múltiplas áreas ainda pendentes de detalhamento.
+**Estado:** definição, formato inicial, estrutura e tipos de geometria
+aprovados pelo responsável pelo projeto em 20/10/2026; limites de entrada,
+regras adicionais de validade das geometrias e tratamento de múltiplas áreas
+ainda pendentes de detalhamento.
 
 **Ator:** AT-01 — Engenheiro/analista.
 
@@ -161,8 +162,22 @@ campo `features` deverá ser uma lista não vazia composta somente por objetos
 não nulo e `properties` como objeto de atributos ou `null`. Essas condições
 são restrições de entrada do GeoVale; a RFC admite coleções vazias e geometrias
 nulas, que serão rejeitadas nessa entrada do MVP. A aprovação estrutural
-permitirá prosseguir às demais validações, sem resolver as regras pendentes
-de geometria, limites ou tratamento de múltiplas áreas.
+permitirá prosseguir às demais validações, incluindo a conferência dos tipos
+de geometria definidos abaixo, sem resolver as regras adicionais de validade,
+limites ou tratamento de múltiplas áreas.
+
+Os tipos de geometria aceitos para representar a área de estudo serão
+`Polygon` e `MultiPolygon`. Um `Polygon` representa uma área contínua; um
+`MultiPolygon` reúne partes poligonais em uma única geometria, permitindo
+representar partes separadas. Esses tipos representam superfícies adequadas
+ao cálculo da extensão do terreno previsto no RF-03.
+
+Geometrias dos tipos `Point`, `MultiPoint`, `LineString`, `MultiLineString`
+e `GeometryCollection` serão rejeitadas nessa entrada do MVP. A rejeição de
+`GeometryCollection` também se aplica quando seus componentes forem somente
+polígonos. A aceitação do tipo não comprova a validade completa da geometria
+nem define como tratar arquivos com mais de uma `Feature`; essas regras
+permanecem pendentes nos RF-01 e RF-02.
 
 **Critérios de aceitação:**
 
@@ -182,15 +197,21 @@ de geometria, limites ou tratamento de múltiplas áreas.
 | Campo `features` ausente, diferente de lista ou vazio | Rejeitar o arquivo com mensagem compreensível. |
 | Item de `features` que não seja `Feature`, ou com `geometry` ausente, nula ou diferente de objeto de geometria | Rejeitar o arquivo com mensagem compreensível. |
 | Campo `properties` ausente ou cujo valor não seja um objeto nem `null` | Rejeitar o arquivo com mensagem compreensível. |
+| Geometria do tipo `Polygon` | Prosseguir às demais validações de entrada. |
+| Geometria do tipo `MultiPolygon` | Prosseguir às demais validações de entrada. |
+| Geometria do tipo `Point`, `MultiPoint`, `LineString` ou `MultiLineString` | Rejeitar o arquivo e informar que os tipos aceitos são `Polygon` e `MultiPolygon`. |
+| Geometria do tipo `GeometryCollection`, mesmo contendo somente polígonos | Rejeitar o arquivo e informar que os tipos aceitos são `Polygon` e `MultiPolygon`. |
 
 **Dependências e detalhamento pendente:**
 
-O formato inicial e a estrutura aceita estão definidos como GeoJSON com
-extensão `.geojson` e objeto principal `FeatureCollection`, conforme as
-condições acima. Os limites de entrada, as regras de geometria e o tratamento
-de arquivos com múltiplas áreas ainda deverão ser especificados e aprovados
-antes da implementação e da preparação dos arquivos de teste válidos e
-inválidos. A definição da estrutura não resolve essas pendências.
+O formato inicial, a estrutura e os tipos de geometria estão definidos como
+GeoJSON com extensão `.geojson`, objeto principal `FeatureCollection` e
+geometrias `Polygon` ou `MultiPolygon`, conforme as condições acima. Os
+limites de entrada, as regras adicionais de validade das geometrias, incluindo
+coordenadas e topologia, e o tratamento de arquivos com múltiplas áreas ou
+mais de uma `Feature` ainda deverão ser especificados e aprovados antes da
+implementação e da preparação dos arquivos de teste válidos e inválidos.
+A definição dos tipos de geometria não resolve essas pendências.
 
 **Momento de verificação:**
 
