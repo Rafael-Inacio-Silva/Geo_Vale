@@ -1082,3 +1082,48 @@ a implementação dos RF-06 e RF-09. O cenário com previsão favorável será
 verificado após a integração do ML na Etapa 8, incluída no MVP final.
 Este registro especifica a regra; ainda não existem comparação multicritério
 nem modelo implementados para verificar seu atendimento.
+
+### RN-02 — Identificação de informações simuladas
+
+**Estado:** definição aprovada pelo responsável pelo projeto em 20/10/2026;
+forma de apresentação ainda pendente de detalhamento nas etapas correspondentes.
+
+**Origem:** identificação das informações simuladas prevista nos RNG-05,
+RNG-06 e RNG-07 e rastreabilidade prevista no RNF-02.
+
+**Prioridade:** essencial.
+
+**Descrição aprovada:**
+
+Dados, regras, notas, custos, benefícios e dados de treinamento simulados
+utilizados pelo GeoVale deverão ser explicitamente identificados como tais.
+Essa identificação deverá manter correspondência entre a análise, o dashboard
+e o relatório, permitindo distinguir as informações simuladas das reais.
+Quando houver treinamento com dados sintéticos, sua natureza simulada deverá
+ser identificável na consulta da origem do treinamento e nos resultados
+apresentados no dashboard e no relatório do MVP final.
+
+**Critérios de aceitação:**
+
+| Cenário | Resultado esperado |
+| --- | --- |
+| Consulta de uma análise com dados, regras, notas, custos ou benefícios simulados | Identificar explicitamente quais dessas informações são simuladas. |
+| Consulta do dashboard de uma análise com informações reais e simuladas | Distinguir as informações simuladas das reais, mantendo correspondência com a análise. |
+| Conferência do relatório de uma análise com informações simuladas | Preservar a identificação das informações simuladas conforme a análise e o dashboard. |
+| Consulta da origem do treinamento e dos resultados após integração de ML treinado com dados sintéticos | Identificar o treinamento sintético na consulta de sua origem e nos resultados apresentados no dashboard e no relatório do MVP final. |
+
+**Dependências e detalhamento pendente:**
+
+A regra orienta a rastreabilidade do RNF-02 e a apresentação prevista nos
+RF-10, RF-12 e RF-13. A forma de apresentação deverá ser detalhada e aprovada
+nas etapas correspondentes, antes da implementação e da preparação dos
+cenários de teste. As pendências dos requisitos anteriores permanecem em
+aberto, incluindo a definição dos metadados e de seu armazenamento.
+
+**Momento de verificação:**
+
+A identificação das informações simuladas será verificada durante a
+implementação da análise, do dashboard e do relatório. O cenário com
+treinamento sintético será verificado após a integração do ML na Etapa 8,
+incluída no MVP final. Este registro especifica a regra; ainda não existem
+essas funcionalidades implementadas para verificar seu atendimento.
