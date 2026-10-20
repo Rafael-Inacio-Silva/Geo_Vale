@@ -1082,11 +1082,12 @@ elegíveis.
 A regra orienta a aplicação das restrições no RF-06, a comparação do RF-09 e
 a integração de ML do RF-13. As condições e os parâmetros das regras
 demonstrativas deverão ser detalhados e aprovados antes da implementação e
-da preparação dos cenários de teste correspondentes. As pendências dos
-requisitos anteriores, incluindo o tratamento de dados ausentes, permanecem
-em aberto. O detalhamento da classificação acima se aplica aos cenários com
-os dados necessários disponíveis; o comportamento diante de indisponibilidade
-ainda precisa ser definido e aprovado.
+da preparação dos cenários de teste correspondentes. As demais pendências
+dos requisitos anteriores permanecem em aberto. O detalhamento da classificação
+acima se aplica aos cenários com os dados necessários disponíveis; o tratamento
+da indisponibilidade segue o comportamento definido e aprovado na RN-03.
+A lista dos dados necessários e os critérios de disponibilidade permanecem
+pendentes de detalhamento e aprovação, conforme a RN-03.
 
 **Momento de verificação:**
 
