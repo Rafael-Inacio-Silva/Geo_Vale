@@ -2,7 +2,7 @@
 
 **Atualização:** 20/10/2026.
 **Etapa atual:** 2 — Engenharia de requisitos do sistema, iniciada com autorização em 20/10/2026.
-**Subetapa atual:** atores AT-01 e AT-02, definições dos RF-01 a RF-13, RNF-01 a RNF-06, RT-01 a RT-02 e RN-01 a RN-03 aprovadas, documentadas e publicadas; revisões documentais dos seis RNF, dos dois RT e das três RN concluídas; exigência das licenças explícita no RT-01 e classificação da RN-01 detalhada para dados necessários disponíveis e efeitos da indisponibilidade detalhados na RN-03; referência entre RN-01 e RN-03 sincronizada; levantamento das pendências de encerramento organizado em seis blocos e formato inicial GeoJSON `.geojson`, estrutura `FeatureCollection` e tipos de geometria `Polygon` e `MultiPolygon` aprovados no RF-01; demais decisões de comportamento, demais detalhamentos técnicos e verificações da aplicação ainda pendentes.
+**Subetapa atual:** atores AT-01 e AT-02, definições dos RF-01 a RF-13, RNF-01 a RNF-06, RT-01 a RT-02 e RN-01 a RN-03 aprovadas, documentadas e publicadas; revisões documentais dos seis RNF, dos dois RT e das três RN concluídas; exigência das licenças explícita no RT-01 e classificação da RN-01 detalhada para dados necessários disponíveis e efeitos da indisponibilidade detalhados na RN-03; referência entre RN-01 e RN-03 sincronizada; levantamento das pendências de encerramento organizado em seis blocos e formato inicial GeoJSON `.geojson`, estrutura `FeatureCollection`, tipos `Polygon` e `MultiPolygon` e regras de validade das geometrias aprovados no RF-01; demais decisões de comportamento, demais detalhamentos técnicos e verificações da aplicação ainda pendentes.
 
 Este documento registra o estado observado nesta entrega. Não há aplicação
 executável nem funcionalidades de geoprocessamento, análise multicritério ou
@@ -109,12 +109,20 @@ estruturais foram acrescentados, totalizando 14 naquele momento. Os tipos
 de geometria `Polygon` e `MultiPolygon` também foram aprovados e publicados
 no commit `a08f135`, após esclarecimento visual ao responsável. Pontos,
 linhas e `GeometryCollection`, mesmo contendo somente polígonos, serão
-rejeitados. Quatro cenários foram acrescentados, totalizando 18 no RF-01.
-A aceitação do tipo permite seguir às demais validações; não comprova a
-validade completa da geometria nem define o tratamento de múltiplas
-`Feature`. Regras adicionais de validade, incluindo coordenadas e topologia,
-limites e tratamento de múltiplas áreas continuam pendentes de definição
-antes da implementação e dos testes.
+rejeitados. Quatro cenários foram acrescentados, totalizando 18 naquele
+momento. As regras de validade das geometrias também foram aprovadas e
+publicadas no commit `fa0601c`, com nove cenários adicionais, totalizando
+27 no RF-01. A entrada deverá ter coordenadas finitas em WGS 84, longitude
+e latitude com altitude opcional, anéis fechados e geometria válida em duas
+dimensões. Foram especificados cruzamentos, recortes internos, relações
+entre partes de um `MultiPolygon` e aceitação do sentido de percurso
+invertido quando as demais condições forem atendidas. Falhas rejeitam o
+arquivo e bloqueiam a análise, sem correção automática da geometria. A
+altitude não participa dos cálculos em duas dimensões; a referência de
+entrada não substitui a definição do sistema adequado aos cálculos do
+RF-03 e do RT-02. Limites de entrada e tratamento de múltiplas áreas ou
+`Feature` continuam pendentes de definição antes da implementação e dos
+testes. A validade ainda não foi implementada nem testada funcionalmente.
 
 ## Entregas concluídas
 
@@ -373,6 +381,14 @@ antes da implementação e dos testes.
   RF-01, com as demais seções e arquivos preservados. Regras adicionais de
   validade, limites e tratamento de múltiplas áreas ou `Feature` continuam
   pendentes; a validação ainda não foi implementada nem testada funcionalmente.
+- Regras de validade das geometrias do RF-01 aprovadas e publicadas no commit
+  `fa0601c`: coordenadas, anéis fechados, cruzamentos, recortes internos e
+  relações entre partes de um `MultiPolygon`, com altitude opcional fora dos
+  cálculos em duas dimensões e sem rejeição somente pelo sentido de percurso.
+  Nove cenários acrescentados, totalizando 27; somente a seção RF-01 foi
+  alterada, com os 18 cenários anteriores, demais seções e arquivos preservados.
+  Erros bloqueiam a análise, sem correção automática. Limites e tratamento de
+  múltiplas áreas ou `Feature` permanecem pendentes; testes funcionais futuros.
 
 ## Arquivos relevantes
 
@@ -392,7 +408,7 @@ excluídos permanecem fora do versionamento.
 ## Estado do Git
 
 - Branch atual: `main`.
-- Histórico anterior a esta entrega: noventa e quatro commits locais já publicados, listados abaixo.
+- Histórico anterior a esta entrega: noventa e seis commits locais já publicados, listados abaixo.
 - Repositório público: [Rafael-Inacio-Silva/Geo_Vale](https://github.com/Rafael-Inacio-Silva/Geo_Vale).
 - Remoto `origin`: `https://github.com/Rafael-Inacio-Silva/Geo_Vale.git`.
 - O repositório foi criado vazio e recebeu o histórico no primeiro push.
@@ -500,9 +516,11 @@ Commits concluídos antes desta atualização:
 | `0d8835e` | `docs: define estrutura FeatureCollection para entrada` |
 | `e831032` | `docs: registra estrutura FeatureCollection do RF-01 no status` |
 | `a08f135` | `docs: define tipos de geometria aceitos no RF-01` |
+| `4164f56` | `docs: registra tipos de geometria do RF-01 no status` |
+| `fa0601c` | `docs: especifica validade das geometrias no RF-01` |
 
 Esta atualização do status tem a mensagem de commit
-`docs: registra tipos de geometria do RF-01 no status`. Consulte `git log --oneline` para
+`docs: registra validade das geometrias do RF-01 no status`. Consulte `git log --oneline` para
 identificar seu hash e o histórico atualizado, sem depender de contagens fixas
 neste documento.
 
@@ -575,6 +593,7 @@ São verificações de configuração e documentação; não são testes da apli
 | Formato inicial do RF-01 | GeoJSON com extensão `.geojson` conferido com a proposta aprovada e a RFC 7946. Commit `57b5e7d` altera somente a seção RF-01 em `docs/REQUISITOS.md`; demais seções preservadas integralmente. Quatro critérios acrescentados, totalizando nove: conteúdo GeoJSON válido segue às demais validações; arquivo vazio, JSON malformado, JSON que não represente GeoJSON e extensão não aceita são rejeitados. Pendências preservadas, diff sem erros de espaços e publicação confirmada com Git limpo e sincronizado. Validação ainda não implementada nem testada funcionalmente. |
 | Estrutura inicial do RF-01 | Conferida com a proposta aprovada e a RFC 7946. Commit `0d8835e` altera somente a seção RF-01 em `docs/REQUISITOS.md`; demais seções preservadas integralmente. Cinco critérios estruturais acrescentados, totalizando 14 no RF-01: objeto principal `FeatureCollection`, lista `features` não vazia com itens `Feature`, geometria não nula e `properties` como objeto ou `null`. Restrições do MVP distinguidas das possibilidades da RFC; pendências preservadas. Diff sem erros de espaços e publicação confirmada com Git limpo e sincronizado. Validação ainda não implementada nem testada funcionalmente. |
 | Tipos de geometria do RF-01 | Commit `a08f135` conferido contra a proposta aprovada: `Polygon` e `MultiPolygon` seguem às demais validações; pontos, linhas e `GeometryCollection` são rejeitados, inclusive quando a coleção contém somente polígonos. Quatro cenários acrescentados, totalizando 18. Somente a seção RF-01 de `docs/REQUISITOS.md` foi alterada; demais seções e arquivos preservados. Pendências de validade, limites e múltiplas áreas mantidas. Diff sem erros de espaços, diretório limpo e igualdade entre HEAD, origin/main e referência consultada no GitHub confirmados após o envio. Validação ainda não implementada nem testada funcionalmente. |
+| Validade das geometrias do RF-01 | Commit `fa0601c` conferido contra a proposta aprovada: nove cenários acrescentados, totalizando 27; os 18 anteriores foram preservados. Condições de coordenadas, fechamento dos anéis, cruzamentos, recortes, relações entre partes e sentido de percurso registradas, com rejeição e bloqueio sem correção automática. Apenas a seção RF-01 de `docs/REQUISITOS.md` foi alterada; demais seções e arquivos preservados. Limites, múltiplas áreas e definições de cálculo do RF-03 e do RT-02 continuam pendentes. Diff sem erros de espaços e publicação confirmada, com igualdade entre HEAD, origin/main e referência consultada no GitHub e diretório limpo. Conferência documental; validação ainda não implementada nem testada funcionalmente. |
 
 Os registros de preparação do ambiente Python são históricos. Nesta revisão,
 foram conferidos os documentos, os commits e o estado do Git; as verificações
@@ -605,11 +624,11 @@ Resultados de funcionalidades e métricas de ML não existem nesta fase.
 - A Etapa 2 foi iniciada; atores e definições dos RF-01 a RF-13 foram documentados.
   O formato inicial do RF-01 está definido como GeoJSON com extensão `.geojson`
   e estrutura `FeatureCollection`, com tipos de geometria `Polygon` e
-  `MultiPolygon`, conforme as condições aprovadas no requisito. Limites de
-  entrada, regras adicionais de validade das geometrias, incluindo coordenadas
-  e topologia, e tratamento de múltiplas áreas ou `Feature` precisam ser
+  `MultiPolygon` e regras de validade das geometrias aprovadas no requisito.
+  Limites de entrada e tratamento de múltiplas áreas ou `Feature` precisam ser
   detalhados e aprovados antes da implementação e da preparação dos arquivos
-  de teste.
+  de teste. As condições de validade já especificadas serão verificadas na
+  implementação; ainda não foram testadas funcionalmente.
 - As regras para arquivos com múltiplas áreas do RF-02 precisam ser
   especificadas e aprovadas antes da implementação e da preparação dos
   cenários de teste correspondentes. A dependência do RF-01 permanece aberta.
@@ -747,7 +766,7 @@ Este plano não define os comportamentos pendentes nem encerra a etapa.
 
 | Ordem | Bloco | Decisões ainda necessárias |
 | --- | --- | --- |
-| 1 | Arquivo e área — RF-01 e RF-02 | Formato GeoJSON `.geojson`, estrutura `FeatureCollection` e tipos de geometria `Polygon` e `MultiPolygon` definidos. Pendentes limites, regras adicionais de validade das geometrias e tratamento de arquivos com múltiplas áreas ou `Feature`. |
+| 1 | Arquivo e área — RF-01 e RF-02 | Formato GeoJSON `.geojson`, estrutura `FeatureCollection`, tipos `Polygon` e `MultiPolygon` e regras de validade das geometrias definidos. Pendentes limites de entrada e tratamento de arquivos com múltiplas áreas ou `Feature`. |
 | 2 | Análise e restrições — RF-04 a RF-06 e RN-01/RN-03 | Medições esperadas, condições demonstrativas de alertas e restrições e identificação dos dados necessários. |
 | 3 | Comparação — RF-07 a RF-09 | Campos das alternativas, critérios, escalas, pesos, normalização, empates e precisão da pontuação. |
 | 4 | Resultados — RF-10 a RF-12 | Confirmar informações mínimas para consulta e persistência, formato do relatório e apresentação dos resultados completos ou parciais. |
@@ -824,8 +843,8 @@ O encerramento depende de revisão e aprovação do responsável pelo projeto.
   disponibilidade e a forma de apresentação da RN-03 antes da implementação
   e da preparação dos testes.
 - Discutir e aprovar os conteúdos das pequenas unidades da sequência
-  registrada no plano de pendências; próxima proposta: regras adicionais de
-  validade das geometrias no RF-01.
+  registrada no plano de pendências; próxima proposta: limites de entrada
+  do RF-01.
 - Discutir e aprovar os demais detalhamentos da Etapa 2.
 - Na Etapa 4, escolher stack e versão suportada de Python, avaliando a proposta
   de Streamlit e a separação entre frontend na Vercel e backend no Railway.
@@ -850,11 +869,11 @@ reproduzível serão detalhadas após a definição da stack.
 
 ## Próxima tarefa recomendada
 
-Discutir as regras adicionais de validade das geometrias no RF-01, incluindo
-coordenadas e topologia, conferindo a consistência com os tipos `Polygon` e
-`MultiPolygon` já aprovados e com os RF-02, RF-03 e RT-02. Apresentar a
-proposta, sua justificativa e os cenários de aceitação no chat, sem alterar
-arquivos nessa discussão. Limites e tratamento de múltiplas áreas serão
-detalhados em unidades próprias.
+Discutir os limites de entrada do RF-01, incluindo tamanho do arquivo e
+complexidade das geometrias, considerando o cenário demonstrativo e o
+RNF-05. Apresentar a proposta, sua justificativa, as unidades de medida e
+os cenários de aceitação no chat, sem alterar arquivos nessa discussão nem
+antecipar medições de desempenho. O tratamento de múltiplas áreas ou
+`Feature` será detalhado em unidade própria.
 A Etapa 2 permanece em andamento; alterações, commits, publicação e
 encerramento dependem de autorização.
