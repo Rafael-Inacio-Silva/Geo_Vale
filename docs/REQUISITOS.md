@@ -1416,7 +1416,8 @@ ainda não foram executados.
 **Estado:** definição aprovada pelo responsável pelo projeto em 20/10/2026;
 alinhamento da contribuição do ML à dimensão de aptidão física do RF-08 e
 à soma ponderada do RF-09 e significado demonstrativo do alvo por uso aprovados
-em 21/10/2026. Representação da saída, atributos, escalas, conversão da previsão
+em 21/10/2026. Saída por classes de aptidão aprovada em 21/10/2026. Nomes,
+quantidade, significado e limites das classes, atributos, escalas, conversão
 em nota, treinamento e avaliação permanecem pendentes de definição.
 
 **Atores:** AT-01 — Engenheiro/analista utiliza a previsão; AT-02 — Gestor consulta os resultados.
@@ -1483,6 +1484,34 @@ validação dessas respostas ainda deverão ser especificadas. Quando simuladas,
 a previsão demonstrará o aprendizado das relações dessa simulação, conforme
 as limitações da RN-02, sem comprovar capacidade preditiva real.
 
+**Representação da saída por classes de aptidão:**
+
+A previsão será apresentada como uma classe de aptidão física demonstrativa
+para cada uso avaliado. A tarefa do ML será de classificação em categorias;
+essa classificação não corresponde ao ranking das alternativas do RF-09.
+A escolha por classes busca facilitar a comunicação do resultado no MVP;
+não comprova maior validade técnica ou capacidade preditiva do modelo.
+
+Nomes, quantidade, significado, condições e limites das classes deverão ser
+fundamentados, especificados e aprovados antes da implementação e da preparação
+das respostas de referência para o treinamento. A distinção conceitual entre
+classificação e regressão consta da documentação do scikit-learn já referenciada;
+a escolha do formato não seleciona algoritmo ou stack nesta unidade.
+
+A classe prevista e a nota comparável de aptidão física serão informações
+distintas. A conversão de classe em nota para os RF-08 e RF-09 exigirá uma regra
+fundamentada, especificada e aprovada; eventuais códigos numéricos de categorias
+não serão usados automaticamente como notas. A saída escolhida nesta unidade
+não será um índice numérico contínuo ou percentual de certeza. Valores dos
+pesos continuarão pendentes, sem serem definidos ou alterados pelo formato
+da previsão.
+
+Avaliação indisponível será um estado separado das classes de aptidão. A falta
+de dado necessário não deverá produzir automaticamente uma classe de menor
+aptidão ou uma nota zero. Identificar o motivo, bloquear o ranking e preservar
+resultados parciais válidos conforme a RN-03. Restrições da RN-01 permanecem
+independentes da classe prevista e simulações continuam identificadas pela RN-02.
+
 **Contribuição à dimensão de aptidão física:**
 
 A previsão demonstrativa contribuirá para a nota de Aptidão física para o uso
@@ -1512,9 +1541,10 @@ seu motivo, bloquear o ranking e preservar resultados parciais válidos. Não
 substituir dados ausentes por zero, preencher automaticamente com simulações
 ou ajustar automaticamente os pesos para prosseguir com a comparação.
 
-O significado do alvo e o papel do ML na comparação estão definidos acima.
-Permanecem pendentes a representação da saída, os atributos, as escalas e a
-conversão em nota, o algoritmo, o treinamento e a avaliação. Esta unidade não
+O significado do alvo, a saída por classes e o papel do ML na comparação
+estão definidos acima. Permanecem pendentes os nomes, a quantidade, o significado
+e os limites das classes, os atributos, as escalas e a conversão em nota,
+o algoritmo, o treinamento e a avaliação. Esta unidade não
 implementa o modelo ou o cálculo multicritério e não atribui valores aos pesos.
 
 **Critérios de aceitação:**
@@ -1532,18 +1562,21 @@ implementa o modelo ou o cálculo multicritério e não atribui valores aos peso
 | Dado necessário à previsão ou à conversão em nota necessária à comparação indisponível | Informar a indisponibilidade e o motivo, bloquear o ranking e preservar resultados parciais válidos conforme a RN-03, sem substituir dados ausentes por zero, preencher automaticamente com simulações ou ajustar automaticamente os pesos. |
 | Avaliação da mesma área para os três cenários de referência, com entradas válidas conforme a especificação | Identificar a aptidão física demonstrativa correspondente a cada uso, permitindo avaliações diferentes; não substituir essas avaliações por um único nome de uso vencedor nem pela classificação final do RF-09. |
 | Consulta do significado e do alcance de uma previsão | Informar o uso avaliado e o alcance limitado aos aspectos considerados; não apresentar o resultado como comprovação de segurança, estabilidade geotécnica, ausência de contaminação, recuperação ambiental ou viabilidade da instalação, nem presumir condições não avaliadas como favoráveis. |
+| Previsão com entradas válidas e classes especificadas e aprovadas | Apresentar a classe de aptidão física demonstrativa e o uso correspondente, distinguindo-a da nota comparável e do ranking final; aplicar somente uma conversão em nota previamente especificada e aprovada, sem usar automaticamente códigos de categorias como notas. |
+| Falta de dado necessário à avaliação por classes | Informar avaliação indisponível e o motivo, sem atribuir automaticamente classe de menor aptidão ou nota zero; bloquear o ranking e preservar resultados parciais válidos conforme a RN-03. |
 
 **Dependências e detalhamento pendente:**
 
 O requisito depende dos atributos provenientes da análise geográfica, das
 alternativas do RF-07, da dimensão de aptidão física e das escalas comparáveis
 do RF-08 e da composição da soma ponderada do RF-09. A contribuição da previsão
-para essa dimensão e o significado demonstrativo do alvo por uso estão definidos
-acima. Permanecem pendentes a representação da saída, os atributos necessários,
+para essa dimensão, o significado demonstrativo do alvo por uso e a saída por
+classes estão definidos acima. Permanecem pendentes os nomes, a quantidade,
+o significado, as condições e os limites das classes, os atributos necessários,
 as respostas de referência para o treinamento, sua origem, obtenção e validação,
-as escalas, a conversão da previsão em nota, o algoritmo, o treinamento e a
-avaliação. Essas definições
-deverão ser aprovadas antes da implementação e da preparação dos testes
+as escalas, a conversão das classes em notas, o algoritmo, o treinamento e a
+avaliação. Essas definições deverão ser aprovadas antes da implementação e
+da preparação dos testes
 correspondentes. Custos e benefícios continuam com avaliações próprias a
 detalhar no RF-08. Preservar as RN-01, RN-02 e RN-03 e as demais pendências
 anteriores. Este alinhamento não altera os RF-08 e RF-09 nem encerra a Etapa 2.
