@@ -652,8 +652,9 @@ implementada e os testes de medições e alertas ainda não foram executados.
 ### RF-06 — Aplicação de regras de negócio demonstrativas
 
 **Estado:** definição aprovada pelo responsável pelo projeto em 20/10/2026;
-regras de negócio, parâmetros e tratamento de dados ausentes ainda pendentes
-de especificação.
+estrutura, fundamentação e comportamento de avaliação das regras demonstrativas
+aprovados em 21/10/2026. Condições específicas, parâmetros e lista dos dados
+necessários ainda pendentes de detalhamento.
 
 **Ator:** AT-01 — Engenheiro/analista.
 
@@ -670,6 +671,59 @@ As restrições eliminatórias deverão permanecer separadas das pontuações;
 uma pontuação alta não poderá compensar uma restrição eliminatória.
 As regras simuladas deverão ser explicitamente identificadas.
 
+**Estrutura e fundamentação das regras:**
+
+Cada regra deverá registrar as seguintes informações:
+
+- Identificação: nome e versão da regra utilizada.
+- Finalidade: alternativa de uso que a regra avalia.
+- Condição: dados necessários e condição que identifica a restrição, com
+  parâmetros e unidades quando aplicáveis.
+- Fundamentação: fonte consultada, adaptação realizada e limitações;
+  hipóteses simuladas deverão ter sua origem e seu caráter demonstrativo
+  identificados explicitamente.
+- Efeito: em qual condição a regra identifica uma restrição para a alternativa.
+- Justificativa do resultado: dados e parâmetros utilizados que sustentam
+  a conclusão apresentada.
+
+O [Guia de Indicadores para Planejamento do Fechamento de Mina do IBRAM,
+2024, página impressa 20](https://ibram.org.br/wp-content/uploads/2024/08/IBRAM_Guia-de-Indicadores-para-Planejamento-do-Fechamento-de-Mina_A4-2.pdf)
+orienta fundamentar estudos de alternativas em aptidões, potencialidades e
+restrições do território e das estruturas da mina. Essa referência apoia a
+necessidade de justificar as regras; não fornece condições ou limites
+universais para o GeoVale. A estrutura de registro acima é uma definição de
+escopo do MVP, sem representar um modelo de banco ou uma validação ambiental.
+
+**Comportamento da avaliação:**
+
+Uma regra completa, com os dados necessários disponíveis, deverá apresentar
+“restrição identificada” quando sua condição de restrição for atendida ou
+“restrição não identificada segundo esta regra” quando não for atendida.
+Os resultados deverão identificar nome, versão, alternativa, dados e
+parâmetros utilizados e a justificativa correspondente. A avaliação de uma
+regra não substitui a avaliação das demais regras aplicáveis à alternativa.
+
+Quando faltar dado necessário à avaliação, apresentar “avaliação indisponível”
+e identificar a pendência, sem substituir dados ausentes por zero nem concluir
+que não existe restrição. Se faltar dado necessário para avaliar restrições
+ou calcular a comparação, bloquear o ranking, preservando resultados parciais
+válidos e identificando a indisponibilidade conforme a RN-03.
+
+Uma regra incompleta, sem as informações exigidas acima, não deverá ser
+aplicada como se fosse válida: informar o problema de configuração com
+mensagem compreensível e apresentar sua avaliação como indisponível, sem
+inferir presença ou ausência de restrição.
+
+Uma interseção ou outra ocorrência identificada no RF-05 somente produzirá
+restrição quando existir uma regra específica, fundamentada e aprovada que
+associe aquela condição à alternativa avaliada. As restrições identificadas
+seguirão a RN-01, permanecendo separadas da pontuação, inclusive diante de
+notas altas ou previsões favoráveis de ML.
+
+Esta unidade define a organização e o comportamento das regras. As condições
+ambientais concretas, seus parâmetros, sua fundamentação e os dados necessários
+serão propostos e aprovados em unidades posteriores, antes da implementação.
+
 **Critérios de aceitação:**
 
 | Cenário | Resultado esperado |
@@ -679,13 +733,25 @@ As regras simuladas deverão ser explicitamente identificadas.
 | Restrição eliminatória acompanhada de pontuação alta | Manter a restrição separada da pontuação, sem permitir sua compensação pela nota. |
 | Consulta do resultado de uma regra | Identificar a regra utilizada e a justificativa do resultado. |
 | Aplicação de regra simulada | Identificar explicitamente seu caráter simulado. |
+| Regra completa com dados necessários disponíveis e condição de restrição atendida | Apresentar “restrição identificada”, com nome, versão, alternativa, dados e parâmetros utilizados e justificativa. |
+| Regra completa com dados necessários disponíveis e condição de restrição não atendida | Apresentar “restrição não identificada segundo esta regra”, com os dados da avaliação e a justificativa, sem substituir a avaliação das demais regras aplicáveis. |
+| Dado necessário à avaliação de uma regra ausente | Apresentar “avaliação indisponível” e identificar a pendência, sem substituir o dado por zero nem concluir ausência de restrição; bloquear o ranking quando faltar dado necessário para avaliar restrições ou calcular a comparação, preservando resultados parciais válidos conforme a RN-03. |
+| Consulta de regra ou parâmetro baseado em hipótese simulada | Identificar sua origem e seu caráter demonstrativo, além da adaptação e das limitações registradas, sem apresentar a hipótese como condição ambiental validada. |
+| Regra incompleta, sem alguma informação exigida em sua estrutura | Não aplicar a regra como válida; informar o problema de configuração e apresentar “avaliação indisponível”, sem inferir presença ou ausência de restrição. |
+| Regra identifica restrição para alternativa com pontuação alta ou previsão favorável de ML | Preservar a restrição e sua justificativa separadas da pontuação, seguindo a RN-01, sem compensação ou remoção pelo resultado favorável. |
 
 **Dependências e detalhamento pendente:**
 
-O requisito depende do RF-05 e da especificação das regras de negócio, de
-seus parâmetros e do tratamento de dados ausentes. Essas definições deverão
-ser aprovadas antes da implementação e da preparação dos cenários de teste.
-As pendências dos requisitos anteriores permanecem em aberto.
+O requisito depende das informações do RF-05 e da definição das alternativas
+a avaliar. A estrutura e o comportamento de avaliação das regras estão
+definidos acima, com tratamento de indisponibilidade conforme a RN-03 e
+preservação das restrições conforme a RN-01. Permanecem pendentes as condições
+específicas, seus parâmetros e unidades, as fontes e adaptações aplicáveis
+e a lista dos dados necessários a cada regra. Essas definições e os critérios
+de disponibilidade deverão ser detalhados e aprovados antes da implementação
+e da preparação dos cenários de teste correspondentes. A referência ao guia
+e a organização da regra não substituem a fundamentação de cada condição
+concreta. As demais pendências dos requisitos anteriores permanecem em aberto.
 
 **Momento de verificação:**
 
