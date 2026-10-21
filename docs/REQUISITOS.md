@@ -1414,8 +1414,10 @@ ainda não foram executados.
 ### RF-13 — Previsão demonstrativa de aptidão física por ML
 
 **Estado:** definição aprovada pelo responsável pelo projeto em 20/10/2026;
-alvo, atributos, treinamento, avaliação e conversão da previsão em entrada
-multicritério ainda pendentes de definição.
+alinhamento da contribuição do ML à dimensão de aptidão física do RF-08 e
+à soma ponderada do RF-09 aprovado em 21/10/2026. Alvo, atributos, escalas,
+conversão da previsão em nota, treinamento e avaliação permanecem pendentes
+de definição.
 
 **Atores:** AT-01 — Engenheiro/analista utiliza a previsão; AT-02 — Gestor consulta os resultados.
 
@@ -1437,6 +1439,39 @@ ou compensadas pela previsão.
 Quando houver treinamento com dados sintéticos, o resultado demonstrará o
 funcionamento do algoritmo, sem comprovar capacidade preditiva em áreas reais.
 
+**Contribuição à dimensão de aptidão física:**
+
+A previsão demonstrativa contribuirá para a nota de Aptidão física para o uso
+de cada alternativa, dimensão comum definida no RF-08. A conversão da previsão
+em nota comparável ainda deverá ser especificada e aprovada. Deverá ser possível
+identificar a alternativa avaliada, os atributos utilizados, a previsão obtida
+e sua relação com a nota dessa dimensão, conforme a conversão que vier a ser
+aprovada. A origem do treinamento e as limitações deverão permanecer
+identificáveis no dashboard e no relatório, conforme os RF-10 e RF-12.
+
+O RF-09 utilizará a nota da dimensão de aptidão física na soma ponderada,
+juntamente com as notas de custo e benefícios. A previsão não será acrescentada
+como quarta dimensão ou como parcela extra nessa soma. A configuração de pesos
+compartilhada entre alternativas permanecerá preservada. O ML deste requisito
+não estimará automaticamente custos ou benefícios; essas dimensões terão
+avaliações próprias, com dados, métodos e escalas ainda a especificar no RF-08.
+
+As restrições eliminatórias continuarão preservadas conforme a RN-01, mesmo
+com previsão favorável. Informações simuladas e treinamento sintético deverão
+permanecer explicitamente identificados conforme a RN-02; resultados com
+esse treinamento não comprovam capacidade preditiva em áreas reais nem
+substituem avaliação especializada.
+
+A falta de dado necessário para produzir a previsão ou convertê-la em nota
+necessária à comparação seguirá a RN-03: identificar a indisponibilidade e
+seu motivo, bloquear o ranking e preservar resultados parciais válidos. Não
+substituir dados ausentes por zero, preencher automaticamente com simulações
+ou ajustar automaticamente os pesos para prosseguir com a comparação.
+
+Este alinhamento especifica o papel do ML na comparação; não define o alvo,
+os atributos, as escalas ou a conversão em nota, nem seleciona algoritmo,
+treinamento ou avaliação. Não implementa o modelo ou o cálculo multicritério.
+
 **Critérios de aceitação:**
 
 | Cenário | Resultado esperado |
@@ -1447,14 +1482,22 @@ funcionamento do algoritmo, sem comprovar capacidade preditiva em áreas reais.
 | Reprodução dos testes do modelo | Permitir reproduzir os testes conforme os dados, procedimentos e critérios de avaliação documentados. |
 | Entradas inválidas | Informar o problema com mensagem compreensível. |
 | Previsão favorável acompanhada de restrição eliminatória | Preservar a restrição, sem permitir sua substituição ou compensação pela previsão. |
+| Integração de previsão válida à nota de aptidão física de uma alternativa, conforme conversão aprovada | Contribuir para a nota dessa dimensão no RF-08 e na soma ponderada do RF-09, sem criar quarta dimensão ou parcela extra; preservar a configuração comum de pesos e manter custos e benefícios em avaliações próprias, sem estimá-los automaticamente por este ML. |
+| Consulta da contribuição do ML na comparação, no dashboard e no relatório | Identificar a alternativa, os atributos, a previsão e sua relação com a nota de aptidão física, conforme a conversão aprovada, mantendo a origem do treinamento e as limitações consultáveis e as simulações identificadas. |
+| Dado necessário à previsão ou à conversão em nota necessária à comparação indisponível | Informar a indisponibilidade e o motivo, bloquear o ranking e preservar resultados parciais válidos conforme a RN-03, sem substituir dados ausentes por zero, preencher automaticamente com simulações ou ajustar automaticamente os pesos. |
 
 **Dependências e detalhamento pendente:**
 
-O requisito depende dos atributos provenientes da análise geográfica e da
-definição do alvo, dos atributos, do treinamento, da avaliação e da conversão
-da previsão em entrada multicritério. Essas definições deverão ser aprovadas
-antes da implementação e da preparação dos testes correspondentes. As
-pendências dos requisitos anteriores permanecem em aberto.
+O requisito depende dos atributos provenientes da análise geográfica, das
+alternativas do RF-07, da dimensão de aptidão física e das escalas comparáveis
+do RF-08 e da composição da soma ponderada do RF-09. A contribuição da previsão
+para essa dimensão está definida acima. Permanecem pendentes o significado
+concreto do alvo por uso, os atributos necessários, as escalas, a conversão
+da previsão em nota, o algoritmo, o treinamento e a avaliação. Essas definições
+deverão ser aprovadas antes da implementação e da preparação dos testes
+correspondentes. Custos e benefícios continuam com avaliações próprias a
+detalhar no RF-08. Preservar as RN-01, RN-02 e RN-03 e as demais pendências
+anteriores. Este alinhamento não altera os RF-08 e RF-09 nem encerra a Etapa 2.
 
 **Momento de implementação e verificação:**
 
