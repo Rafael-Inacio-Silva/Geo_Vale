@@ -1183,8 +1183,10 @@ não foram executados.
 ### RF-09 — Cálculo multicritério por soma ponderada
 
 **Estado:** definição aprovada pelo responsável pelo projeto em 20/10/2026;
-regras de normalização, precisão, empates e valores ausentes ainda pendentes
-de definição.
+alinhamento às três dimensões comuns e à configuração de pesos compartilhada
+do RF-08 aprovado em 21/10/2026. Escalas, notas, valores e validação dos pesos,
+normalização, precisão, empates e demais detalhes de valores ausentes
+permanecem pendentes de definição.
 
 **Ator:** AT-01 — Engenheiro/analista.
 
@@ -1202,6 +1204,45 @@ eliminatórias deverão permanecer separadas da pontuação, sem permitir sua
 compensação por uma nota alta. Entradas inconsistentes deverão ser informadas
 com mensagem compreensível.
 
+**Composição da pontuação e configuração comum:**
+
+Para cada alternativa, a pontuação será composta pelas notas das três dimensões
+definidas no RF-08:
+
+```text
+Pontuação =
+  nota de aptidão física para o uso × peso da aptidão
++ nota de custo de implantação e adaptação × peso do custo
++ nota de benefícios esperados × peso dos benefícios
+```
+
+As alternativas selecionadas para uma mesma comparação utilizarão a mesma
+configuração de pesos. Cada dimensão terá seu próprio peso, compartilhado
+entre as alternativas, e cada alternativa terá suas notas específicas.
+As notas e os pesos efetivamente usados no cálculo deverão ser identificáveis.
+A nota de custo dependerá da conversão para uma escala comparável a ser definida
+no RF-08; o valor monetário não entrará diretamente nessa soma. Escalas e
+conversões em notas, valores dos pesos e sua validação ainda deverão ser
+especificados e aprovados antes da implementação do cálculo.
+
+Os cinco indicadores geográficos do RF-08 serão informações de apoio à
+avaliação dos usos; não entrarão automaticamente como cinco notas extras
+na soma ponderada. O cálculo utilizará as notas das três dimensões comuns,
+conforme a configuração aprovada para a comparação.
+
+Entradas de pontuação incompatíveis com as três dimensões e com a configuração
+comum de pesos deverão ser rejeitadas, sem calcular a classificação com essas
+entradas. Informar a incompatibilidade com mensagem compreensível, sem
+substituir automaticamente a configuração de uma alternativa para fazer
+prosseguir o cálculo.
+
+As restrições continuarão separadas da pontuação, conforme a RN-01; uma nota
+alta não removerá ou compensará uma restrição. A falta de dado necessário
+para avaliar restrições ou calcular a comparação bloqueará o ranking, com
+preservação dos resultados parciais válidos conforme a RN-03, sem substituir
+dados ausentes por zero. Simulações deverão permanecer explicitamente
+identificadas conforme a RN-02. Este alinhamento não implementa o cálculo.
+
 **Critérios de aceitação:**
 
 | Cenário | Resultado esperado |
@@ -1211,14 +1252,23 @@ com mensagem compreensível.
 | Consulta das entradas utilizadas no cálculo | Identificar as notas e os respectivos pesos utilizados. |
 | Alternativa com restrição eliminatória e pontuação alta | Manter a restrição separada da pontuação, sem permitir sua compensação pela nota. |
 | Entradas inconsistentes | Informar o problema com mensagem compreensível. |
+| Comparação com entradas válidas para as três dimensões do RF-08 | Usar a mesma configuração de pesos para as alternativas e suas notas específicas de aptidão física, custo e benefícios; identificar as entradas efetivamente utilizadas. |
+| Entradas de pontuação incompatíveis com as três dimensões ou com a configuração comum de pesos | Rejeitar o cálculo da classificação com essas entradas e informar a incompatibilidade com mensagem compreensível, sem ajustar automaticamente a configuração de uma alternativa. |
+| Análise com cinco indicadores geográficos de apoio e notas válidas para as três dimensões comuns | Utilizar na soma ponderada as notas das três dimensões, sem acrescentar automaticamente os indicadores como notas extras. |
 
 **Dependências e detalhamento pendente:**
 
-O requisito depende das regras do RF-06, das alternativas do RF-07 e dos
-critérios, notas e pesos do RF-08. As regras de normalização, precisão,
-empates e valores ausentes deverão ser definidas e aprovadas antes da
-implementação e da preparação dos cenários de teste com cálculo de referência.
-As pendências dos requisitos anteriores permanecem em aberto.
+O requisito depende das regras do RF-06, das alternativas do RF-07 e das três
+dimensões comuns, notas e configuração de pesos do RF-08. O alinhamento da
+composição da pontuação está definido acima. Permanecem pendentes as escalas
+comparáveis e a conversão em notas de cada dimensão, incluindo custo e
+benefícios, valores e validação dos pesos, normalização, precisão, empates
+e demais detalhes de dados ausentes. Essas definições deverão ser aprovadas
+antes da implementação e da preparação dos cenários de teste com cálculo de
+referência. Preservar o tratamento das RN-01, RN-02 e RN-03. O reflexo da
+organização na contribuição do ML do RF-13 será tratado em unidade posterior;
+o RF-13 não foi alterado nesta unidade. As demais pendências anteriores
+permanecem em aberto, e a Etapa 2 não está encerrada.
 
 **Momento de verificação:**
 
