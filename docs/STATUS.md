@@ -2,7 +2,7 @@
 
 **Atualização:** 20/10/2026.
 **Etapa atual:** 2 — Engenharia de requisitos do sistema, iniciada com autorização em 20/10/2026.
-**Subetapa atual:** atores AT-01 e AT-02, definições dos RF-01 a RF-13, RNF-01 a RNF-06, RT-01 a RT-02 e RN-01 a RN-03 aprovadas, documentadas e publicadas; revisões documentais dos seis RNF, dos dois RT e das três RN concluídas; exigência das licenças explícita no RT-01 e classificação da RN-01 detalhada para dados necessários disponíveis e efeitos da indisponibilidade detalhados na RN-03; referência entre RN-01 e RN-03 sincronizada; levantamento das pendências de encerramento organizado em seis blocos e formato inicial GeoJSON `.geojson`, estrutura `FeatureCollection`, tipos `Polygon` e `MultiPolygon`, regras de validade das geometrias e limites de 1 MiB e 20.000 posições por arquivo aprovados no RF-01; opção de uma área preparada por arquivo, com exatamente uma `Feature` e todas as partes válidas de um `MultiPolygon` analisadas em conjunto, aprovada nos RF-01 e RF-02; cruzamentos iniciais com unidades de conservação, rios e drenagem e massas d’água aprovados no RF-04; medidas descritivas iniciais de área, percentual e distância, com referências e limitações, aprovadas no RF-05; demais decisões de comportamento, demais detalhamentos técnicos e verificações da aplicação ainda pendentes.
+**Subetapa atual:** atores AT-01 e AT-02, definições dos RF-01 a RF-13, RNF-01 a RNF-06, RT-01 a RT-02 e RN-01 a RN-03 aprovadas, documentadas e publicadas; revisões documentais dos seis RNF, dos dois RT e das três RN concluídas; exigência das licenças explícita no RT-01 e classificação da RN-01 detalhada para dados necessários disponíveis e efeitos da indisponibilidade detalhados na RN-03; referência entre RN-01 e RN-03 sincronizada; levantamento das pendências de encerramento organizado em seis blocos e formato inicial GeoJSON `.geojson`, estrutura `FeatureCollection`, tipos `Polygon` e `MultiPolygon`, regras de validade das geometrias e limites de 1 MiB e 20.000 posições por arquivo aprovados no RF-01; opção de uma área preparada por arquivo, com exatamente uma `Feature` e todas as partes válidas de um `MultiPolygon` analisadas em conjunto, aprovada nos RF-01 e RF-02; cruzamentos iniciais com unidades de conservação, rios e drenagem e massas d’água aprovados no RF-04; medidas descritivas iniciais de área, percentual e distância, com referências e limitações, aprovadas no RF-05; condições e mensagens dos alertas informativos iniciais também aprovadas no RF-05; demais decisões de comportamento, demais detalhamentos técnicos e verificações da aplicação ainda pendentes.
 
 Este documento registra o estado observado nesta entrega. Não há aplicação
 executável nem funcionalidades de geoprocessamento, análise multicritério ou
@@ -23,10 +23,10 @@ conforme o detalhamento dos RF-01 e RF-02 abaixo. Permanecem pendentes a
 definição do sistema de coordenadas adequado, da precisão e da tolerância
 do cálculo da área. Para o RF-04, os cruzamentos iniciais estão definidos;
 fontes definitivas, cobertura, preparação das bases e demais detalhamentos
-continuam pendentes. Para o RF-05, as medidas descritivas iniciais estão
-definidas; precisão, tolerâncias, alcance de consulta e condições dos alertas
-permanecem pendentes. Para o RF-06, as regras de negócio, os parâmetros e o
-tratamento de dados ausentes ainda precisam ser especificados. Para o RF-07,
+continuam pendentes. Para o RF-05, as medidas descritivas e as condições dos
+alertas informativos iniciais estão definidas; precisão, tolerâncias, alcance
+de consulta e eventuais alertas adicionais permanecem pendentes. Para o RF-06,
+as regras de negócio, os parâmetros e o tratamento de dados ausentes ainda precisam ser especificados. Para o RF-07,
 os campos e as regras de validação do cadastro também permanecem pendentes.
 Para o RF-08, escalas, limites, validação dos pesos e tratamento de valores
 ausentes ainda precisam ser definidos. Para o RF-09, regras de normalização,
@@ -175,10 +175,25 @@ O estudo de Servou e colaboradores (2023) e as referências técnicas foram
 registrados no RF-05. O uso de um resumo da área inteira foi identificado
 como adaptação descritiva do MVP; não reproduz diretamente o estudo em células
 nem valida notas, pesos ou parâmetros ambientais locais. Sete critérios foram
-acrescentados, totalizando 12, com os cinco anteriores preservados. Os exemplos
-numéricos são didáticos. Precisão, tolerâncias, alcance de consulta, condições
-dos alertas e demais dependências continuam pendentes. A funcionalidade ainda
-não foi implementada nem testada; a Etapa 2 permanece em andamento.
+acrescentados, totalizando 12 naquele momento, com os cinco anteriores
+preservados. Os exemplos numéricos são didáticos. A funcionalidade ainda não
+foi implementada nem testada; a Etapa 2 permanece em andamento.
+
+As condições dos alertas informativos iniciais do RF-05 foram aprovadas e
+publicadas no commit `a0e1b77`: mensagens de sobreposição de superfície,
+contato somente na borda ou em um ponto, interseção com drenagem, cruzamento
+válido sem ocorrência e impossibilidade de concluir uma avaliação por dados
+insuficientes ou inválidos ou falha no processamento. Camada, fonte e condições
+da análise deverão ser consultáveis. As mensagens descrevem resultados ou
+limitações; não classificam por si só risco, aptidão, segurança ou restrição.
+Resultados parciais válidos serão preservados quando outra avaliação falhar;
+o ranking será bloqueado quando faltar dado necessário para avaliar restrições
+ou calcular a comparação, conforme a RN-03. Seis critérios foram acrescentados,
+totalizando 18 no RF-05, com os 12 anteriores preservados. A fundamentação
+registrada foi mantida. Referência espacial concreta, precisão, tolerâncias,
+alcance de consulta e eventuais alertas adicionais continuam pendentes;
+faixas numéricas adicionais exigirão fundamentação específica e aprovação.
+A definição documental não implementa a funcionalidade nem executa os testes.
 
 ## Entregas concluídas
 
@@ -488,6 +503,15 @@ não foi implementada nem testada; a Etapa 2 permanece em andamento.
   alterada. Adaptação ao MVP distinguida da metodologia do estudo citado;
   notas, pesos, alertas e restrições permanecem para unidades próprias.
   Conferência documental concluída; testes funcionais ainda não executados.
+- Alertas informativos iniciais do RF-05 aprovados e publicados no commit
+  `a0e1b77`, com condições e exemplos de mensagens para sobreposição, contato,
+  interseção com drenagem, ausência após cruzamento válido e avaliação não
+  concluída. Preservação dos resultados parciais e bloqueio do ranking conforme
+  a RN-03 explicitados. Seis critérios acrescentados, totalizando 18; os 12
+  anteriores e a fundamentação preservados. Somente a seção RF-05 foi alterada.
+  Precisão, tolerâncias, alcance de consulta e eventuais alertas adicionais
+  permanecem pendentes. Verificação documental concluída; testes funcionais
+  futuros na implementação.
 
 ## Arquivos relevantes
 
@@ -507,7 +531,7 @@ excluídos permanecem fora do versionamento.
 ## Estado do Git
 
 - Branch atual: `main`.
-- Histórico anterior a esta entrega: cento e quatro commits locais já publicados, listados abaixo.
+- Histórico anterior a esta entrega: cento e seis commits locais já publicados, listados abaixo.
 - Repositório público: [Rafael-Inacio-Silva/Geo_Vale](https://github.com/Rafael-Inacio-Silva/Geo_Vale).
 - Remoto `origin`: `https://github.com/Rafael-Inacio-Silva/Geo_Vale.git`.
 - O repositório foi criado vazio e recebeu o histórico no primeiro push.
@@ -625,9 +649,11 @@ Commits concluídos antes desta atualização:
 | `21c5430` | `docs: detalha cruzamentos iniciais do RF-04` |
 | `8a7631f` | `docs: registra cruzamentos iniciais do RF-04 no status` |
 | `d651b17` | `docs: fundamenta medidas descritivas do RF-05` |
+| `2121f9b` | `docs: registra medidas descritivas do RF-05 no status` |
+| `a0e1b77` | `docs: define alertas informativos iniciais do RF-05` |
 
 Esta atualização do status tem a mensagem de commit
-`docs: registra medidas descritivas do RF-05 no status`. Consulte `git log --oneline` para
+`docs: registra alertas informativos do RF-05 no status`. Consulte `git log --oneline` para
 identificar seu hash e o histórico atualizado, sem depender de contagens fixas
 neste documento.
 
@@ -707,6 +733,7 @@ locais com dados reais; não são testes da aplicação.
 | Área única por arquivo nos RF-01 e RF-02 | Commit `3eede04` conferido contra a opção 1 aprovada: exatamente uma `Feature`, com `Polygon` ou `MultiPolygon` válido e todas as partes disponibilizadas em conjunto; várias `Feature` rejeitadas mesmo quando representam partes da mesma mina, com orientação e sem seleção ou união automática. Somente essas duas seções de `docs/REQUISITOS.md` alteradas; RF-01 com 36 critérios e RF-02 com cinco, preservando os 33 e os três anteriores, respectivamente. Limites de tamanho e posições mantidos; demais seções e arquivos preservados. Diff sem erros de espaços e publicação confirmada, com HEAD, origin/main e referência consultada no GitHub iguais e diretório limpo. Conferência documental; funcionalidades ainda não implementadas e testes da aplicação ainda não executados. |
 | Cruzamentos iniciais do RF-04 | Commit `21c5430` conferido contra a proposta aprovada: três grupos de camadas, geometria completa com todas as partes e recortes, identificação dos elementos e de suas fontes, distinção entre contato e sobreposição e entre ausência de ocorrência e indisponibilidade. Seis cenários acrescentados, totalizando dez; quatro anteriores preservados. Somente a seção RF-04 de `docs/REQUISITOS.md` alterada; demais seções e arquivos intactos. Pendências de fontes, cobertura, preparação, medidas, alertas, restrições, terreno e declividade explícitas. Diff sem erros de espaços e publicação confirmada, com HEAD, origin/main e referência consultada no GitHub iguais e diretório limpo. Conferência documental; cruzamentos do GeoVale ainda não implementados nem testados funcionalmente. |
 | Medidas descritivas iniciais do RF-05 | Commit `d651b17` conferido contra a proposta aprovada: áreas em m² e hectares, percentual sobre a área total, consolidação por camada sem duplicar superfícies e menor distância geométrica em metros, com todas as partes e recortes considerados. Fonte, cobertura, referência, unidades e parâmetros consultáveis; contato, ausência e indisponibilidade distinguidos. Referência de Servou e colaboradores e documentação das operações registradas, com adaptação ao MVP e limites de interpretação explícitos. Sete cenários acrescentados, totalizando 12; cinco anteriores preservados. Somente a seção RF-05 de `docs/REQUISITOS.md` alterada, demais seções e arquivos intactos. Exemplos numéricos identificados como didáticos; pendências mantidas. Diff sem erros de espaços e publicação confirmada, com HEAD, origin/main e referência consultada no GitHub iguais e diretório limpo. Conferência documental; medidas do GeoVale ainda não implementadas nem testadas funcionalmente. |
+| Alertas informativos iniciais do RF-05 | Commit `a0e1b77` conferido contra a proposta aprovada: cinco condições de mensagens, consulta de camada, fonte e condições da análise, preservação dos resultados parciais válidos e bloqueio do ranking quando faltar dado necessário, conforme a RN-03. Seis critérios acrescentados, totalizando 18; 12 anteriores e fundamentação preservados. Mensagens descritivas sem classificação automática de risco, aptidão, segurança ou restrição. Somente a seção RF-05 de `docs/REQUISITOS.md` alterada, demais seções e arquivos intactos. Pendências de precisão, tolerâncias, alcance e eventuais alertas adicionais mantidas. Diff sem erros de espaços e publicação confirmada, com HEAD, origin/main e referência consultada no GitHub iguais e diretório limpo. Conferência documental; alertas ainda não implementados nem testados funcionalmente. |
 
 Os registros de preparação do ambiente Python são históricos. Nesta revisão,
 foram conferidos os documentos, os commits e o estado do Git; as verificações
@@ -760,18 +787,20 @@ Resultados de funcionalidades e métricas de ML não existem nesta fase.
   metadados e as condições de uso do RT-01 e a preparação das bases na Etapa 6.
   O cruzamento depende da geometria do RF-02 e de sistemas de coordenadas
   compatíveis segundo o RT-02. As medidas descritivas iniciais estão definidas
-  no RF-05; precisão, tolerâncias, alertas e alcance de consulta para distâncias
-  continuam pendentes. A lista dos dados
+  no RF-05, juntamente com os alertas informativos iniciais. Precisão,
+  tolerâncias, alcance de consulta e eventuais alertas adicionais continuam
+  pendentes. A lista dos dados
   necessários à comparação e os critérios de disponibilidade permanecem
   pendentes na RN-03. Terreno, declividade, demais operações e cenários de
   referência serão detalhados e aprovados nas unidades correspondentes.
   Os dez critérios do RF-04 ainda não foram testados funcionalmente.
-- Para o RF-05, as medidas descritivas iniciais e suas referências estão
-  aprovadas, com 12 critérios. Referência espacial concreta, precisão,
-  tolerâncias, alcance de consulta e condições dos alertas precisam ser
-  detalhados e aprovados antes da implementação e da preparação dos cenários
-  de referência. Fontes definitivas, cobertura, preparação e metadados das
-  bases continuam pendentes nas etapas correspondentes. A lista de dados
+- Para o RF-05, as medidas descritivas com suas referências e os alertas
+  informativos iniciais estão aprovados, com 18 critérios. Referência espacial
+  concreta, precisão, tolerâncias e alcance de consulta precisam ser detalhados
+  e aprovados antes da implementação e da preparação dos cenários de referência.
+  Eventuais alertas adicionais, inclusive por faixas numéricas, exigirão
+  fundamentação específica e aprovação prévia. Fontes definitivas, cobertura,
+  preparação e metadados das bases continuam pendentes nas etapas correspondentes. A lista de dados
   necessários à comparação e os critérios de disponibilidade permanecem
   pendentes na RN-03. Medidas descritivas não definem notas, pesos, faixas de
   segurança ou restrições; essas definições exigem fundamentação própria.
@@ -898,7 +927,7 @@ Este plano não define os comportamentos pendentes nem encerra a etapa.
 | Ordem | Bloco | Decisões ainda necessárias |
 | --- | --- | --- |
 | 1 | Arquivo e área — RF-01 e RF-02 | Formato GeoJSON `.geojson`, estrutura `FeatureCollection`, tipos `Polygon` e `MultiPolygon`, regras de validade das geometrias e limites de até 1 MiB (1.048.576 bytes) e 20.000 posições por arquivo definidos. Tratamento definido: exatamente uma `Feature` por arquivo; várias partes válidas de um `MultiPolygon` compõem uma única área para análise conjunta; arquivos com várias `Feature` são rejeitados. Implementação e verificação funcional futuras. |
-| 2 | Análise e restrições — RF-04 a RF-06 e RN-01/RN-03 | Cruzamentos iniciais do RF-04 definidos para unidades de conservação, rios e drenagem e massas d’água. Medidas descritivas iniciais do RF-05 e suas referências definidas. Pendentes fontes definitivas e preparação, demais operações, precisão, tolerâncias, alcance de consulta, condições de alertas e restrições e identificação dos dados necessários à comparação. |
+| 2 | Análise e restrições — RF-04 a RF-06 e RN-01/RN-03 | Cruzamentos iniciais do RF-04 definidos para unidades de conservação, rios e drenagem e massas d’água. Medidas descritivas e alertas informativos iniciais do RF-05 definidos. Pendentes fontes definitivas e preparação, demais operações, precisão, tolerâncias, alcance de consulta, eventuais alertas adicionais, regras demonstrativas de restrição e identificação dos dados necessários à comparação. |
 | 3 | Comparação — RF-07 a RF-09 | Campos das alternativas, critérios, escalas, pesos, normalização, empates e precisão da pontuação. |
 | 4 | Resultados — RF-10 a RF-12 | Confirmar informações mínimas para consulta e persistência, formato do relatório e apresentação dos resultados completos ou parciais. |
 | 5 | ML — RF-13 | Significado da aptidão prevista e forma de utilização da previsão na pontuação. |
@@ -931,9 +960,10 @@ O encerramento depende de revisão e aprovação do responsável pelo projeto.
 - Detalhar e aprovar fontes definitivas, cobertura, preparação das bases,
   dados de terreno e declividade e demais operações do RF-04 antes da
   implementação correspondente; os cruzamentos iniciais já estão definidos.
-- Detalhar e aprovar referência espacial concreta, precisão, tolerâncias,
-  alcance de consulta e condições dos alertas do RF-05 antes da implementação;
-  as medidas descritivas iniciais já estão definidas.
+- Detalhar e aprovar referência espacial concreta, precisão, tolerâncias e
+  alcance de consulta do RF-05 antes da implementação; as medidas descritivas
+  e os alertas informativos iniciais já estão definidos. Eventuais alertas
+  adicionais exigirão fundamentação específica e aprovação.
 - Especificar e aprovar regras de negócio, parâmetros e tratamento de dados
   ausentes do RF-06 antes da implementação.
 - Especificar e aprovar campos e regras de validação do cadastro do RF-07
@@ -972,8 +1002,8 @@ O encerramento depende de revisão e aprovação do responsável pelo projeto.
   disponibilidade e a forma de apresentação da RN-03 antes da implementação
   e da preparação dos testes.
 - Discutir e aprovar os conteúdos das pequenas unidades da sequência
-  registrada no plano de pendências; próxima proposta: alertas informativos
-  derivados das relações espaciais e da disponibilidade dos dados no RF-05.
+  registrada no plano de pendências; próxima proposta: natureza e fundamentação
+  das regras demonstrativas do RF-06, considerando as RN-01 e RN-03.
 - Discutir e aprovar os demais detalhamentos da Etapa 2.
 - Na Etapa 4, escolher stack e versão suportada de Python, avaliando a proposta
   de Streamlit e a separação entre frontend na Vercel e backend no Railway.
@@ -998,14 +1028,14 @@ reproduzível serão detalhadas após a definição da stack.
 
 ## Próxima tarefa recomendada
 
-Discutir os alertas informativos do RF-05 a partir das relações espaciais e
-da disponibilidade dos dados já especificadas. Apresentar no chat as condições,
-a finalidade das mensagens e os cenários de aceitação, com suas referências
-e limitações. Distinguir avisos de ocorrência e indisponibilidade de conclusões
-de risco, aptidão, segurança ou restrição. Não definir faixas numéricas sem
-fundamentação específica nem antecipar regras eliminatórias do RF-06.
-Preservar as pendências de referência espacial, precisão, tolerâncias e
-alcance de consulta. Não alterar arquivos nessa discussão nem antecipar
-implementação, escolha da stack ou encerramento da Etapa 2.
+Discutir a natureza e a fundamentação das regras demonstrativas do RF-06,
+considerando as medidas e os alertas já definidos e as RN-01 e RN-03.
+Apresentar no chat quais decisões as regras deverão apoiar, a origem dos
+parâmetros, as limitações e os cenários de aceitação propostos. Preservar a
+separação entre resultados geométricos, notas e restrições eliminatórias;
+a ocorrência em uma camada não define por si só uma restrição. Identificar
+dados necessários e dependências ainda abertas, sem criar parâmetros ou
+conclusões ambientais sem sustentação. Não alterar arquivos nessa discussão
+nem antecipar implementação ou encerramento da Etapa 2.
 A Etapa 2 permanece em andamento; alterações, commits, publicação e
 encerramento dependem de autorização.
