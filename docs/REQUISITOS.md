@@ -1415,9 +1415,9 @@ ainda não foram executados.
 
 **Estado:** definição aprovada pelo responsável pelo projeto em 20/10/2026;
 alinhamento da contribuição do ML à dimensão de aptidão física do RF-08 e
-à soma ponderada do RF-09 aprovado em 21/10/2026. Alvo, atributos, escalas,
-conversão da previsão em nota, treinamento e avaliação permanecem pendentes
-de definição.
+à soma ponderada do RF-09 e significado demonstrativo do alvo por uso aprovados
+em 21/10/2026. Representação da saída, atributos, escalas, conversão da previsão
+em nota, treinamento e avaliação permanecem pendentes de definição.
 
 **Atores:** AT-01 — Engenheiro/analista utiliza a previsão; AT-02 — Gestor consulta os resultados.
 
@@ -1438,6 +1438,50 @@ ou compensadas pela previsão.
 
 Quando houver treinamento com dados sintéticos, o resultado demonstrará o
 funcionamento do algoritmo, sem comprovar capacidade preditiva em áreas reais.
+
+**Significado do alvo e alcance da previsão:**
+
+O alvo será a compatibilidade física demonstrativa entre as características
+geográficas consideradas da área e o cenário de uso avaliado. A previsão
+procurará representar quanto essas características favorecem esse uso, limitada
+aos aspectos cobertos pelos atributos e pelas respostas de referência do
+treinamento que vierem a ser especificados e aprovados.
+
+Para os três cenários de referência do RF-07, o significado será:
+
+| Cenário de referência | Significado da aptidão física demonstrativa |
+| --- | --- |
+| Revegetação com espécies nativas | Condições físicas consideradas que favorecem a implantação da vegetação proposta. |
+| Lazer e educação ambiental | Condições físicas consideradas que favorecem a implantação dos espaços e atividades previstos no cenário. |
+| Solar em terreno | Condições físicas consideradas que favorecem a implantação de painéis no cenário solar definido no RF-07, preservando o alcance da regra RF06-R01. |
+
+A mesma área poderá receber avaliações diferentes para cada uso. Cada resultado
+deverá identificar a alternativa correspondente; a saída do ML não será apenas
+um nome de uso vencedor. A escolha comparativa continuará dependendo das notas
+de aptidão, custo e benefícios, dos pesos do RF-09 e das restrições da RN-01.
+Esta definição não divide automaticamente a área entre usos nem fixa quantidade
+de modelos ou arquitetura de treinamento.
+
+O resultado não comprovará segurança, estabilidade geotécnica, ausência de
+contaminação, recuperação ambiental ou viabilidade da instalação. Um atributo
+geográfico, como declividade, representa somente o aspecto que mede; condições
+não cobertas pelos dados não deverão ser presumidas favoráveis. Dados necessários
+indisponíveis continuarão sujeitos à RN-03.
+
+A avaliação física por uso tem como referência [Servou e colaboradores (2023)](https://www.mdpi.com/2071-1050/15/19/14388),
+que combinaram características físicas e informações específicas da mineração
+para avaliar usos pós-mineração em um caso grego. O significado do alvo de ML
+acima é uma adaptação demonstrativa do GeoVale; o estudo não valida esse modelo
+nem transfere automaticamente critérios, limites ou resultados para a área local.
+
+No treinamento supervisionado, os mapas fornecerão atributos; também serão
+necessários exemplos com respostas de referência para o alvo. Essa distinção
+entre atributos e valores-alvo é descrita na [documentação conceitual do
+scikit-learn](https://scikit-learn.org/stable/getting_started.html), utilizada
+como referência sem selecionar a stack nesta unidade. Origem, obtenção e
+validação dessas respostas ainda deverão ser especificadas. Quando simuladas,
+a previsão demonstrará o aprendizado das relações dessa simulação, conforme
+as limitações da RN-02, sem comprovar capacidade preditiva real.
 
 **Contribuição à dimensão de aptidão física:**
 
@@ -1468,9 +1512,10 @@ seu motivo, bloquear o ranking e preservar resultados parciais válidos. Não
 substituir dados ausentes por zero, preencher automaticamente com simulações
 ou ajustar automaticamente os pesos para prosseguir com a comparação.
 
-Este alinhamento especifica o papel do ML na comparação; não define o alvo,
-os atributos, as escalas ou a conversão em nota, nem seleciona algoritmo,
-treinamento ou avaliação. Não implementa o modelo ou o cálculo multicritério.
+O significado do alvo e o papel do ML na comparação estão definidos acima.
+Permanecem pendentes a representação da saída, os atributos, as escalas e a
+conversão em nota, o algoritmo, o treinamento e a avaliação. Esta unidade não
+implementa o modelo ou o cálculo multicritério e não atribui valores aos pesos.
 
 **Critérios de aceitação:**
 
@@ -1485,15 +1530,19 @@ treinamento ou avaliação. Não implementa o modelo ou o cálculo multicritéri
 | Integração de previsão válida à nota de aptidão física de uma alternativa, conforme conversão aprovada | Contribuir para a nota dessa dimensão no RF-08 e na soma ponderada do RF-09, sem criar quarta dimensão ou parcela extra; preservar a configuração comum de pesos e manter custos e benefícios em avaliações próprias, sem estimá-los automaticamente por este ML. |
 | Consulta da contribuição do ML na comparação, no dashboard e no relatório | Identificar a alternativa, os atributos, a previsão e sua relação com a nota de aptidão física, conforme a conversão aprovada, mantendo a origem do treinamento e as limitações consultáveis e as simulações identificadas. |
 | Dado necessário à previsão ou à conversão em nota necessária à comparação indisponível | Informar a indisponibilidade e o motivo, bloquear o ranking e preservar resultados parciais válidos conforme a RN-03, sem substituir dados ausentes por zero, preencher automaticamente com simulações ou ajustar automaticamente os pesos. |
+| Avaliação da mesma área para os três cenários de referência, com entradas válidas conforme a especificação | Identificar a aptidão física demonstrativa correspondente a cada uso, permitindo avaliações diferentes; não substituir essas avaliações por um único nome de uso vencedor nem pela classificação final do RF-09. |
+| Consulta do significado e do alcance de uma previsão | Informar o uso avaliado e o alcance limitado aos aspectos considerados; não apresentar o resultado como comprovação de segurança, estabilidade geotécnica, ausência de contaminação, recuperação ambiental ou viabilidade da instalação, nem presumir condições não avaliadas como favoráveis. |
 
 **Dependências e detalhamento pendente:**
 
 O requisito depende dos atributos provenientes da análise geográfica, das
 alternativas do RF-07, da dimensão de aptidão física e das escalas comparáveis
 do RF-08 e da composição da soma ponderada do RF-09. A contribuição da previsão
-para essa dimensão está definida acima. Permanecem pendentes o significado
-concreto do alvo por uso, os atributos necessários, as escalas, a conversão
-da previsão em nota, o algoritmo, o treinamento e a avaliação. Essas definições
+para essa dimensão e o significado demonstrativo do alvo por uso estão definidos
+acima. Permanecem pendentes a representação da saída, os atributos necessários,
+as respostas de referência para o treinamento, sua origem, obtenção e validação,
+as escalas, a conversão da previsão em nota, o algoritmo, o treinamento e a
+avaliação. Essas definições
 deverão ser aprovadas antes da implementação e da preparação dos testes
 correspondentes. Custos e benefícios continuam com avaliações próprias a
 detalhar no RF-08. Preservar as RN-01, RN-02 e RN-03 e as demais pendências
