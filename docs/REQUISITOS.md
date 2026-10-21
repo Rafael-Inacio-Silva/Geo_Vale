@@ -966,11 +966,11 @@ implementada e os testes de cadastro e seleção ainda não foram executados.
 ### RF-08 — Definição de critérios, notas e pesos
 
 **Estado:** definição aprovada pelo responsável pelo projeto em 20/10/2026;
-três critérios iniciais, dados necessários, unidades, referências e limitações
-aprovados em 21/10/2026. Dois critérios solares complementares, unidades,
-fontes candidatas e limitações também aprovados em 21/10/2026, totalizando
-cinco critérios descritos. Operacionalização, escalas, notas, limites, pesos
-e demais detalhamentos indicados nas dependências permanecem pendentes.
+dados, unidades, referências e limitações dos cinco itens geográficos aprovados
+em 21/10/2026. Reorganização desses itens como indicadores de apoio e definição
+de três dimensões comuns para a comparação aprovadas em 21/10/2026.
+Operacionalização, escalas, notas, limites, valores dos pesos e demais
+detalhamentos indicados nas dependências permanecem pendentes.
 
 **Ator:** AT-01 — Engenheiro/analista.
 
@@ -987,16 +987,44 @@ e os pesos configurados deverão poder ser consultados. Cada nota deverá estar
 associada à alternativa e ao critério correspondentes. Valores inválidos
 deverão ser rejeitados com mensagem compreensível.
 
-**Critérios iniciais e dados necessários:**
+**Dimensões comuns da comparação:**
 
-Os três critérios abaixo constituem uma definição inicial para a comparação
-dos cenários de referência do RF-07: Revegetação com espécies nativas, Lazer
-e educação ambiental e Solar em terreno. A interpretação e a conversão em
-nota deverão ser fundamentadas para cada cenário antes de sua utilização
-na pontuação; este registro não atribui a mesma nota ou importância aos três
-usos nem define um conjunto completo de critérios de aptidão.
+A comparação das alternativas selecionadas utilizará as três dimensões comuns
+abaixo, retomando a organização de aptidão, custos e benefícios do planejamento
+do GeoVale:
 
-| Critério inicial | O que observar | Dados necessários e unidades |
+| Dimensão comum | O que avaliar | Detalhamento ainda necessário |
+| --- | --- | --- |
+| Aptidão física para o uso | Adequação demonstrativa da área ao cenário avaliado. | Atributos pertinentes ao uso, fundamentação da avaliação e conversão em nota. Na Etapa 8, receberá a contribuição do ML, com alvo, integração e limitações detalhados no RF-13. |
+| Custo de implantação e adaptação | Esforço financeiro para implantar e adaptar o cenário. | Escopo, período considerado, dados e método de estimativa, unidade e conversão em nota. |
+| Benefícios esperados | Resultados pretendidos de cada uso. | Aspectos a avaliar, evidências, forma de avaliação e conversão em nota comparável entre alternativas. |
+
+As alternativas de uma mesma comparação serão avaliadas nessas mesmas
+dimensões e com a mesma configuração de pesos. Cada dimensão terá seu próprio
+peso, comum às alternativas; as notas serão específicas de cada alternativa.
+Notas, escalas, limites e valores dos pesos ainda deverão ser definidos e
+aprovados. A configuração utilizada deverá ser consultável.
+
+Os cinco indicadores geográficos registrados abaixo fornecerão informações
+de apoio à avaliação de cada uso. Eles não serão adicionados automaticamente
+como cinco notas extras ao ranking. Sua interpretação e associação às
+dimensões ainda precisarão ser fundamentadas e detalhadas por cenário.
+
+O [Multi-criteria analysis: a manual, edição de 2009, seções 4.3.2 e 5.1](https://assets.publishing.service.gov.uk/media/5a790545e5274a2acd18b975/1132618.pdf)
+descreve a matriz de desempenho que avalia cada opção em relação aos critérios
+definidos para a decisão. Essa referência apoia a organização comum da
+comparação; a escolha das três dimensões e o uso dos indicadores são definições
+demonstrativas do GeoVale, não uma validação ambiental ou financeira. A fonte
+foi consultada em 21/10/2026.
+
+**Indicadores geográficos de apoio e dados necessários:**
+
+Os três indicadores iniciais abaixo apoiam a avaliação dos cenários de referência
+do RF-07: Revegetação com espécies nativas, Lazer e educação ambiental e Solar
+em terreno. Sua utilização dependerá da interpretação justificada para cada
+uso e da definição dos dados necessários, sem produzir uma pontuação automática.
+
+| Indicador de apoio | O que observar | Dados necessários e unidades |
 | --- | --- | --- |
 | Declividade do terreno | Inclinação das superfícies dentro da área estudada. | Modelo digital de elevação adequado à área; declividade em graus. |
 | Proximidade de vias mapeadas | Localização da área em relação às estradas e outras vias. | Camada de vias com cobertura adequada; distância geométrica em metros. |
@@ -1032,22 +1060,22 @@ o cenário de revegetação é uma adaptação demonstrativa do GeoVale. As font
 foram consultadas em 21/10/2026; seus parâmetros não foram adotados como
 limites universais para o MVP.
 
-A seleção dos três critérios é um recorte inicial de escopo apoiado nessas
-referências, complementado pelos dois critérios solares descritos abaixo.
+A seleção dos três indicadores é um recorte inicial de escopo apoiado nessas
+referências, complementado pelos dois indicadores solares descritos abaixo.
 As bases ainda precisam ser selecionadas e preparadas na Etapa 6, incluindo
 as novas camadas de vias e vegetação. O detalhamento dos cruzamentos
 correspondentes no RF-04 continua futuro.
 
-**Critérios complementares para Solar em terreno:**
+**Indicadores complementares para Solar em terreno:**
 
-Os dois critérios a seguir detalham aspectos específicos do cenário Solar
+Os dois indicadores a seguir detalham aspectos específicos do cenário Solar
 em terreno do RF-07, apoiados na consideração de recurso solar e proximidade
 da transmissão no estudo de Worden e colaboradores (2024) referenciado acima.
 A definição das medidas e o recorte das fontes candidatas são adaptações de
 escopo do GeoVale; os limites usados no estudo australiano não serão adotados
 automaticamente como condições ou notas do MVP.
 
-| Critério complementar | O que representar | Dados necessários e unidade |
+| Indicador solar de apoio | O que representar | Dados necessários e unidade |
 | --- | --- | --- |
 | Recurso solar disponível | Média anual do total diário da irradiação global horizontal (GHI), representando a energia solar recebida por unidade de superfície horizontal. | Base de GHI com cobertura, período de referência, resolução e unidade identificados; apresentação em kWh/m²/dia. |
 | Proximidade de linhas de transmissão existentes | Distância geométrica entre a área estudada e as linhas de transmissão existentes na cobertura consultada. | Camada de linhas de transmissão com situação existente identificável, fonte e cobertura adequadas; distância em metros. |
@@ -1067,9 +1095,9 @@ permanece pendente, sem presumir detalhamento interno compatível com a mina.
 Como fonte candidata para a transmissão, o [WEBMAP EPE](https://www.epe.gov.br/pt/publicacoes-dados-abertos/publicacoes/webmap-epe)
 permite consultar e obter dados geográficos e metadados de linhas e subestações
 de transmissão, com grupos de infraestrutura existente e planejada. O recorte
-deste critério será de linhas de transmissão existentes; manter identificada
+deste indicador será de linhas de transmissão existentes; manter identificada
 a situação da infraestrutura e distinguir as planejadas, que não comporão
-a medida de proximidade a linhas existentes. O critério não representa toda
+a medida de proximidade a linhas existentes. O indicador não representa toda
 a rede local de distribuição. A distância seguirá o caráter geométrico do
 RF-05, considerando a cobertura efetivamente analisada, sem presumir a linha
 mais próxima fora dessa cobertura. Seleção e preparação da camada, alcance
@@ -1084,13 +1112,32 @@ unidades, período, resolução e situação da infraestrutura, conforme aplicá
 adaptações e limitações deverão ser consultáveis. As páginas das duas fontes
 candidatas foram consultadas em 21/10/2026; elas ainda não foram selecionadas
 como bases definitivas ou preparadas para a aplicação. Esta unidade registra
-somente a definição dos critérios solares no RF-08.
+a descrição dos indicadores solares de apoio no RF-08.
 
-Os critérios e suas condições de utilização deverão permitir consultar
-as fontes, unidades, adaptações e limitações. A falta de dados necessários
+**Aplicação dos indicadores e tratamento dos dados:**
+
+A declividade caracteriza o relevo para os três usos, com interpretação
+específica por cenário. A proximidade de vias apoia a análise de acesso e
+logística, que exige informações adicionais. A proximidade de vegetação
+nativa apoia a leitura do contexto ambiental, especialmente da revegetação.
+Recurso solar e proximidade da transmissão apoiam especificamente a avaliação
+de Solar em terreno. Os indicadores não substituem os estudos necessários
+para avaliar cada uso.
+
+A ausência de necessidade de um indicador para determinado uso não deverá
+ser transformada automaticamente em nota zero. Por exemplo, não precisar
+avaliar conexão elétrica para revegetação não atribui uma nota zero à
+alternativa. Isso não dispensa a avaliação das três dimensões comuns nem
+altera automaticamente seus pesos. A definição de quais dados cada avaliação
+exige e a associação dos indicadores às dimensões permanecem pendentes.
+
+Indicadores, critérios e suas condições de utilização deverão permitir
+consultar fontes, unidades, adaptações e limitações. A falta de dado necessário
 à comparação seguirá a RN-03: indicar a indisponibilidade e o motivo, sem
 substituir dados ausentes por zero ou concluir ausência de ocorrência;
 bloquear o ranking quando necessário e preservar resultados parciais válidos.
+Dados simulados deverão ser explicitamente identificados conforme a RN-02;
+essa possibilidade não autoriza preencher automaticamente dados reais ausentes.
 As restrições do RF-06 continuarão separadas da pontuação conforme a RN-01.
 
 **Critérios de aceitação:**
@@ -1101,23 +1148,30 @@ As restrições do RF-06 continuarão separadas da pontuação conforme a RN-01.
 | Consulta da configuração da comparação | Apresentar os critérios, as notas e os pesos configurados. |
 | Consulta de uma nota atribuída | Identificar a alternativa e o critério correspondentes. |
 | Informação de valores inválidos | Rejeitar os valores e informar o problema com mensagem compreensível. |
+| Consulta da configuração de uma comparação entre alternativas | Identificar as três dimensões comuns, a mesma configuração de pesos utilizada para todas as alternativas e as notas específicas de cada alternativa. |
+| Indicador solar sem necessidade de avaliação para revegetação | Não atribuir automaticamente nota zero pela ausência dessa necessidade; preservar as dimensões comuns e a configuração de pesos, sem dispensar dados necessários à avaliação. |
+| Dado necessário à avaliação de uma dimensão indisponível | Identificar a pendência e aplicar a RN-03, bloqueando o ranking quando necessário e preservando resultados parciais válidos; não substituir o dado por zero nem preencher automaticamente com valor simulado. |
 
 **Dependências e detalhamento pendente:**
 
-O requisito depende das alternativas do RF-07. Os três critérios iniciais e
-os dois critérios solares complementares, dados necessários, unidades, fontes
-e limitações estão definidos acima. Permanecem pendentes a seleção e preparação
-das bases, a avaliação de adequação das fontes candidatas, os cruzamentos
-adicionais do RF-04, o cálculo e resumo da declividade, a associação ou resumo
-da GHI para a área, o alcance das consultas, as referências espaciais, precisão
-e tolerâncias, bem como os demais critérios específicos necessários a cada
-uso. Escalas, conversão das medidas em notas por cenário,
-limites, valores e validação dos pesos e demais detalhes do tratamento de
-valores ausentes deverão ser especificados e aprovados antes da implementação
-e da preparação dos cenários de teste, preservando o tratamento da RN-03.
-As demais pendências dos requisitos anteriores permanecem em aberto.
-Este registro não implementa cálculos, não atribui notas ou pesos e não
-encerra a Etapa 2.
+O requisito depende das alternativas do RF-07. As três dimensões comuns,
+a configuração de pesos compartilhada entre alternativas e os cinco
+indicadores geográficos de apoio, com dados, unidades, fontes e limitações,
+estão definidos acima. Permanecem pendentes a associação e interpretação dos
+indicadores por cenário, os dados necessários a cada dimensão, os aspectos
+dos benefícios esperados, o escopo, período e método de estimativa dos custos,
+as escalas comparáveis e a conversão em notas, limites, valores e validação
+dos pesos e demais detalhes do tratamento de dados ausentes.
+
+Seleção e preparação das bases, adequação das fontes candidatas, cruzamentos
+adicionais do RF-04, cálculo e resumo da declividade, associação ou resumo da
+GHI, alcance das consultas, referências espaciais, precisão e tolerâncias
+continuam pendentes. As definições deverão ser aprovadas antes da implementação
+e da preparação dos cenários de teste. Os reflexos dessa organização no RF-09
+e na contribuição do ML prevista no RF-13 serão tratados em unidades próprias;
+esses requisitos não foram alterados nesta unidade. As RN-01, RN-02 e RN-03 e
+as demais pendências anteriores permanecem válidas. Este registro não implementa
+cálculos, não atribui notas ou pesos e não encerra a Etapa 2.
 
 **Momento de verificação:**
 
