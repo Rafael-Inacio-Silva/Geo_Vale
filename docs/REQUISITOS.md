@@ -823,7 +823,8 @@ implementada e os testes de aplicação das regras ainda não foram executados.
 ### RF-07 — Cadastro e seleção de alternativas de uso futuro
 
 **Estado:** definição aprovada pelo responsável pelo projeto em 20/10/2026;
-campos e regras de validação do cadastro ainda pendentes de definição.
+campos obrigatórios e regras de validação do cadastro e da seleção aprovados
+em 21/10/2026. A lista definitiva de alternativas de uso permanece pendente.
 
 **Ator:** AT-01 — Engenheiro/analista.
 
@@ -840,6 +841,48 @@ as selecionadas deverão ser identificáveis. Para iniciar a comparação,
 deverão estar selecionadas pelo menos duas alternativas distintas. Dados de
 cadastro inválidos deverão ser informados com mensagem compreensível.
 
+**Campos e validações do cadastro:**
+
+Cada alternativa deverá ter dois campos obrigatórios:
+
+| Campo | Conteúdo | Exemplo ilustrativo |
+| --- | --- | --- |
+| Nome da alternativa | Texto que identifica a opção de uso futuro. | Solar em terreno. |
+| Descrição do cenário | Texto que explica o cenário representado pela alternativa, para permitir compreender sua comparação e as regras aplicáveis. | Painéis em terreno fora da água, sem drenagem, aterro ou estruturas sobre a água. |
+
+Ambos os campos deverão ser textos preenchidos. Campo ausente, vazio ou
+composto somente por espaços impedirá o cadastro, com mensagem que identifique
+a pendência: “Informe o nome da alternativa.” ou “Informe a descrição do
+cenário.” Valor de outro tipo deverá ser rejeitado, informando que o campo
+correspondente deve conter texto.
+
+Nomes repetidos deverão impedir o cadastro, mesmo quando a descrição for
+diferente. Para comparar os nomes, desconsiderar maiúsculas e minúsculas,
+retirar espaços nas pontas e tratar sequências de espaços como um só.
+Por exemplo, “Solar em terreno”, “ SOLAR EM TERRENO ” e “Solar  em terreno”
+correspondem ao mesmo nome. Informar: “Já existe uma alternativa com esse
+nome. Informe um nome diferente.”
+
+O exemplo acima descreve o cenário específico da RF06-R01; não define a lista
+definitiva das alternativas do MVP nem comprova aptidão ou viabilidade do uso.
+O cadastro permitirá identificar as opções avaliadas pelas regras do RF-06
+e pelas comparações dos RF-08 e RF-09; os pesos dos critérios serão definidos
+no RF-08.
+
+**Validações da seleção:**
+
+A seleção deverá aceitar somente alternativas cadastradas. Ao receber uma
+seleção inexistente no cadastro, informar “Selecione somente alternativas
+cadastradas.” e impedir o início da comparação com essa seleção inválida.
+Deverão estar selecionadas pelo menos duas alternativas distintas; selecionar
+a mesma alternativa mais de uma vez não contará como alternativas diferentes.
+Se o mínimo não for atendido, informar “Selecione pelo menos duas alternativas
+distintas para comparar.” e impedir o início da comparação.
+
+Atender ao mínimo de alternativas não dispensa as demais condições necessárias
+à comparação, incluindo o bloqueio por indisponibilidade dos dados necessários
+conforme a RN-03 e o tratamento das restrições conforme a RN-01.
+
 **Critérios de aceitação:**
 
 | Cenário | Resultado esperado |
@@ -849,13 +892,23 @@ cadastro inválidos deverão ser informados com mensagem compreensível.
 | Seleção de pelo menos duas alternativas distintas | Atender ao mínimo de alternativas necessário para iniciar a comparação. |
 | Seleção de menos de duas alternativas distintas | Impedir o início da comparação e informar a necessidade de selecionar pelo menos duas alternativas distintas. |
 | Dados de cadastro inválidos | Informar o problema com mensagem compreensível. |
+| Nome ausente, vazio ou composto somente por espaços | Impedir o cadastro e solicitar o nome da alternativa, identificando o campo pendente. |
+| Descrição do cenário ausente, vazia ou composta somente por espaços | Impedir o cadastro e solicitar a descrição do cenário, identificando o campo pendente. |
+| Nome ou descrição informado com valor que não seja texto | Rejeitar o cadastro e informar que o campo correspondente deve conter texto. |
+| Nome já cadastrado, inclusive com variações de maiúsculas, minúsculas, espaços nas pontas ou espaços consecutivos | Impedir o novo cadastro e informar que já existe uma alternativa com esse nome, mesmo que a descrição seja diferente. |
+| Seleção contendo alternativa inexistente no cadastro | Informar que somente alternativas cadastradas podem ser selecionadas e impedir o início da comparação com essa seleção inválida. |
+| Seleção da mesma alternativa mais de uma vez, sem uma segunda alternativa distinta | Contar somente uma alternativa distinta, impedir o início da comparação e solicitar pelo menos duas alternativas distintas. |
 
 **Dependências e detalhamento pendente:**
 
-O requisito depende da área identificada pelo RF-02 e da definição dos campos
-e das regras de validação do cadastro. Essas definições deverão ser
-especificadas e aprovadas antes da implementação e da preparação dos cenários
-de teste. As pendências dos requisitos anteriores permanecem em aberto.
+O requisito depende da área identificada pelo RF-02. Os dois campos
+obrigatórios e as validações do cadastro e da seleção estão definidos acima.
+A lista definitiva de alternativas do MVP permanece pendente de definição
+e aprovação, considerando os cenários e as regras do RF-06. O armazenamento
+será detalhado nas etapas correspondentes, conforme o RF-11. Os arquivos de
+teste e a verificação funcional serão preparados na implementação; as
+pendências dos requisitos anteriores e da RN-03 permanecem em aberto.
+Este detalhamento não implementa o cadastro nem encerra a Etapa 2.
 
 **Momento de verificação:**
 
