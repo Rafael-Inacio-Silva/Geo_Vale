@@ -2,7 +2,7 @@
 
 **Atualização:** 21/10/2026.
 **Etapa atual:** 2 — Engenharia de requisitos do sistema, iniciada com autorização em 20/10/2026.
-**Subetapa atual:** atores AT-01 e AT-02, definições dos RF-01 a RF-13, RNF-01 a RNF-06, RT-01 a RT-02 e RN-01 a RN-03 aprovadas, documentadas e publicadas; revisões documentais dos seis RNF, dos dois RT e das três RN concluídas; exigência das licenças explícita no RT-01 e classificação da RN-01 detalhada para dados necessários disponíveis e efeitos da indisponibilidade detalhados na RN-03; referência entre RN-01 e RN-03 sincronizada; levantamento das pendências de encerramento organizado em seis blocos e formato inicial GeoJSON `.geojson`, estrutura `FeatureCollection`, tipos `Polygon` e `MultiPolygon`, regras de validade das geometrias e limites de 1 MiB e 20.000 posições por arquivo aprovados no RF-01; opção de uma área preparada por arquivo, com exatamente uma `Feature` e todas as partes válidas de um `MultiPolygon` analisadas em conjunto, aprovada nos RF-01 e RF-02; cruzamentos iniciais com unidades de conservação, rios e drenagem e massas d’água aprovados no RF-04; medidas descritivas iniciais de área, percentual e distância, com referências e limitações, aprovadas no RF-05; condições e mensagens dos alertas informativos iniciais também aprovadas no RF-05; estrutura, fundamentação e comportamento de avaliação das regras demonstrativas e primeira regra concreta RF06-R01 aprovados no RF-06 em 21/10/2026; nome e descrição obrigatórios, validações do cadastro e da seleção e três cenários de referência do MVP aprovados no RF-07 em 21/10/2026; cinco indicadores geográficos de apoio, três dimensões comuns da comparação e configuração de pesos compartilhada entre alternativas aprovados no RF-08 em 21/10/2026, com sete critérios de aceitação; RF-09 alinhado às três dimensões comuns e à configuração de pesos compartilhada em 21/10/2026, com oito critérios de aceitação; contribuição do ML para a nota de aptidão física por alternativa alinhada no RF-13 em 21/10/2026, com nove critérios de aceitação; demais decisões de comportamento, demais detalhamentos técnicos e verificações da aplicação ainda pendentes.
+**Subetapa atual:** atores AT-01 e AT-02, definições dos RF-01 a RF-13, RNF-01 a RNF-06, RT-01 a RT-02 e RN-01 a RN-03 aprovadas, documentadas e publicadas; revisões documentais dos seis RNF, dos dois RT e das três RN concluídas; exigência das licenças explícita no RT-01 e classificação da RN-01 detalhada para dados necessários disponíveis e efeitos da indisponibilidade detalhados na RN-03; referência entre RN-01 e RN-03 sincronizada; levantamento das pendências de encerramento organizado em seis blocos e formato inicial GeoJSON `.geojson`, estrutura `FeatureCollection`, tipos `Polygon` e `MultiPolygon`, regras de validade das geometrias e limites de 1 MiB e 20.000 posições por arquivo aprovados no RF-01; opção de uma área preparada por arquivo, com exatamente uma `Feature` e todas as partes válidas de um `MultiPolygon` analisadas em conjunto, aprovada nos RF-01 e RF-02; cruzamentos iniciais com unidades de conservação, rios e drenagem e massas d’água aprovados no RF-04; medidas descritivas iniciais de área, percentual e distância, com referências e limitações, aprovadas no RF-05; condições e mensagens dos alertas informativos iniciais também aprovadas no RF-05; estrutura, fundamentação e comportamento de avaliação das regras demonstrativas e primeira regra concreta RF06-R01 aprovados no RF-06 em 21/10/2026; nome e descrição obrigatórios, validações do cadastro e da seleção e três cenários de referência do MVP aprovados no RF-07 em 21/10/2026; cinco indicadores geográficos de apoio, três dimensões comuns da comparação e configuração de pesos compartilhada entre alternativas aprovados no RF-08 em 21/10/2026, com sete critérios de aceitação; RF-09 alinhado às três dimensões comuns e à configuração de pesos compartilhada em 21/10/2026, com oito critérios de aceitação; contribuição do ML e significado demonstrativo do alvo por uso definidos no RF-13 em 21/10/2026, com 11 critérios de aceitação; demais decisões de comportamento, demais detalhamentos técnicos e verificações da aplicação ainda pendentes.
 
 Este documento registra o estado observado nesta entrega. Não há aplicação
 executável nem funcionalidades de geoprocessamento, análise multicritério ou
@@ -59,18 +59,23 @@ valores ausentes continuam pendentes. RN-01, RN-02 e RN-03 preservadas.
 O RF-13 está alinhado à contribuição para a nota de aptidão física de cada
 alternativa, com conversão ainda a especificar. A previsão não será uma quarta
 dimensão nem parcela extra; custos e benefícios terão avaliações próprias.
-Nove critérios de aceitação documentados, com rastreabilidade, simulações
-identificadas e tratamento da indisponibilidade conforme a RN-03.
+O alvo está definido como compatibilidade física demonstrativa entre as
+características geográficas consideradas e cada cenário de uso, limitado aos
+aspectos cobertos pelos atributos e pelas respostas de referência do treinamento.
+São 11 critérios de aceitação documentados, com rastreabilidade, simulações
+identificadas e tratamento da indisponibilidade conforme a RN-03. Cada uso terá
+sua avaliação; o ML não produzirá apenas o nome de uma alternativa vencedora.
 Para o RF-10, falta detalhar a apresentação; as previsões de ML serão incorporadas
 na Etapa 8 e estarão presentes no dashboard do MVP final. Para o RF-11,
 o modelo e as regras de armazenamento serão detalhados na Etapa 5. Para o
 RF-12, formato e estrutura do relatório permanecem pendentes; as previsões
 de ML integrarão o relatório do MVP final. O RF-13 formaliza a previsão
 demonstrativa, com implementação, integração e testes na Etapa 8, obrigatória
-no MVP final. Significado concreto do alvo por uso, atributos, escalas,
-conversão da previsão em nota, algoritmo, treinamento e avaliação continuam
-pendentes. O RNF-01 foi aprovado e publicado; seu checklist de clareza será aplicado após a implementação da interface e dos
-fluxos correspondentes. O RNF-02 foi aprovado e publicado; a estrutura de
+no MVP final. Representação da saída, atributos, respostas de referência e
+sua origem, obtenção e validação, escalas, conversão da previsão em nota,
+algoritmo, treinamento e avaliação continuam pendentes. O RNF-01 foi aprovado
+e publicado; seu checklist de clareza será aplicado após a implementação da
+interface e dos fluxos correspondentes. O RNF-02 foi aprovado e publicado; a estrutura de
 armazenamento e os metadados das bases concretas ainda serão detalhados, com
 verificação funcional após a implementação. O RNF-03 foi aprovado e publicado;
 stack, versões, conjuntos de referência e condições de reprodução ainda
@@ -422,11 +427,35 @@ ajuste automático dos pesos (RN-03). Seis cenários anteriores preservados e
 três acrescentados, totalizando nove em tabela contínua. Somente a seção
 RF-13 foi alterada; demais seções e quatro arquivos versionados preservados.
 Conferência documental concluída e publicação confirmada, com Git limpo e
-sincronizado. Significado concreto do alvo por uso, atributos, escalas,
-conversão em nota, algoritmo, treinamento e avaliação permanecem pendentes.
+sincronizado. Naquela entrega, significado concreto do alvo por uso, atributos,
+escalas, conversão em nota, algoritmo, treinamento e avaliação ficaram pendentes;
+a definição posterior do significado do alvo está registrada abaixo.
 Implementação, integração e testes continuam na Etapa 8 e integram o MVP
 final; não há modelo implementado, treinamento, avaliação ou testes funcionais
 executados. A Etapa 2 permanece em andamento.
+
+O significado do alvo do RF-13 foi aprovado em 21/10/2026 e publicado no
+commit `095ef69`: compatibilidade física demonstrativa entre as características
+geográficas consideradas e o uso avaliado, com sentidos registrados para
+Revegetação com espécies nativas, Lazer e educação ambiental e Solar em terreno.
+A mesma área poderá receber avaliações diferentes por uso; a previsão não será
+apenas o nome de uma alternativa vencedora nem a classificação final do RF-09.
+O alcance fica limitado aos aspectos cobertos pelos atributos e pelas respostas
+de referência do treinamento; não comprova segurança, estabilidade geotécnica,
+ausência de contaminação, recuperação ambiental ou viabilidade da instalação.
+Referências de Servou e colaboradores (2023) e da documentação conceitual do
+scikit-learn registradas, com adaptação demonstrativa e sem seleção da stack.
+Respostas de referência serão necessárias ao treinamento supervisionado; sua
+origem, obtenção e validação continuam pendentes. Quando simuladas, demonstram
+relações da simulação, sem comprovar capacidade preditiva real. Nove cenários
+anteriores preservados e dois acrescentados, totalizando 11 em tabela contínua.
+Somente RF-13 alterado; demais seções e quatro arquivos versionados preservados.
+Conferência documental e publicação confirmadas, com Git limpo e sincronizado.
+Representação da saída, atributos, escalas, conversão em nota, algoritmo,
+treinamento, avaliação e valores dos pesos continuam pendentes. RN-01, RN-02
+e RN-03 preservadas; implementação, integração e testes do ML permanecem na
+Etapa 8 e são obrigatórios no MVP final. Nenhum modelo implementado ou teste
+funcional executado; Etapa 2 em andamento.
 
 ## Entregas concluídas
 
@@ -835,10 +864,21 @@ executados. A Etapa 2 permanece em andamento.
   Rastreabilidade na comparação, no dashboard e no relatório e RN-01, RN-02
   e RN-03 preservadas. Seis cenários anteriores mantidos e três acrescentados,
   totalizando nove. Somente RF-13 alterado, com conferência documental e
-  publicação confirmadas. Alvo por uso, atributos, escalas, conversão em nota,
-  algoritmo, treinamento e avaliação pendentes. Implementação, integração e
-  testes previstos na Etapa 8 e obrigatórios no MVP final; modelo ainda não
+  publicação confirmadas. Naquela entrega, alvo por uso, atributos, escalas,
+  conversão em nota, algoritmo, treinamento e avaliação ficaram pendentes;
+  o significado do alvo foi definido posteriormente, conforme o registro abaixo.
+  Implementação, integração e testes previstos na Etapa 8 e obrigatórios no MVP final; modelo ainda não
   implementado e testes funcionais futuros.
+
+- Significado do alvo do RF-13 definido em 21/10/2026 e publicado no commit
+  `095ef69`: compatibilidade física demonstrativa por uso, com os três cenários
+  de referência descritos e alcance limitado aos aspectos efetivamente cobertos.
+  Atributos dos mapas separados das respostas de referência do treinamento;
+  fundamentação, adaptação demonstrativa e limitações registradas. Nove cenários
+  preservados e dois acrescentados, totalizando 11. Somente RF-13 alterado, com
+  conferência documental e publicação confirmadas. Representação da saída,
+  atributos, respostas de treinamento, escalas e conversão em nota pendentes;
+  implementação, integração e testes na Etapa 8, sem modelo implementado.
 
 ## Arquivos relevantes
 
@@ -858,7 +898,7 @@ excluídos permanecem fora do versionamento.
 ## Estado do Git
 
 - Branch atual: `main`.
-- Histórico anterior a esta entrega: cento e vinte e quatro commits locais já publicados, listados abaixo.
+- Histórico anterior a esta entrega: cento e vinte e seis commits locais já publicados, listados abaixo.
 - Repositório público: [Rafael-Inacio-Silva/Geo_Vale](https://github.com/Rafael-Inacio-Silva/Geo_Vale).
 - Remoto `origin`: `https://github.com/Rafael-Inacio-Silva/Geo_Vale.git`.
 - O repositório foi criado vazio e recebeu o histórico no primeiro push.
@@ -996,9 +1036,11 @@ Commits concluídos antes desta atualização:
 | `8838e1b` | `docs: alinha soma ponderada do RF-09 às dimensões comuns` |
 | `a200e3f` | `docs: registra alinhamento do RF-09 no status` |
 | `c5bfe32` | `docs: alinha contribuição do ML à aptidão física no RF-13` |
+| `f632c62` | `docs: registra alinhamento do RF-13 no status` |
+| `095ef69` | `docs: esclarece significado do alvo por uso no RF-13` |
 
 Esta atualização do status tem a mensagem de commit
-`docs: registra alinhamento do RF-13 no status`. Consulte `git log --oneline` para
+`docs: registra significado do alvo do RF-13 no status`. Consulte `git log --oneline` para
 identificar seu hash e o histórico atualizado, sem depender de contagens fixas
 neste documento.
 
@@ -1088,6 +1130,7 @@ locais com dados reais; não são testes da aplicação.
 | Organização dos indicadores e dimensões comuns do RF-08 | Commit `5bafc16` conferido contra a proposta aprovada: cinco indicadores geográficos mantidos integralmente nas linhas de dados e unidades de suas tabelas; três dimensões comuns definidas — Aptidão física para o uso, Custo de implantação e adaptação e Benefícios esperados. Mesma configuração de pesos entre alternativas, com notas específicas e sem acrescentar automaticamente os indicadores como notas extras. Referência ao manual de análise multicritério de 2009 e caráter demonstrativo registrados; ausência de necessidade de indicador diferenciada de dado necessário indisponível. RN-01, RN-02 e RN-03 preservadas. Três cenários acrescentados aos quatro anteriores, totalizando sete em tabela contínua. Somente a seção RF-08 de `docs/REQUISITOS.md` alterada; demais seções, inclusive RF-09 e RF-13, e quatro arquivos versionados preservados. Fontes anteriores mantidas; tabelas e `git diff --check` sem problemas. Conteúdo do commit e publicação conferidos, com HEAD, origin/main e referência remota iguais a `5bafc165da8c6d7dda4536e5dee8547af75e1442` e árvore de trabalho limpa ao concluir. Conferência documental; dados, estimativas, escalas, notas, valores dos pesos, cálculos e reflexos nos RF-09 e RF-13 ainda pendentes, sem implementação ou testes funcionais. |
 | Alinhamento da soma ponderada do RF-09 às dimensões comuns | Commit `8838e1b` conferido contra a proposta aprovada e o RF-08: soma das notas de aptidão física, custo e benefícios, cada uma com seu peso; configuração de pesos compartilhada entre alternativas e notas específicas. Custo monetário depende de conversão para escala comparável; cinco indicadores geográficos sem inclusão automática como notas extras. Entradas incompatíveis rejeitadas com mensagem compreensível, sem ajuste automático da configuração. RN-01, RN-02 e RN-03 preservadas. Cinco cenários anteriores mantidos e três acrescentados, totalizando oito em tabela contínua. Somente a seção RF-09 de `docs/REQUISITOS.md` alterada; demais seções, inclusive RF-13, e quatro arquivos versionados preservados. `git diff --check` sem problemas; conteúdo do commit e publicação conferidos, com HEAD, origin/main e referência remota iguais a `8838e1bdd633bd42a9b2e68daf8d712ae5d7679a` e árvore de trabalho limpa ao concluir. Conferência documental; escalas, conversões em notas, valores e validação dos pesos, normalização, precisão, empates e demais detalhes de dados ausentes ainda pendentes, sem implementação ou testes funcionais. |
 | Alinhamento da contribuição do ML no RF-13 | Commit `c5bfe32` conferido contra a proposta aprovada e os RF-08 e RF-09: previsão contribui para a nota de aptidão física de cada alternativa, com conversão ainda a especificar; sem quarta dimensão ou parcela extra na soma ponderada e sem estimativa automática de custos ou benefícios por este ML. Configuração comum de pesos, rastreabilidade da alternativa, atributos, previsão e relação com a nota, origem e limitações no dashboard e no relatório conferidas. RN-01, RN-02 e RN-03 preservadas, incluindo bloqueio do ranking por dado necessário indisponível, resultados parciais válidos e ausência de preenchimento automático ou ajuste dos pesos. Seis cenários anteriores intactos e três acrescentados, totalizando nove em tabela contínua. Somente a seção RF-13 de `docs/REQUISITOS.md` alterada; demais seções e quatro arquivos versionados preservados. `git diff --check` sem problemas; conteúdo do commit e publicação conferidos, com HEAD, origin/main e referência remota iguais a `c5bfe32298189d413a8d849878c253209768f552` e árvore de trabalho limpa ao concluir. Conferência documental; alvo por uso, atributos, escalas, conversão em nota, algoritmo, treinamento e avaliação pendentes. Implementação, integração e testes na Etapa 8, obrigatórios no MVP final; nenhum modelo implementado ou teste funcional executado. |
+| Significado do alvo por uso no RF-13 | Commit `095ef69` conferido contra a proposta aprovada: compatibilidade física demonstrativa por uso limitada aos aspectos cobertos, com três cenários de referência, identificação de cada alternativa e distinção da classificação final. Respostas de referência para treinamento supervisionado diferenciadas dos atributos geográficos; origem, obtenção e validação pendentes e simulação identificada. Referências de Servou e colaboradores (2023) e scikit-learn com adaptações e limitações explícitas, sem selecionar stack. Nove cenários anteriores preservados integralmente e dois acrescentados, totalizando 11 em tabela contínua. Somente a seção RF-13 de `docs/REQUISITOS.md` alterada; demais seções e quatro arquivos versionados preservados. Tabelas e `git diff --check` sem problemas; conteúdo do commit e publicação conferidos, com HEAD, origin/main e referência remota iguais a `095ef69f4e80d2ac0818988fbec0f385da41e72b` e árvore limpa ao concluir. RN-01, RN-02, RN-03 e implementação na Etapa 8 mantidas; representação da saída, atributos, escalas, conversão em nota, treinamento, avaliação e valores dos pesos não definidos. Conferência documental; nenhum modelo implementado ou teste funcional executado. |
 
 Os registros de preparação do ambiente Python são históricos. Nesta revisão,
 foram conferidos os documentos, os commits e o estado do Git; as verificações
@@ -1217,12 +1260,12 @@ Resultados de funcionalidades e métricas de ML não existem nesta fase.
   A exportação depende dos dados e resultados da análise; a inclusão das
   previsões depende da integração de ML prevista na Etapa 8, incluída na
   entrega final do MVP.
-- Para o RF-13, a contribuição para a nota de aptidão física por alternativa
-  está alinhada aos RF-08 e RF-09, com nove critérios de aceitação. Significado
-  concreto do alvo por uso, atributos, escalas, conversão em nota, algoritmo,
-  treinamento e avaliação precisam ser definidos e aprovados antes da
-  implementação e da preparação dos testes. Rastreabilidade e RN-01, RN-02
-  e RN-03 preservadas; custos e benefícios com avaliações próprias no RF-08.
+- Para o RF-13, contribuição para a nota de aptidão física e significado do
+  alvo por uso estão definidos, com 11 critérios de aceitação. Representação
+  da saída, atributos, respostas de referência e sua origem, obtenção e validação,
+  escalas, conversão em nota, algoritmo, treinamento e avaliação precisam ser
+  definidos e aprovados antes da implementação e da preparação dos testes.
+  Rastreabilidade e RN-01, RN-02 e RN-03 preservadas; custos e benefícios com avaliações próprias no RF-08.
   Implementação, integração e testes permanecem na Etapa 8 e são obrigatórios
   no MVP final; nenhuma implementação ou teste funcional realizado.
 - Para o RNF-01, fluxos e interface serão detalhados nas etapas correspondentes.
@@ -1317,7 +1360,7 @@ Este plano não define os comportamentos pendentes nem encerra a etapa.
 | 2 | Análise e restrições — RF-04 a RF-06 e RN-01/RN-03 | Cruzamentos iniciais do RF-04 definidos para unidades de conservação, rios e drenagem e massas d’água. Medidas descritivas e alertas informativos iniciais do RF-05 definidos. Pendentes fontes definitivas e preparação, demais operações, precisão, tolerâncias, alcance de consulta, eventuais alertas adicionais, demais condições concretas das regras de restrição e identificação dos dados necessários à comparação. Estrutura, comportamento de avaliação e primeira regra concreta RF06-R01 definidos no RF-06. Para essa regra, bases concretas, disponibilidade, cobertura e parâmetros técnicos permanecem pendentes. |
 | 3 | Comparação — RF-07 a RF-09 | Nome e descrição obrigatórios, validações do cadastro e da seleção e três cenários de referência definidos no RF-07: Revegetação com espécies nativas, Lazer e educação ambiental e Solar em terreno. Cinco indicadores geográficos de apoio preservados no RF-08 e três dimensões comuns do ranking definidas: aptidão física, custo de implantação e adaptação e benefícios esperados, com configuração de pesos compartilhada entre alternativas e notas específicas. Soma ponderada do RF-09 alinhada a essa organização, com oito critérios de aceitação. Pendentes associação dos indicadores, dados por dimensão, aspectos dos benefícios, escopo e período dos custos, escalas, notas, valores e validação dos pesos, normalização, empates e precisão. Contribuição do ML para a nota de aptidão física alinhada no RF-13, com conversão em nota ainda pendente; armazenamento nas etapas correspondentes. |
 | 4 | Resultados — RF-10 a RF-12 | Confirmar informações mínimas para consulta e persistência, formato do relatório e apresentação dos resultados completos ou parciais. |
-| 5 | ML — RF-13 | Contribuição para a nota de aptidão física de cada alternativa alinhada aos RF-08 e RF-09, com nove critérios de aceitação. Pendentes significado concreto do alvo por uso, atributos, escalas e conversão da previsão em nota. Algoritmo, treinamento, avaliação, implementação, integração e testes permanecem para a Etapa 8 e integram o MVP final. |
+| 5 | ML — RF-13 | Contribuição à nota de aptidão física e significado demonstrativo do alvo por uso definidos, com 11 critérios de aceitação. Pendentes representação da saída, atributos, respostas de referência e sua origem, obtenção e validação, escalas e conversão em nota. Algoritmo, treinamento, avaliação, implementação, integração e testes permanecem para a Etapa 8 e integram o MVP final. |
 | 6 | Aceitação | Completar critérios verificáveis e estabelecer quando serão fixadas as metas dependentes do ambiente e dos dados, especialmente desempenho. |
 
 Detalhamentos previstos para as etapas posteriores, conforme o planejamento:
@@ -1377,9 +1420,10 @@ O encerramento depende de revisão e aprovação do responsável pelo projeto.
   antes da implementação.
 - Definir e aprovar formato e estrutura do relatório do RF-12 antes da
   implementação.
-- Definir e aprovar significado concreto do alvo por uso, atributos, escalas,
-  conversão da previsão em nota, algoritmo, treinamento e avaliação do RF-13
-  antes da implementação. O papel na dimensão de aptidão física está alinhado.
+- Definir e aprovar representação da saída, atributos, respostas de referência
+  e sua origem, obtenção e validação, escalas, conversão em nota, algoritmo,
+  treinamento e avaliação do RF-13 antes da implementação. Significado do alvo
+  por uso e papel na dimensão de aptidão física já definidos.
 - Definir e aprovar os cenários do checklist do RNF-01 antes da verificação.
 - Detalhar e aprovar a estrutura de armazenamento e os metadados das bases
   concretas previstos no RNF-02 e no RT-01 nas etapas correspondentes,
@@ -1403,9 +1447,9 @@ O encerramento depende de revisão e aprovação do responsável pelo projeto.
   disponibilidade e a forma de apresentação da RN-03 antes da implementação
   e da preparação dos testes.
 - Discutir e aprovar os conteúdos das pequenas unidades da sequência
-  registrada no plano de pendências; próxima discussão recomendada: significado
-  da aptidão física que o ML deverá prever para cada um dos três usos de
-  referência, com exemplos simples, dependências e limites demonstrativos.
+  registrada no plano de pendências; próxima discussão recomendada: comparar
+  representações possíveis da saída do ML, como classes de aptidão ou índice
+  numérico, e suas consequências para o treinamento e a conversão em nota.
   Apresentar uma proposta antes de alterar requisitos; Etapa 2 em andamento.
 - Discutir e aprovar os demais detalhamentos da Etapa 2.
 - Na Etapa 4, escolher stack e versão suportada de Python, avaliando a proposta
@@ -1431,16 +1475,15 @@ reproduzível serão detalhadas após a definição da stack.
 
 ## Próxima tarefa recomendada
 
-Discutir no chat o significado da aptidão física que o ML deverá prever para
-Revegetação com espécies nativas, Lazer e educação ambiental e Solar em terreno.
-Explicar, com exemplos simples, a diferença entre atributos geográficos,
-previsão por uso, conversão em nota de aptidão e pontuação final com custos e
-benefícios. Preparar uma proposta delimitada para esclarecer o alvo do RF-13,
-identificando fundamentos, adaptações demonstrativas, limitações e pendências.
-Não fixar valores, limiares, escalas, atributos definitivos, algoritmo ou
-procedimentos de treinamento nessa discussão, nem presumir validação por
-especialistas. Manter restrições separadas, simulações identificadas e o
-tratamento de dados necessários indisponíveis. Não alterar arquivos sem
-aprovação da proposta. Implementação, integração e testes continuam na Etapa 8,
-obrigatórios no MVP final. A Etapa 2 permanece em andamento; alterações,
-commits, publicação e encerramento dependem de autorização.
+Apresentar no chat uma comparação simples entre representações possíveis da
+saída de aptidão física por uso: classes ou índice numérico. Explicar o que
+cada opção exige das respostas de referência, do treinamento, da avaliação e
+da conversão para a nota do RF-08. Distinguir saída do ML, nota comparável e
+pesos da decisão; o significado demonstrativo do alvo já está definido no
+RF-13. Comparar vantagens, limitações e dependências e preparar uma proposta
+pequena antes de qualquer alteração. Não fixar classes, valores, limiares,
+escalas, atributos, algoritmo, treinamento ou pesos nessa discussão, nem
+presumir validação técnica dos resultados. Preservar RN-01, RN-02 e RN-03;
+implementação, integração e testes do ML continuam na Etapa 8, obrigatórios
+no MVP final. A Etapa 2 permanece em andamento; alterações, commits,
+publicação e encerramento dependem de autorização.
