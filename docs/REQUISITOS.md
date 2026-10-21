@@ -824,7 +824,9 @@ implementada e os testes de aplicação das regras ainda não foram executados.
 
 **Estado:** definição aprovada pelo responsável pelo projeto em 20/10/2026;
 campos obrigatórios e regras de validação do cadastro e da seleção aprovados
-em 21/10/2026. A lista definitiva de alternativas de uso permanece pendente.
+em 21/10/2026. Três cenários de referência para o MVP, com nomes, descrições
+e referências, também aprovados em 21/10/2026; detalhamentos das condições de
+avaliação permanecem pendentes nos requisitos correspondentes.
 
 **Ator:** AT-01 — Engenheiro/analista.
 
@@ -863,11 +865,53 @@ Por exemplo, “Solar em terreno”, “ SOLAR EM TERRENO ” e “Solar  em ter
 correspondem ao mesmo nome. Informar: “Já existe uma alternativa com esse
 nome. Informe um nome diferente.”
 
-O exemplo acima descreve o cenário específico da RF06-R01; não define a lista
-definitiva das alternativas do MVP nem comprova aptidão ou viabilidade do uso.
+O exemplo dos campos descreve o cenário específico da RF06-R01, incluído
+entre os cenários de referência abaixo. Sua descrição não comprova aptidão
+ou viabilidade do uso.
 O cadastro permitirá identificar as opções avaliadas pelas regras do RF-06
 e pelas comparações dos RF-08 e RF-09; os pesos dos critérios serão definidos
 no RF-08.
+
+**Cenários de referência para o MVP:**
+
+Os três cenários abaixo orientarão a demonstração do MVP, com nomes e
+descrições que seguem os campos do cadastro:
+
+| Nome da alternativa | Descrição do cenário |
+| --- | --- |
+| Revegetação com espécies nativas | Recuperar a cobertura vegetal das superfícies terrestres, com espécies adequadas à região, a serem definidas posteriormente. |
+| Lazer e educação ambiental | Criar um parque de visitação terrestre, com trilhas, espaços de convivência e atividades educativas. |
+| Solar em terreno | Instalar painéis em terreno fora da água, sem drenagem, aterro ou estruturas sobre a água, conforme o cenário da RF06-R01. |
+
+Cada cenário representa um objetivo predominante para a área estudada. Por
+exemplo, o parque de visitação também poderá ter vegetação. A comparação
+avaliará os cenários selecionados para a mesma área de estudo; este registro
+não define uma distribuição automática de usos pelo terreno. O cadastro
+continuará permitindo outras alternativas que atendam às validações acima.
+
+O estudo de [Servou e colaboradores (2023), A Geospatial Analysis Model for
+the Selection of Post-Mining Land Uses in Surface Lignite Mines: Application
+in the Ptolemais Mines, Greece](https://www.mdpi.com/2071-1050/15/19/14388)
+considera usos florestais, parques recreativos e usos industriais que incluem
+instalações fotovoltaicas, além do uso agrícola. Isso fundamenta a consideração
+dessas famílias de usos, sem validar sua aplicação em Minas Gerais. A escolha
+dos três cenários, seus nomes e descrições, incluindo o recorte de revegetação
+com espécies nativas e de lazer com educação ambiental, são adaptações
+demonstrativas do GeoVale, não uma reprodução direta dos cenários do estudo.
+
+O documento da [EPA/NREL, Screening Sites for Solar PV Potential, página 1](https://www.epa.gov/sites/production/files/2015-04/documents/solar_decision_tree.pdf)
+inclui áreas mineradas entre os locais considerados na triagem solar. Seu
+alcance é preliminar e não substitui avaliação específica do local, conforme
+as limitações já registradas na RF06-R01. Essas referências foram consultadas
+em 21/10/2026.
+
+A escolha dos cenários define o que comparar. Espécies, critérios, notas,
+pesos, regras adicionais de restrição, dados necessários e condições de
+viabilidade ainda serão detalhados e fundamentados nas unidades correspondentes.
+O registro não comprova adequação ambiental, segurança ou autorização de uso
+da área. O atendimento dos critérios de aceitação do cadastro e da seleção
+continuará sendo verificado na implementação, com os cenários de referência
+identificáveis na preparação da demonstração.
 
 **Validações da seleção:**
 
@@ -902,13 +946,16 @@ conforme a RN-03 e o tratamento das restrições conforme a RN-01.
 **Dependências e detalhamento pendente:**
 
 O requisito depende da área identificada pelo RF-02. Os dois campos
-obrigatórios e as validações do cadastro e da seleção estão definidos acima.
-A lista definitiva de alternativas do MVP permanece pendente de definição
-e aprovação, considerando os cenários e as regras do RF-06. O armazenamento
+obrigatórios, as validações do cadastro e da seleção e os três cenários de
+referência do MVP estão definidos acima. Permanecem pendentes os detalhamentos
+das condições de avaliação desses usos, das demais regras do RF-06, dos
+critérios, notas e pesos dos RF-08 e RF-09 e dos dados necessários, incluindo
+a disponibilidade conforme a RN-03. As espécies para revegetação serão
+definidas posteriormente, considerando sua adequação à região. O armazenamento
 será detalhado nas etapas correspondentes, conforme o RF-11. Os arquivos de
-teste e a verificação funcional serão preparados na implementação; as
-pendências dos requisitos anteriores e da RN-03 permanecem em aberto.
-Este detalhamento não implementa o cadastro nem encerra a Etapa 2.
+teste e a verificação funcional serão preparados na implementação; as demais
+pendências dos requisitos anteriores permanecem em aberto. Este detalhamento
+não implementa o cadastro nem encerra a Etapa 2.
 
 **Momento de verificação:**
 
