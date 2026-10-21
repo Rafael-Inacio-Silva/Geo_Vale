@@ -653,8 +653,9 @@ implementada e os testes de medições e alertas ainda não foram executados.
 
 **Estado:** definição aprovada pelo responsável pelo projeto em 20/10/2026;
 estrutura, fundamentação e comportamento de avaliação das regras demonstrativas
-aprovados em 21/10/2026. Condições específicas, parâmetros e lista dos dados
-necessários ainda pendentes de detalhamento.
+aprovados em 21/10/2026. Primeira regra concreta demonstrativa, RF06-R01,
+aprovada em 21/10/2026 para o cenário solar descrito abaixo. As demais regras
+e os detalhamentos técnicos indicados nas dependências permanecem pendentes.
 
 **Ator:** AT-01 — Engenheiro/analista.
 
@@ -720,9 +721,60 @@ associe aquela condição à alternativa avaliada. As restrições identificadas
 seguirão a RN-01, permanecendo separadas da pontuação, inclusive diante de
 notas altas ou previsões favoráveis de ML.
 
-Esta unidade define a organização e o comportamento das regras. As condições
-ambientais concretas, seus parâmetros, sua fundamentação e os dados necessários
-serão propostos e aprovados em unidades posteriores, antes da implementação.
+**RF06-R01 — Ausência de superfície fora da água para o cenário solar em terreno:**
+
+- Identificação: RF06-R01, versão 0.1 — regra demonstrativa simulada.
+- Finalidade: avaliar o cenário de painéis solares instalados em terreno fora
+  da água, sem drenagem, aterro ou estruturas sobre a água. A definição desse
+  cenário não encerra a escolha das alternativas nem o cadastro do RF-07.
+- Dados necessários: geometria completa da área do RF-02; camada de polígonos
+  de massas d’água válida e com cobertura suficiente para avaliar toda a área;
+  fontes, datas, cobertura e referências espaciais dos dados, com condições
+  adequadas às operações conforme os RF-04, RF-05, RT-01 e RT-02.
+- Condição: identificar restrição quando não restar superfície da área de
+  estudo fora da união dos polígonos de massas d’água mapeadas. Considerar
+  todas as partes de um `MultiPolygon` e seus recortes internos, sem duplicar
+  a superfície coberta por polígonos de água sobrepostos. Uma interseção
+  parcial ou somente na borda não atende a essa condição.
+- Parâmetros e unidades: a condição é a ausência de superfície remanescente,
+  sem estabelecer tamanho mínimo de instalação ou limite de declividade.
+  As áreas de estudo, de sobreposição e remanescente deverão ser consultáveis
+  em m² e hectares. Percentuais arredondados exibidos ao usuário não decidirão
+  a cobertura total; referência espacial, precisão e tolerâncias deverão ser
+  especificadas antes da implementação, conforme o RT-02.
+- Efeito: quando a condição for atendida, apresentar “restrição identificada”
+  para esse cenário demonstrativo e aplicar a separação da RN-01. Havendo
+  superfície fora da água e condições suficientes de avaliação, apresentar
+  “restrição não identificada segundo esta regra”, sem declarar que a
+  superfície remanescente seja utilizável ou suficiente para uma instalação.
+  As demais regras aplicáveis continuarão necessárias.
+- Indisponibilidade: dados ausentes, inválidos ou com cobertura insuficiente,
+  referências incompatíveis ou condições de cálculo ainda não definidas que
+  impeçam concluir a cobertura deverão produzir “avaliação indisponível”, com
+  o motivo. Não presumir ausência de água nem substituir dados por zero;
+  preservar resultados parciais válidos e bloquear o ranking quando faltar
+  dado necessário à avaliação, conforme a RN-03.
+- Justificativa do resultado: identificar regra, versão, cenário avaliado,
+  caráter simulado, camadas e elementos utilizados, fontes, datas, cobertura,
+  referência espacial, condições de cálculo, medidas e relação espacial que
+  sustentam a conclusão ou o motivo da indisponibilidade.
+
+A referência consultada é o documento da EPA/NREL
+[Screening Sites for Solar PV Potential, páginas 1 e 6, seção I.3](https://www.epa.gov/sites/production/files/2015-04/documents/solar_decision_tree.pdf),
+consultado em 21/10/2026. Ele inclui áreas mineradas entre os locais de
+interesse e considera água entre as exclusões na triagem de uso do solo para
+energia solar. O documento trata de avaliação preliminar no contexto dos
+Estados Unidos e não substitui um estudo específico do local.
+
+A condição de cobertura total e sua consequência eliminatória neste cenário
+são uma adaptação simulada do GeoVale, aprovada para demonstrar o software;
+não são uma regra universal extraída do documento, uma proibição brasileira
+ou uma validação ambiental. A regra não avalia soluções solares flutuantes,
+nem intervenções para alterar a superfície da área. A ausência dessa restrição
+não comprova viabilidade, segurança, autorização de uso ou aptidão da área.
+A representação mapeada depende da data, escala, precisão e cobertura dos
+dados; não comprova a situação atual da água no terreno. Os dados reais e os
+cenários sintéticos de teste deverão permanecer identificados separadamente.
 
 **Critérios de aceitação:**
 
@@ -739,19 +791,28 @@ serão propostos e aprovados em unidades posteriores, antes da implementação.
 | Consulta de regra ou parâmetro baseado em hipótese simulada | Identificar sua origem e seu caráter demonstrativo, além da adaptação e das limitações registradas, sem apresentar a hipótese como condição ambiental validada. |
 | Regra incompleta, sem alguma informação exigida em sua estrutura | Não aplicar a regra como válida; informar o problema de configuração e apresentar “avaliação indisponível”, sem inferir presença ou ausência de restrição. |
 | Regra identifica restrição para alternativa com pontuação alta ou previsão favorável de ML | Preservar a restrição e sua justificativa separadas da pontuação, seguindo a RN-01, sem compensação ou remoção pelo resultado favorável. |
+| RF06-R01 com toda a superfície da área coberta por massas d’água e avaliação válida | Identificar a restrição somente para o cenário solar em terreno especificado, com justificativa e caráter simulado; manter a restrição separada da pontuação conforme a RN-01. |
+| RF06-R01 com cobertura parcial de água e superfície remanescente, inclusive quando o percentual exibido arredondar para 100% | Apresentar “restrição não identificada segundo esta regra”, sem concluir viabilidade ou suficiência da superfície remanescente nem dispensar outras regras. |
+| RF06-R01 com massas d’água tocando somente a borda ou um ponto da área | Não identificar restrição por cobertura total; preservar a distinção entre contato e sobreposição de superfície do RF-05. |
+| RF06-R01 com uma parte do `MultiPolygon` coberta por água e outra com superfície fora da água | Considerar todas as partes em conjunto e não identificar cobertura total nem descartar a parte remanescente. |
+| RF06-R01 com polígonos de água sobrepostos entre si | Considerar a união das superfícies, sem duplicar áreas nem produzir cobertura total pela soma de sobreposições parciais. |
+| RF06-R01 com dados ausentes, inválidos, cobertura insuficiente ou impossibilidade de concluir o cálculo | Apresentar “avaliação indisponível” e o motivo, sem presumir ausência de água; aplicar a RN-03 quanto ao ranking e aos resultados parciais válidos. |
+| Consulta da fundamentação e do alcance da RF06-R01 | Identificar fonte, adaptação simulada, versão, cenário solar específico e limitações, sem apresentar a restrição como proibição brasileira ou aprovação ambiental. |
 
 **Dependências e detalhamento pendente:**
 
 O requisito depende das informações do RF-05 e da definição das alternativas
-a avaliar. A estrutura e o comportamento de avaliação das regras estão
-definidos acima, com tratamento de indisponibilidade conforme a RN-03 e
-preservação das restrições conforme a RN-01. Permanecem pendentes as condições
-específicas, seus parâmetros e unidades, as fontes e adaptações aplicáveis
-e a lista dos dados necessários a cada regra. Essas definições e os critérios
-de disponibilidade deverão ser detalhados e aprovados antes da implementação
-e da preparação dos cenários de teste correspondentes. A referência ao guia
-e a organização da regra não substituem a fundamentação de cada condição
-concreta. As demais pendências dos requisitos anteriores permanecem em aberto.
+a avaliar. A estrutura, o comportamento de avaliação e a primeira regra
+concreta RF06-R01 estão definidos acima, com tratamento de indisponibilidade
+conforme a RN-03 e preservação das restrições conforme a RN-01. Permanecem
+pendentes as demais regras, suas condições, parâmetros e unidades, fontes,
+adaptações e dados necessários. Para a RF06-R01, continuam pendentes a seleção
+e preparação da camada concreta na Etapa 6, os critérios de disponibilidade
+e adequação da cobertura e os detalhamentos de referência espacial, precisão
+e tolerâncias do RT-02, antes da implementação e da preparação dos arquivos
+de teste. Este registro não escolhe bases definitivas, não implementa cálculos
+e não encerra o RF-07 nem a Etapa 2. As demais pendências dos requisitos
+anteriores permanecem em aberto.
 
 **Momento de verificação:**
 
