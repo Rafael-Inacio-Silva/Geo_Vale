@@ -966,8 +966,9 @@ implementada e os testes de cadastro e seleção ainda não foram executados.
 ### RF-08 — Definição de critérios, notas e pesos
 
 **Estado:** definição aprovada pelo responsável pelo projeto em 20/10/2026;
-escalas, limites, validação dos pesos e tratamento de valores ausentes ainda
-pendentes de definição.
+três critérios iniciais, dados necessários, unidades, referências e limitações
+aprovados em 21/10/2026. Operacionalização, escalas, notas, limites, pesos e
+demais detalhamentos indicados nas dependências permanecem pendentes.
 
 **Ator:** AT-01 — Engenheiro/analista.
 
@@ -984,6 +985,65 @@ e os pesos configurados deverão poder ser consultados. Cada nota deverá estar
 associada à alternativa e ao critério correspondentes. Valores inválidos
 deverão ser rejeitados com mensagem compreensível.
 
+**Critérios iniciais e dados necessários:**
+
+Os três critérios abaixo constituem uma definição inicial para a comparação
+dos cenários de referência do RF-07: Revegetação com espécies nativas, Lazer
+e educação ambiental e Solar em terreno. A interpretação e a conversão em
+nota deverão ser fundamentadas para cada cenário antes de sua utilização
+na pontuação; este registro não atribui a mesma nota ou importância aos três
+usos nem define um conjunto completo de critérios de aptidão.
+
+| Critério inicial | O que observar | Dados necessários e unidades |
+| --- | --- | --- |
+| Declividade do terreno | Inclinação das superfícies dentro da área estudada. | Modelo digital de elevação adequado à área; declividade em graus. |
+| Proximidade de vias mapeadas | Localização da área em relação às estradas e outras vias. | Camada de vias com cobertura adequada; distância geométrica em metros. |
+| Proximidade de vegetação nativa remanescente | Entorno vegetal, principalmente para o cenário de revegetação. | Camada que identifique remanescentes de vegetação nativa, com cobertura adequada; distância geométrica em metros. |
+
+A medida de declividade depende da seleção de um modelo de elevação adequado,
+do método de cálculo e da definição de como resumir os valores existentes
+dentro da área, incluindo suas partes. Esses procedimentos ainda deverão
+ser detalhados e aprovados. As medidas de proximidade serão geométricas,
+conforme o caráter descritivo do RF-05; referências espaciais, precisão,
+tolerâncias e alcance das consultas continuam pendentes. Avaliar rotas e
+acesso efetivo às vias exige informações adicionais; proximidade de vegetação
+é uma medida de localização e exige análise adicional para avaliar conectividade
+ecológica. As medidas não constituem por si só nota, restrição ou conclusão
+de viabilidade dos usos.
+
+O estudo de [Servou e colaboradores (2023), A Geospatial Analysis Model for
+the Selection of Post-Mining Land Uses in Surface Lignite Mines: Application
+in the Ptolemais Mines, Greece, seção 2.2.1](https://www.mdpi.com/2071-1050/15/19/14388)
+utiliza modelo digital de elevação para declividade e distâncias euclidianas
+para vias e outros elementos na avaliação de usos pós-mineração. Sua análise
+emprega mapas por células e condições da área estudada na Grécia; o resumo
+descritivo da área no GeoVale e sua conversão futura em notas constituem
+adaptações, não uma reprodução direta ou validação local do estudo.
+
+O estudo de [Worden e colaboradores (2024), Regional post-mining land use
+assessment: An interdisciplinary and multi-stakeholder approach, tabela 2](https://doi.org/10.1016/j.resourpol.2024.104680)
+considera proximidade de ecossistemas remanescentes na avaliação de usos
+ecológicos em regiões mineradoras de Queensland, Austrália. Para energia
+solar, considera também radiação solar e proximidade da rede elétrica, entre
+outros critérios. A medida de proximidade de vegetação nativa proposta para
+o cenário de revegetação é uma adaptação demonstrativa do GeoVale. As fontes
+foram consultadas em 21/10/2026; seus parâmetros não foram adotados como
+limites universais para o MVP.
+
+A seleção dos três critérios é um recorte inicial de escopo apoiado nessas
+referências. Critérios específicos de energia solar, como radiação e rede
+elétrica, exigirão detalhamento posterior. As bases ainda precisam ser
+selecionadas e preparadas na Etapa 6, incluindo as novas camadas de vias e
+vegetação. O detalhamento dos cruzamentos correspondentes no RF-04 continua
+futuro; esta unidade altera somente a definição inicial do RF-08.
+
+Os critérios e suas condições de utilização deverão permitir consultar
+as fontes, unidades, adaptações e limitações. A falta de dados necessários
+à comparação seguirá a RN-03: indicar a indisponibilidade e o motivo, sem
+substituir dados ausentes por zero ou concluir ausência de ocorrência;
+bloquear o ranking quando necessário e preservar resultados parciais válidos.
+As restrições do RF-06 continuarão separadas da pontuação conforme a RN-01.
+
 **Critérios de aceitação:**
 
 | Cenário | Resultado esperado |
@@ -995,11 +1055,18 @@ deverão ser rejeitados com mensagem compreensível.
 
 **Dependências e detalhamento pendente:**
 
-O requisito depende das alternativas do RF-07 e da definição das escalas, dos
-limites, da validação dos pesos e do tratamento de valores ausentes. Essas
-definições deverão ser especificadas e aprovadas antes da implementação e da
-preparação dos cenários de teste. As pendências dos requisitos anteriores
-permanecem em aberto.
+O requisito depende das alternativas do RF-07. Os três critérios iniciais,
+dados necessários, unidades, fontes e limitações estão definidos acima.
+Permanecem pendentes a seleção e preparação das bases, os cruzamentos adicionais
+do RF-04, o cálculo e resumo da declividade, o alcance das consultas, as
+referências espaciais, precisão e tolerâncias, bem como os critérios específicos
+adicionais para cada uso. Escalas, conversão das medidas em notas por cenário,
+limites, valores e validação dos pesos e demais detalhes do tratamento de
+valores ausentes deverão ser especificados e aprovados antes da implementação
+e da preparação dos cenários de teste, preservando o tratamento da RN-03.
+As demais pendências dos requisitos anteriores permanecem em aberto.
+Este registro não implementa cálculos, não atribui notas ou pesos e não
+encerra a Etapa 2.
 
 **Momento de verificação:**
 
