@@ -1416,9 +1416,10 @@ ainda não foram executados.
 **Estado:** definição aprovada pelo responsável pelo projeto em 20/10/2026;
 alinhamento da contribuição do ML à dimensão de aptidão física do RF-08 e
 à soma ponderada do RF-09 e significado demonstrativo do alvo por uso aprovados
-em 21/10/2026. Saída por classes de aptidão aprovada em 21/10/2026. Nomes,
-quantidade, significado e limites das classes, atributos, escalas, conversão
-em nota, treinamento e avaliação permanecem pendentes de definição.
+em 21/10/2026. Saída por classes e três nomes, ordem e significados qualitativos
+aprovados em 21/10/2026: Baixa, Moderada e Alta. Condições e limites técnicos
+das classes, atributos, escalas, conversão em nota, treinamento e avaliação
+permanecem pendentes de definição.
 
 **Atores:** AT-01 — Engenheiro/analista utiliza a previsão; AT-02 — Gestor consulta os resultados.
 
@@ -1492,11 +1493,32 @@ essa classificação não corresponde ao ranking das alternativas do RF-09.
 A escolha por classes busca facilitar a comunicação do resultado no MVP;
 não comprova maior validade técnica ou capacidade preditiva do modelo.
 
-Nomes, quantidade, significado, condições e limites das classes deverão ser
-fundamentados, especificados e aprovados antes da implementação e da preparação
-das respostas de referência para o treinamento. A distinção conceitual entre
-classificação e regressão consta da documentação do scikit-learn já referenciada;
-a escolha do formato não seleciona algoritmo ou stack nesta unidade.
+Serão utilizadas três classes, com os mesmos nomes e significados qualitativos
+para os três usos de referência, aplicados às características relevantes a cada
+uso:
+
+| Classe | Significado qualitativo no MVP |
+| --- | --- |
+| Baixa | As características físicas consideradas são pouco favoráveis ao uso avaliado. |
+| Moderada | As características físicas consideradas apresentam favorabilidade intermediária para o uso avaliado. |
+| Alta | As características físicas consideradas são mais favoráveis ao uso avaliado. |
+
+A ordem será Baixa, Moderada e Alta, da menor para a maior aptidão demonstrativa.
+Essa ordem não define distâncias numéricas iguais entre as classes nem suas
+notas na comparação. A mesma área poderá receber uma classe diferente por uso;
+condições e limites técnicos para atribuir cada classe continuam pendentes.
+
+A [FAO, em A Framework for Land Evaluation, capítulo 3](https://www.fao.org/4/x5310e/x5310e04.htm),
+apresenta graus de aptidão avaliados por uso. Os três nomes e significados acima
+são uma simplificação demonstrativa do GeoVale, sem adoção integral da metodologia,
+importação de seus limites ou equivalência automática com as classes oficiais
+da FAO. A referência não valida o classificador ou seus resultados locais.
+
+As condições e os limites técnicos das classes deverão ser fundamentados,
+especificados e aprovados antes da implementação e da preparação das respostas
+de referência para o treinamento. A distinção conceitual entre classificação
+e regressão consta da documentação do scikit-learn já referenciada; esta unidade
+não seleciona algoritmo ou stack.
 
 A classe prevista e a nota comparável de aptidão física serão informações
 distintas. A conversão de classe em nota para os RF-08 e RF-09 exigirá uma regra
@@ -1511,6 +1533,9 @@ de dado necessário não deverá produzir automaticamente uma classe de menor
 aptidão ou uma nota zero. Identificar o motivo, bloquear o ranking e preservar
 resultados parciais válidos conforme a RN-03. Restrições da RN-01 permanecem
 independentes da classe prevista e simulações continuam identificadas pela RN-02.
+Baixa não significará automaticamente restrição eliminatória; Alta não removerá
+uma restrição identificada nem comprovará autorização ou viabilidade. Avaliação
+indisponível não será uma quarta classe de aptidão.
 
 **Contribuição à dimensão de aptidão física:**
 
@@ -1542,10 +1567,11 @@ substituir dados ausentes por zero, preencher automaticamente com simulações
 ou ajustar automaticamente os pesos para prosseguir com a comparação.
 
 O significado do alvo, a saída por classes e o papel do ML na comparação
-estão definidos acima. Permanecem pendentes os nomes, a quantidade, o significado
-e os limites das classes, os atributos, as escalas e a conversão em nota,
-o algoritmo, o treinamento e a avaliação. Esta unidade não
-implementa o modelo ou o cálculo multicritério e não atribui valores aos pesos.
+estão definidos acima, incluindo os três nomes, a ordem e os significados
+qualitativos das classes. Permanecem pendentes as condições e os limites técnicos
+das classes, os atributos, as escalas, a conversão em nota, o algoritmo,
+o treinamento e a avaliação. Esta unidade não implementa o modelo ou o cálculo
+multicritério e não atribui valores aos pesos.
 
 **Critérios de aceitação:**
 
@@ -1564,6 +1590,8 @@ implementa o modelo ou o cálculo multicritério e não atribui valores aos peso
 | Consulta do significado e do alcance de uma previsão | Informar o uso avaliado e o alcance limitado aos aspectos considerados; não apresentar o resultado como comprovação de segurança, estabilidade geotécnica, ausência de contaminação, recuperação ambiental ou viabilidade da instalação, nem presumir condições não avaliadas como favoráveis. |
 | Previsão com entradas válidas e classes especificadas e aprovadas | Apresentar a classe de aptidão física demonstrativa e o uso correspondente, distinguindo-a da nota comparável e do ranking final; aplicar somente uma conversão em nota previamente especificada e aprovada, sem usar automaticamente códigos de categorias como notas. |
 | Falta de dado necessário à avaliação por classes | Informar avaliação indisponível e o motivo, sem atribuir automaticamente classe de menor aptidão ou nota zero; bloquear o ranking e preservar resultados parciais válidos conforme a RN-03. |
+| Consulta dos nomes, da ordem e do significado qualitativo das classes | Apresentar exatamente Baixa, Moderada e Alta, da menor para a maior aptidão demonstrativa, com o significado definido para o uso avaliado, sem atribuir automaticamente notas ou distâncias numéricas iguais entre as classes. |
+| Consulta de resultado Baixa ou Alta, de avaliação indisponível e de restrição identificada | Distinguir as classes de aptidão dos estados da avaliação e das restrições: Baixa não indica automaticamente restrição; Alta não remove restrição nem comprova autorização ou viabilidade; indisponibilidade não é uma quarta classe. Preservar RN-01 e RN-03. |
 
 **Dependências e detalhamento pendente:**
 
@@ -1571,14 +1599,13 @@ O requisito depende dos atributos provenientes da análise geográfica, das
 alternativas do RF-07, da dimensão de aptidão física e das escalas comparáveis
 do RF-08 e da composição da soma ponderada do RF-09. A contribuição da previsão
 para essa dimensão, o significado demonstrativo do alvo por uso e a saída por
-classes estão definidos acima. Permanecem pendentes os nomes, a quantidade,
-o significado, as condições e os limites das classes, os atributos necessários,
-as respostas de referência para o treinamento, sua origem, obtenção e validação,
-as escalas, a conversão das classes em notas, o algoritmo, o treinamento e a
-avaliação. Essas definições deverão ser aprovadas antes da implementação e
-da preparação dos testes
-correspondentes. Custos e benefícios continuam com avaliações próprias a
-detalhar no RF-08. Preservar as RN-01, RN-02 e RN-03 e as demais pendências
+classes estão definidos acima, com três nomes, ordem e significados qualitativos.
+Permanecem pendentes as condições e os limites técnicos das classes, os atributos
+necessários, as respostas de referência para o treinamento, sua origem, obtenção
+e validação, as escalas, a conversão das classes em notas, o algoritmo,
+o treinamento e a avaliação. Essas definições deverão ser aprovadas antes da implementação e
+da preparação dos testes correspondentes. Custos e benefícios continuam com
+avaliações próprias a detalhar no RF-08. Preservar as RN-01, RN-02 e RN-03 e as demais pendências
 anteriores. Este alinhamento não altera os RF-08 e RF-09 nem encerra a Etapa 2.
 
 **Momento de implementação e verificação:**
