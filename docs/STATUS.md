@@ -2,7 +2,7 @@
 
 **Atualização:** 21/10/2026.
 **Etapa atual:** 2 — Engenharia de requisitos do sistema, iniciada com autorização em 20/10/2026.
-**Subetapa atual:** atores AT-01 e AT-02, definições dos RF-01 a RF-13, RNF-01 a RNF-06, RT-01 a RT-02 e RN-01 a RN-03 aprovadas, documentadas e publicadas; revisões documentais dos seis RNF, dos dois RT e das três RN concluídas; exigência das licenças explícita no RT-01 e classificação da RN-01 detalhada para dados necessários disponíveis e efeitos da indisponibilidade detalhados na RN-03; referência entre RN-01 e RN-03 sincronizada; levantamento das pendências de encerramento organizado em seis blocos e formato inicial GeoJSON `.geojson`, estrutura `FeatureCollection`, tipos `Polygon` e `MultiPolygon`, regras de validade das geometrias e limites de 1 MiB e 20.000 posições por arquivo aprovados no RF-01; opção de uma área preparada por arquivo, com exatamente uma `Feature` e todas as partes válidas de um `MultiPolygon` analisadas em conjunto, aprovada nos RF-01 e RF-02; cruzamentos iniciais com unidades de conservação, rios e drenagem e massas d’água aprovados no RF-04; medidas descritivas iniciais de área, percentual e distância, com referências e limitações, aprovadas no RF-05; condições e mensagens dos alertas informativos iniciais também aprovadas no RF-05; estrutura, fundamentação e comportamento de avaliação das regras demonstrativas e primeira regra concreta RF06-R01 aprovados no RF-06 em 21/10/2026; nome e descrição obrigatórios, validações do cadastro e da seleção e três cenários de referência do MVP aprovados no RF-07 em 21/10/2026; demais decisões de comportamento, demais detalhamentos técnicos e verificações da aplicação ainda pendentes.
+**Subetapa atual:** atores AT-01 e AT-02, definições dos RF-01 a RF-13, RNF-01 a RNF-06, RT-01 a RT-02 e RN-01 a RN-03 aprovadas, documentadas e publicadas; revisões documentais dos seis RNF, dos dois RT e das três RN concluídas; exigência das licenças explícita no RT-01 e classificação da RN-01 detalhada para dados necessários disponíveis e efeitos da indisponibilidade detalhados na RN-03; referência entre RN-01 e RN-03 sincronizada; levantamento das pendências de encerramento organizado em seis blocos e formato inicial GeoJSON `.geojson`, estrutura `FeatureCollection`, tipos `Polygon` e `MultiPolygon`, regras de validade das geometrias e limites de 1 MiB e 20.000 posições por arquivo aprovados no RF-01; opção de uma área preparada por arquivo, com exatamente uma `Feature` e todas as partes válidas de um `MultiPolygon` analisadas em conjunto, aprovada nos RF-01 e RF-02; cruzamentos iniciais com unidades de conservação, rios e drenagem e massas d’água aprovados no RF-04; medidas descritivas iniciais de área, percentual e distância, com referências e limitações, aprovadas no RF-05; condições e mensagens dos alertas informativos iniciais também aprovadas no RF-05; estrutura, fundamentação e comportamento de avaliação das regras demonstrativas e primeira regra concreta RF06-R01 aprovados no RF-06 em 21/10/2026; nome e descrição obrigatórios, validações do cadastro e da seleção e três cenários de referência do MVP aprovados no RF-07 em 21/10/2026; três critérios iniciais, dados, unidades, referências e limitações aprovados no RF-08 em 21/10/2026; demais decisões de comportamento, demais detalhamentos técnicos e verificações da aplicação ainda pendentes.
 
 Este documento registra o estado observado nesta entrega. Não há aplicação
 executável nem funcionalidades de geoprocessamento, análise multicritério ou
@@ -37,8 +37,11 @@ estão aprovados: Revegetação com espécies nativas, Lazer e educação ambien
 e Solar em terreno. Descrições, referências e adaptações demonstrativas estão
 registradas; condições de avaliação, dados, implementação e testes funcionais
 continuam pendentes.
-Para o RF-08, escalas, limites, validação dos pesos e tratamento de valores
-ausentes ainda precisam ser definidos. Para o RF-09, regras de normalização,
+Para o RF-08, três critérios iniciais estão definidos: Declividade do terreno,
+Proximidade de vias mapeadas e Proximidade de vegetação nativa remanescente,
+com dados necessários, unidades, fontes e limitações. Cálculos e resumos,
+critérios específicos adicionais, escalas, notas, limites, pesos e tratamento
+detalhado de valores ausentes ainda precisam ser definidos. Para o RF-09, regras de normalização,
 precisão, empates e valores ausentes também permanecem pendentes. Para o
 RF-10, falta detalhar a apresentação; as previsões de ML serão incorporadas
 na Etapa 8 e estarão presentes no dashboard do MVP final. Para o RF-11,
@@ -283,6 +286,29 @@ com publicação e sincronização verificadas. Condições de avaliação, esp�
 critérios, notas, pesos, demais restrições e dados necessários continuam
 pendentes; cadastro e seleção ainda não foram implementados nem testados
 funcionalmente. A Etapa 2 permanece em andamento.
+
+Os três critérios iniciais do RF-08 foram aprovados em 21/10/2026 e publicados
+no commit `c1fb652`: Declividade do terreno, Proximidade de vias mapeadas e
+Proximidade de vegetação nativa remanescente. Declividade exigirá modelo digital
+de elevação adequado e terá valores em graus; as proximidades exigirão camadas
+de vias e de remanescentes de vegetação nativa, respectivamente, e distâncias
+geométricas em metros. As referências de Servou e colaboradores (2023) e
+Worden e colaboradores (2024) foram registradas, com seus contextos na Grécia
+e na Austrália e as adaptações do GeoVale identificadas. As medidas não
+representam por si só notas, restrições ou viabilidade dos usos; acesso
+viário efetivo e conectividade ecológica exigem informações e análises
+adicionais. A interpretação e a conversão em nota precisarão ser fundamentadas
+para cada cenário. Fontes, unidades, adaptações e limitações deverão ser
+consultáveis. A indisponibilidade seguirá a RN-03, sem substituir dados por
+zero, preservando resultados parciais válidos e bloqueando o ranking quando
+necessário; as restrições seguirão a RN-01. Os quatro critérios de aceitação
+foram preservados integralmente. Somente a seção RF-08 foi alterada, com
+conferência documental e publicação verificadas. Bases, novas camadas de vias
+e vegetação, cruzamentos correspondentes no RF-04, cálculo e resumo da
+declividade, alcance de consulta, referência espacial, precisão e tolerâncias
+continuam pendentes. Critérios específicos de energia solar, como radiação e
+rede elétrica, também exigirão detalhamento posterior. Nenhuma nota, peso ou
+cálculo foi implementado; testes funcionais futuros e Etapa 2 em andamento.
 
 ## Entregas concluídas
 
@@ -637,6 +663,16 @@ funcionalmente. A Etapa 2 permanece em andamento.
   preservados integralmente. Somente RF-07 alterado; conferência documental
   concluída e publicação confirmada. Condições de avaliação e demais parâmetros
   continuam pendentes; implementação e testes funcionais futuros.
+- Três critérios iniciais de comparação do RF-08 aprovados em 21/10/2026 e
+  publicados no commit `c1fb652`: Declividade do terreno, Proximidade de vias
+  mapeadas e Proximidade de vegetação nativa remanescente. Dados necessários,
+  unidades em graus ou metros, referências de Servou e colaboradores (2023)
+  e Worden e colaboradores (2024), adaptações e limitações documentados.
+  Medidas, notas e restrições separadas; RN-01 e RN-03 preservadas. Os quatro
+  critérios de aceitação anteriores foram mantidos integralmente. Somente
+  RF-08 alterado; conferência documental concluída e publicação confirmada.
+  Dados concretos, procedimentos de cálculo, critérios adicionais, escalas,
+  notas e pesos continuam pendentes; implementação e testes funcionais futuros.
 
 ## Arquivos relevantes
 
@@ -656,7 +692,7 @@ excluídos permanecem fora do versionamento.
 ## Estado do Git
 
 - Branch atual: `main`.
-- Histórico anterior a esta entrega: cento e quatorze commits locais já publicados, listados abaixo.
+- Histórico anterior a esta entrega: cento e dezesseis commits locais já publicados, listados abaixo.
 - Repositório público: [Rafael-Inacio-Silva/Geo_Vale](https://github.com/Rafael-Inacio-Silva/Geo_Vale).
 - Remoto `origin`: `https://github.com/Rafael-Inacio-Silva/Geo_Vale.git`.
 - O repositório foi criado vazio e recebeu o histórico no primeiro push.
@@ -784,9 +820,11 @@ Commits concluídos antes desta atualização:
 | `a654a8b` | `docs: define campos e validações do cadastro do RF-07` |
 | `d90890e` | `docs: registra campos e validações do RF-07 no status` |
 | `f0fa236` | `docs: define cenários de referência do MVP no RF-07` |
+| `711114d` | `docs: registra cenários de referência do RF-07 no status` |
+| `c1fb652` | `docs: define critérios iniciais de comparação do RF-08` |
 
 Esta atualização do status tem a mensagem de commit
-`docs: registra cenários de referência do RF-07 no status`. Consulte `git log --oneline` para
+`docs: registra critérios iniciais do RF-08 no status`. Consulte `git log --oneline` para
 identificar seu hash e o histórico atualizado, sem depender de contagens fixas
 neste documento.
 
@@ -871,6 +909,7 @@ locais com dados reais; não são testes da aplicação.
 | Primeira regra concreta RF06-R01 do RF-06 | Commit `77d763c` conferido contra a proposta aprovada: versão 0.1, cenário solar em terreno, condição de ausência de superfície fora da união das massas d’água, dados necessários, unidades, fonte EPA/NREL, adaptação simulada e limitações explícitas. Cobertura total, parcial, contato na borda, todas as partes de um `MultiPolygon`, sobreposições entre polígonos de água, arredondamento e indisponibilidade contemplados. Sete cenários acrescentados, totalizando 18; os 11 anteriores preservados em tabela contínua. Somente a seção RF-06 de `docs/REQUISITOS.md` alterada; demais seções e quatro arquivos versionados preservados. `git diff --check` sem problemas; conteúdo do commit e publicação conferidos, com HEAD, origin/main e referência remota iguais a `77d763c48ae36ae05c013558f5a1108c06a348b6` e árvore de trabalho limpa ao concluir. Conferência documental; implementação, testes funcionais, bases definitivas e parâmetros técnicos continuam futuros. |
 | Campos e validações do cadastro e da seleção do RF-07 | Commit `a654a8b` conferido contra a proposta aprovada: nome e descrição do cenário obrigatórios, validação de texto, campos ausentes, vazios ou somente com espaços, rejeição de nomes repetidos desconsiderando maiúsculas, minúsculas, espaços nas pontas e espaços consecutivos, mensagens compreensíveis, seleção somente de alternativas cadastradas e pelo menos duas distintas, sem duplicar a contagem da mesma opção. RN-01 e RN-03 preservadas; pesos continuam associados aos critérios no RF-08. Seis cenários acrescentados, totalizando 11; os cinco anteriores preservados em tabela contínua. Somente a seção RF-07 de `docs/REQUISITOS.md` alterada; demais seções e quatro arquivos versionados preservados. `git diff --check` sem problemas; conteúdo do commit e publicação conferidos, com HEAD, origin/main e referência remota iguais a `a654a8bf988a26b36d534470a8fe67c095feb7eb` e árvore de trabalho limpa ao concluir. Conferência documental; cadastro e seleção ainda não implementados nem testados funcionalmente, lista definitiva de alternativas e armazenamento pendentes. |
 | Cenários de referência do MVP no RF-07 | Commit `f0fa236` conferido contra a proposta aprovada: três nomes e descrições registrados para Revegetação com espécies nativas, Lazer e educação ambiental e Solar em terreno. Correspondência do cenário solar com a RF06-R01, objetivo predominante de cada cenário, comparação para a mesma área e possibilidade de cadastrar outras alternativas válidas explicitados. Duas referências, Servou e colaboradores (2023) e EPA/NREL, registradas com adaptações demonstrativas e limitações, sem afirmar viabilidade local. Campos, validações do cadastro e da seleção e 11 critérios de aceitação preservados integralmente; três linhas de cenários e estrutura da tabela conferidas. Somente a seção RF-07 de `docs/REQUISITOS.md` alterada; demais seções e quatro arquivos versionados preservados. `git diff --check` sem problemas; conteúdo do commit e publicação conferidos, com HEAD, origin/main e referência remota iguais a `f0fa236566886a078fc4fcad7757d580fd6ab491` e árvore de trabalho limpa ao concluir. Conferência documental; condições de avaliação, implementação e testes funcionais continuam futuros. |
+| Critérios iniciais de comparação do RF-08 | Commit `c1fb652` conferido contra a proposta aprovada: Declividade do terreno em graus, Proximidade de vias mapeadas em metros e Proximidade de vegetação nativa remanescente em metros, com dados necessários, fontes de Servou e colaboradores (2023) e Worden e colaboradores (2024), adaptações e limitações. Medidas descritivas separadas de notas, pesos e restrições; interpretação por cenário, disponibilidade conforme a RN-03 e preservação das restrições conforme a RN-01 explicitadas. Três linhas de critérios e unidades conferidas; quatro critérios de aceitação anteriores preservados integralmente. Somente a seção RF-08 de `docs/REQUISITOS.md` alterada; demais seções e quatro arquivos versionados preservados. `git diff --check` sem problemas; conteúdo do commit e publicação conferidos, com HEAD, origin/main e referência remota iguais a `c1fb652f6cb3144f8d41a71381d9a76dc6744fdc` e árvore de trabalho limpa ao concluir. Conferência documental; dados concretos, cálculos e resumos, critérios específicos adicionais, escalas, notas e pesos ainda pendentes. Nenhuma implementação ou teste funcional realizado. |
 
 Os registros de preparação do ambiente Python são históricos. Nesta revisão,
 foram conferidos os documentos, os commits e o estado do Git; as verificações
@@ -959,15 +998,23 @@ Resultados de funcionalidades e métricas de ML não existem nesta fase.
   seleção e os três cenários de referência do MVP estão aprovados; os 11
   critérios de aceitação foram preservados. Permanecem pendentes as condições
   de avaliação dos usos, espécies para revegetação adequadas à região, demais
-  regras do RF-06, critérios, notas e pesos dos RF-08 e RF-09 e dados necessários,
+  regras do RF-06, demais critérios, notas e pesos dos RF-08 e RF-09 e dados necessários,
   incluindo a disponibilidade conforme a RN-03. O armazenamento será detalhado
   nas etapas correspondentes, conforme o RF-11. A dependência da área do RF-02
   e as demais pendências anteriores permanecem em aberto. Implementação e
   testes funcionais futuros.
-- Para o RF-08, escalas, limites, validação dos pesos e tratamento de valores
-  ausentes precisam ser definidos e aprovados antes da implementação e da
-  preparação dos cenários de teste. A dependência do RF-07 e as pendências
-  anteriores permanecem em aberto.
+- Para o RF-08, três critérios iniciais, dados necessários, unidades, fontes
+  e limitações estão aprovados; os quatro critérios de aceitação foram
+  preservados. Permanecem pendentes as bases concretas e camadas de vias e
+  vegetação na Etapa 6, os cruzamentos adicionais do RF-04, o cálculo e resumo
+  da declividade, o alcance das consultas, referência espacial, precisão e
+  tolerâncias. Critérios específicos adicionais, incluindo radiação e rede
+  elétrica para solar, interpretação e conversão em notas por cenário,
+  escalas, limites, valores e validação dos pesos e detalhes do tratamento de
+  valores ausentes ainda exigem definição e aprovação antes da implementação
+  e dos arquivos de teste, preservando as RN-01 e RN-03. A dependência do
+  RF-07 e as demais pendências anteriores permanecem em aberto. Implementação
+  e testes funcionais futuros.
 - Para o RF-09, regras de normalização, precisão, empates e valores ausentes
   precisam ser definidas e aprovadas antes da implementação e da preparação
   dos cenários de teste com cálculo de referência. As dependências dos
@@ -1080,7 +1127,7 @@ Este plano não define os comportamentos pendentes nem encerra a etapa.
 | --- | --- | --- |
 | 1 | Arquivo e área — RF-01 e RF-02 | Formato GeoJSON `.geojson`, estrutura `FeatureCollection`, tipos `Polygon` e `MultiPolygon`, regras de validade das geometrias e limites de até 1 MiB (1.048.576 bytes) e 20.000 posições por arquivo definidos. Tratamento definido: exatamente uma `Feature` por arquivo; várias partes válidas de um `MultiPolygon` compõem uma única área para análise conjunta; arquivos com várias `Feature` são rejeitados. Implementação e verificação funcional futuras. |
 | 2 | Análise e restrições — RF-04 a RF-06 e RN-01/RN-03 | Cruzamentos iniciais do RF-04 definidos para unidades de conservação, rios e drenagem e massas d’água. Medidas descritivas e alertas informativos iniciais do RF-05 definidos. Pendentes fontes definitivas e preparação, demais operações, precisão, tolerâncias, alcance de consulta, eventuais alertas adicionais, demais condições concretas das regras de restrição e identificação dos dados necessários à comparação. Estrutura, comportamento de avaliação e primeira regra concreta RF06-R01 definidos no RF-06. Para essa regra, bases concretas, disponibilidade, cobertura e parâmetros técnicos permanecem pendentes. |
-| 3 | Comparação — RF-07 a RF-09 | Nome e descrição obrigatórios, validações do cadastro e da seleção e três cenários de referência definidos no RF-07: Revegetação com espécies nativas, Lazer e educação ambiental e Solar em terreno. Pendentes condições de avaliação, critérios, escalas, pesos, normalização, empates e precisão da pontuação; armazenamento nas etapas correspondentes. |
+| 3 | Comparação — RF-07 a RF-09 | Nome e descrição obrigatórios, validações do cadastro e da seleção e três cenários de referência definidos no RF-07: Revegetação com espécies nativas, Lazer e educação ambiental e Solar em terreno. Três critérios iniciais do RF-08 definidos, com dados, unidades, fontes e limitações: declividade e proximidade de vias e de vegetação nativa remanescente. Pendentes operacionalização e condições de avaliação, critérios adicionais, escalas, notas, pesos, normalização, empates e precisão da pontuação; armazenamento nas etapas correspondentes. |
 | 4 | Resultados — RF-10 a RF-12 | Confirmar informações mínimas para consulta e persistência, formato do relatório e apresentação dos resultados completos ou parciais. |
 | 5 | ML — RF-13 | Significado da aptidão prevista e forma de utilização da previsão na pontuação. |
 | 6 | Aceitação | Completar critérios verificáveis e estabelecer quando serão fixadas as metas dependentes do ambiente e dos dados, especialmente desempenho. |
@@ -1126,8 +1173,11 @@ O encerramento depende de revisão e aprovação do responsável pelo projeto.
   critérios e dados necessários nos requisitos correspondentes. Campos,
   validações e cenários estão definidos; armazenamento nas etapas correspondentes,
   implementação e testes funcionais futuros.
-- Definir e aprovar escalas, limites, validação dos pesos e tratamento de
-  valores ausentes do RF-08 antes da implementação.
+- Completar os critérios específicos e a operacionalização do RF-08; definir
+  e aprovar escalas, conversão em notas por cenário, limites, valores e
+  validação dos pesos e detalhes do tratamento de valores ausentes antes
+  da implementação. Os três critérios iniciais, dados, unidades, fontes e
+  limitações já estão definidos.
 - Definir e aprovar regras de normalização, precisão, empates e valores
   ausentes do RF-09 antes da implementação.
 - Detalhar e aprovar a apresentação do RF-10 antes da implementação.
@@ -1160,10 +1210,10 @@ O encerramento depende de revisão e aprovação do responsável pelo projeto.
   disponibilidade e a forma de apresentação da RN-03 antes da implementação
   e da preparação dos testes.
 - Discutir e aprovar os conteúdos das pequenas unidades da sequência
-  registrada no plano de pendências; próxima discussão recomendada: primeiros
-  critérios de comparação do RF-08 para os três cenários de referência, com
-  fundamentação, dados necessários e limitações. Critérios e parâmetros ainda
-  dependem de aprovação; a Etapa 2 permanece em andamento.
+  registrada no plano de pendências; próxima discussão recomendada: critérios
+  complementares de radiação solar e proximidade da rede elétrica para o
+  cenário Solar em terreno, com dados, unidades, fundamentação e limitações.
+  A proposta ainda depende de aprovação; a Etapa 2 permanece em andamento.
 - Discutir e aprovar os demais detalhamentos da Etapa 2.
 - Na Etapa 4, escolher stack e versão suportada de Python, avaliando a proposta
   de Streamlit e a separação entre frontend na Vercel e backend no Railway.
@@ -1188,17 +1238,18 @@ reproduzível serão detalhadas após a definição da stack.
 
 ## Próxima tarefa recomendada
 
-Levantar e discutir no chat os primeiros critérios de comparação do RF-08
-para os três cenários de referência já definidos: Revegetação com espécies
-nativas, Lazer e educação ambiental e Solar em terreno. Explicar o que cada
-critério representará, quais dados exigirá, sua fundamentação, adaptações e
-limitações, separando a medida geográfica da nota e da restrição eliminatória.
-Apresentar uma proposta delimitada e seus cenários de aceitação antes de
-qualquer registro. Não criar notas, pesos, limiares ou conclusões ambientais
-sem fundamentação; identificar hipóteses simuladas e preservar as RN-01 e
-RN-03. Não alterar arquivos nessa discussão nem antecipar implementação.
-As demais regras do RF-06, as bases, os critérios de disponibilidade e os
-parâmetros técnicos da RF06-R01 continuam pendentes; esses requisitos não
-estão encerrados.
+Levantar e discutir no chat os critérios complementares de radiação solar e
+proximidade da rede elétrica para o cenário Solar em terreno. Identificar o
+que cada medida representará, dados necessários, unidades, referências,
+adaptações e limitações; distinguir proximidade geométrica de possibilidade
+real de conexão e medida de recurso solar de previsão de geração. Apresentar
+uma proposta delimitada antes de qualquer registro, sem importar parâmetros
+de outros estudos como limites universais nem criar notas, pesos ou conclusões
+ambientais sem fundamentação. Preservar as RN-01 e RN-03 e identificar hipóteses
+simuladas. Não alterar arquivos nessa discussão nem antecipar implementação.
+Os três critérios iniciais do RF-08 estão definidos, mas sua operacionalização,
+interpretação e conversão em notas, bases e parâmetros permanecem pendentes.
+As demais regras do RF-06 e os critérios de disponibilidade também continuam
+pendentes; esses requisitos não estão encerrados.
 A Etapa 2 permanece em andamento; alterações, commits, publicação e
 encerramento dependem de autorização.
