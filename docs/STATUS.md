@@ -2,7 +2,7 @@
 
 **Atualização:** 21/10/2026.
 **Etapa atual:** 2 — Engenharia de requisitos do sistema, iniciada com autorização em 20/10/2026.
-**Subetapa atual:** atores AT-01 e AT-02, definições dos RF-01 a RF-13, RNF-01 a RNF-06, RT-01 a RT-02 e RN-01 a RN-03 aprovadas, documentadas e publicadas; revisões documentais dos seis RNF, dos dois RT e das três RN concluídas; exigência das licenças explícita no RT-01 e classificação da RN-01 detalhada para dados necessários disponíveis e efeitos da indisponibilidade detalhados na RN-03; referência entre RN-01 e RN-03 sincronizada; levantamento das pendências de encerramento organizado em seis blocos e formato inicial GeoJSON `.geojson`, estrutura `FeatureCollection`, tipos `Polygon` e `MultiPolygon`, regras de validade das geometrias e limites de 1 MiB e 20.000 posições por arquivo aprovados no RF-01; opção de uma área preparada por arquivo, com exatamente uma `Feature` e todas as partes válidas de um `MultiPolygon` analisadas em conjunto, aprovada nos RF-01 e RF-02; cruzamentos iniciais com unidades de conservação, rios e drenagem e massas d’água aprovados no RF-04; medidas descritivas iniciais de área, percentual e distância, com referências e limitações, aprovadas no RF-05; condições e mensagens dos alertas informativos iniciais também aprovadas no RF-05; estrutura, fundamentação e comportamento de avaliação das regras demonstrativas e primeira regra concreta RF06-R01 aprovados no RF-06 em 21/10/2026; demais decisões de comportamento, demais detalhamentos técnicos e verificações da aplicação ainda pendentes.
+**Subetapa atual:** atores AT-01 e AT-02, definições dos RF-01 a RF-13, RNF-01 a RNF-06, RT-01 a RT-02 e RN-01 a RN-03 aprovadas, documentadas e publicadas; revisões documentais dos seis RNF, dos dois RT e das três RN concluídas; exigência das licenças explícita no RT-01 e classificação da RN-01 detalhada para dados necessários disponíveis e efeitos da indisponibilidade detalhados na RN-03; referência entre RN-01 e RN-03 sincronizada; levantamento das pendências de encerramento organizado em seis blocos e formato inicial GeoJSON `.geojson`, estrutura `FeatureCollection`, tipos `Polygon` e `MultiPolygon`, regras de validade das geometrias e limites de 1 MiB e 20.000 posições por arquivo aprovados no RF-01; opção de uma área preparada por arquivo, com exatamente uma `Feature` e todas as partes válidas de um `MultiPolygon` analisadas em conjunto, aprovada nos RF-01 e RF-02; cruzamentos iniciais com unidades de conservação, rios e drenagem e massas d’água aprovados no RF-04; medidas descritivas iniciais de área, percentual e distância, com referências e limitações, aprovadas no RF-05; condições e mensagens dos alertas informativos iniciais também aprovadas no RF-05; estrutura, fundamentação e comportamento de avaliação das regras demonstrativas e primeira regra concreta RF06-R01 aprovados no RF-06 em 21/10/2026; nome e descrição obrigatórios e validações do cadastro e da seleção aprovados no RF-07 em 21/10/2026; demais decisões de comportamento, demais detalhamentos técnicos e verificações da aplicação ainda pendentes.
 
 Este documento registra o estado observado nesta entrega. Não há aplicação
 executável nem funcionalidades de geoprocessamento, análise multicritério ou
@@ -31,8 +31,9 @@ estão definidos. Essa regra simulada considera a ausência de superfície fora
 da água no cenário de painéis solares em terreno, sem drenagem, aterro ou
 estruturas sobre a água. As demais regras, os critérios de disponibilidade,
 as bases concretas e os detalhamentos técnicos continuam pendentes.
-Para o RF-07, os campos e as regras de validação do cadastro também
-permanecem pendentes.
+Para o RF-07, nome e descrição do cenário obrigatórios, validações do
+cadastro e da seleção e mensagens estão definidos. A lista definitiva de
+alternativas permanece pendente; implementação e testes funcionais são futuros.
 Para o RF-08, escalas, limites, validação dos pesos e tratamento de valores
 ausentes ainda precisam ser definidos. Para o RF-09, regras de normalização,
 precisão, empates e valores ausentes também permanecem pendentes. Para o
@@ -238,6 +239,23 @@ preparação da camada concreta na Etapa 6, adequação da cobertura, critérios
 de disponibilidade, referência espacial, precisão e tolerâncias continuam
 pendentes. A definição das alternativas no RF-07 e a Etapa 2 permanecem abertas.
 
+Os campos e as validações do RF-07 foram aprovados em 21/10/2026 e publicados
+no commit `a654a8b`. Cada alternativa deverá ter nome e descrição do cenário,
+ambos textos obrigatórios. Campo ausente, vazio, somente com espaços ou de
+outro tipo impedirá o cadastro, com mensagem que identifique o problema.
+Nomes repetidos serão rejeitados, mesmo com descrições diferentes, sem
+considerar diferenças de maiúsculas e minúsculas, espaços nas pontas ou
+sequências de espaços. A seleção aceitará somente alternativas cadastradas
+e exigirá pelo menos duas distintas; repetições da mesma opção não contarão
+como alternativas diferentes. Os demais bloqueios, incluindo a RN-03,
+continuam válidos. O exemplo de solar em terreno identifica o cenário da
+RF06-R01 e não encerra a lista de usos do MVP. Seis critérios foram
+acrescentados, totalizando 11, com os cinco anteriores preservados. Somente
+a seção RF-07 foi alterada, com verificação documental e publicação conferidas.
+A lista definitiva de alternativas e os detalhamentos de armazenamento
+permanecem pendentes; cadastro e seleção ainda não foram implementados nem
+testados funcionalmente. A Etapa 2 permanece em andamento.
+
 ## Entregas concluídas
 
 - Organização inicial do projeto e orientações locais de desenvolvimento definidas.
@@ -332,9 +350,9 @@ pendentes. A definição das alternativas no RF-07 e a Etapa 2 permanecem aberta
 - RF-07 — Cadastro e seleção de alternativas de uso futuro aprovado e
   publicado no commit `f6c0ec4`, com ator, origem, prioridade, descrição e
   cinco cenários de aceitação. Prevê alternativas identificáveis e seleção de
-  pelo menos duas alternativas distintas para iniciar a comparação. Campos
-  e regras de validação do cadastro permanecem pendentes; a funcionalidade
-  ainda não foi implementada.
+  pelo menos duas alternativas distintas para iniciar a comparação. Naquele
+  registro, campos e regras de validação do cadastro permaneciam pendentes;
+  a funcionalidade ainda não foi implementada.
 - RF-08 — Definição de critérios, notas e pesos aprovado e publicado no commit
   `4471b22`, com ator, origem, prioridade, descrição e quatro cenários de
   aceitação. Prevê consulta da configuração, associação de cada nota à
@@ -573,6 +591,15 @@ pendentes. A definição das alternativas no RF-07 e a Etapa 2 permanecem aberta
   Somente RF-06 alterado, com conferência documental e publicação confirmadas.
   Bases concretas, disponibilidade, cobertura, referência espacial, precisão
   e tolerâncias ainda pendentes; implementação e testes funcionais futuros.
+- Campos e validações do RF-07 aprovados em 21/10/2026 e publicados no commit
+  `a654a8b`: nome e descrição do cenário como textos obrigatórios, mensagens
+  para entradas inválidas, rejeição de nomes repetidos desconsiderando caixa
+  e espaços, seleção somente de alternativas cadastradas e mínimo de duas
+  distintas, sem contar repetições da mesma opção. Demais bloqueios mantidos.
+  Seis critérios acrescentados, totalizando 11; os cinco anteriores e todas
+  as demais seções preservados. Somente RF-07 alterado, com verificação
+  documental e publicação confirmadas. Lista definitiva de alternativas e
+  armazenamento permanecem pendentes; implementação e testes funcionais futuros.
 
 ## Arquivos relevantes
 
@@ -592,7 +619,7 @@ excluídos permanecem fora do versionamento.
 ## Estado do Git
 
 - Branch atual: `main`.
-- Histórico anterior a esta entrega: cento e dez commits locais já publicados, listados abaixo.
+- Histórico anterior a esta entrega: cento e doze commits locais já publicados, listados abaixo.
 - Repositório público: [Rafael-Inacio-Silva/Geo_Vale](https://github.com/Rafael-Inacio-Silva/Geo_Vale).
 - Remoto `origin`: `https://github.com/Rafael-Inacio-Silva/Geo_Vale.git`.
 - O repositório foi criado vazio e recebeu o histórico no primeiro push.
@@ -716,9 +743,11 @@ Commits concluídos antes desta atualização:
 | `4b2d350` | `docs: define estrutura e avaliação das regras do RF-06` |
 | `195d32b` | `docs: registra estrutura das regras do RF-06 no status` |
 | `77d763c` | `docs: define primeira regra demonstrativa solar do RF-06` |
+| `b23a073` | `docs: registra primeira regra demonstrativa do RF-06 no status` |
+| `a654a8b` | `docs: define campos e validações do cadastro do RF-07` |
 
 Esta atualização do status tem a mensagem de commit
-`docs: registra primeira regra demonstrativa do RF-06 no status`. Consulte `git log --oneline` para
+`docs: registra campos e validações do RF-07 no status`. Consulte `git log --oneline` para
 identificar seu hash e o histórico atualizado, sem depender de contagens fixas
 neste documento.
 
@@ -801,6 +830,7 @@ locais com dados reais; não são testes da aplicação.
 | Alertas informativos iniciais do RF-05 | Commit `a0e1b77` conferido contra a proposta aprovada: cinco condições de mensagens, consulta de camada, fonte e condições da análise, preservação dos resultados parciais válidos e bloqueio do ranking quando faltar dado necessário, conforme a RN-03. Seis critérios acrescentados, totalizando 18; 12 anteriores e fundamentação preservados. Mensagens descritivas sem classificação automática de risco, aptidão, segurança ou restrição. Somente a seção RF-05 de `docs/REQUISITOS.md` alterada, demais seções e arquivos intactos. Pendências de precisão, tolerâncias, alcance e eventuais alertas adicionais mantidas. Diff sem erros de espaços e publicação confirmada, com HEAD, origin/main e referência consultada no GitHub iguais e diretório limpo. Conferência documental; alertas ainda não implementados nem testados funcionalmente. |
 | Estrutura e avaliação das regras do RF-06 | Commit `4b2d350` conferido contra a proposta aprovada em 21/10/2026: identificação, finalidade, condição, fundamentação, efeito e justificativa, com referência ao guia do IBRAM e limitações explícitas. Resultados de restrição identificada, não identificada segundo a regra e avaliação indisponível definidos; regras incompletas não aplicadas como válidas; falta de dados tratada conforme a RN-03 e restrições preservadas conforme a RN-01. Seis critérios acrescentados, totalizando 11; cinco anteriores preservados. Somente a seção RF-06 de `docs/REQUISITOS.md` alterada, demais seções e arquivos intactos. Condições específicas e parâmetros mantidos como pendências. Diff sem erros de espaços e publicação confirmada, com HEAD, origin/main e referência consultada no GitHub iguais e diretório limpo. Conferência documental; regras ainda não implementadas nem testadas funcionalmente. |
 | Primeira regra concreta RF06-R01 do RF-06 | Commit `77d763c` conferido contra a proposta aprovada: versão 0.1, cenário solar em terreno, condição de ausência de superfície fora da união das massas d’água, dados necessários, unidades, fonte EPA/NREL, adaptação simulada e limitações explícitas. Cobertura total, parcial, contato na borda, todas as partes de um `MultiPolygon`, sobreposições entre polígonos de água, arredondamento e indisponibilidade contemplados. Sete cenários acrescentados, totalizando 18; os 11 anteriores preservados em tabela contínua. Somente a seção RF-06 de `docs/REQUISITOS.md` alterada; demais seções e quatro arquivos versionados preservados. `git diff --check` sem problemas; conteúdo do commit e publicação conferidos, com HEAD, origin/main e referência remota iguais a `77d763c48ae36ae05c013558f5a1108c06a348b6` e árvore de trabalho limpa ao concluir. Conferência documental; implementação, testes funcionais, bases definitivas e parâmetros técnicos continuam futuros. |
+| Campos e validações do cadastro e da seleção do RF-07 | Commit `a654a8b` conferido contra a proposta aprovada: nome e descrição do cenário obrigatórios, validação de texto, campos ausentes, vazios ou somente com espaços, rejeição de nomes repetidos desconsiderando maiúsculas, minúsculas, espaços nas pontas e espaços consecutivos, mensagens compreensíveis, seleção somente de alternativas cadastradas e pelo menos duas distintas, sem duplicar a contagem da mesma opção. RN-01 e RN-03 preservadas; pesos continuam associados aos critérios no RF-08. Seis cenários acrescentados, totalizando 11; os cinco anteriores preservados em tabela contínua. Somente a seção RF-07 de `docs/REQUISITOS.md` alterada; demais seções e quatro arquivos versionados preservados. `git diff --check` sem problemas; conteúdo do commit e publicação conferidos, com HEAD, origin/main e referência remota iguais a `a654a8bf988a26b36d534470a8fe67c095feb7eb` e árvore de trabalho limpa ao concluir. Conferência documental; cadastro e seleção ainda não implementados nem testados funcionalmente, lista definitiva de alternativas e armazenamento pendentes. |
 
 Os registros de preparação do ambiente Python são históricos. Nesta revisão,
 foram conferidos os documentos, os commits e o estado do Git; as verificações
@@ -884,10 +914,12 @@ Resultados de funcionalidades e métricas de ML não existem nesta fase.
   restrições, a RN-01. A adaptação simulada não representa proibição brasileira
   ou validação ambiental; cobertura parcial de água não restringe toda a área
   por essa regra. Implementação e testes funcionais futuros.
-- Para o RF-07, campos e regras de validação do cadastro precisam ser
-  especificados e aprovados antes da implementação e da preparação dos
-  cenários de teste. A dependência da área identificada pelo RF-02 e as
-  pendências anteriores permanecem em aberto.
+- Para o RF-07, os dois campos obrigatórios e as validações do cadastro e da
+  seleção estão aprovados, com 11 critérios. A lista definitiva de alternativas
+  de uso precisa ser definida e aprovada, considerando os cenários e as regras
+  do RF-06. O armazenamento será detalhado nas etapas correspondentes, conforme
+  o RF-11. A dependência da área do RF-02 e as pendências anteriores, incluindo
+  a RN-03, permanecem em aberto. Implementação e testes funcionais futuros.
 - Para o RF-08, escalas, limites, validação dos pesos e tratamento de valores
   ausentes precisam ser definidos e aprovados antes da implementação e da
   preparação dos cenários de teste. A dependência do RF-07 e as pendências
@@ -1004,7 +1036,7 @@ Este plano não define os comportamentos pendentes nem encerra a etapa.
 | --- | --- | --- |
 | 1 | Arquivo e área — RF-01 e RF-02 | Formato GeoJSON `.geojson`, estrutura `FeatureCollection`, tipos `Polygon` e `MultiPolygon`, regras de validade das geometrias e limites de até 1 MiB (1.048.576 bytes) e 20.000 posições por arquivo definidos. Tratamento definido: exatamente uma `Feature` por arquivo; várias partes válidas de um `MultiPolygon` compõem uma única área para análise conjunta; arquivos com várias `Feature` são rejeitados. Implementação e verificação funcional futuras. |
 | 2 | Análise e restrições — RF-04 a RF-06 e RN-01/RN-03 | Cruzamentos iniciais do RF-04 definidos para unidades de conservação, rios e drenagem e massas d’água. Medidas descritivas e alertas informativos iniciais do RF-05 definidos. Pendentes fontes definitivas e preparação, demais operações, precisão, tolerâncias, alcance de consulta, eventuais alertas adicionais, demais condições concretas das regras de restrição e identificação dos dados necessários à comparação. Estrutura, comportamento de avaliação e primeira regra concreta RF06-R01 definidos no RF-06. Para essa regra, bases concretas, disponibilidade, cobertura e parâmetros técnicos permanecem pendentes. |
-| 3 | Comparação — RF-07 a RF-09 | Campos das alternativas, critérios, escalas, pesos, normalização, empates e precisão da pontuação. |
+| 3 | Comparação — RF-07 a RF-09 | Nome e descrição obrigatórios e validações do cadastro e da seleção definidos no RF-07. Pendentes lista definitiva de alternativas, critérios, escalas, pesos, normalização, empates e precisão da pontuação; armazenamento nas etapas correspondentes. |
 | 4 | Resultados — RF-10 a RF-12 | Confirmar informações mínimas para consulta e persistência, formato do relatório e apresentação dos resultados completos ou parciais. |
 | 5 | ML — RF-13 | Significado da aptidão prevista e forma de utilização da previsão na pontuação. |
 | 6 | Aceitação | Completar critérios verificáveis e estabelecer quando serão fixadas as metas dependentes do ambiente e dos dados, especialmente desempenho. |
@@ -1045,8 +1077,9 @@ O encerramento depende de revisão e aprovação do responsável pelo projeto.
   o comportamento de avaliação e a primeira regra concreta RF06-R01 estão
   definidos; bases concretas, disponibilidade, cobertura, referência espacial,
   precisão e tolerâncias dessa regra permanecem pendentes antes da implementação.
-- Especificar e aprovar campos e regras de validação do cadastro do RF-07
-  antes da implementação.
+- Definir e aprovar a lista de alternativas de uso do RF-07 e detalhar o
+  armazenamento nas etapas correspondentes. Campos obrigatórios e validações
+  do cadastro e da seleção já estão definidos; implementação e testes futuros.
 - Definir e aprovar escalas, limites, validação dos pesos e tratamento de
   valores ausentes do RF-08 antes da implementação.
 - Definir e aprovar regras de normalização, precisão, empates e valores
@@ -1081,9 +1114,10 @@ O encerramento depende de revisão e aprovação do responsável pelo projeto.
   disponibilidade e a forma de apresentação da RN-03 antes da implementação
   e da preparação dos testes.
 - Discutir e aprovar os conteúdos das pequenas unidades da sequência
-  registrada no plano de pendências; próxima discussão recomendada: campos e
-  validações do cadastro do RF-07, para delimitar as alternativas e as demais
-  regras do RF-06 aplicáveis ao MVP, sem considerar esses requisitos encerrados.
+  registrada no plano de pendências; próxima discussão recomendada: lista
+  inicial de alternativas do MVP, com nome e descrição do cenário, para
+  delimitar as demais regras do RF-06 e os critérios da comparação. A lista
+  ainda não está aprovada e a Etapa 2 permanece em andamento.
 - Discutir e aprovar os demais detalhamentos da Etapa 2.
 - Na Etapa 4, escolher stack e versão suportada de Python, avaliando a proposta
   de Streamlit e a separação entre frontend na Vercel e backend no Railway.
@@ -1108,15 +1142,15 @@ reproduzível serão detalhadas após a definição da stack.
 
 ## Próxima tarefa recomendada
 
-Discutir no chat os campos e as regras de validação do cadastro das alternativas
-de uso futuro do RF-07, com entradas, mensagens e cenários de aceitação em
-linguagem simples. A discussão ajudará a delimitar quais outras regras do
-RF-06 serão necessárias. Distinguir o cenário solar específico da RF06-R01
-da lista definitiva das alternativas do MVP, que permanece aberta. Preservar
-a exigência de pelo menos duas alternativas distintas e apresentar a proposta
-antes de qualquer registro. Não alterar arquivos nessa discussão, criar
-parâmetros ambientais sem fundamentação ou antecipar implementação. A RF06-R01
-está documentada, mas suas bases, critérios de disponibilidade e parâmetros
-técnicos continuam pendentes; o RF-06 não está encerrado.
+Discutir no chat uma lista inicial de alternativas de uso futuro para o MVP,
+com nome e descrição de cada cenário, seguindo os campos e as validações do
+RF-07 já definidos. Explicar o alcance de cada opção e distinguir o cenário
+solar em terreno da RF06-R01 de outros usos ou formas de instalação. A lista
+ajudará a delimitar as demais regras do RF-06 e os critérios da comparação;
+ainda depende de aprovação e deverá conter pelo menos duas alternativas
+distintas. Fundamentar eventuais escolhas ou condições ambientais, separando
+referências e adaptações demonstrativas. Não alterar arquivos nessa discussão
+nem antecipar implementação. As bases, os critérios de disponibilidade e os
+parâmetros técnicos da RF06-R01 continuam pendentes; o RF-06 não está encerrado.
 A Etapa 2 permanece em andamento; alterações, commits, publicação e
 encerramento dependem de autorização.
