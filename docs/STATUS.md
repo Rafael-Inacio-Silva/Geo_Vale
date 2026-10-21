@@ -2,7 +2,7 @@
 
 **Atualização:** 21/10/2026.
 **Etapa atual:** 2 — Engenharia de requisitos do sistema, iniciada com autorização em 20/10/2026.
-**Subetapa atual:** atores AT-01 e AT-02, definições dos RF-01 a RF-13, RNF-01 a RNF-06, RT-01 a RT-02 e RN-01 a RN-03 aprovadas, documentadas e publicadas; revisões documentais dos seis RNF, dos dois RT e das três RN concluídas; exigência das licenças explícita no RT-01 e classificação da RN-01 detalhada para dados necessários disponíveis e efeitos da indisponibilidade detalhados na RN-03; referência entre RN-01 e RN-03 sincronizada; levantamento das pendências de encerramento organizado em seis blocos e formato inicial GeoJSON `.geojson`, estrutura `FeatureCollection`, tipos `Polygon` e `MultiPolygon`, regras de validade das geometrias e limites de 1 MiB e 20.000 posições por arquivo aprovados no RF-01; opção de uma área preparada por arquivo, com exatamente uma `Feature` e todas as partes válidas de um `MultiPolygon` analisadas em conjunto, aprovada nos RF-01 e RF-02; cruzamentos iniciais com unidades de conservação, rios e drenagem e massas d’água aprovados no RF-04; medidas descritivas iniciais de área, percentual e distância, com referências e limitações, aprovadas no RF-05; condições e mensagens dos alertas informativos iniciais também aprovadas no RF-05; estrutura, fundamentação e comportamento de avaliação das regras demonstrativas e primeira regra concreta RF06-R01 aprovados no RF-06 em 21/10/2026; nome e descrição obrigatórios, validações do cadastro e da seleção e três cenários de referência do MVP aprovados no RF-07 em 21/10/2026; cinco indicadores geográficos de apoio, três dimensões comuns da comparação e configuração de pesos compartilhada entre alternativas aprovados no RF-08 em 21/10/2026, com sete critérios de aceitação; demais decisões de comportamento, demais detalhamentos técnicos e verificações da aplicação ainda pendentes.
+**Subetapa atual:** atores AT-01 e AT-02, definições dos RF-01 a RF-13, RNF-01 a RNF-06, RT-01 a RT-02 e RN-01 a RN-03 aprovadas, documentadas e publicadas; revisões documentais dos seis RNF, dos dois RT e das três RN concluídas; exigência das licenças explícita no RT-01 e classificação da RN-01 detalhada para dados necessários disponíveis e efeitos da indisponibilidade detalhados na RN-03; referência entre RN-01 e RN-03 sincronizada; levantamento das pendências de encerramento organizado em seis blocos e formato inicial GeoJSON `.geojson`, estrutura `FeatureCollection`, tipos `Polygon` e `MultiPolygon`, regras de validade das geometrias e limites de 1 MiB e 20.000 posições por arquivo aprovados no RF-01; opção de uma área preparada por arquivo, com exatamente uma `Feature` e todas as partes válidas de um `MultiPolygon` analisadas em conjunto, aprovada nos RF-01 e RF-02; cruzamentos iniciais com unidades de conservação, rios e drenagem e massas d’água aprovados no RF-04; medidas descritivas iniciais de área, percentual e distância, com referências e limitações, aprovadas no RF-05; condições e mensagens dos alertas informativos iniciais também aprovadas no RF-05; estrutura, fundamentação e comportamento de avaliação das regras demonstrativas e primeira regra concreta RF06-R01 aprovados no RF-06 em 21/10/2026; nome e descrição obrigatórios, validações do cadastro e da seleção e três cenários de referência do MVP aprovados no RF-07 em 21/10/2026; cinco indicadores geográficos de apoio, três dimensões comuns da comparação e configuração de pesos compartilhada entre alternativas aprovados no RF-08 em 21/10/2026, com sete critérios de aceitação; RF-09 alinhado às três dimensões comuns e à configuração de pesos compartilhada em 21/10/2026, com oito critérios de aceitação; demais decisões de comportamento, demais detalhamentos técnicos e verificações da aplicação ainda pendentes.
 
 Este documento registra o estado observado nesta entrega. Não há aplicação
 executável nem funcionalidades de geoprocessamento, análise multicritério ou
@@ -48,9 +48,16 @@ a mesma configuração de pesos e terão notas específicas. Associação dos
 indicadores às dimensões, cálculos e resumos, dados necessários, aspectos dos
 benefícios, escopo e período dos custos, escalas, notas, limites, valores dos
 pesos e demais detalhes do tratamento de dados ausentes continuam pendentes.
-Os reflexos no RF-09 e no RF-13 ainda serão tratados em unidades próprias. Para o RF-09, regras de normalização,
-precisão, empates e valores ausentes também permanecem pendentes. Para o
-RF-10, falta detalhar a apresentação; as previsões de ML serão incorporadas
+O RF-09 está alinhado às três dimensões: soma das notas de aptidão física,
+custo e benefícios, cada uma multiplicada pelo peso da dimensão. A configuração
+de pesos é comum às alternativas, com notas específicas; indicadores não são
+notas extras e o custo monetário exige conversão para escala comparável.
+Entradas incompatíveis serão rejeitadas, sem ajuste automático da configuração.
+Oito critérios de aceitação estão documentados. Escalas, notas, valores e
+validação dos pesos, normalização, precisão, empates e demais detalhes de
+valores ausentes continuam pendentes. RN-01, RN-02 e RN-03 preservadas;
+alinhamento da contribuição do ML no RF-13 ainda pendente em unidade própria.
+Para o RF-10, falta detalhar a apresentação; as previsões de ML serão incorporadas
 na Etapa 8 e estarão presentes no dashboard do MVP final. Para o RF-11,
 o modelo e as regras de armazenamento serão detalhados na Etapa 5. Para o
 RF-12, formato e estrutura do relatório permanecem pendentes; as previsões
@@ -368,8 +375,30 @@ demais seções foram preservados. A conferência documental passou e a publica�
 foi confirmada com Git limpo e sincronizado. Dados por dimensão, aspectos dos
 benefícios, escopo, período e método de estimativa dos custos, escalas, notas,
 limites, valores e validação dos pesos e procedimentos de cálculo continuam
-pendentes. Os reflexos no RF-09 e no RF-13 serão tratados em unidades próprias.
+pendentes. Naquela entrega, os reflexos no RF-09 e no RF-13 ficaram para
+unidades próprias; o alinhamento posterior do RF-09 está registrado abaixo.
 Nenhuma implementação ou teste funcional realizado; Etapa 2 em andamento.
+
+O alinhamento do RF-09 foi aprovado em 21/10/2026 e publicado no commit
+`8838e1b`. A soma ponderada utiliza as notas das três dimensões comuns do RF-08:
+Aptidão física para o uso, Custo de implantação e adaptação e Benefícios
+esperados. Cada dimensão tem seu peso, compartilhado entre as alternativas
+da mesma comparação, com notas específicas de cada alternativa e entradas
+identificáveis. O custo monetário depende de conversão para escala comparável;
+os cinco indicadores geográficos continuam como apoio, sem inclusão automática
+como notas extras. Entradas incompatíveis com as três dimensões ou com a
+configuração comum serão rejeitadas com mensagem compreensível, sem ajuste
+automático da configuração. Restrições não são compensadas pela pontuação
+(RN-01); dado necessário indisponível bloqueia o ranking e preserva resultados
+parciais válidos, sem substituição por zero (RN-03); simulações permanecem
+identificadas (RN-02). Cinco cenários anteriores preservados e três acrescentados,
+totalizando oito em tabela contínua. Somente a seção RF-09 foi alterada, com
+conferência documental e publicação confirmadas; demais seções, inclusive
+RF-13, e quatro arquivos versionados preservados. Escalas, conversões em notas,
+valores e validação dos pesos, normalização, precisão, empates e demais detalhes
+de dados ausentes permanecem pendentes. O alinhamento do RF-13 exige unidade
+própria. Nenhum cálculo implementado ou teste funcional executado; Etapa 2
+em andamento.
 
 ## Entregas concluídas
 
@@ -478,8 +507,8 @@ Nenhuma implementação ou teste funcional realizado; Etapa 2 em andamento.
   commit `4429780`, com ator, origem, prioridade, descrição e cinco cenários
   de aceitação. Prevê pontuações, classificação, identificação de notas e
   pesos utilizados e restrições eliminatórias separadas da pontuação.
-  Normalização, precisão, empates e valores ausentes permanecem pendentes;
-  a funcionalidade ainda não foi implementada.
+  Naquela definição, normalização, precisão, empates e valores ausentes
+  permaneciam pendentes; a funcionalidade ainda não foi implementada.
 - RF-10 — Apresentação dos resultados no dashboard aprovado e publicado no
   commit `87f58c7`, com dois atores, origem, prioridade, descrição e cinco
   cenários de aceitação. Prevê mapa, características, alertas, restrições,
@@ -753,9 +782,22 @@ Nenhuma implementação ou teste funcional realizado; Etapa 2 em andamento.
   registrada, com adaptações demonstrativas e limites explícitos. RN-01,
   RN-02 e RN-03 preservadas; três cenários acrescentados aos quatro anteriores,
   totalizando sete. Somente RF-08 alterado, com conferência documental e
-  publicação confirmadas. Reflexos no RF-09 e RF-13 e detalhamentos de dados,
-  custos, benefícios, escalas, notas, pesos e cálculos continuam pendentes.
+  publicação confirmadas. Naquela entrega, ficaram pendentes reflexos no RF-09
+  e RF-13 e detalhamentos de dados, custos, benefícios, escalas, notas, pesos
+  e cálculos; o alinhamento posterior do RF-09 está registrado a seguir.
   Implementação e testes funcionais futuros.
+
+- RF-09 alinhado ao RF-08 em 21/10/2026 e publicado no commit `8838e1b`:
+  soma ponderada das notas de aptidão física, custo e benefícios, com a mesma
+  configuração de pesos entre alternativas e notas específicas. Indicadores
+  sem inclusão automática como notas extras e custo monetário sujeito à
+  conversão para escala comparável. Entradas incompatíveis rejeitadas sem
+  ajuste automático da configuração; RN-01, RN-02 e RN-03 preservadas.
+  Cinco cenários anteriores mantidos e três acrescentados, totalizando oito.
+  Somente RF-09 alterado, com conferência documental e publicação confirmadas.
+  RF-13, escalas, notas, valores e validação dos pesos, normalização, precisão,
+  empates e demais detalhes de dados ausentes ainda pendentes. Implementação
+  e testes funcionais futuros.
 
 ## Arquivos relevantes
 
@@ -775,7 +817,7 @@ excluídos permanecem fora do versionamento.
 ## Estado do Git
 
 - Branch atual: `main`.
-- Histórico anterior a esta entrega: cento e vinte commits locais já publicados, listados abaixo.
+- Histórico anterior a esta entrega: cento e vinte e dois commits locais já publicados, listados abaixo.
 - Repositório público: [Rafael-Inacio-Silva/Geo_Vale](https://github.com/Rafael-Inacio-Silva/Geo_Vale).
 - Remoto `origin`: `https://github.com/Rafael-Inacio-Silva/Geo_Vale.git`.
 - O repositório foi criado vazio e recebeu o histórico no primeiro push.
@@ -909,9 +951,11 @@ Commits concluídos antes desta atualização:
 | `72ddc90` | `docs: define critérios solares complementares do RF-08` |
 | `054fbd7` | `docs: registra critérios solares do RF-08 no status` |
 | `5bafc16` | `docs: organiza indicadores e dimensões comuns do RF-08` |
+| `70cc711` | `docs: registra organização da comparação do RF-08 no status` |
+| `8838e1b` | `docs: alinha soma ponderada do RF-09 às dimensões comuns` |
 
 Esta atualização do status tem a mensagem de commit
-`docs: registra organização da comparação do RF-08 no status`. Consulte `git log --oneline` para
+`docs: registra alinhamento do RF-09 no status`. Consulte `git log --oneline` para
 identificar seu hash e o histórico atualizado, sem depender de contagens fixas
 neste documento.
 
@@ -999,6 +1043,7 @@ locais com dados reais; não são testes da aplicação.
 | Critérios iniciais de comparação do RF-08 | Commit `c1fb652` conferido contra a proposta aprovada: Declividade do terreno em graus, Proximidade de vias mapeadas em metros e Proximidade de vegetação nativa remanescente em metros, com dados necessários, fontes de Servou e colaboradores (2023) e Worden e colaboradores (2024), adaptações e limitações. Medidas descritivas separadas de notas, pesos e restrições; interpretação por cenário, disponibilidade conforme a RN-03 e preservação das restrições conforme a RN-01 explicitadas. Três linhas de critérios e unidades conferidas; quatro critérios de aceitação anteriores preservados integralmente. Somente a seção RF-08 de `docs/REQUISITOS.md` alterada; demais seções e quatro arquivos versionados preservados. `git diff --check` sem problemas; conteúdo do commit e publicação conferidos, com HEAD, origin/main e referência remota iguais a `c1fb652f6cb3144f8d41a71381d9a76dc6744fdc` e árvore de trabalho limpa ao concluir. Conferência documental; dados concretos, cálculos e resumos, critérios específicos adicionais, escalas, notas e pesos ainda pendentes. Nenhuma implementação ou teste funcional realizado. |
 | Critérios solares complementares do RF-08 | Commit `72ddc90` conferido contra a proposta aprovada: Recurso solar disponível como média anual do total diário da GHI em kWh/m²/dia, com conversão de Wh/m²/dia por divisão por 1.000, e Proximidade de linhas de transmissão existentes como distância geométrica em metros dentro da cobertura consultada. Fontes candidatas INPE/LABREN e WEBMAP EPE, resolução regional aproximada de 10 × 10 km, distinção entre linhas existentes e planejadas e limites entre recurso e geração e entre proximidade e conexão explicitados. Dois critérios acrescentados, totalizando cinco critérios de comparação; três iniciais e quatro critérios de aceitação preservados. RN-01, RN-03, tabelas, referências e pendências conferidas. Somente a seção RF-08 de `docs/REQUISITOS.md` alterada; demais seções e quatro arquivos versionados preservados. `git diff --check` sem problemas; conteúdo do commit e publicação conferidos, com HEAD, origin/main e referência remota iguais a `72ddc90f7b3de671da3ae5a8133dbed41fbe904e` e árvore de trabalho limpa ao concluir. Conferência documental; nenhuma base definitiva selecionada ou preparada, nenhuma implementação ou teste funcional realizado. |
 | Organização dos indicadores e dimensões comuns do RF-08 | Commit `5bafc16` conferido contra a proposta aprovada: cinco indicadores geográficos mantidos integralmente nas linhas de dados e unidades de suas tabelas; três dimensões comuns definidas — Aptidão física para o uso, Custo de implantação e adaptação e Benefícios esperados. Mesma configuração de pesos entre alternativas, com notas específicas e sem acrescentar automaticamente os indicadores como notas extras. Referência ao manual de análise multicritério de 2009 e caráter demonstrativo registrados; ausência de necessidade de indicador diferenciada de dado necessário indisponível. RN-01, RN-02 e RN-03 preservadas. Três cenários acrescentados aos quatro anteriores, totalizando sete em tabela contínua. Somente a seção RF-08 de `docs/REQUISITOS.md` alterada; demais seções, inclusive RF-09 e RF-13, e quatro arquivos versionados preservados. Fontes anteriores mantidas; tabelas e `git diff --check` sem problemas. Conteúdo do commit e publicação conferidos, com HEAD, origin/main e referência remota iguais a `5bafc165da8c6d7dda4536e5dee8547af75e1442` e árvore de trabalho limpa ao concluir. Conferência documental; dados, estimativas, escalas, notas, valores dos pesos, cálculos e reflexos nos RF-09 e RF-13 ainda pendentes, sem implementação ou testes funcionais. |
+| Alinhamento da soma ponderada do RF-09 às dimensões comuns | Commit `8838e1b` conferido contra a proposta aprovada e o RF-08: soma das notas de aptidão física, custo e benefícios, cada uma com seu peso; configuração de pesos compartilhada entre alternativas e notas específicas. Custo monetário depende de conversão para escala comparável; cinco indicadores geográficos sem inclusão automática como notas extras. Entradas incompatíveis rejeitadas com mensagem compreensível, sem ajuste automático da configuração. RN-01, RN-02 e RN-03 preservadas. Cinco cenários anteriores mantidos e três acrescentados, totalizando oito em tabela contínua. Somente a seção RF-09 de `docs/REQUISITOS.md` alterada; demais seções, inclusive RF-13, e quatro arquivos versionados preservados. `git diff --check` sem problemas; conteúdo do commit e publicação conferidos, com HEAD, origin/main e referência remota iguais a `8838e1bdd633bd42a9b2e68daf8d712ae5d7679a` e árvore de trabalho limpa ao concluir. Conferência documental; escalas, conversões em notas, valores e validação dos pesos, normalização, precisão, empates e demais detalhes de dados ausentes ainda pendentes, sem implementação ou testes funcionais. |
 
 Os registros de preparação do ambiente Python são históricos. Nesta revisão,
 foram conferidos os documentos, os commits e o estado do Git; as verificações
@@ -1102,14 +1147,18 @@ Resultados de funcionalidades e métricas de ML não existem nesta fase.
   preparação das bases na Etapa 6, adequação das fontes candidatas, cruzamentos
   adicionais do RF-04, cálculo e resumo da declividade, associação ou resumo da
   GHI, alcance das consultas, referência espacial, precisão e tolerâncias
-  continuam pendentes. Reflexos no RF-09 e na contribuição do ML do RF-13
-  exigirão unidades próprias. Preservar as RN-01, RN-02 e RN-03 antes da
-  implementação e dos arquivos de teste. Dependência do RF-07 e demais
+  continuam pendentes. O alinhamento da soma ponderada do RF-09 está definido;
+  o reflexo na contribuição do ML do RF-13 exige unidade própria. Preservar
+  as RN-01, RN-02 e RN-03 antes da implementação e dos arquivos de teste. Dependência do RF-07 e demais
   pendências anteriores mantidas; implementação e testes funcionais futuros.
-- Para o RF-09, regras de normalização, precisão, empates e valores ausentes
-  precisam ser definidas e aprovadas antes da implementação e da preparação
-  dos cenários de teste com cálculo de referência. As dependências dos
-  RF-06, RF-07 e RF-08 e as pendências anteriores permanecem em aberto.
+- Para o RF-09, a soma ponderada das três dimensões comuns e a configuração
+  de pesos compartilhada estão alinhadas ao RF-08, com oito critérios de
+  aceitação. Permanecem pendentes escalas comparáveis e conversões em notas,
+  valores e validação dos pesos, normalização, precisão, empates e demais
+  detalhes de dados ausentes antes da implementação e dos testes com cálculo
+  de referência. Preservar RN-01, RN-02 e RN-03. Dependências dos RF-06, RF-07
+  e RF-08 mantidas; alinhamento do RF-13 em unidade própria. Implementação e
+  testes funcionais futuros.
 - Para o RF-10, o detalhamento da apresentação precisa ser aprovado antes da
   implementação e da preparação dos cenários de teste. O dashboard depende
   dos resultados anteriores; a apresentação das previsões depende da
@@ -1218,7 +1267,7 @@ Este plano não define os comportamentos pendentes nem encerra a etapa.
 | --- | --- | --- |
 | 1 | Arquivo e área — RF-01 e RF-02 | Formato GeoJSON `.geojson`, estrutura `FeatureCollection`, tipos `Polygon` e `MultiPolygon`, regras de validade das geometrias e limites de até 1 MiB (1.048.576 bytes) e 20.000 posições por arquivo definidos. Tratamento definido: exatamente uma `Feature` por arquivo; várias partes válidas de um `MultiPolygon` compõem uma única área para análise conjunta; arquivos com várias `Feature` são rejeitados. Implementação e verificação funcional futuras. |
 | 2 | Análise e restrições — RF-04 a RF-06 e RN-01/RN-03 | Cruzamentos iniciais do RF-04 definidos para unidades de conservação, rios e drenagem e massas d’água. Medidas descritivas e alertas informativos iniciais do RF-05 definidos. Pendentes fontes definitivas e preparação, demais operações, precisão, tolerâncias, alcance de consulta, eventuais alertas adicionais, demais condições concretas das regras de restrição e identificação dos dados necessários à comparação. Estrutura, comportamento de avaliação e primeira regra concreta RF06-R01 definidos no RF-06. Para essa regra, bases concretas, disponibilidade, cobertura e parâmetros técnicos permanecem pendentes. |
-| 3 | Comparação — RF-07 a RF-09 | Nome e descrição obrigatórios, validações do cadastro e da seleção e três cenários de referência definidos no RF-07: Revegetação com espécies nativas, Lazer e educação ambiental e Solar em terreno. Cinco indicadores geográficos de apoio preservados no RF-08 e três dimensões comuns do ranking definidas: aptidão física, custo de implantação e adaptação e benefícios esperados, com configuração de pesos compartilhada entre alternativas e notas específicas. Pendentes associação dos indicadores, dados por dimensão, aspectos dos benefícios, escopo e período dos custos, escalas, notas, valores e validação dos pesos, normalização, empates e precisão; reflexos no RF-09 e RF-13 e armazenamento nas etapas correspondentes. |
+| 3 | Comparação — RF-07 a RF-09 | Nome e descrição obrigatórios, validações do cadastro e da seleção e três cenários de referência definidos no RF-07: Revegetação com espécies nativas, Lazer e educação ambiental e Solar em terreno. Cinco indicadores geográficos de apoio preservados no RF-08 e três dimensões comuns do ranking definidas: aptidão física, custo de implantação e adaptação e benefícios esperados, com configuração de pesos compartilhada entre alternativas e notas específicas. Soma ponderada do RF-09 alinhada a essa organização, com oito critérios de aceitação. Pendentes associação dos indicadores, dados por dimensão, aspectos dos benefícios, escopo e período dos custos, escalas, notas, valores e validação dos pesos, normalização, empates e precisão; alinhamento da contribuição do ML no RF-13 e armazenamento nas etapas correspondentes. |
 | 4 | Resultados — RF-10 a RF-12 | Confirmar informações mínimas para consulta e persistência, formato do relatório e apresentação dos resultados completos ou parciais. |
 | 5 | ML — RF-13 | Significado da aptidão prevista e forma de utilização da previsão na pontuação. |
 | 6 | Aceitação | Completar critérios verificáveis e estabelecer quando serão fixadas as metas dependentes do ambiente e dos dados, especialmente desempenho. |
@@ -1269,10 +1318,12 @@ O encerramento depende de revisão e aprovação do responsável pelo projeto.
   estimativa dos custos, escalas comparáveis, notas, limites, valores e validação
   dos pesos e detalhes de dados ausentes antes da implementação. Cinco
   indicadores, três dimensões comuns e configuração de pesos compartilhada
-  já estão definidos. Reflexos no RF-09 e RF-13, avaliação e seleção das fontes
-  candidatas e procedimentos de cálculo continuam pendentes em unidades próprias.
-- Definir e aprovar regras de normalização, precisão, empates e valores
-  ausentes do RF-09 antes da implementação.
+  já estão definidos, e o RF-09 está alinhado a essa composição. Alinhamento
+  do RF-13, avaliação e seleção das fontes candidatas e procedimentos de cálculo
+  continuam pendentes em unidades próprias.
+- Definir e aprovar escalas comparáveis e conversões em notas, valores e
+  validação dos pesos, normalização, precisão, empates e demais detalhes de
+  valores ausentes do RF-09 antes da implementação.
 - Detalhar e aprovar a apresentação do RF-10 antes da implementação.
 - Definir e aprovar o modelo e as regras de armazenamento do RF-11 na Etapa 5,
   antes da implementação.
@@ -1304,9 +1355,9 @@ O encerramento depende de revisão e aprovação do responsável pelo projeto.
   e da preparação dos testes.
 - Discutir e aprovar os conteúdos das pequenas unidades da sequência
   registrada no plano de pendências; próxima discussão recomendada: proposta
-  de sincronização do RF-09 com as três dimensões comuns e a configuração de
-  pesos compartilhada já definidas no RF-08. A proposta deverá ser apresentada
-  antes de qualquer alteração; a Etapa 2 permanece em andamento.
+  de alinhamento da contribuição do ML do RF-13 à dimensão de aptidão física
+  definida no RF-08 e à composição da soma ponderada do RF-09. A proposta
+  deverá ser apresentada antes de qualquer alteração; a Etapa 2 permanece em andamento.
 - Discutir e aprovar os demais detalhamentos da Etapa 2.
 - Na Etapa 4, escolher stack e versão suportada de Python, avaliando a proposta
   de Streamlit e a separação entre frontend na Vercel e backend no Railway.
@@ -1331,16 +1382,17 @@ reproduzível serão detalhadas após a definição da stack.
 
 ## Próxima tarefa recomendada
 
-Apresentar no chat uma proposta delimitada de sincronização do RF-09 com a
-organização aprovada no RF-08: três dimensões comuns, mesma configuração de
-pesos entre alternativas e notas específicas para cada uma. Preservar a soma
-ponderada e a separação das restrições da RN-01, o tratamento de dados ausentes
-da RN-03 e a identificação de simulações da RN-02; distinguir os indicadores
-de apoio das notas efetivamente utilizadas no ranking. Explicar o conteúdo,
-verificação e impacto antes de qualquer alteração. Não alterar arquivos nessa
-discussão, definir escalas, notas ou valores dos pesos nem antecipar implementação.
-Normalização, precisão, empates, dados necessários, custos, benefícios, fontes
-e cálculos permanecem pendentes. O reflexo na contribuição do ML do RF-13
-será tratado em unidade posterior; esses requisitos não estão encerrados.
-A Etapa 2 permanece em andamento; alterações, commits, publicação e
-encerramento dependem de autorização.
+Apresentar no chat uma proposta delimitada de alinhamento do RF-13 à dimensão
+Aptidão física para o uso do RF-08 e à soma ponderada do RF-09. Esclarecer que
+a previsão demonstrativa contribuirá para a nota dessa dimensão por alternativa,
+com conversão ainda a especificar, sem ser uma quarta dimensão ou estimar
+automaticamente custos e benefícios. Preservar as restrições da RN-01, a
+identificação de simulações e treinamento sintético da RN-02 e o tratamento
+de dados necessários indisponíveis da RN-03. Manter origem, atributos e
+limitações identificáveis e a apresentação no dashboard e no relatório.
+Explicar conteúdo, critérios de aceitação, verificação e impacto antes de
+alterar somente a seção RF-13 de `docs/REQUISITOS.md`. Não alterar arquivos
+nessa discussão nem definir alvo, atributos, escalas, valores, algoritmo,
+treinamento ou avaliação. Implementação, integração e testes permanecem na
+Etapa 8 e fazem parte do MVP final. A Etapa 2 continua em andamento; alterações,
+commits, publicação e encerramento dependem de autorização.
