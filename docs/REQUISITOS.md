@@ -500,8 +500,9 @@ implementada e os testes de cruzamento ainda não foram executados.
 
 ### RF-05 — Identificação de distâncias, sobreposições e alertas
 
-**Estado:** definição aprovada pelo responsável pelo projeto em 20/10/2026;
-medições, tolerâncias e condições dos alertas ainda pendentes de definição.
+**Estado:** definição e medidas descritivas iniciais, com suas referências e
+limitações, aprovadas pelo responsável pelo projeto em 20/10/2026; precisão,
+tolerâncias, alcance de consulta e condições dos alertas ainda pendentes.
 
 **Ator:** AT-01 — Engenheiro/analista.
 
@@ -517,6 +518,60 @@ fontes e os parâmetros utilizados. Os resultados deverão apresentar suas
 unidades e distinguir a ausência de uma ocorrência da indisponibilidade dos
 dados necessários. Falhas deverão ser informadas com mensagem compreensível.
 
+As medidas descritivas iniciais deverão abranger as camadas do RF-04:
+
+- Para polígonos de unidades de conservação e massas d’água, apresentar a
+  área de interseção em m² e hectares e seu percentual em relação à área
+  total estudada, calculado por `100 × área de interseção / área total`.
+  Considerar todas as partes da área e descontar seus recortes internos.
+  Identificar os elementos, suas camadas e fontes.
+- Em um total consolidado por camada poligonal, considerar a união das
+  superfícies de interseção, contando uma única vez os trechos cobertos por
+  vários polígonos daquela camada. Manter identificáveis as ocorrências
+  individuais. Totais de camadas diferentes não serão somados como se fossem
+  uma superfície sem repetição. Essa consolidação dos resultados não altera
+  a poligonal recebida nem autoriza várias `Feature` no arquivo de entrada.
+- Para elementos de referência dos três grupos do RF-04, apresentar a menor
+  distância geométrica em metros entre a área completa e cada elemento
+  medido. Considerar todas as partes e recortes internos, sem substituir a
+  área por seu centro. Contato ou interseção terá distância zero; contato
+  somente na borda ou em um ponto terá área comum zero, mantendo identificada
+  a relação espacial conforme o RF-04.
+
+Cada medição deverá permitir consultar sua fonte, camada, cobertura analisada,
+sistema de coordenadas e unidades, além dos parâmetros utilizados. Os
+cálculos dependerão de referência espacial validada e adequada, conforme o
+RT-02, e do cálculo da área total previsto no RF-03.
+
+A menor distância descreverá a proximidade entre as geometrias efetivamente
+medidas dentro da cobertura identificada; não caracterizará a distribuição
+das distâncias no interior do terreno nem comprovará a proximidade de todos
+os elementos existentes fora dessa cobertura. Dados ou cobertura insuficientes
+não deverão produzir distância conclusiva nem ser substituídos por zero.
+Quando uma consulta válida não encontrar elementos, informar essa ausência
+limitada à camada e à cobertura, sem atribuir distância numérica a um elemento
+ausente. O tratamento dos resultados parciais e dos dados necessários à
+comparação seguirá a RN-03.
+
+**Fundamentação e alcance da adaptação:**
+
+O estudo de [Servou e colaboradores, 2023, seções 2.2 e 3.1](https://www.mdpi.com/2071-1050/15/19/14388)
+utiliza critérios topográficos e de proximidade em células de mapa para
+avaliar usos pós-mineração, com pesos atribuídos por especialistas. Essa
+referência fundamenta a investigação de terreno e proximidade; a menor
+distância da área inteira e o percentual de interseção definidos aqui são
+medidas descritivas propostas para o GeoVale, sem reproduzir diretamente
+o método ou validar parâmetros para a região de estudo.
+
+A [interseção geométrica](https://shapely.readthedocs.io/en/stable/reference/shapely.intersection.html),
+a [distância entre geometrias](https://shapely.readthedocs.io/en/stable/reference/shapely.distance.html)
+e a [união geométrica](https://shapely.readthedocs.io/en/stable/reference/shapely.union_all.html)
+fundamentam as operações propostas. A medição de área depende das unidades
+e da adequação da referência espacial, conforme a [documentação do GeoPandas](https://geopandas.org/en/stable/docs/reference/api/geopandas.GeoSeries.area.html).
+Essas referências técnicas não definem a stack, cuja escolha pertence à
+Etapa 4. As medidas não atribuem por si só notas de aptidão, pesos, faixas de
+segurança ou restrições; essas definições serão tratadas em unidades próprias.
+
 **Critérios de aceitação:**
 
 | Cenário | Resultado esperado |
@@ -526,13 +581,27 @@ dados necessários. Falhas deverão ser informadas com mensagem compreensível.
 | Ausência de uma ocorrência nos dados analisados | Identificar essa ausência como resultado da análise realizada. |
 | Dados necessários indisponíveis | Informar a indisponibilidade de forma distinta da ausência de ocorrência. |
 | Falha na identificação das distâncias, sobreposições ou alertas | Informar o problema com mensagem compreensível. |
+| Cenário didático com área total de 100 ha e interseção de 10 ha | Apresentar 100.000 m², 10 ha e 10% de interseção, identificando elemento, camada e fonte; valores servem de referência para teste futuro, não de resultado medido em mina real. |
+| Duas feições da mesma camada cobrem os mesmos 10 ha da área estudada | Apresentar 10 ha no total consolidado da camada, sem duplicar a superfície, mantendo identificáveis as ocorrências individuais. |
+| Contato somente na borda ou em um ponto com um polígono de referência | Apresentar área comum e percentual zero e distância zero, mantendo identificado o contato conforme o RF-04. |
+| Cálculo de distância para área com várias partes ou recortes internos | Obter a menor distância entre as geometrias completas, considerando todas as partes e respeitando os recortes internos; não substituir a área por seu centro. |
+| Dados necessários ou cobertura insuficientes para uma medição | Informar a indisponibilidade ou limitação com mensagem compreensível, sem produzir distância conclusiva ou substituir a falta por zero; seguir a RN-03. |
+| Consulta válida sem elementos encontrados na camada e cobertura analisadas | Informar a ausência limitada àquela camada e cobertura, sem atribuir distância numérica a um elemento ausente. |
+| Consulta das condições de uma medida descritiva | Identificar fonte, camada, cobertura, sistema de coordenadas, unidades e parâmetros utilizados. |
 
 **Dependências e detalhamento pendente:**
 
-O requisito depende do RF-04. As medições, as tolerâncias e as condições de
-emissão dos alertas deverão ser especificadas e aprovadas antes da
-implementação e da preparação dos cenários de referência. As pendências dos
-requisitos anteriores permanecem em aberto.
+O requisito depende dos cruzamentos do RF-04, da área total do RF-03 e das
+referências espaciais do RT-02. As medidas descritivas iniciais estão definidas
+acima. Fontes definitivas, cobertura, preparação e metadados das bases continuam
+pendentes nas etapas correspondentes. Sistema de coordenadas concreto,
+precisão, tolerâncias, alcance de consulta para distâncias e condições dos
+alertas deverão ser detalhados e aprovados antes da implementação e da
+preparação dos cenários de referência. Notas, pesos, regras demonstrativas e
+sua fundamentação não são definidos por essas medidas. Os dados necessários
+à comparação e os critérios de disponibilidade permanecem pendentes na RN-03.
+Os exemplos numéricos acima são didáticos; os testes funcionais do GeoVale
+continuam futuros.
 
 **Momento de verificação:**
 
