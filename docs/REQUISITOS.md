@@ -500,9 +500,10 @@ implementada e os testes de cruzamento ainda não foram executados.
 
 ### RF-05 — Identificação de distâncias, sobreposições e alertas
 
-**Estado:** definição e medidas descritivas iniciais, com suas referências e
-limitações, aprovadas pelo responsável pelo projeto em 20/10/2026; precisão,
-tolerâncias, alcance de consulta e condições dos alertas ainda pendentes.
+**Estado:** definição, medidas descritivas iniciais com suas referências e
+limitações e condições dos alertas informativos iniciais aprovadas pelo
+responsável pelo projeto em 20/10/2026; precisão, tolerâncias, alcance de
+consulta e eventuais alertas adicionais ainda pendentes.
 
 **Ator:** AT-01 — Engenheiro/analista.
 
@@ -553,6 +554,36 @@ limitada à camada e à cobertura, sem atribuir distância numérica a um elemen
 ausente. O tratamento dos resultados parciais e dos dados necessários à
 comparação seguirá a RN-03.
 
+**Alertas informativos iniciais:**
+
+As mensagens deverão descrever os resultados dos cruzamentos e das medidas
+especificados nos RF-04 e RF-05, com as seguintes condições e exemplos de texto:
+
+- Sobreposição de superfície com um polígono de referência: “Foi identificada
+  sobreposição com [elemento]. Consulte a área e o percentual calculados.”
+- Contato somente na borda ou em um ponto com um polígono de referência:
+  “A área toca [elemento], sem superfície em comum.”
+- Interseção com rio ou trecho de drenagem: “Foi identificada interseção com
+  [elemento de drenagem].”
+- Cruzamento válido sem ocorrência: “Nenhuma interseção foi identificada nesta
+  camada, dentro da cobertura analisada.”
+- Dados insuficientes ou inválidos, ou falha no processamento: “Não foi possível
+  concluir a avaliação de [camada]. Motivo: [explicação compreensível].”
+
+Cada mensagem deverá permitir consultar a camada, a fonte e as condições da
+análise. As distâncias calculadas serão apresentadas em metros, acompanhadas
+da cobertura considerada, conforme as medidas descritivas acima. As mensagens
+comunicarão o resultado geométrico ou a impossibilidade de avaliá-lo; não
+classificarão por si só risco, aptidão, segurança ou restrição. Tais
+interpretações dependerão de regras fundamentadas e aprovadas em unidades
+próprias, sem adotar faixas numéricas de alerta nesta definição.
+
+Quando uma avaliação falhar, seus avisos não deverão ocultar resultados
+parciais válidos de outras avaliações. A indisponibilidade e eventual bloqueio
+do ranking deverão permanecer identificados conforme a RN-03: o bloqueio
+ocorrerá quando faltar dado necessário para avaliar restrições ou calcular
+a comparação. Uma falha não será apresentada como ausência de ocorrência.
+
 **Fundamentação e alcance da adaptação:**
 
 O estudo de [Servou e colaboradores, 2023, seções 2.2 e 3.1](https://www.mdpi.com/2071-1050/15/19/14388)
@@ -588,17 +619,26 @@ segurança ou restrições; essas definições serão tratadas em unidades próp
 | Dados necessários ou cobertura insuficientes para uma medição | Informar a indisponibilidade ou limitação com mensagem compreensível, sem produzir distância conclusiva ou substituir a falta por zero; seguir a RN-03. |
 | Consulta válida sem elementos encontrados na camada e cobertura analisadas | Informar a ausência limitada àquela camada e cobertura, sem atribuir distância numérica a um elemento ausente. |
 | Consulta das condições de uma medida descritiva | Identificar fonte, camada, cobertura, sistema de coordenadas, unidades e parâmetros utilizados. |
+| Sobreposição de superfície identificada com polígono de referência | Emitir mensagem informativa de sobreposição, identificando o elemento e permitindo consultar área, percentual, camada, fonte e condições da análise. |
+| Contato somente na borda ou em um ponto identificado com polígono de referência | Emitir mensagem de contato sem superfície em comum, distinta da mensagem de sobreposição de área. |
+| Interseção identificada com rio ou trecho de drenagem | Emitir mensagem informativa de interseção com o elemento de drenagem, permitindo consultar sua camada, fonte e condições da análise. |
+| Cruzamento válido sem ocorrência na camada e cobertura analisadas | Emitir mensagem de que nenhuma interseção foi identificada naquela camada e cobertura, sem apresentar conclusão de segurança ou aptidão. |
+| Dados insuficientes ou inválidos, ou falha no processamento de uma avaliação | Informar que a avaliação da camada não pôde ser concluída e apresentar o motivo com explicação compreensível; não informar ausência de ocorrência. |
+| Falha em uma avaliação acompanhada de resultados parciais válidos de outras avaliações | Preservar os resultados válidos e identificar a indisponibilidade; bloquear o ranking quando faltar dado necessário para avaliar restrições ou calcular a comparação, conforme a RN-03. |
 
 **Dependências e detalhamento pendente:**
 
 O requisito depende dos cruzamentos do RF-04, da área total do RF-03 e das
-referências espaciais do RT-02. As medidas descritivas iniciais estão definidas
-acima. Fontes definitivas, cobertura, preparação e metadados das bases continuam
-pendentes nas etapas correspondentes. Sistema de coordenadas concreto,
-precisão, tolerâncias, alcance de consulta para distâncias e condições dos
-alertas deverão ser detalhados e aprovados antes da implementação e da
-preparação dos cenários de referência. Notas, pesos, regras demonstrativas e
-sua fundamentação não são definidos por essas medidas. Os dados necessários
+referências espaciais do RT-02. As medidas descritivas e as condições dos
+alertas informativos iniciais estão definidas acima. Fontes definitivas,
+cobertura, preparação e metadados das bases continuam pendentes nas etapas
+correspondentes. Sistema de coordenadas concreto,
+precisão, tolerâncias e alcance de consulta para distâncias deverão ser
+detalhados e aprovados antes da implementação e da preparação dos cenários
+de referência. Eventuais alertas adicionais, inclusive aqueles baseados em
+faixas numéricas, exigirão fundamentação específica e aprovação prévia.
+Notas, pesos, regras demonstrativas e sua fundamentação não são definidos
+por essas medidas. Os dados necessários
 à comparação e os critérios de disponibilidade permanecem pendentes na RN-03.
 Os exemplos numéricos acima são didáticos; os testes funcionais do GeoVale
 continuam futuros.
