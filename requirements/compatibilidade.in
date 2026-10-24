@@ -1,0 +1,14 @@
+# Dependências diretas da demonstração GIS + AHP + TOPSIS; Python 3.12.
+fastapi==0.159.1
+pydantic==2.14.1
+uvicorn==0.54.0
+shapely==2.2.0
+pyproj==3.8.0
+geopandas==1.2.0
+rasterio==1.5.2
+numpy==2.5.4
+Jinja2==3.1.6
+matplotlib==3.11.2
+httpx==0.28.1
+python-multipart==0.0.32
+pytest==9.1.1

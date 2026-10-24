@@ -1,0 +1,20 @@
+{
+  "consulta": "https://basemap.nationalmap.gov/arcgis/rest/services/USGSImageryOnly/MapServer/export?bbox=-10033900.1196%2C4967446.355400003%2C-10029387.0728%2C4971615.617899998&bboxSR=3857&imageSR=3857&size=1400%2C1000&format=jpg&f=pjson",
+  "coleta_utc": "2026-10-23T01:56:04.572736+00:00",
+  "resposta": {
+    "href": "https://basemap.nationalmap.gov/arcgis/rest/directories/basemap_output/USGSImageryOnly_MapServer/_ags_map033c7df6300142abb07ae11160ba1e12.jpg",
+    "width": 1400,
+    "height": 1000,
+    "extent": {
+      "xmin": -10034562.079949997,
+      "ymin": 4967446.3554000035,
+      "xmax": -10028725.112450004,
+      "ymax": 4971615.617899999,
+      "spatialReference": {
+        "wkid": 102100,
+        "latestWkid": 3857
+      }
+    },
+    "scale": 15757.8110039831
+  }
+}

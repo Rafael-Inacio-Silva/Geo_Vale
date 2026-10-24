@@ -42,3 +42,14 @@ htmlcov/
 !.env.*.example
 *.pem
 *.key
+
+# Dependências e builds locais da interface/provas de compatibilidade.
+node_modules/
+dist/
+*.tsbuildinfo
+
+# Sessões, banco e exportações locais.
+.local/
+*.sqlite3
+*.sqlite3-*
+.venv-mcda/

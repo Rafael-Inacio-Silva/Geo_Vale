@@ -1,0 +1,19 @@
+[
+  {
+    "objectid": 6534,
+    "national_id": "IL_071",
+    "contact": 7,
+    "coalmine_op_status": 7,
+    "mine_name": "Burning Star 3",
+    "msha_id": null,
+    "state_tribe_mine_id": null,
+    "calculated_area": 1309.80327893,
+    "reported_area": null,
+    "area_mine": 1,
+    "contour": 0,
+    "mountaintop": 0,
+    "steep_slope": 0,
+    "highwall": 0,
+    "auger": 0
+  }
+]

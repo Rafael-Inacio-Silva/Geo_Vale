@@ -1,0 +1,32 @@
+{
+  "consulta": "https://elevation.nationalmap.gov/arcgis/rest/services/3DEPElevation/ImageServer/exportImage?bbox=256260%2C4218360%2C260160%2C4221870&bboxSR=32616&imageSR=32616&size=130%2C117&format=tiff&pixelType=F32&renderingRule=%7B%22rasterFunction%22%3A+%22None%22%7D&interpolation=RSP_BilinearInterpolation&compression=LZ77&f=image",
+  "coleta_lote_utc": "2026-10-21T20:17:36.970805+00:00",
+  "requisicao": {
+    "licenca": "IL_071",
+    "epsg": 32616,
+    "parametros": {
+      "bbox": "256260,4218360,260160,4221870",
+      "bboxSR": 32616,
+      "imageSR": 32616,
+      "size": "130,117",
+      "format": "tiff",
+      "pixelType": "F32",
+      "renderingRule": "{\"rasterFunction\": \"None\"}",
+      "interpolation": "RSP_BilinearInterpolation",
+      "compression": "LZ77",
+      "f": "image"
+    },
+    "area_limite_m2": 5305501.233929167,
+    "largura": 130,
+    "altura": 117,
+    "intervalo_dem_m": [
+      146.12217712402344,
+      178.6358642578125
+    ],
+    "arquivo": "dem/IL_071.tif",
+    "bytes": 61556,
+    "sha256": "fd311a2df543460f550473291751c7129b2d041ca1d621e64452b705eacb437b"
+  },
+  "fonte": "USGS 3DEP",
+  "limite": "Exportação de coleção multirresolução em grade de 30 m. Não constitui levantamento topográfico ou prova de segurança."
+}

@@ -1,0 +1,15 @@
+{
+  "consulta": "https://data.naturalcapitalalliance.stanford.edu/download/global/NLCD/LandCover/MRLC_Annual_NLCD_LndCov_2024_c1v1.tif",
+  "janela": [
+    121377,
+    45494,
+    217,
+    159
+  ],
+  "produto": "USGS Annual NLCD Collection 1.1 — Land Cover",
+  "ano": 2024,
+  "coleta_utc": "2026-10-23T02:18:54.247019+00:00",
+  "atribuicao": "USGS / MRLC Consortium",
+  "metodo": "Janela do COG Stanford em EPSG4326, preservada em cobertura-original.tif; reprojeção para EPSG5070/30 m por vizinho mais próximo, sem reclassificar códigos.",
+  "limite": "Cobertura remota não é uso autorizado ou aptidão. Serviço WCS falhou; recorte do produto USGS obtido na distribuição pública Stanford Natural Capital Alliance via HTTP Range."
+}

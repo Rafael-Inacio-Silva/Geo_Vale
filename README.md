@@ -1,99 +1,64 @@
 # GeoVale
 
-**Sistema de Apoio à Decisão para Uso Futuro de Áreas Pós-Mineração**
+MVP local de apoio à comparação de usos futuros de áreas pós-mineração. **Geoprocessamento + AHP + TOPSIS**, com dados públicos reais e regras exploratórias explícitas. Não utiliza previsão por Machine Learning.
 
-Projeto demonstrativo em desenvolvimento para apoiar a comparação de possíveis
-usos futuros de áreas pós-mineração, combinando geoprocessamento, análise de
-dados, análise multicritério e Machine Learning demonstrativo. O modelo será
-integrado, testado e documentado na versão final do MVP.
+Ao abrir o site, o usuário envia uma poligonal GeoJSON do próprio computador, visualiza o contorno sobre uma imagem aérea, analisa o território, define prioridades e compara **Agricultura, Uso florestal e Recreação em áreas abertas**. Pode salvar a comparação e baixar dois relatórios HTML da mesma revisão: simples e técnico.
 
-## Objetivo
+**Alcance:** ordenação relativa para aprofundar estudos. Não determina viabilidade, segurança, autorização, custos ou aceitação social. Os parâmetros do protótipo ainda não foram validados por especialistas. A literatura fundamenta o método; não valida as nossas notas ou os resultados destas minas.
 
-Organizar informações sobre uma área de estudo e comparar alternativas de uso
-futuro de forma compreensível e rastreável, permitindo identificar as fontes,
-os parâmetros e as limitações de cada análise.
+## Mapas reais para envio manual
 
-O MVP será desenvolvido gradualmente, com documentação e verificação de cada
-entrega, priorizando simplicidade e facilidade de manutenção.
+| Mina / licença pública | Recorte de operações | Dados preparados |
+|---|---:|---|
+| [Rapatee — IL_006](dados/demonstracao/il_006/area.geojson) | 162,29 ha | Contorno, relevo, cobertura 2024, fotografia aérea |
+| [Burning Star 3 — IL_071](dados/demonstracao/il_071/area.geojson) | 530,55 ha | Contorno, relevo, cobertura 2024, fotografia aérea |
 
-## Fluxo planejado
+A entrada é feita exclusivamente pelo envio do arquivo do computador. Para a apresentação, os dois arquivos estão no computador em `~/Desktop/Mapas GeoVale/`: `Rapatee.geojson` e `Burning Star 3.geojson`. Clique em **Enviar GeoJSON** e escolha o arquivo.
 
-As funcionalidades abaixo representam o escopo previsto e ainda não estão
-implementadas:
+São uniões de limites de operações do GeoMine/OSMRE em Illinois, EUA; não certificam a totalidade cadastral de uma mina, nem representam uma mina da Vale. A jornada completa reconhece estas duas geometrias, inclusive se o arquivo for renomeado. Outras poligonais válidas são exibidas, mas precisam de preparação de fontes para serem analisadas. Fotografias e rasters já estão no pacote: a apresentação não depende de consultas externas.
 
-1. Enviar e validar um arquivo geográfico da área de estudo.
-2. Analisar características do terreno e cruzar camadas geográficas públicas.
-3. Identificar sobreposições, distâncias, alertas e restrições eliminatórias.
-4. Comparar alternativas de uso por critérios, notas e pesos definidos.
-5. Apresentar mapa, características e ranking em um dashboard.
-6. Exportar um relatório com resultados, fontes, parâmetros e limitações.
+## Executar
 
-Após o fluxo principal funcionar, será desenvolvida e integrada, na Etapa 8,
-uma Árvore de Decisão demonstrativa para estimar aptidão física como uma das
-entradas da análise multicritério. O ML fará parte da demonstração final do MVP.
-
-## Estado atual
-
-A **Etapa 1 — Engenharia de requisitos de negócio foi concluída e teve seu
-encerramento aprovado em 20/10/2026**. A Etapa 0 foi concluída e aprovada em
-19/10/2026. A Etapa 2 — Engenharia de requisitos do sistema ainda não foi
-iniciada e depende de autorização.
-
-Os requisitos de negócio **RNG-01 a RNG-07** foram aprovados e registrados em
-[docs/REQUISITOS.md](docs/REQUISITOS.md): problema, objetivo, público-alvo,
-benefícios esperados, escopo, limitações e critérios de sucesso do MVP.
-
-- Repositório Git local inicializado na branch `main`.
-- Exclusões de arquivos locais configuradas no `.gitignore`.
-- Ambiente virtual Python existente e verificado.
-- Nenhuma funcionalidade da aplicação implementada.
-- Repositório público [Rafael-Inacio-Silva/Geo_Vale](https://github.com/Rafael-Inacio-Silva/Geo_Vale)
-  criado no GitHub e configurado como remoto `origin` no Git local.
-- Nenhum serviço implantado.
-
-A arquitetura, as bibliotecas e as versões das dependências da aplicação ainda
-serão avaliadas e documentadas. Não há interface, servidor ou suíte de testes
-da aplicação para executar neste momento.
-
-## Verificação do ambiente local
-
-Na preparação inicial, foram verificados Python **3.13.5** e pip **25.1.1**.
-Essas versões descrevem o ambiente observado; a versão de Python suportada pelo
-projeto ainda será definida junto às dependências.
-
-No terminal do macOS ou Linux, a partir da raiz do projeto e com a pasta `.venv`
-já existente, ative o ambiente e confira o interpretador e o gerenciador de pacotes:
+Python **3.12** e Node **24**. Execute a partir da raiz do projeto; use um ambiente virtual dedicado, sem apagar seu ambiente existente.
 
 ```bash
-source .venv/bin/activate
-python --version
-python -m pip --version
-python -m pip check
+python3.12 -m venv .venv-mcda
+source .venv-mcda/bin/activate
+python -m pip install --require-hashes -r requirements/compatibilidade-macos15-x86_64.txt
+cd frontend
+npm ci
+npm run build
+cd ..
+python executar.py
 ```
 
-A ativação seleciona o Python do ambiente virtual para a sessão do terminal.
-O comando `pip check` verifica a compatibilidade declarada entre os pacotes
-instalados; ele não substitui os testes da aplicação.
+Abra **http://127.0.0.1:8000**. A interface e a API usam a mesma origem e não há tela de login. Para outra porta: `GEOVALE_PORT=8020 python executar.py`. O servidor escuta somente no computador local. O build da interface é obrigatório antes de executar. O comando não abre o navegador automaticamente.
 
-Somente o pip estava instalado na verificação inicial. As instruções completas
-de instalação e execução serão adicionadas quando a stack for definida.
+O lock macOS foi usado no ambiente Python 3.12 de verificação. Existe lock Linux x86_64, mas **esta nova versão não foi executada em Linux**. Outros sistemas exigem ambiente compatível; não utilize o lock macOS em Windows.
 
-## Limitações e uso responsável
+Para desenvolvimento, execute a API e, em outro terminal, `cd frontend && npm run dev`: o Vite encaminha `/api` para a porta 8000. Não coloque credenciais no frontend. Não há configuração de implantação pública nesta versão.
 
-- O sistema tem finalidade demonstrativa e de apoio à decisão.
-- Os dados geográficos deverão ter fontes, datas, licenças e limitações registradas.
-- Uma área demonstrativa não deverá ser apresentada como perímetro oficial de mina.
-- Regras, notas e dados simulados deverão ser identificados explicitamente.
-- Restrições eliminatórias deverão ser aplicadas separadamente das pontuações;
-  uma pontuação alta não poderá compensar uma restrição eliminatória.
-- Treinamento com dados sintéticos poderá demonstrar o funcionamento do algoritmo,
-  mas não comprovará capacidade preditiva em áreas reais.
-- Os resultados não substituirão avaliações de especialistas, ambientais, legais
-  ou de segurança, nem constituirão autorização para uso de uma área.
+## Verificar
 
-## Evolução prevista
+```bash
+PYTHONPATH=backend PYTHONDONTWRITEBYTECODE=1 PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 python -m pytest -q -p no:cacheprovider tests
+PYTHONPATH=backend python validacao/verificar_pacotes.py
+cd frontend
+npm test
+npm run build
+```
 
-A próxima etapa prevista é o detalhamento dos requisitos do sistema, seguido
-pela modelagem e pela arquitetura. A implementação seguirá com persistência,
-dados geográficos, funcionalidades do fluxo principal, Machine Learning,
-validação final, implantação e preparação da demonstração.
+## Organização
+
+- `backend/geovale/geografia`: validação da entrada.
+- `backend/geovale/decisao`: extração territorial, AHP, TOPSIS e sensibilidade.
+- `backend/geovale/mvp`: API, sessão, revisões SQLite e relatórios.
+- `frontend`: React e Leaflet; interface sem painéis de bastidores.
+- `dados/demonstracao`: dois pacotes reais, com fontes, datas e hashes.
+- `dados/qgis`: GeoPackage e projeto auxiliar para inspeção no QGIS.
+- `tests` e `validacao`: verificações automatizadas e inspeção dos pacotes.
+- `.local`: banco e arquivos gerados localmente, fora do Git.
+
+Verificação em macOS: **119 testes Python e 2 testes frontend aprovados**, TypeScript e build Vite aprovados, integridade dos dois pacotes conferida. Detalhes em [Validação](docs/VALIDACAO.md).
+
+Leia [Metodologia](docs/METODOLOGIA.md), [Roteiro de apresentação](docs/DEMONSTRACAO.md) e [Índice da documentação](docs/INDICE.md).
