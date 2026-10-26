@@ -23,13 +23,13 @@
 | RF-19 | Conservar a área ao navegar ou alternar fundo/camadas; recarregar a página descarta o desenho. Sem persistência. |
 | RF-20 | Consultar trilhas da fonte municipal fixa com recorte visível, crédito e nome por interação; falha recuperável sem interromper outras fontes. |
 | RF-21 | Associar cada trilha ao nome e cor publicados no item oficial; legenda com categorias do enquadramento, sem duplicatas e na ordem da fonte. Ao navegar, atualizar; ao falhar ou sair da cobertura, não conservar legenda de outra região. |
-
 | RF-22 | Revelar os detalhes pela seta do cartão, com teclado e estado expandido; consultar titular, fase, processo e área cadastrada na ANM, com recarga na falha. |
 | RF-23 | Polígono ANM na barra esquerda junto às ferramentas de desenho, desabilitado até selecionar a mina; prévia, confirmação e cancelamento sem substituir outras áreas. |
 | RF-24 | Preservar origem cadastral ao confirmar a geometria ANM intacta; confirmar sua edição produz origem manual sem identificação oficial. |
 | RF-25 | Selecionar a mina acrescenta apenas o município associado, via IBGE; retornar para MG retira o limite e seu crédito. Requisição tardia não desfaz desenho ou navegação. |
 | RF-26 | Adicionar várias áreas independentes; escolher uma pela lista ou contorno e editar, redesenhar, enquadrar ou remover só ela. Cancelar conserva as confirmações e demais áreas. |
 | RF-27 | Validar cada polígono individualmente e descartar todas as áreas ao recarregar. Sem unir automaticamente áreas separadas ou sobrepostas. |
+| RF-28 | Renomear individualmente a área selecionada com 1–80 caracteres; atualizar lista/identificação/tooltip sem alterar geometria ou origem. Salvar/Enter e Cancelar/Escape; preservar nome ao editar/redesenhar e descartar com a área ou reload. |
 
 ## Regras de interpretação
 

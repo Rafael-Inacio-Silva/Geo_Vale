@@ -15,3 +15,5 @@ Verificações desta entrega em [Validação](VALIDACAO.md). Ferramentas e justi
 O cartão reúne os detalhes sob seta expansível. A seleção consulta [ANM](ANM.md) para processo, titular, fase e área cadastrada; Polígono ANM permite adicionar a geometria cadastral com prévia/confirmação. Editar e confirmar torna a área manual. A seleção acrescenta apenas o [limite de Nova Lima via IBGE](LIMITE_MUNICIPAL.md); voltar ao estado o remove. Cache ANM de dez minutos e municipal de uma hora, sob demanda, sem banco.
 
 Cartão alterna seleção e retorno a MG; marcador aproxima a mina em zoom 14, sem a chegada do limite municipal desfazer essa ação. Visualização 3D adiada pelo usuário como acabamento da apresentação. Pesquisa Google registrada em [Consulta 3D](CONSULTA_3D_GOOGLE.md); nenhuma API Google foi ativada ou integrada.
+
+As áreas podem ser renomeadas individualmente na lateral. Nomes pessoais aparecem na lista e nos tooltips, preservam geometria/origem e acompanham ajustes do recorte; permanecem apenas na memória da página.

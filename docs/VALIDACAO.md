@@ -52,3 +52,7 @@ Conferência de 26/10/2026: ativar relevo e água manteve intensidade/legenda re
 ## Seleção e zoom da mina
 
 Em 26/10/2026, o navegador confirmou: cartão seleciona e enquadra Nova Lima; segundo clique desmarca e volta para escala estadual, com zero caminhos municipais e Polígono ANM desabilitado. Clicar na bolinha selecionou a mina e aproximou para escala de 500 m no viewport utilizado. Depois de o contorno municipal carregar (um caminho municipal presente), repetir por Enter manteve a escala de 500 m e a seleção. A consulta municipal deixou de depender da identidade do objeto Mina, preservando o enquadramento do marcador. TypeScript/build e dois testes de pesquisa aprovados; não houve mudança no backend. Pesquisa de 3D consultou documentação pública, sem chave, ativação de faturamento ou teste de cobertura real da API Google na mina.
+
+## Nome personalizado da área
+
+Em 26/10/2026, o formulário de Renomear rejeitou somente espaços e normalizou “   Cava   principal   ” para “Cava principal”. Lista e identificação refletiram o nome; a geometria SVG permaneceu exatamente igual e a origem/atribuição ANM foi conservada. O tooltip do polígono exibiu “Cava principal”. Cancelar por Escape preservou o nome anterior. Na versão final, salvar por Enter retornou o foco ao botão Renomear. Durante a edição do nome, a seleção de áreas ficou desabilitada. TypeScript e build aprovados. Não há nova rota, alteração de validação geométrica ou persistência.

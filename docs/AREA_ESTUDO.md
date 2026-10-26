@@ -8,9 +8,17 @@ Versão 3.3.0. O engenheiro pode demarcar **vários polígonos independentes** n
 
 Depois da primeira confirmação, **Adicionar área** inicia outro desenho conservando os anteriores. A lista **Áreas** permite selecionar cada demarcação, inclusive por clique em um contorno inativo no mapa. A área selecionada tem borda amarela; as demais ficam verdes. A numeração é estável durante a sessão e não é reaproveitada após remover.
 
-**Ver área**, **Ajustar**, **Redesenhar** e **Remover** atuam somente sobre a área selecionada. Remover escolhe a última área restante; se não restar nenhuma, volta ao estado inicial. Cancelar adição retorna à área antes selecionada; cancelar edição/redesenho restaura sua geometria confirmada. As outras áreas permanecem inalteradas. Escape cancela o desenho ou a prévia ANM quando o foco está nos controles.
+**Ver área**, **Ajustar**, **Redesenhar**, **Renomear** e **Remover** atuam somente sobre a área selecionada. Remover escolhe a última área restante; se não restar nenhuma, volta ao estado inicial. Cancelar adição retorna à área antes selecionada; cancelar edição/redesenho restaura sua geometria confirmada. As outras áreas permanecem inalteradas. Escape cancela o desenho ou a prévia ANM quando o foco está nos controles.
 
 **Polígono ANM** é outra forma de adicionar, disponível após selecionar a mina. Exibe a prévia do processo associado e permite confirmar ou cancelar. A geometria importada pode ser ajustada; ao confirmar qualquer ajuste, torna-se recorte manual, sem manter o rótulo de origem oficial. [Fonte e limites ANM](ANM.md).
+
+## Nome personalizado
+
+Na área selecionada, **Renomear** abre um campo na lateral. Digite um nome (por exemplo, Barragem ou Cava principal) e use **Salvar nome** ou Enter. **Cancelar** ou Escape conserva o nome anterior. O foco retorna ao botão Renomear. Enquanto o campo está aberto, a seleção de outra área fica bloqueada para não aplicar o nome ao recorte errado.
+
+O nome substitui o rótulo padrão na lista, na identificação da área selecionada e no tooltip do polígono, ativo ou inativo. É texto livre de 1 a 80 caracteres após retirar espaços nas extremidades e reduzir sequências de espaços a um. Nomes iguais são permitidos; os ids internos continuam distintos e estáveis. A numeração inicial permanece como padrão se não houver nome personalizado.
+
+Renomear não altera a geometria, a fonte, o processo ou a finalidade; é uma identificação pessoal do recorte. O nome acompanha a área após ajuste ou redesenho e é removido quando ela é excluída. É mantido separadamente das propriedades cadastrais e não é enviado ao backend ou aos fornecedores. No mapa usa `textContent`, sem interpretar HTML. Assim como os polígonos, existe apenas na memória da página e se perde ao recarregar.
 
 ## Validação e memória
 

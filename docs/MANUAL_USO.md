@@ -20,7 +20,7 @@ Clique em **Desenhar área**. Clique ou toque no mapa para marcar pelo menos tr�
 
 Após confirmar, **Adicionar área** começa outro polígono sem apagar os anteriores. A lista Áreas ou o clique em um contorno inativo seleciona qual será editado; amarelo indica a seleção e verde indica as demais. **Polígono ANM**, habilitado ao selecionar a mina, oferece uma prévia cadastral para confirmar como outra área independente. Editar e confirmar esse polígono o transforma em recorte manual.
 
-Na área selecionada, **Ver área** enquadra o desenho; **Ajustar** permite editar, **Redesenhar** começa outro e **Remover** apaga apenas ela. Cancelar uma edição/redesenho restaura a última área confirmada. Escape cancela o desenho em andamento. Todas as áreas permanecem ao navegar e alternar camadas/fundo, mas se perde ao atualizar ou fechar a página. Não há salvamento permanente.
+Na área selecionada, **Ver área** enquadra o desenho; **Ajustar** permite editar, **Redesenhar** começa outro e **Remover** apaga apenas ela. **Renomear** permite trocar “Área 1” por uma identificação sua; digite o nome e use **Salvar nome** ou Enter. Cancelar/Escape mantém o nome anterior. O nome aparece na lista e no rótulo do mapa, acompanha as edições e também se perde ao recarregar a página. Cancelar uma edição/redesenho restaura a última área confirmada. Escape cancela o desenho em andamento. Todas as áreas permanecem ao navegar e alternar camadas/fundo, mas se perde ao atualizar ou fechar a página. Não há salvamento permanente.
 
 O contorno é a área escolhida para estudo, não o perímetro físico ou operacional da mina. [Limites do desenho](AREA_ESTUDO.md).
 

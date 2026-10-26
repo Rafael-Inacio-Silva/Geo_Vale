@@ -6,7 +6,7 @@
 4. Marcar um ou mais dos cinco temas estaduais ou Trilhas de Nova Lima para visualizar sobreposições. A seleção da mina é opcional para usar as camadas.
 5. Ajustar a intensidade de um tema, abrir sua legenda ou desmarcar para remover.
 6. Usar **Desenhar área**, marcar pontos e confirmar; ou **Polígono ANM**, depois de selecionar a mina, conferir a prévia e confirmar.
-7. Usar **Adicionar área** para demarcar outros recortes (cava, morro, barragem). Escolher uma área na lista ou mapa para enquadrar, ajustar, redesenhar ou remover apenas ela. Cancelar preserva as confirmações e demais áreas.
+7. Usar **Adicionar área** para demarcar outros recortes (cava, morro, barragem). Escolher uma área na lista ou mapa para enquadrar, ajustar, redesenhar, renomear ou remover apenas ela. Renomear abre um campo curto na lateral, com Salvar nome e Cancelar; a identificação pessoal acompanha o mesmo recorte. Cancelar preserva as confirmações e demais áreas.
 8. Usar “Ver Minas Gerais” para retornar ao estado, desfazendo a seleção da mina e mantendo temas e áreas e retirando o contorno municipal.
 
 A jornada termina na exploração visual e delimitação confirmada da área. A confirmação não persiste após recarregar a página. Sem avaliação de aptidão ou recomendação de uso futuro. A pesquisa aceita nome atual/anterior, caixa, acentos, Vale e Nova Lima; continua contendo uma única mina.

@@ -224,3 +224,10 @@ button:focus-visible, input:focus-visible, a:focus-visible, [tabindex="-1"]:focu
 .estado-camada {padding-inline: .7rem;}
 .estado-camada:empty {display: none;}
 .estado-camada > p {margin: 0 0 .5rem;}
+
+.renomear-area {display: grid; gap: .6rem;}
+.renomear-area > label {font-size: .8rem; font-weight: 600; color: var(--escuro);}
+.renomear-area > input {min-inline-size: 0; inline-size: 100%; padding: .65rem; border: 1px solid #aac4b5; border-radius: .3rem; background: #fff; color: #153f3b; font-size: .85rem;}
+.renomear-area > input[aria-invalid="true"] {border-color: #a73720;}
+.lista-areas .acao-area {max-inline-size: 100%; overflow-wrap: anywhere; text-align: left;}
+.painel-areas .estado-area {overflow-wrap: anywhere;}

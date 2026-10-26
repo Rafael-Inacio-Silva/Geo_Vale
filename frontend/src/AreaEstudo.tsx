@@ -4,7 +4,7 @@ import 'leaflet-draw';
 import 'leaflet-draw/dist/leaflet.draw.css';
 import type {AreaConfirmada, AreaManual, ProcessoANM} from './tipos.ts';
 
-type Fase = 'vazia' | 'carregando_anm' | 'previa_anm' | 'desenhando' | 'ajustando' | 'validando' | 'confirmada';
+type Fase = 'vazia' | 'carregando_anm' | 'previa_anm' | 'desenhando' | 'ajustando' | 'validando' | 'confirmada' | 'renomeando';
 const ESTILO = {color: '#ffc329', weight: 3, opacity: 1, fillColor: '#ffc329', fillOpacity: .15};
 
 L.drawLocal.draw.handlers.polygon.tooltip = {
@@ -21,6 +21,13 @@ export default function AreaEstudo({mapa, minaId, obterProcessoANM, aoInteragir}
   const faseAtual = useRef<Fase>('vazia');
   const [pontos, setPontos] = useState(0);
   const [erro, setErro] = useState('');
+  const [nomes, setNomes] = useState<Record<number, string>>({});
+  const nomesAtuais = useRef(nomes);
+  nomesAtuais.current = nomes;
+  const [nomeEditado, setNomeEditado] = useState('');
+  const [erroNome, setErroNome] = useState('');
+  const botaoRenomear = useRef<HTMLButtonElement>(null);
+  const devolverFocoNome = useRef(false);
   const [lista, setLista] = useState<{id: number; dados: AreaConfirmada}[]>([]);
   const areas = useRef(new Map<number, AreaConfirmada>());
   const ativa = useRef<number | null>(null);
@@ -36,6 +43,44 @@ export default function AreaEstudo({mapa, minaId, obterProcessoANM, aoInteragir}
   const recursos = useRef<{grupo: L.FeatureGroup; desenho: L.Draw.Polygon | null; editor: L.EditToolbar.Edit | null} | null>(null);
 
   function mudarFase(valor: Fase) {faseAtual.current = valor; setFase(valor);}
+
+  function nomeArea(id: number | null) {
+    return id === null ? '' : nomesAtuais.current[id] ?? `Área ${id}`;
+  }
+
+  function iniciarRenomeacao() {
+    setNomeEditado(nomeArea(ativa.current));
+    setErroNome('');
+    mudarFase('renomeando');
+  }
+
+  function cancelarRenomeacao() {
+    devolverFocoNome.current = true;
+    setErroNome('');
+    mudarFase('confirmada');
+  }
+
+  function renomear() {
+    const id = ativa.current;
+    if (id === null || !areas.current.has(id)) return;
+    const nome = nomeEditado.trim().replace(/\s+/gu, ' ');
+    if (!nome || nome.length > 80) {setErroNome('Informe um nome de até 80 caracteres.'); return;}
+    const proximos = {...nomesAtuais.current, [id]: nome};
+    nomesAtuais.current = proximos;
+    setNomes(proximos);
+    devolverFocoNome.current = true;
+    setErroNome('');
+    if (confirmada.current) exibirArea(confirmada.current, true);
+    atualizarOutras();
+    mudarFase('confirmada');
+  }
+
+  useEffect(() => {
+    if (fase === 'confirmada' && devolverFocoNome.current) {
+      devolverFocoNome.current = false;
+      botaoRenomear.current?.focus();
+    }
+  }, [fase]);
 
   function poligonoAtual() {
     return recursos.current?.grupo.getLayers().find(item => item instanceof L.Polygon) as L.Polygon | undefined;
@@ -55,6 +100,11 @@ export default function AreaEstudo({mapa, minaId, obterProcessoANM, aoInteragir}
     grupo.clearLayers();
     L.geoJSON(dados, {pane: 'area-estudo', style: {...ESTILO, fillColor: confirmacao ? '#007f73' : ESTILO.fillColor}}).eachLayer(camada => {
       if (dados.properties.origem === 'processo_anm') camada.options.attribution = 'Área cadastral: <a href="https://geo.anm.gov.br/portal/">ANM</a>';
+      if (confirmacao && ativa.current !== null) {
+        const nome = document.createElement('span');
+        nome.textContent = nomeArea(ativa.current);
+        camada.bindTooltip(nome);
+      }
       grupo.addLayer(camada);
     });
   }
@@ -68,7 +118,7 @@ export default function AreaEstudo({mapa, minaId, obterProcessoANM, aoInteragir}
       L.geoJSON(dados, {pane: 'area-estudo', style: {color: '#007f73', weight: 3, fillColor: '#007f73', fillOpacity: .12}}).eachLayer(camada => {
         if (dados.properties.origem === 'processo_anm') camada.options.attribution = 'Área cadastral: <a href="https://geo.anm.gov.br/portal/">ANM</a>';
         const nome = document.createElement('span');
-        nome.textContent = `Área ${id}`;
+        nome.textContent = nomeArea(id);
         camada.bindTooltip(nome);
         camada.on('click', () => {if (faseAtual.current === 'confirmada' || faseAtual.current === 'vazia') selecionarArea(id);});
         grupo.addLayer(camada);
@@ -270,7 +320,13 @@ export default function AreaEstudo({mapa, minaId, obterProcessoANM, aoInteragir}
   }
 
   function remover() {
-    if (ativa.current !== null) areas.current.delete(ativa.current);
+    if (ativa.current !== null) {
+      areas.current.delete(ativa.current);
+      const proximos = {...nomesAtuais.current};
+      delete proximos[ativa.current];
+      nomesAtuais.current = proximos;
+      setNomes(proximos);
+    }
     const restante = [...areas.current.keys()].at(-1);
     setLista([...areas.current].map(([id, dados]) => ({id, dados})));
     if (restante !== undefined) {selecionarArea(restante); return;}
@@ -282,7 +338,7 @@ export default function AreaEstudo({mapa, minaId, obterProcessoANM, aoInteragir}
   }
 
   return <section className={`area-estudo fase-${fase}`} aria-label="Área de estudo" onKeyDown={evento => {if (evento.key === 'Escape' && (faseAtual.current === 'desenhando' || faseAtual.current === 'carregando_anm' || faseAtual.current === 'previa_anm')) {evento.stopPropagation(); restaurarConfirmada();}}}>
-    {lista.length > 0 && fase === 'confirmada' ? <div className="lista-areas" role="group" aria-label="Áreas demarcadas"><span>Áreas ({lista.length})</span>{lista.map(item => <button type="button" className="acao-area" key={item.id} aria-label={`Selecionar área ${item.id}`} aria-pressed={ativa.current === item.id} onClick={() => selecionarArea(item.id)}>Área {item.id}</button>)}</div> : null}
+    {lista.length > 0 && (fase === 'confirmada' || fase === 'renomeando') ? <div className="lista-areas" role="group" aria-label="Áreas demarcadas"><span>Áreas ({lista.length})</span>{lista.map(item => <button type="button" className="acao-area" key={item.id} aria-label={`Selecionar ${nomeArea(item.id)} (área ${item.id})`} disabled={fase === 'renomeando'} aria-pressed={ativa.current === item.id} onClick={() => selecionarArea(item.id)}>{nomeArea(item.id)}</button>)}</div> : null}
     {fase === 'vazia' ? <div className="acoes-area"><button type="button" className="acao-area primaria" disabled={!mapa} onClick={desenhar}>Desenhar área</button><button type="button" className="acao-area" disabled={!mapa || !minaId} title={!minaId ? 'Selecione uma mina para carregar o processo.' : 'Carregar a poligonal do processo minerário'} onClick={() => {void carregarAreaANM();}}>Polígono ANM</button></div> : null}
     {fase === 'carregando_anm' ? <><p className="estado-area" role="status">Carregando polígono da ANM…</p><button type="button" className="acao-area" onClick={restaurarConfirmada}>Cancelar</button></> : null}
     {fase === 'previa_anm' ? <><p className="estado-area" role="status">Processo ANM {rascunhoANM.current?.properties.processo}</p><p className="nota-area">Poligonal cadastral para a área de estudo.</p><div className="acoes-area"><button type="button" className="acao-area primaria" onClick={() => {void confirmar();}}>Confirmar área</button><button type="button" className="acao-area" onClick={restaurarConfirmada}>Cancelar</button></div></> : null}
@@ -294,9 +350,14 @@ export default function AreaEstudo({mapa, minaId, obterProcessoANM, aoInteragir}
       <p className="estado-area" role="status">{fase === 'validando' ? 'Confirmando área…' : 'Ajuste os pontos e confirme a área.'}</p>
       <div className="acoes-area"><button type="button" className="acao-area primaria" disabled={fase === 'validando'} onClick={() => {void confirmar();}}>Confirmar área</button><button type="button" className="acao-area" onClick={restaurarConfirmada}>Cancelar</button></div>
     </> : null}
-    {fase === 'confirmada' ? <>
-      <p className="estado-area" role="status">{area?.properties.origem === 'processo_anm' ? `Área ${ativa.current} · Processo ANM ${(area as ProcessoANM).properties.processo}` : `Área ${ativa.current} confirmada · ${area?.properties.vertices} pontos`}</p>
-      <div className="acoes-area"><button type="button" className="acao-area primaria" onClick={() => {iniciarAdicao(); desenhar();}}>Adicionar área</button><button type="button" className="acao-area" onClick={() => {aoInteragir(); const p = poligonoAtual(); if (p) mapa?.fitBounds(p.getBounds(), {padding: [36, 36], maxZoom: 18});}}>Ver área</button><button type="button" className="acao-area" onClick={() => {aoInteragir(); rascunhoANM.current = null; prepararEdicao(); mudarFase('ajustando'); setErro('');}}>Ajustar</button><button type="button" className="acao-area" onClick={desenhar}>Redesenhar</button><button type="button" className="acao-area" disabled={!minaId} onClick={() => {iniciarAdicao(); void carregarAreaANM();}}>Polígono ANM</button><button type="button" className="acao-area" onClick={remover}>Remover</button></div>
+    {fase === 'confirmada' || fase === 'renomeando' ? <>
+      <p className="estado-area" role="status">{area?.properties.origem === 'processo_anm' ? `${nomeArea(ativa.current)} · Processo ANM ${(area as ProcessoANM).properties.processo}` : `${nomeArea(ativa.current)} · ${area?.properties.vertices} pontos`}</p>
+      {fase === 'renomeando' ? <form className="renomear-area" onSubmit={evento => {evento.preventDefault(); renomear();}} onKeyDown={evento => {if (evento.key === 'Escape') {evento.stopPropagation(); cancelarRenomeacao();}}}>
+        <label htmlFor="nome-area">Nome da área</label>
+        <input id="nome-area" value={nomeEditado} onChange={evento => {setNomeEditado(evento.target.value); setErroNome('');}} maxLength={80} required autoFocus onFocus={evento => evento.currentTarget.select()} autoComplete="off" aria-invalid={!!erroNome} aria-describedby={erroNome ? 'erro-nome-area' : undefined}/>
+        {erroNome ? <p id="erro-nome-area" className="erro-area" role="alert">{erroNome}</p> : null}
+        <div className="acoes-area"><button type="submit" className="acao-area primaria">Salvar nome</button><button type="button" className="acao-area" onClick={cancelarRenomeacao}>Cancelar</button></div>
+      </form> : <div className="acoes-area"><button type="button" className="acao-area primaria" onClick={() => {iniciarAdicao(); desenhar();}}>Adicionar área</button><button type="button" className="acao-area" onClick={() => {aoInteragir(); const p = poligonoAtual(); if (p) mapa?.fitBounds(p.getBounds(), {padding: [36, 36], maxZoom: 18});}}>Ver área</button><button type="button" className="acao-area" onClick={() => {aoInteragir(); rascunhoANM.current = null; prepararEdicao(); mudarFase('ajustando'); setErro('');}}>Ajustar</button><button type="button" className="acao-area" onClick={desenhar}>Redesenhar</button><button type="button" className="acao-area" disabled={!minaId} onClick={() => {iniciarAdicao(); void carregarAreaANM();}}>Polígono ANM</button><button type="button" className="acao-area" ref={botaoRenomear} onClick={iniciarRenomeacao}>Renomear</button><button type="button" className="acao-area" onClick={remover}>Remover</button></div>}
     </> : null}
     {erro ? <p className="erro-area" role="alert">{erro}</p> : null}
   </section>;
