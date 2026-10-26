@@ -6,7 +6,7 @@ Prepare o ambiente e compile conforme o [README](../README.md). Na raiz, execute
 
 ## Navegar e localizar
 
-O mapa abre em Minas Gerais. Arraste e use zoom, roda do mouse ou gestos para aproximar/afastar. O fundo permite navegar pelo mundo; o contorno verde representa MG. Alterne **Mapa** e **Satélite**. Pesquise Horizontes, Capitão do Mato, Vale ou Nova Lima e clique na única entrada ou no marcador. A seleção enquadra Nova Lima e a referência da mina, mostrando apenas o contorno desse município. Abra a seta do cartão para ver identificação e dados cadastrais da ANM; Recarregar ANM recupera uma consulta com falha. **Ver Minas Gerais** desfaz a seleção, retira o limite municipal e retorna ao estado, preservando as áreas de estudo.
+O mapa abre em Minas Gerais. Arraste e use zoom, roda do mouse ou gestos para aproximar/afastar. O fundo permite navegar pelo mundo; o contorno verde representa MG. Alterne **Mapa** e **Satélite**. Pesquise Horizontes, Capitão do Mato, Vale ou Nova Lima e clique na única entrada ou no marcador. Clicar no cartão seleciona a mina e enquadra Nova Lima e a referência da mina, mostrando apenas o contorno desse município. Clicar novamente no cartão desmarca e volta para Minas Gerais. Clicar na bolinha aproxima a mina em zoom 14, inclusive se ela já estiver selecionada; o contorno municipal continua visível sem desfazer a aproximação. A bolinha também aceita Enter ou Espaço pelo teclado. Abra a seta do cartão para ver identificação e dados cadastrais da ANM; Recarregar ANM recupera uma consulta com falha. **Ver Minas Gerais** desfaz a seleção, retira o limite municipal e retorna ao estado, preservando as áreas de estudo.
 
 ## Sobrepor camadas
 

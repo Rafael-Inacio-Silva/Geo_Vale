@@ -46,7 +46,7 @@ Falha na primeira consulta retorna 503. Falha de renovação conserva a última 
 
 O navegador solicita tiles apenas da região e zoom visíveis. O botão Mapa/Satélite troca o provedor. Não há aquisição em lote nem armazenamento offline dos tiles. O contorno e o marcador permanecem quando uma imagem falha. Erros do fundo têm controle de recarga.
 
-O componente Leaflet é desmontado corretamente; o redimensionamento apenas invalida seu tamanho, preservando a navegação do usuário. A chegada tardia do contorno não desfaz uma mina já selecionada. Selecionar a mina aproxima a referência e consulta seu município. O limite IBGE enquadra município e ponto quando chega, preservando a câmera se o engenheiro já navegou ou começou uma área. “Ver Minas Gerais” enquadra o estado, remove município e seleção, mantendo áreas e temas.
+O componente Leaflet é desmontado corretamente; o redimensionamento apenas invalida seu tamanho, preservando a navegação do usuário. A chegada tardia do contorno não desfaz uma mina já selecionada. A seleção registra a origem da ação: cartão ou marcador. O cartão alterna seleção e permite enquadramento municipal; o marcador sempre aproxima a mina em zoom 14 e bloqueia o reenquadramento municipal, inclusive para resposta pendente. Os dados municipais dependem de id/coordenadas, sem nova consulta ao repetir o clique no marcador. A resposta também preserva a câmera se o engenheiro já navegou ou começou uma área. Desmarcar pelo cartão enquadra novamente MG. O marcador tem papel de botão, rótulo acessível e ações Enter/Espaço. “Ver Minas Gerais” enquadra o estado, remove município e seleção, mantendo áreas e temas.
 
 ## Sobreposições WMS
 

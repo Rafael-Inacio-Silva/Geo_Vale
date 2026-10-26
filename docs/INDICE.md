@@ -16,3 +16,5 @@ Escopo implementado: mapa, seleção da Mina Horizontes, cinco temas estaduais, 
 - [Manual de uso](MANUAL_USO.md): execução e operação.
 - [Dependências](DEPENDENCIAS.md): ambiente e instalação.
 - [Validação](VALIDACAO.md): verificações realizadas nesta revisão.
+
+- [Consulta 3D Google](CONSULTA_3D_GOOGLE.md): viabilidade e preços consultados; integração não implementada.

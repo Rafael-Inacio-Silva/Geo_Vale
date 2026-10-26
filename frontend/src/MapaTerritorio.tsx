@@ -9,7 +9,8 @@ interface Propriedades {
   configuracao: ConfiguracaoMapa;
   limite: LimiteMG | null;
   selecionada: Mina | null;
-  selecionar: (mina: Mina) => void;
+  selecionar: (mina: Mina, origem: 'marcador') => void;
+  enquadrarMunicipio: boolean;
   voltar: () => void;
   informarMapa: (mapa: L.DrawMap | null) => void;
   prioridadeArea: {current: boolean};
@@ -20,8 +21,8 @@ interface Propriedades {
 }
 
 /** Exibe fundo mundial, temas de fontes distintas, contorno estadual e referência da mina. */
-export default function MapaTerritorio({configuracao, limite, selecionada, selecionar, voltar, ativas, recargas, informarEstado, informarLegendaTrilhas, informarMapa, prioridadeArea}: Propriedades) {
-  const podeEnquadrarMunicipio = useCallback(() => !prioridadeArea.current, [prioridadeArea]);
+export default function MapaTerritorio({configuracao, limite, selecionada, selecionar, voltar, ativas, recargas, informarEstado, informarLegendaTrilhas, informarMapa, prioridadeArea, enquadrarMunicipio}: Propriedades) {
+  const podeEnquadrarMunicipio = useCallback(() => enquadrarMunicipio && !prioridadeArea.current, [prioridadeArea, enquadrarMunicipio]);
   const elemento = useRef<HTMLDivElement>(null);
   const mapa = useRef<L.Map | null>(null);
   const [instanciaAtual, setInstanciaAtual] = useState<L.DrawMap | null>(null);
@@ -52,7 +53,18 @@ export default function MapaTerritorio({configuracao, limite, selecionada, selec
       const rotulo = document.createElement('span');
       rotulo.textContent = mina.nome;
       ponto.bindTooltip(rotulo, {direction: 'top', offset: [0, -9]});
-      ponto.on('click', () => selecionarAtual.current(mina));
+      const aproximar = () => selecionarAtual.current(mina, 'marcador');
+      ponto.on('click', aproximar);
+      const simbolo = ponto.getElement();
+      if (simbolo) {
+        simbolo.setAttribute('role', 'button');
+        simbolo.setAttribute('aria-label', `Aproximar ${mina.nome}`);
+        simbolo.setAttribute('tabindex', '0');
+        simbolo.addEventListener('keydown', evento => {
+          if (!(evento instanceof KeyboardEvent)) return;
+          if (evento.key === 'Enter' || evento.key === ' ') {evento.preventDefault(); aproximar();}
+        });
+      }
       marcadores.current.set(mina.id, ponto);
     }
     const observador = new ResizeObserver(() => instancia.invalidateSize({animate: false}));
@@ -175,6 +187,8 @@ export default function MapaTerritorio({configuracao, limite, selecionada, selec
     }
     prioridadeArea.current = false;
     if (selecionada) instancia.setView([selecionada.latitude, selecionada.longitude], 14, {animate: false});
+    else if (contorno.current) instancia.fitBounds(contorno.current.getBounds(), {padding: [16, 16], animate: false});
+    else instancia.setView(configuracao.estado.centro, configuracao.estado.zoom, {animate: false});
   }, [selecionada, configuracao, prioridadeArea]);
 
   /** Retorna ao enquadramento estadual sem restringir a navegação mundial. */

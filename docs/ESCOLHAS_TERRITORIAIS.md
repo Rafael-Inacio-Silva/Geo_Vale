@@ -50,3 +50,5 @@ O desenho manual permite ao engenheiro escolher o recorte que pretende estudar, 
 ## Contexto municipal e recortes independentes
 
 O IBGE foi acrescentado para identificar visualmente Nova Lima quando a mina é selecionada, sem exibir todas as cidades. A ANM foi acrescentada como fonte primária do cadastro minerário associado. São funções de localização e consulta cadastral, não novos critérios de aptidão. O engenheiro pode delimitar várias partes separadas (cava, morro, barragem), editar um recorte derivado da ANM ou desenhar do zero. Nenhuma escolha significa que toda a área do processo ou do município esteja disponível para uso futuro. [Município](LIMITE_MUNICIPAL.md), [ANM](ANM.md), [Áreas](AREA_ESTUDO.md).
+
+A consulta de 26/10/2026 sobre visualização 3D Google está registrada em [Consulta 3D](CONSULTA_3D_GOOGLE.md). Não alterou os fundos, camadas ou fontes implementadas nem ativou faturamento Google.

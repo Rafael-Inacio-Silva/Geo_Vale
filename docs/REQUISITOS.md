@@ -6,7 +6,7 @@
 | RF-02 | Permitir navegação mundial sem limitar o arraste ao estado. |
 | RF-03 | Consultar o limite oficial estadual no WFS da IDE-Sisema e desenhar o contorno. |
 | RF-04 | Oferecer somente Mina Horizontes; reconhecer Capitão do Mato como nome anterior da mesma entrada. |
-| RF-05 | Selecionar pela lista ou marcador, enquadrar município e referência; detalhes dentro do cartão expansível, sem seção separada. |
+| RF-05 | Cartão seleciona e enquadra município/referência; novo clique no mesmo cartão desmarca e retorna a MG. Marcador sempre seleciona/aproxima a mina em zoom 14, sem reenquadramento municipal posterior; aceita teclado. Detalhes dentro do cartão expansível. |
 | RF-06 | Alternar Mapa/Satélite com créditos visíveis. |
 | RF-07 | Zoom e “Ver Minas Gerais”; retornar ao estado desfaz a seleção da mina. |
 | RF-08 | Informar carregamento e falhas, com recuperação, sem inventar geometria. |

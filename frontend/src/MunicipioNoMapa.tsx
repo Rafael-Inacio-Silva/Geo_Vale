@@ -37,7 +37,7 @@ export default function MunicipioNoMapa({mapa, mina, podeEnquadrar}: {mapa: L.Ma
       setEstado({id, fase: 'pronto'});
     }).catch(() => {if (!controle.signal.aborted) setEstado({id, fase: 'erro'});});
     return () => {controle.abort(); camada?.remove();};
-  }, [mapa, mina, id, latitude, longitude, recarga]);
+  }, [mapa, id, latitude, longitude, recarga]);
   if (!mina || estado?.id !== mina.id || estado.fase === 'pronto') return null;
   return <div className="estado-municipio" role="status">
     <span>{estado.fase === 'carregando' ? `Carregando contorno de ${mina.municipio}…` : `Contorno de ${mina.municipio} indisponível.`}</span>

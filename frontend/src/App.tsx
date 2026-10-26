@@ -38,6 +38,7 @@ export default function App() {
   const preservarArea = useCallback(() => {prioridadeArea.current = true;}, []);
   const [configuracao, setConfiguracao] = useState<ConfiguracaoMapa | null>(null);
   const [limite, setLimite] = useState<LimiteMG | null>(null);
+  const [enquadrarMunicipio, setEnquadrarMunicipio] = useState(true);
   const [selecionada, setSelecionada] = useState<Mina | null>(null);
   const anm = useProcessoANM(selecionada?.id);
   const [ativas, setAtivas] = useState<CamadasAtivas>({});
@@ -65,8 +66,13 @@ export default function App() {
   const minas = configuracao ? filtrarMinas(configuracao.minas, consulta) : [];
   const erro = erroConfiguracao || erroLimite;
 
-  /** Recentrar também funciona quando a mesma mina já está selecionada. */
-  function selecionarMina(mina: Mina) {
+  /** O cartão alterna seleção; o marcador sempre aproxima a mina. */
+  function selecionarMina(mina: Mina, origem: 'cartao' | 'marcador' = 'cartao') {
+    if (origem === 'cartao' && selecionada?.id === mina.id) {
+      setSelecionada(null);
+      return;
+    }
+    setEnquadrarMunicipio(origem === 'cartao');
     setSelecionada({...mina});
   }
 
@@ -112,7 +118,7 @@ export default function App() {
           {erro ? <div className="erro" role="alert"><p>{erro}</p><button type="button" className="tentar-novamente" onClick={() => setTentativa(atual => atual + 1)}>Tentar novamente</button></div> : null}
         </aside>
         <section id="territorio" className="painel-mapa" aria-label="Mapa territorial" tabIndex={-1}>
-          {configuracao ? <MapaTerritorio configuracao={configuracao} limite={limite} selecionada={selecionada} selecionar={selecionarMina} ativas={ativas} recargas={recargasCamadas} informarEstado={informarEstado} informarLegendaTrilhas={setLegendaTrilhas} informarMapa={setMapa} prioridadeArea={prioridadeArea} voltar={() => setSelecionada(null)}/> : <div className="mapa-carregando" role="status">{erroConfiguracao ? 'Mapa indisponível.' : 'Abrindo mapa…'}</div>}
+          {configuracao ? <MapaTerritorio enquadrarMunicipio={enquadrarMunicipio} configuracao={configuracao} limite={limite} selecionada={selecionada} selecionar={selecionarMina} ativas={ativas} recargas={recargasCamadas} informarEstado={informarEstado} informarLegendaTrilhas={setLegendaTrilhas} informarMapa={setMapa} prioridadeArea={prioridadeArea} voltar={() => setSelecionada(null)}/> : <div className="mapa-carregando" role="status">{erroConfiguracao ? 'Mapa indisponível.' : 'Abrindo mapa…'}</div>}
           {limite?.aviso ? <p className="aviso-fonte" role="status">{limite.aviso}</p> : null}
         </section>
       </div>

@@ -2,7 +2,7 @@
 
 1. Abrir o GeoVale: mapa em Minas Gerais, contorno estadual e pesquisa da Mina Horizontes.
 2. Navegar ou alternar Mapa/Satélite.
-3. Pesquisar e selecionar a mina pela lista ou pelo marcador para enquadrar Nova Lima e a referência da mina. O contorno municipal aparece somente enquanto a mina estiver selecionada. A seta do cartão abre detalhes e cadastro ANM, sem outro cartão abaixo.
+3. Pesquisar e clicar no cartão para enquadrar Nova Lima e a referência da mina; clicar novamente no cartão desmarca e retorna a MG. A bolinha aproxima a mina e não desfaz a seleção ao repetir o clique. O contorno municipal aparece somente enquanto a mina estiver selecionada. A seta do cartão abre detalhes e cadastro ANM, sem outro cartão abaixo.
 4. Marcar um ou mais dos cinco temas estaduais ou Trilhas de Nova Lima para visualizar sobreposições. A seleção da mina é opcional para usar as camadas.
 5. Ajustar a intensidade de um tema, abrir sua legenda ou desmarcar para remover.
 6. Usar **Desenhar área**, marcar pontos e confirmar; ou **Polígono ANM**, depois de selecionar a mina, conferir a prévia e confirmar.

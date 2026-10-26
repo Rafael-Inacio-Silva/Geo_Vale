@@ -48,3 +48,7 @@ Não há persistência das áreas, análise espacial, medição, ranking ou reco
 ## Opções recolhíveis de camada
 
 Conferência de 26/10/2026: ativar relevo e água manteve intensidade/legenda recolhidas; cada seta expandiu somente seu tema. A intensidade de relevo foi alterada por teclado de 50% para 55%; recolher e reabrir preservou 55% e as duas camadas ativas. A legenda oficial de declividade abriu pela seção interna; recolher água não afetou relevo. Botões têm `aria-expanded` e `aria-controls`. Mensagens de carregamento/falha ficam fora do trecho oculto. TypeScript e build aprovados; nenhuma alteração no backend ou nos contratos das fontes.
+
+## Seleção e zoom da mina
+
+Em 26/10/2026, o navegador confirmou: cartão seleciona e enquadra Nova Lima; segundo clique desmarca e volta para escala estadual, com zero caminhos municipais e Polígono ANM desabilitado. Clicar na bolinha selecionou a mina e aproximou para escala de 500 m no viewport utilizado. Depois de o contorno municipal carregar (um caminho municipal presente), repetir por Enter manteve a escala de 500 m e a seleção. A consulta municipal deixou de depender da identidade do objeto Mina, preservando o enquadramento do marcador. TypeScript/build e dois testes de pesquisa aprovados; não houve mudança no backend. Pesquisa de 3D consultou documentação pública, sem chave, ativação de faturamento ou teste de cobertura real da API Google na mina.
