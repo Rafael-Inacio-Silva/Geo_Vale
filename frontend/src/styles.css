@@ -213,3 +213,14 @@ button:focus-visible, input:focus-visible, a:focus-visible, [tabindex="-1"]:focu
   .painel-areas .lista-areas {max-height: 7rem;}
   .legenda-mapa {gap: .6rem; max-inline-size: calc(100% - 1.5rem); flex-wrap: wrap;}
 }
+
+.cabecalho-tema {display: flex; align-items: stretch;}
+.cabecalho-tema .seletor-tema {flex: 1; min-inline-size: 0;}
+.expandir-tema {display: grid; place-items: center; flex: 0 0 2.3rem; padding: .45rem; border: 0; border-left: 1px solid #d5e0d8; border-radius: 0 .35rem .35rem 0; color: var(--escuro); background: transparent;}
+.expandir-tema:hover {background: #dcece0;}
+.expandir-tema:focus-visible {outline-offset: -3px;}
+.expandir-tema svg {width: 1.1rem; height: 1.1rem; fill: none; stroke: currentColor; stroke-width: 2;}
+.expandir-tema[aria-expanded="true"] svg {transform: rotate(180deg);}
+.estado-camada {padding-inline: .7rem;}
+.estado-camada:empty {display: none;}
+.estado-camada > p {margin: 0 0 .5rem;}

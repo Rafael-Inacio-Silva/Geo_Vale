@@ -13,7 +13,7 @@
 | RF-09 | Preservar fundo e pesquisa se o contorno falhar; avisar quando reaproveitar cache vencido. |
 | RF-10 | Exibir seis controles independentes inicialmente desmarcados: cinco temas estaduais e Trilhas de Nova Lima, conforme catálogo fixo. |
 | RF-11 | Marcar adiciona a sobreposição real WMS ou GeoJSON municipal; desmarcar remove. Combinar temas com ordem fixa e sem perder a navegação. |
-| RF-12 | Ajustar a intensidade de cada tema ativo e consultar legendas oficiais de suas bases. |
+| RF-12 | Expandir/recolher pela seta as opções de cada tema ativo, inicialmente fechadas; ajustar intensidade e consultar legendas sem desligar a camada ao recolher. Manter carregamento/falhas visíveis. |
 | RF-13 | Carregar WMS e trilhas somente ao ativar e na região/zoom visíveis. Falha de uma camada não interrompe as demais; permitir recarregar. |
 | RF-14 | Manter temas ativos ao mudar fundo, selecionar mina ou retornar ao estado. Fora da cobertura, informar o alcance específico: Minas Gerais ou Nova Lima. |
 | RF-15 | Remover o título visual acima do painel e ocupar o espaço disponível com margens pequenas e iguais; preservar responsividade e mapa utilizável. |

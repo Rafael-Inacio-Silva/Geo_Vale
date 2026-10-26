@@ -44,3 +44,7 @@ Conferidas larguras **375, 768 e 1280 px** nesta revisão, sem transbordamento h
 Falhas das fontes ANM/IBGE e sua recuperação têm cobertura automatizada. Não foi interrompida a conexão física nem aguardado manualmente cada timeout externo. Não houve nova simulação visual de todos os erros nesta versão. As fontes continuam externas e sujeitas à disponibilidade e condições de uso.
 
 Não há persistência das áreas, análise espacial, medição, ranking ou recomendação de uso futuro. Fase cadastral não comprova operação; processo ANM não é perímetro físico; malha municipal simplificada não é certificação cadastral; trilha não comprova acesso ou segurança. Fontes regionais não descrevem necessariamente a condição atual da cava.
+
+## Opções recolhíveis de camada
+
+Conferência de 26/10/2026: ativar relevo e água manteve intensidade/legenda recolhidas; cada seta expandiu somente seu tema. A intensidade de relevo foi alterada por teclado de 50% para 55%; recolher e reabrir preservou 55% e as duas camadas ativas. A legenda oficial de declividade abriu pela seção interna; recolher água não afetou relevo. Botões têm `aria-expanded` e `aria-controls`. Mensagens de carregamento/falha ficam fora do trecho oculto. TypeScript e build aprovados; nenhuma alteração no backend ou nos contratos das fontes.

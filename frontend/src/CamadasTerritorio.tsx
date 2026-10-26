@@ -39,26 +39,35 @@ function LegendasTema({bases, trilhas, estado}: {bases: CamadaTerritorial['bases
 
 /** Liga temas independentes e ajusta a transparência sem esconder o mapa de fundo. */
 export default function CamadasTerritorio({camadas, ativas, estados, legendaTrilhas, alterar, recarregar}: Propriedades) {
+  const [expandidas, setExpandidas] = useState<Record<string, boolean>>({});
   return <section className="camadas" aria-labelledby="titulo-camadas">
     <div className="cabecalho-camadas"><h2 id="titulo-camadas">Camadas</h2><span>Fontes públicas</span></div>
     <div className="lista-camadas">
       {camadas.map(camada => {
         const ativa = ativas[camada.id] !== undefined;
         const estado = estados[camada.id];
+        const expandida = expandidas[camada.id] ?? false;
         return <div key={camada.id} className={`tema ${ativa ? 'tema-ativo' : ''}`}>
-          <label className="seletor-tema">
-            <input type="checkbox" checked={ativa} onChange={evento => alterar(camada.id, evento.target.checked ? camada.opacidade : null)}/>
-            <span className="nome-tema">{camada.nome}</span><i className="cor-tema" style={{background: camada.cor}} aria-hidden="true"/>
-          </label>
-          {ativa ? <div className="opcoes-tema">
+          <div className="cabecalho-tema">
+            <label className="seletor-tema">
+              <input type="checkbox" checked={ativa} onChange={evento => alterar(camada.id, evento.target.checked ? camada.opacidade : null)}/>
+              <span className="nome-tema">{camada.nome}</span><i className="cor-tema" style={{background: camada.cor}} aria-hidden="true"/>
+            </label>
+            {ativa ? <button type="button" className="expandir-tema" aria-label={`Opções de ${camada.nome}`} aria-expanded={expandida} aria-controls={`opcoes-${camada.id}`} onClick={() => setExpandidas(atuais => ({...atuais, [camada.id]: !expandida}))}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m7 10 5 5 5-5"/></svg></button> : null}
+          </div>
+          {ativa ? <>
+          <div id={`opcoes-${camada.id}`} className="opcoes-tema" hidden={!expandida}>
             <label className="transparencia" htmlFor={`opacidade-${camada.id}`}>Intensidade <output>{Math.round(ativas[camada.id] * 100)}%</output></label>
             <input id={`opacidade-${camada.id}`} aria-label={`Intensidade de ${camada.nome}`} type="range" min="10" max="100" step="5" value={Math.round(ativas[camada.id] * 100)} onChange={evento => alterar(camada.id, Number(evento.target.value) / 100)}/>
+            <LegendasTema bases={camada.bases} trilhas={camada.tipo === 'geojson' ? legendaTrilhas : undefined} estado={estado}/>
+          </div>
+          <div className="estado-camada">
             {estado === 'erro' ? <p className="erro-tema" role="status">Camada indisponível. <button type="button" className="tentar-novamente" onClick={() => recarregar(camada.id)}>Recarregar</button></p> : null}
             {estado === 'carregando' ? <p className="estado-tema" role="status">Carregando…</p> : null}
             {estado === 'fora' ? <p className="estado-tema">Disponível em {camada.alcance}.</p> : null}
             {estado === 'vazia' ? <p className="estado-tema">Sem trilhas cadastradas neste enquadramento.</p> : null}
-            <LegendasTema bases={camada.bases} trilhas={camada.tipo === 'geojson' ? legendaTrilhas : undefined} estado={estado}/>
-          </div> : null}
+          </div>
+          </> : null}
         </div>;
       })}
     </div>
