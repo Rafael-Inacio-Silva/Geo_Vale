@@ -1,4 +1,4 @@
-# Instruções locais para assistentes; não devem ser publicadas.
+# Instruções, prompts e conversas locais não são publicados.
 AGENTS.md
 AGENTS.override.md
 CLAUDE.md
@@ -13,19 +13,17 @@ GEMINI.md
 .windsurfrules
 .github/copilot-instructions.md
 .github/instructions/
-
-# Reserve estas pastas na raiz para prompts e conversas locais.
 /prompts/
 /conversas/
 
-# Ambientes virtuais e configurações locais do editor.
-.venv/
+# Ambientes e configurações pessoais.
+.venv*/
 venv/
 .idea/
 .vscode/
 .DS_Store
 
-# Arquivos gerados pelo Python e ferramentas de qualidade.
+# Arquivos gerados.
 __pycache__/
 *.py[cod]
 .pytest_cache/
@@ -34,22 +32,15 @@ __pycache__/
 .coverage
 .coverage.*
 htmlcov/
+node_modules/
+dist/
+*.tsbuildinfo
+.local/
 
-# Segredos locais. Exemplos devem conter somente valores fictícios.
+# Segredos locais.
 .env
 .env.*
 !.env.example
 !.env.*.example
 *.pem
 *.key
-
-# Dependências e builds locais da interface/provas de compatibilidade.
-node_modules/
-dist/
-*.tsbuildinfo
-
-# Sessões, banco e exportações locais.
-.local/
-*.sqlite3
-*.sqlite3-*
-.venv-mcda/

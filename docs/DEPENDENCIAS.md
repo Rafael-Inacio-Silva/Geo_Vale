@@ -1,13 +1,23 @@
-# Ambiente e dependências
+# Dependências e execução
 
-Verificação da versão 2.0: Python 3.12.15 em macOS x86_64; Node 24.22.1. Reutilizado ambiente de provas compatível, sem apagar ou modificar o ambiente virtual do PyCharm.
+## Python 3.12
 
-Dependências diretas estão em `requirements/compatibilidade.in`; os dois locks preservam versões e hashes de distribuição anteriormente levantados. Foram retirados scikit-learn, SciPy, joblib, threadpoolctl e cloudpickle da solução ativa, pois não são usados nesta rota. Não executar scripts/modelos arquivados com este conjunto reduzido.
+Dependências diretas: FastAPI 0.159.1, Uvicorn 0.54.0 e Shapely 2.2.0. HTTPX 0.28.1 e pytest 9.1.1 são usados nos testes. Shapely utiliza NumPy e GEOS para validação/simplificação do contorno estadual, validação das linhas municipais e dos polígonos manuais, cadastral ANM e municipal IBGE.
 
-Python: FastAPI 0.159.1, Uvicorn 0.54.0, Shapely 2.2.0, PyProj 3.8.0, GeoPandas 1.2.0, Rasterio 1.5.2, NumPy 2.5.4, Jinja2 3.1.6, Matplotlib 3.11.2, python-multipart 0.0.32. Testes com pytest 9.1.1 e HTTPX 0.28.1. Versões transitivas e hashes: arquivos de lock.
+`requirements/compatibilidade.in` declara as dependências diretas. Os locks macOS 15 x86_64 e Linux x86_64 fixam versões transitivas e hashes. Os pacotes sem uso na etapa territorial foram retirados dos arquivos de instalação. A existência de um lock Linux não comprova execução nessa plataforma.
 
-Frontend: React/ReactDOM 19.3.1, Leaflet 1.9.4, TypeScript 7.0.2, Vite 8.3.5. `package-lock.json` preserva dependências; somente a versão do aplicativo mudou para 2.0.0. `npm ci` instala conforme o lock. Não há APIs de mapas que exijam chave.
+Use um ambiente virtual dedicado. Não substitua o Python nem o ambiente pessoal do usuário.
 
-A execução nova foi verificada em macOS. O lock Linux não significa execução em Linux. QGIS não estava instalado: GeoPackage foi lido por GeoPandas; o projeto auxiliar não foi aberto na interface QGIS.
+## Node 24
 
-A suíte emite um aviso de depreciação do TestClient/HTTPX pela versão Starlette. Isso não falhou os testes, mas merece revisão futura conjunta das dependências; não foi introduzida atualização de framework fora desta entrega.
+React 19.3.1, React DOM 19.3.1 e Leaflet 1.9.4. Leaflet.draw **1.0.4** (MIT) para desenho/edição; `@types/leaflet-draw` **1.0.13** na compilação. TypeScript 7.0.2 e Vite 8.3.5 na compilação. Versões e dependências transitivas constam de `frontend/package-lock.json`.
+
+`npm test` verifica a pesquisa no catálogo. `npm run build` verifica os tipos e gera `frontend/dist`. O build é necessário para `python executar.py`. Node não é necessário no processo do servidor depois da compilação.
+
+## Rede e armazenamento
+
+WFS oficial da IDE-Sisema via HTTPS no backend. Tiles OpenStreetMap/Esri e imagens WMS/legendas IDE-Sisema via HTTPS no navegador. WMS usa suporte nativo do Leaflet. Trilhas: ArcGIS REST via HTTPS no backend para geometria e configuração de cores; GeoJSON e legenda sanitizada para o navegador. As duas primeiras leituras usam ThreadPoolExecutor da biblioteca padrão, sem dependência adicional. Desenho/edição usa Leaflet.draw, instalado pelo npm oficial. Sem credenciais dessas fontes no frontend. O cache do contorno existe apenas na memória do processo, por uma hora. Trilhas usam cache de dez minutos, até 16 enquadramentos. O polígono confirmado existe somente na memória da página; a validação POST não grava arquivos. Não há banco de dados nem instalador Selenium.
+
+O papel e a justificativa de cada ferramenta estão em [Ferramentas e justificativas](FERRAMENTAS.md). Este documento reúne as versões e os procedimentos de instalação.
+
+Na versão 3.3.0, a ANM é consultada por HTTPS/ArcGIS REST e o IBGE por sua API de malhas. `urllib`, gzip, threading e cópias defensivas são da biblioteca padrão; não houve nova dependência. Cache ANM de dez minutos, municipal de uma hora. As barras laterais e a coleção de polígonos usam React/Leaflet já instalados.

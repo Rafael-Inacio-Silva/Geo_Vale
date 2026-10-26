@@ -1,73 +1,122 @@
-import {useRef,useState} from 'react';
-import type {Estudo} from './tipos.ts';
-import {enviarArquivo,operar} from './api.ts';
-import {mesmosPesos,pesosValidos} from './pesos.ts';
-import MapaArea from './MapaArea.tsx';
-import Prioridades from './Prioridades.tsx';
-const formato=new Intl.NumberFormat('pt-BR',{maximumFractionDigits:2});
+import {useCallback, useEffect, useRef, useState} from 'react';
+import {requisitar} from './api.ts';
+import {filtrarMinas} from './busca.mjs';
+import type L from 'leaflet';
+import AreaEstudo from './AreaEstudo.tsx';
+import MapaTerritorio from './MapaTerritorio.tsx';
+import CamadasTerritorio from './CamadasTerritorio.tsx';
+import CartaoMina from './CartaoMina.tsx';
+import {useProcessoANM} from './useProcessoANM.ts';
+import type {CamadasAtivas, ConfiguracaoMapa, EstadoCamada, LegendaTrilha, LimiteMG, Mina} from './tipos.ts';
 
-/** Jornada pública local: enviar, analisar, definir prioridades e comparar sem painéis técnicos ou login. */
-export default function App(){
-  const [estudo,setEstudo]=useState<Estudo|null>(null);
-  const [pesos,setPesos]=useState<number[]>([]);const [erro,setErro]=useState('');
-  const [atividade,setAtividade]=useState('');const [modal,setModal]=useState(false);const [arrastando,setArrastando]=useState(false);
-  const arquivo=useRef<HTMLInputElement>(null);
-  const ocupado=atividade!=='';
-  const alterado=estudo!==null&&!mesmosPesos(pesos,estudo.pesos);
-  const resultado=estudo&&!alterado?estudo.resultado:null;
-  const podeExportar=Boolean(resultado&&estudo?.salvo_revisao);
-  /** Publica resposta aceita e sincroniza as prioridades com a mesma versão do servidor. */
-  function aceitar(novo:Estudo){setEstudo(novo);setPesos(novo.pesos);}
-  /** Serializa ações da tela e mantém o último mapa válido quando uma operação falha. */
-  async function executar(nome:string,acao:()=>Promise<Estudo>){
-    if(ocupado)return;setAtividade(nome);setErro('');
-    try{aceitar(await acao());}catch(e){setErro(e instanceof Error?e.message:'Não foi possível concluir. Tente novamente.');}
-    finally{setAtividade('');}
+let configuracaoPendente: Promise<ConfiguracaoMapa> | null = null;
+let limitePendente: Promise<LimiteMG> | null = null;
+
+/** Compartilha as leituras durante a montagem dupla do StrictMode. */
+function carregarConfiguracao() {
+  configuracaoPendente ??= requisitar<ConfiguracaoMapa>('/api/mapa').catch(erro => {
+    configuracaoPendente = null;
+    throw erro;
+  });
+  return configuracaoPendente;
+}
+
+function carregarLimite() {
+  limitePendente ??= requisitar<LimiteMG>('/api/mapa/limite-mg').catch(erro => {
+    limitePendente = null;
+    throw erro;
+  });
+  return limitePendente;
+}
+
+/** Organiza mapa central, consulta à direita e várias áreas de estudo na barra esquerda. */
+export default function App() {
+  const [barraAreas, setBarraAreas] = useState(true);
+  const [barraConsulta, setBarraConsulta] = useState(true);
+  const [mapa, setMapa] = useState<L.DrawMap | null>(null);
+  const prioridadeArea = useRef(false);
+  const preservarArea = useCallback(() => {prioridadeArea.current = true;}, []);
+  const [configuracao, setConfiguracao] = useState<ConfiguracaoMapa | null>(null);
+  const [limite, setLimite] = useState<LimiteMG | null>(null);
+  const [selecionada, setSelecionada] = useState<Mina | null>(null);
+  const anm = useProcessoANM(selecionada?.id);
+  const [ativas, setAtivas] = useState<CamadasAtivas>({});
+  const [estadosCamadas, setEstadosCamadas] = useState<Record<string, EstadoCamada>>({});
+  const [recargasCamadas, setRecargasCamadas] = useState<Record<string, number>>({});
+  const [legendaTrilhas, setLegendaTrilhas] = useState<LegendaTrilha[]>([]);
+  const [consulta, setConsulta] = useState('');
+  const [erroConfiguracao, setErroConfiguracao] = useState('');
+  const [erroLimite, setErroLimite] = useState('');
+  const [tentativa, setTentativa] = useState(0);
+
+  useEffect(() => {
+    let ativo = true;
+    setErroConfiguracao('');
+    setErroLimite('');
+    void carregarConfiguracao().then(dados => {
+      if (ativo) setConfiguracao(dados);
+    }).catch(erro => {if (ativo) setErroConfiguracao(erro.message);});
+    void carregarLimite().then(dados => {
+      if (ativo) setLimite(dados);
+    }).catch(erro => {if (ativo) setErroLimite(erro.message);});
+    return () => {ativo = false;};
+  }, [tentativa]);
+
+  const minas = configuracao ? filtrarMinas(configuracao.minas, consulta) : [];
+  const erro = erroConfiguracao || erroLimite;
+
+  /** Recentrar também funciona quando a mesma mina já está selecionada. */
+  function selecionarMina(mina: Mina) {
+    setSelecionada({...mina});
   }
-  /** Usa o mesmo upload para arquivo escolhido e arquivo arrastado. */
-  function receber(f:File|undefined){if(f)void executar('Preparando mapa',()=>enviarArquivo(f));}
-  /** Edita apenas o peso exibido e torna a comparação antiga indisponível para exportação. */
-  function mudarPeso(indice:number,valor:string){const n=valor===''?NaN:Number(valor);setPesos(p=>p.map((v,i)=>i===indice?n:v));}
-  /** Reinicia a tela sem apagar revisões já salvas na sessão. */
-  function novaArea(){setEstudo(null);setPesos([]);setErro('');setModal(false);}
-  const trilha=<div className="trilha" aria-label="Etapas da análise"><span className={!estudo?'atual':'concluida'}><b>1</b> Escolher área</span><i/><span className={estudo&&!estudo.analisada?'atual':estudo?.analisada?'concluida':''}><b>2</b> Entender o território</span><i/><span className={estudo?.analisada?'atual':''}><b>3</b> Comparar possibilidades</span></div>;
-  return <><header className="cabecalho"><div className="marca">
-    <svg viewBox="0 0 40 40" aria-hidden="true"><rect x="1" y="1" width="38" height="38" rx="10" fill="none" stroke="currentColor" opacity=".4"/><path d="M9 28L17 12L23 22L28 15L33 28H9" fill="none" stroke="#ffc329" strokeWidth="2"/></svg><span>GeoVale</span></div>
+
+  function alterarCamada(id: string, opacidade: number | null) {
+    setAtivas(atuais => {
+      const proximas = {...atuais};
+      if (opacidade === null) delete proximas[id]; else proximas[id] = opacidade;
+      return proximas;
+    });
+  }
+
+  function informarEstado(id: string, estado: EstadoCamada) {
+    setEstadosCamadas(atuais => atuais[id] === estado ? atuais : {...atuais, [id]: estado});
+  }
+
+  return <>
+    <a href="#territorio" className="pular-conteudo">Ir para o mapa</a>
+    <header className="cabecalho">
+      <div className="marca">
+        <svg viewBox="0 0 40 40" aria-hidden="true"><rect x="1" y="1" width="38" height="38" rx="10" fill="none" stroke="currentColor" opacity=".4"/><path d="M9 28L17 12L23 22L28 15L33 28H9" fill="none" stroke="#ffc329" strokeWidth="2"/></svg>
+        <span>GeoVale</span>
+      </div>
     </header>
-    <main className={`conteudo ${estudo?'conteudo-estudo':'conteudo-inicio'}`} aria-busy={ocupado}>
-      {estudo?trilha:null}
-      {!estudo?<section className="inicio"><div className="apresentacao-inicio"><p className="sobretitulo">ÁREAS PÓS-MINERAÇÃO</p><h1>Qual o melhor <span>futuro</span> para esta área?</h1>{trilha}</div>
-        <div className={`envio ${arrastando?'arrastando':''}`} onDragOver={e=>{e.preventDefault();if(!ocupado)setArrastando(true);}} onDragLeave={()=>setArrastando(false)} onDrop={e=>{e.preventDefault();setArrastando(false);if(!ocupado){if(e.dataTransfer.files.length!==1)setErro('Envie um mapa por vez.');else receber(e.dataTransfer.files[0]);}}}>
-          <svg width="42" height="42" viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M5 25h22M16 22V5m-7 7 7-7 7 7" stroke="currentColor" strokeWidth="1.6"/></svg>
-          <h2>Envie seu mapa</h2><p>Arraste um mapa ou escolha o arquivo.</p><button type="button" className="botao principal" disabled={ocupado} onClick={()=>arquivo.current?.click()}>Enviar GeoJSON <span aria-hidden="true">↗</span></button><small>Uma poligonal por arquivo · GeoJSON · até 1 MB</small>
-        </div>
-      </section>:<>
-        <div className="titulo-area"><div><p className="sobretitulo">ÁREA DE ESTUDO</p><h1>{estudo.nome}</h1><p>{estudo.localizacao} <span className="separador">·</span> {formato.format(estudo.area_ha)} hectares</p></div><button type="button" className="botao secundario" disabled={ocupado} onClick={novaArea}>Trocar mapa</button></div>
-        <div className="grade-area"><section className="cartao cartao-mapa"><MapaArea estudo={estudo}/><div className="rodape-mapa"><span><strong>{formato.format(estudo.area_ha)}</strong> hectares</span><span><strong>{estudo.numero_partes}</strong> parte(s)</span><span className="limite-imagem">Contorno público · imagem de referência</span></div></section>
-        <aside className="cartao painel-jornada">
-          {!estudo.analisada?<><span className="numero-etapa">02</span><h2>Análise da área</h2>{!estudo.cobertura_disponivel?<p className="aviso">Área fora da cobertura disponível. Escolha outro mapa.</p>:null}<button type="button" className="botao principal largura" disabled={ocupado||!estudo.cobertura_disponivel} onClick={()=>void executar('Analisando o território',()=>operar(estudo,'analisar'))}>Analisar área <span aria-hidden="true">→</span></button></>:<>
-          <span className="numero-etapa">03</span><h2>Defina suas prioridades</h2>
-          <div className="pesos">{estudo.criterios.map((c,i)=><div className="peso" key={c.id}><label htmlFor={`peso-${c.id}`}>{c.nome}</label><div className="peso-controles"><input aria-label={`Ajustar ${c.nome}`} type="range" min="0" max="100" step=".01" disabled={ocupado} value={Number.isFinite(pesos[i])?pesos[i]:0} onChange={e=>mudarPeso(i,e.target.value)}/><div className="valor-peso"><input id={`peso-${c.id}`} type="number" min="0" max="100" step=".01" disabled={ocupado} value={Number.isFinite(pesos[i])?pesos[i]:''} onChange={e=>mudarPeso(i,e.target.value)}/><span>%</span></div></div></div>)}</div>
-          <div className={`soma-pesos ${pesosValidos(pesos)?'valida':''}`}><span>Total distribuído</span><strong>{pesos.every(Number.isFinite)?formato.format(pesos.reduce((a,b)=>a+b,0)):'—'}%</strong></div>
-          <button type="button" className="link-botao" disabled={ocupado} onClick={()=>setModal(true)}>Comparar prioridades</button>
-          <p className="origem-pesos">{alterado||estudo.origem_pesos==='manual_usuario'?'Pesos personalizados.':estudo.origem_pesos==='ahp_usuario'?'Pesos por comparação.':'Pesos iniciais iguais.'}</p>
-          <button type="button" className="botao principal largura" disabled={ocupado||!pesosValidos(pesos)} onClick={()=>void executar('Comparando possibilidades',()=>operar(estudo,'comparar',{pesos,origem:alterado||estudo.origem_pesos==='manual_usuario'?'manual':'ahp'}))}>Comparar opções <span aria-hidden="true">→</span></button>
-          {!pesosValidos(pesos)?<p className="texto-discreto">O total deve ser 100%.</p>:null}</>}
-        </aside></div>
-        {estudo.resumo?<section className="caracteristicas" aria-label="Características principais"><div><span>Declividade mediana</span><strong>{formato.format(estudo.resumo.declividade_mediana_graus)}°</strong></div><div><span>Declividade P90</span><strong>{formato.format(estudo.resumo.declividade_p90_graus)}°</strong></div><div><span>Cobertura predominante · {estudo.resumo.ano_cobertura}</span><strong>{estudo.resumo.cobertura_predominante}</strong></div></section>:null}
-        {alterado&&estudo.resultado?<p className="aviso" role="status">Prioridades alteradas. Compare novamente.</p>:null}
-        {resultado?<section className="resultados" aria-labelledby="titulo-resultado"><div className="titulo-resultado"><div><p className="sobretitulo">RESULTADO</p><h2 id="titulo-resultado">Prioridade relativa para estudo</h2></div><span className="selo exploratorio">Análise preliminar</span></div>
-          <div className="opcoes">{resultado.ranking.map(a=><article className={`opcao ${a.posicao===1?'primeira':''}`} key={a.id}><span className="posicao">{a.posicao.toString().padStart(2,'0')}</span><h3>{a.nome}</h3><div className="indice"><span>Índice relativo</span><strong>{a.indice.toFixed(3).replace('.',',')}</strong></div><div className="barra-indice"><i style={{width:`${a.indice*100}%`}}/></div></article>)}</div>
-          <div className="nota-resultado"><strong>{resultado.sem_discriminacao?'Opções empatadas.':resultado.sensivel_aos_pesos?'Resultado sensível aos pesos.':'Resultado estável nos ajustes testados.'}</strong></div>
-          <div className="acoes-relatorio"><div><button type="button" className="botao secundario" disabled={ocupado||podeExportar} onClick={()=>void executar('Salvando resultado',()=>operar(estudo,'salvar'))}>{podeExportar?'Resultado salvo ✓':'Salvar resultado'}</button>{podeExportar?<><a className="botao principal" href={`/api/areas/${estudo.id}/revisoes/${estudo.salvo_revisao}/simples`}>Relatório simples ↓</a><a className="link-botao" href={`/api/areas/${estudo.id}/revisoes/${estudo.salvo_revisao}/tecnico`}>Relatório técnico ↓</a></>:null}</div></div>
-        </section>:null}
-        {estudo.analisada?<p className="limite-analise">Comparação preliminar; uso sujeito à avaliação técnica.</p>:null}
-      </>}
-      <input ref={arquivo} type="file" accept=".geojson,application/geo+json" hidden aria-label="Escolher mapa GeoJSON" onChange={e=>{receber(e.target.files?.[0]);e.currentTarget.value='';}}/>
-      {ocupado?<div role="status" className="atividade"><span className="girando"/>{atividade}…</div>:null}
-      {erro?<div role="alert" className="erro erro-principal">{erro}</div>:null}
+    <main className="conteudo">
+      <h1 className="somente-leitor">GeoVale — mapa territorial</h1>
+      <div className={`territorio${barraAreas ? '' : ' areas-ocultas'}${barraConsulta ? '' : ' consulta-oculta'}`}>
+        <aside id="barra-areas" className="painel-areas" aria-label="Ferramentas de áreas" hidden={!barraAreas}>
+          <h2>Áreas de estudo</h2>
+          <AreaEstudo mapa={mapa} minaId={selecionada?.id} obterProcessoANM={anm.obter} aoInteragir={preservarArea}/>
+        </aside>
+        <button type="button" className="alternar-painel alternar-areas" aria-controls="barra-areas" aria-expanded={barraAreas} aria-label={barraAreas ? 'Ocultar áreas' : 'Mostrar áreas'} title={barraAreas ? 'Ocultar áreas' : 'Mostrar áreas'} onClick={() => setBarraAreas(valor => !valor)}><svg viewBox="0 0 24 24" aria-hidden="true"><path d={barraAreas ? 'm14 7-5 5 5 5' : 'm10 7 5 5-5 5'}/></svg><span>Áreas</span></button>
+        <button type="button" className="alternar-painel alternar-consulta" aria-controls="barra-consulta" aria-expanded={barraConsulta} aria-label={barraConsulta ? 'Ocultar mina e camadas' : 'Mostrar mina e camadas'} title={barraConsulta ? 'Ocultar mina e camadas' : 'Mostrar mina e camadas'} onClick={() => setBarraConsulta(valor => !valor)}><svg viewBox="0 0 24 24" aria-hidden="true"><path d={barraConsulta ? 'm10 7 5 5-5 5' : 'm14 7-5 5 5 5'}/></svg><span>Mina e camadas</span></button>
+        <aside id="barra-consulta" className="pesquisa" aria-label="Pesquisa de minas" hidden={!barraConsulta}>
+          <label htmlFor="pesquisa-mina">Pesquisar mina</label>
+          <div className="campo-pesquisa">
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" stroke="currentColor" strokeWidth="1.7"/><path d="m16 16 4 4" stroke="currentColor" strokeWidth="1.7"/></svg>
+            <input id="pesquisa-mina" type="search" placeholder="Nome da mina" value={consulta} onChange={evento => setConsulta(evento.target.value)} autoComplete="off"/>
+          </div>
+          <div className="lista-minas" aria-live="polite">
+            {configuracao ? (minas.length ? minas.map(mina => <CartaoMina key={mina.id} mina={mina} selecionada={selecionada?.id === mina.id} selecionar={selecionarMina} anm={anm.estado} recarregar={anm.recarregar}/>) : <p className="vazio">Nenhuma mina encontrada.</p>) : <p role="status" className="vazio">{erroConfiguracao ? 'Pesquisa indisponível.' : 'Carregando minas…'}</p>}
+          </div>
+          {configuracao ? <CamadasTerritorio camadas={configuracao.camadas} ativas={ativas} estados={estadosCamadas} legendaTrilhas={legendaTrilhas} alterar={alterarCamada} recarregar={id => setRecargasCamadas(atuais => ({...atuais, [id]: (atuais[id] ?? 0) + 1}))}/> : null}
+          {erro ? <div className="erro" role="alert"><p>{erro}</p><button type="button" className="tentar-novamente" onClick={() => setTentativa(atual => atual + 1)}>Tentar novamente</button></div> : null}
+        </aside>
+        <section id="territorio" className="painel-mapa" aria-label="Mapa territorial" tabIndex={-1}>
+          {configuracao ? <MapaTerritorio configuracao={configuracao} limite={limite} selecionada={selecionada} selecionar={selecionarMina} ativas={ativas} recargas={recargasCamadas} informarEstado={informarEstado} informarLegendaTrilhas={setLegendaTrilhas} informarMapa={setMapa} prioridadeArea={prioridadeArea} voltar={() => setSelecionada(null)}/> : <div className="mapa-carregando" role="status">{erroConfiguracao ? 'Mapa indisponível.' : 'Abrindo mapa…'}</div>}
+          {limite?.aviso ? <p className="aviso-fonte" role="status">{limite.aviso}</p> : null}
+        </section>
+      </div>
     </main>
     <footer className="rodape"><span>Desenvolvido por Rafael Inácio Silva · MVP · 2026</span><span>Dados: fontes públicas</span></footer>
-    {modal&&estudo?<Prioridades estudo={estudo} concluir={aceitar} fechar={()=>setModal(false)}/>:null}
   </>;
 }

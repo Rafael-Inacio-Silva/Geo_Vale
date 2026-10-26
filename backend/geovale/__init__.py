@@ -1,1 +1,1 @@
-"""Componentes funcionais do GeoVale, independentes dos experimentos de pesquisa."""
+"""Mapa territorial do GeoVale."""

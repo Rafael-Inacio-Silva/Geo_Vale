@@ -1,25 +1,40 @@
-# Requisitos vigentes — versão 2.0
+# Requisitos — mapa, camadas e área de estudo
 
-Revisão autorizada: substituir a referência preditiva por GIS + AHP + TOPSIS, concluir o MVP local com dois mapas reais, simplificar a tela e manter dois relatórios.
-
-| ID | Requisito e aceitação |
+| ID | Comportamento e aceitação |
 |---|---|
-| RF-01 | Receber um GeoJSON Polygon/MultiPolygon válido; recusar arquivo inválido com causa compreensível. |
-| RF-02 | Mostrar mapa, nome e extensão da área antes da análise. |
-| RF-03 | Abrir diretamente a jornada de envio do arquivo GeoJSON do usuário, pelo seletor ou por arraste. Os dois mapas reais de apresentação ficam em arquivos no computador. |
-| RF-04 | Ler relevo e cobertura reais dos dois pacotes; dados ausentes ou corrompidos bloqueiam cálculo, sem substituição inventada. |
-| RF-05 | Exibir apenas características principais; a matriz completa e metadados permanecem no backend/relatório técnico. |
-| RF-06 | Comparar Agricultura, Uso florestal e Recreação em áreas abertas com perfil exploratório explicitado. |
-| RF-07 | Permitir pesos percentuais somando 100%, origem manual ou AHP com verificação de consistência. |
-| RF-08 | Executar TOPSIS, empates e sensibilidade local aos pesos; não apresentar probabilidade de sucesso. |
-| RF-09 | Alterar mapa/prioridades invalida o resultado dependente e impede exportar comparação desatualizada. |
-| RF-10 | Salvar revisão imutável com dados, pesos, hipóteses, fontes e cálculo aceitos. |
-| RF-11 | Gerar HTML simples e técnico da mesma revisão, sem recalcular o ranking. |
-| RF-12 | Não exibir login; isolar análises por sessão anônima na execução local. |
-| RF-13 | Informar que viabilidade, autorização, custos, segurança e aceitação social não foram avaliados. |
+| RF-01 | Abrir com mapa já centralizado em Minas Gerais. |
+| RF-02 | Permitir navegação mundial sem limitar o arraste ao estado. |
+| RF-03 | Consultar o limite oficial estadual no WFS da IDE-Sisema e desenhar o contorno. |
+| RF-04 | Oferecer somente Mina Horizontes; reconhecer Capitão do Mato como nome anterior da mesma entrada. |
+| RF-05 | Selecionar pela lista ou marcador, enquadrar município e referência; detalhes dentro do cartão expansível, sem seção separada. |
+| RF-06 | Alternar Mapa/Satélite com créditos visíveis. |
+| RF-07 | Zoom e “Ver Minas Gerais”; retornar ao estado desfaz a seleção da mina. |
+| RF-08 | Informar carregamento e falhas, com recuperação, sem inventar geometria. |
+| RF-09 | Preservar fundo e pesquisa se o contorno falhar; avisar quando reaproveitar cache vencido. |
+| RF-10 | Exibir seis controles independentes inicialmente desmarcados: cinco temas estaduais e Trilhas de Nova Lima, conforme catálogo fixo. |
+| RF-11 | Marcar adiciona a sobreposição real WMS ou GeoJSON municipal; desmarcar remove. Combinar temas com ordem fixa e sem perder a navegação. |
+| RF-12 | Ajustar a intensidade de cada tema ativo e consultar legendas oficiais de suas bases. |
+| RF-13 | Carregar WMS e trilhas somente ao ativar e na região/zoom visíveis. Falha de uma camada não interrompe as demais; permitir recarregar. |
+| RF-14 | Manter temas ativos ao mudar fundo, selecionar mina ou retornar ao estado. Fora da cobertura, informar o alcance específico: Minas Gerais ou Nova Lima. |
+| RF-15 | Remover o título visual acima do painel e ocupar o espaço disponível com margens pequenas e iguais; preservar responsividade e mapa utilizável. |
+| RF-16 | Desenhar um polígono simples com 3 a 500 vértices, desfazer o último ponto e fechar o contorno. |
+| RF-17 | Permitir ajustar vértices antes da confirmação e validar no backend; rejeitar interseções e coordenadas inválidas sem correção silenciosa. |
+| RF-18 | Enquadrar, ajustar, redesenhar e remover a área confirmada; cancelar restaura a última confirmação. |
+| RF-19 | Conservar a área ao navegar ou alternar fundo/camadas; recarregar a página descarta o desenho. Sem persistência. |
+| RF-20 | Consultar trilhas da fonte municipal fixa com recorte visível, crédito e nome por interação; falha recuperável sem interromper outras fontes. |
+| RF-21 | Associar cada trilha ao nome e cor publicados no item oficial; legenda com categorias do enquadramento, sem duplicatas e na ordem da fonte. Ao navegar, atualizar; ao falhar ou sair da cobertura, não conservar legenda de outra região. |
 
-RN-01: dados reais não validam automaticamente as transformações exploratórias. RN-02: soma de pesos não pode ser corrigida silenciosamente. RN-03: não transformar ausência de estudo em aprovação ou restrição comprovada. RN-04: índice relativo não equivale a aptidão ou probabilidade. RN-05: mapa fora dos recortes pode ser exibido, mas não recebe ranking sem fontes preparadas.
+| RF-22 | Revelar os detalhes pela seta do cartão, com teclado e estado expandido; consultar titular, fase, processo e área cadastrada na ANM, com recarga na falha. |
+| RF-23 | Polígono ANM na barra esquerda junto às ferramentas de desenho, desabilitado até selecionar a mina; prévia, confirmação e cancelamento sem substituir outras áreas. |
+| RF-24 | Preservar origem cadastral ao confirmar a geometria ANM intacta; confirmar sua edição produz origem manual sem identificação oficial. |
+| RF-25 | Selecionar a mina acrescenta apenas o município associado, via IBGE; retornar para MG retira o limite e seu crédito. Requisição tardia não desfaz desenho ou navegação. |
+| RF-26 | Adicionar várias áreas independentes; escolher uma pela lista ou contorno e editar, redesenhar, enquadrar ou remover só ela. Cancelar conserva as confirmações e demais áreas. |
+| RF-27 | Validar cada polígono individualmente e descartar todas as áreas ao recarregar. Sem unir automaticamente áreas separadas ou sobrepostas. |
 
-RNF: operação local sem dependência de consultas remotas durante a apresentação; mensagens de erro; sessão HttpOnly/SameSite; validação de origem e tamanho de entrada; persistência SQLite; interface responsiva e controles rotulados; fontes rastreáveis; testes de métodos e de jornada.
+## Regras de interpretação
 
-Fora desta entrega: treinamento ML, processamento de qualquer mina global, ingestão de SHP/KML/PDF, fotografia como classificador, globo 3D, análise financeira/geotécnica/jurídica, gestão multiusuário, implantação pública. A operação pública exige projeto próprio de autenticação e armazenamento; retirar o formulário de login da demonstração não autoriza exposição pública sem controle.
+Os cinco temas são adaptação para MVP, apoiada em referências, sem validação de especialista da Vale. Não equivalem a cinco critérios obrigatórios ou diagnóstico completo. Marcador aproximado e contorno estadual simplificado são apenas localização/navegação. Cada área manual é um recorte de estudo escolhido pelo usuário. O polígono ANM é cadastral, não perímetro físico ou operacional. Fase cadastral não informa operação ativa/encerrada. O limite IBGE é contexto municipal simplificado, sem certificação cadastral. Trilhas são cadastro municipal; não comprovam segurança ou permissão de acesso. Mapa de solos não comprova condição ambiental; Topodata não representa a cava atual. Há validação geométrica do desenho, mas não cruzamento espacial, pesos, ranking, ML ou relatório nesta etapa. Justificativas e limites em [Escolhas territoriais](ESCOLHAS_TERRITORIAIS.md).
+
+## Qualidade
+
+Interface limpa em português, operável por teclado, com foco e rótulos; identidade verde/amarelo e textura apenas no fundo. Sem controles decorativos ou detalhes de integração na jornada. Créditos cartográficos visíveis. API e frontend na mesma origem, execução local. WMS direto no navegador usa HTTPS; WFS tem timeout e limite de tamanho. Não há download em lote. Ausência de dados visíveis não significa ausência de risco ou restrição.

@@ -1,26 +1,20 @@
-# Interface pública
+# Experiência do usuário
 
-1. Abrir o site e enviar o GeoJSON do computador pelo seletor ou arrastando o arquivo para a caixa de envio.
-2. Ver nome, área em hectares e poligonal sobre fotografia aérea, com zoom e enquadramento.
-3. Clicar **Analisar área** para obter declividade mediana/P90 e cobertura predominante com ano.
-4. Ajustar três prioridades somando 100%. **Comparar prioridades** abre o diálogo opcional de AHP.
-5. Clicar **Comparar opções** para ver a ordenação, o índice relativo e o estado de sensibilidade.
-6. **Salvar resultado** libera **Relatório simples** e **Relatório técnico** da mesma revisão.
+1. Abrir o GeoVale: mapa em Minas Gerais, contorno estadual e pesquisa da Mina Horizontes.
+2. Navegar ou alternar Mapa/Satélite.
+3. Pesquisar e selecionar a mina pela lista ou pelo marcador para enquadrar Nova Lima e a referência da mina. O contorno municipal aparece somente enquanto a mina estiver selecionada. A seta do cartão abre detalhes e cadastro ANM, sem outro cartão abaixo.
+4. Marcar um ou mais dos cinco temas estaduais ou Trilhas de Nova Lima para visualizar sobreposições. A seleção da mina é opcional para usar as camadas.
+5. Ajustar a intensidade de um tema, abrir sua legenda ou desmarcar para remover.
+6. Usar **Desenhar área**, marcar pontos e confirmar; ou **Polígono ANM**, depois de selecionar a mina, conferir a prévia e confirmar.
+7. Usar **Adicionar área** para demarcar outros recortes (cava, morro, barragem). Escolher uma área na lista ou mapa para enquadrar, ajustar, redesenhar ou remover apenas ela. Cancelar preserva as confirmações e demais áreas.
+8. Usar “Ver Minas Gerais” para retornar ao estado, desfazendo a seleção da mina e mantendo temas e áreas e retirando o contorno municipal.
 
-**Trocar mapa** retorna à escolha do arquivo, sem apagar revisões já salvas. Mudar prioridades esconde o resultado desatualizado até uma nova comparação. A interface comunica processamento, erros e total de pesos inválido. A ausência de cobertura impede a análise, sem fabricar resultados.
+A jornada termina na exploração visual e delimitação confirmada da área. A confirmação não persiste após recarregar a página. Sem avaliação de aptidão ou recomendação de uso futuro. A pesquisa aceita nome atual/anterior, caixa, acentos, Vale e Nova Lima; continua contendo uma única mina.
 
-Não há login, painéis técnicos, editor de regras, cadastro de cenários, tabelas de fontes ou histórico na tela principal. A marca é estática. As explicações detalhadas ficam no [Manual de uso](MANUAL_USO.md) e nos relatórios; a interface preserva títulos, dados, ações, estados e avisos breves.
+Cabeçalho com logo estática. Painel principal sem título visual acima: áreas à esquerda, mapa ao centro e pesquisa/cartão/camadas à direita, com setas para ocultar e reabrir cada barra sem descartar estado. Margens externas pequenas e iguais nos quatro lados, mantidas quando a janela aumenta. No desktop, o painel ocupa o espaço entre cabeçalho e rodapé, com rolagem independente da lateral. Em telas estreitas, atalhos das barras no topo, ferramentas antes do mapa e consulta depois, com rolagem normal da página e mapa com altura utilizável. Textura apenas no fundo e superfícies de leitura lisas; verde petróleo e amarelo preservados.
 
-## Composição vigente
+Checkboxes com rótulos, foco e teclado; as cores auxiliares não substituem os nomes. Temas abrem desmarcados. Intensidade e legenda aparecem apenas ao ativar o tema. Sobreposição tem ordem fixa, independente da sequência de cliques. O contorno e a referência da mina permanecem acima das imagens temáticas. Falhas exibem recuperação; legenda indisponível tem recarga própria. Fora da cobertura, cada opção informa seu alcance: MG nos cinco temas, Nova Lima nas trilhas. Controles de desenho ficam na barra esquerda, sem cobrir o mapa, indicando apenas a etapa e ações necessárias. O recorte manual não oculta os controles cartográficos.
 
-Cabeçalho com marca GeoVale, verde-petróleo e amarelo. Título “Qual o melhor futuro para esta área?”, com sublinhado amarelo em “futuro”. As três etapas aparecem abaixo do título, em contraste claro sobre o painel verde. Caixa de envio centralizada na coluna direita, com largura máxima de 30rem, borda, sombra, tipografia legível e proporções ajustadas. O rodapé identifica Rafael Inácio Silva, MVP, 2026 e as fontes públicas.
+Em Trilhas de Nova Lima, os traçados e a legenda usam os nomes e cores publicados pela Prefeitura. A legenda lista somente categorias do enquadramento atual, na ordem da fonte, com rolagem quando necessário. Ao navegar, a lista acompanha a nova consulta.
 
-O fundo utiliza pedra na cor original, derivada da referência fornecida, sem marca ou letras. O arquivo local `frontend/src/assets/textura-pedra.png` é servido pelo build. Uma única imagem cobre a viewport, sem repetição ou emenda horizontal; permanece fixa durante a rolagem. Cabeçalho, painel frontal, caixa de envio e demais superfícies mantêm fundos lisos. O gradiente claro é suave. A textura é decorativa e não participa da análise.
-
-## Responsividade e interação
-
-Estrutura flexível com altura mínima de viewport dinâmica e alternativa `100vh`; cabeçalho/rodapé têm altura natural. Margens revelam o fundo, e o painel ocupa a altura disponível. O título fica no alto; a caixa permanece centralizada na vertical em telas com duas colunas. Em telas pequenas, os blocos são empilhados e a página permite rolagem vertical. Os rótulos das etapas passam a três colunas com número acima do texto quando necessário.
-
-Tipografia e espaçamentos usam limites fluidos. Consultas ao contêiner definem as colunas, com alternativa por media query. Campos e controles são rotulados; o diálogo de prioridades possui altura limitada e rolagem própria. O mapa reenquadra a poligonal ao redimensionar e libera observador/quadros de animação ao desmontar.
-
-Abertura verificada por viewport do navegador em dez dimensões entre 320×640 e 1920×1080, sem overflow horizontal ou rótulos das etapas cortados. Isso não representa teste físico em todos os dispositivos. Detalhes em [Validação](VALIDACAO.md).
+Detalhes técnicos, datas, fontes e justificativas ficam na documentação. Atribuições continuam visíveis no mapa. “Localização de referência” é preservado para não apresentar o marcador aproximado como localização certificada.

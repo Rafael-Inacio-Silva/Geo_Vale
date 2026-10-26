@@ -1,0 +1,25 @@
+[
+  {
+    "id": "horizontes",
+    "nome": "Mina Horizontes",
+    "nome_anterior": "Capitão do Mato",
+    "empresa": "Vale",
+    "municipio": "Nova Lima",
+    "uf": "MG",
+    "complexo": "Vargem Grande",
+    "latitude": -20.12139929,
+    "longitude": -43.91708014,
+    "referencia_localizacao": "Ponto aproximado para navegação, derivado do centroide do processo ANM 003.964/1950 vinculado documentalmente ao empreendimento. Não é centroide certificado nem limite físico da mina.",
+    "fontes": {
+      "identificacao": "https://www.vale.com/ar/w/vale-altera-nome-de-mina-e-barragem-em-nova-lima-e-reforca-posicionamento-antirracista",
+      "vinculo_processo": "https://sistemas.meioambiente.mg.gov.br/licenciamento/uploads/-r1U-OgCZO3dEqex9HShmdqbrC5mgstw.pdf",
+      "localizacao": "https://geoserver.meioambiente.mg.gov.br/ows?service=WFS&version=2.0.0&request=GetFeature&typeNames=IDE%3Aide_1706_mg_processos_minerarios_pol&outputFormat=application%2Fjson&srsName=EPSG%3A4326&count=1&CQL_FILTER=numero%3D3964+AND+ano%3D1950",
+      "consulta_em": "2026-10-24"
+    },
+    "processo_anm": {
+      "numero": 3964,
+      "ano": 1950
+    },
+    "codigo_municipio_ibge": "3144805"
+  }
+]

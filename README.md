@@ -1,29 +1,18 @@
 # GeoVale
 
-MVP local de apoio à comparação de usos futuros de áreas pós-mineração. **Geoprocessamento + AHP + TOPSIS**, com dados públicos reais e regras exploratórias explícitas. Não utiliza previsão por Machine Learning.
+Mapa territorial com navegação mundial, aberto em **Minas Gerais**, contorno oficial do estado e pesquisa de uma única mina: **Mina Horizontes — Vale — Nova Lima/MG**. A seleção mostra o contorno de Nova Lima pelo IBGE e enquadra município e referência da mina. A seta do cartão revela empresa, município, complexo e dados cadastrais consultados diretamente na ANM (processo, titular, fase e área cadastrada). Cinco temas territoriais permitem sobrepor relevo, água, solos, vegetação/conservação e entorno/infraestrutura, com intensidade ajustável e legendas oficiais. Uma sexta opção mostra **Trilhas de Nova Lima**, de fonte municipal independente, com cores e nomes da configuração oficial e legenda dos traçados no enquadramento. O engenheiro pode **desenhar, ajustar e confirmar várias áreas de estudo independentes**, ou adicionar o polígono cadastral do processo ANM diretamente no mapa.
 
-Ao abrir o site, o usuário envia uma poligonal GeoJSON do próprio computador, visualiza o contorno sobre uma imagem aérea, analisa o território, define prioridades e compara **Agricultura, Uso florestal e Recreação em áreas abertas**. Pode salvar a comparação e baixar dois relatórios HTML da mesma revisão: simples e técnico.
+A interface usa React, TypeScript e Leaflet. A API local usa Python/FastAPI e consulta o WFS público da IDE-Sisema para obter o limite estadual. O fundo cartográfico é carregado por região e zoom, por OpenStreetMap ou Esri World Imagery. Temas da IDE-Sisema são carregados diretamente pelo navegador via WMS, somente quando marcados e para a região visível. A cobertura desses temas é estadual; a navegação de fundo é mundial. As trilhas são consultadas via API local no ArcGIS REST da Prefeitura de Nova Lima, em GeoJSON e somente para a região visível. A confirmação do desenho usa validação geométrica local, sem enviar o polígono aos fornecedores. **É necessário acesso à internet para as fontes geográficas.**
 
-**Alcance:** ordenação relativa para aprofundar estudos. Não determina viabilidade, segurança, autorização, custos ou aceitação social. Os parâmetros do protótipo ainda não foram validados por especialistas. A literatura fundamenta o método; não valida as nossas notas ou os resultados destas minas.
-
-## Mapas reais para envio manual
-
-| Mina / licença pública | Recorte de operações | Dados preparados |
-|---|---:|---|
-| [Rapatee — IL_006](dados/demonstracao/il_006/area.geojson) | 162,29 ha | Contorno, relevo, cobertura 2024, fotografia aérea |
-| [Burning Star 3 — IL_071](dados/demonstracao/il_071/area.geojson) | 530,55 ha | Contorno, relevo, cobertura 2024, fotografia aérea |
-
-A entrada é feita exclusivamente pelo envio do arquivo do computador. Para a apresentação, os dois arquivos estão no computador em `~/Desktop/Mapas GeoVale/`: `Rapatee.geojson` e `Burning Star 3.geojson`. Clique em **Enviar GeoJSON** e escolha o arquivo.
-
-São uniões de limites de operações do GeoMine/OSMRE em Illinois, EUA; não certificam a totalidade cadastral de uma mina, nem representam uma mina da Vale. A jornada completa reconhece estas duas geometrias, inclusive se o arquivo for renomeado. Outras poligonais válidas são exibidas, mas precisam de preparação de fontes para serem analisadas. Fotografias e rasters já estão no pacote: a apresentação não depende de consultas externas.
+O ponto da Horizontes é uma referência aproximada para navegação, derivada do centroide de um processo minerário vinculado documentalmente ao empreendimento. Não representa um limite físico da mina. Fontes e precisão estão em [Dados geográficos](docs/DADOS_GEOGRAFICOS.md).
 
 ## Executar
 
-Python **3.12** e Node **24**. Execute a partir da raiz do projeto; use um ambiente virtual dedicado, sem apagar seu ambiente existente.
+Python **3.12** e Node **24**. Na raiz do projeto:
 
 ```bash
-python3.12 -m venv .venv-mcda
-source .venv-mcda/bin/activate
+python3.12 -m venv .venv-geovale
+source .venv-geovale/bin/activate
 python -m pip install --require-hashes -r requirements/compatibilidade-macos15-x86_64.txt
 cd frontend
 npm ci
@@ -32,17 +21,16 @@ cd ..
 python executar.py
 ```
 
-Abra **http://127.0.0.1:8000**. A interface e a API usam a mesma origem e não há tela de login. Para outra porta: `GEOVALE_PORT=8020 python executar.py`. O servidor escuta somente no computador local. O build da interface é obrigatório antes de executar. O comando não abre o navegador automaticamente.
+Abra **http://127.0.0.1:8000**. O servidor escuta somente em `127.0.0.1`. Para outra porta: `GEOVALE_PORT=8020 python executar.py`. O comando não abre o navegador automaticamente.
 
-O lock macOS foi usado no ambiente Python 3.12 de verificação. Existe lock Linux x86_64, mas **esta nova versão não foi executada em Linux**. Outros sistemas exigem ambiente compatível; não utilize o lock macOS em Windows.
+O arquivo de dependências Linux x86_64 é separado; execução nessa plataforma não foi verificada nesta entrega. Não use o lock de macOS em outro sistema.
 
-Para desenvolvimento, execute a API e, em outro terminal, `cd frontend && npm run dev`: o Vite encaminha `/api` para a porta 8000. Não coloque credenciais no frontend. Não há configuração de implantação pública nesta versão.
+Para desenvolvimento, execute a API e, em outro terminal, `cd frontend && npm run dev`. O Vite usa a porta 5173 e encaminha `/api` à porta 8000.
 
 ## Verificar
 
 ```bash
 PYTHONPATH=backend PYTHONDONTWRITEBYTECODE=1 PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 python -m pytest -q -p no:cacheprovider tests
-PYTHONPATH=backend python validacao/verificar_pacotes.py
 cd frontend
 npm test
 npm run build
@@ -50,15 +38,26 @@ npm run build
 
 ## Organização
 
-- `backend/geovale/geografia`: validação da entrada.
-- `backend/geovale/decisao`: extração territorial, AHP, TOPSIS e sensibilidade.
-- `backend/geovale/mvp`: API, sessão, revisões SQLite e relatórios.
-- `frontend`: React e Leaflet; interface sem painéis de bastidores.
-- `dados/demonstracao`: dois pacotes reais, com fontes, datas e hashes.
-- `dados/qgis`: GeoPackage e projeto auxiliar para inspeção no QGIS.
-- `tests` e `validacao`: verificações automatizadas e inspeção dos pacotes.
-- `.local`: banco e arquivos gerados localmente, fora do Git.
+As tecnologias utilizadas e suas justificativas estão em [Ferramentas](docs/FERRAMENTAS.md), com uma explicação curta para apresentação.
 
-Verificação em macOS: **119 testes Python e 2 testes frontend aprovados**, TypeScript e build Vite aprovados, integridade dos dois pacotes conferida. Detalhes em [Validação](docs/VALIDACAO.md).
+- `backend/geovale/api`: configuração do mapa, contorno e entrega da interface.
+- `backend/geovale/camadas.py`: catálogo fixo: cinco temas estaduais/dez bases e uma camada municipal de trilhas.
+- `backend/geovale/mapa.py`: consulta WFS, validação, simplificação visual e cache em memória.
+- `backend/geovale/trilhas.py`: consulta municipal, validação e cache temporário.
+- `backend/geovale/anm.py`: consulta do processo e polígono cadastral ANM.
+- `backend/geovale/municipio.py`: consulta do município selecionado na API IBGE.
+- `backend/geovale/area.py`: validação do polígono manual.
+- `frontend/src`: navegação, pesquisa, camadas, desenho e identidade visual.
+- `dados/minas.json`: cadastro da única mina e proveniência de sua localização.
+- `tests` e `frontend/tests`: testes do escopo territorial.
+- `docs`: documentação atual; consulte o [índice](docs/INDICE.md).
 
-Leia [Metodologia](docs/METODOLOGIA.md), [Roteiro de apresentação](docs/DEMONSTRACAO.md) e [Índice da documentação](docs/INDICE.md).
+O acesso à página já abre o mapa. A pesquisa aceita nome atual, nome anterior, empresa e município da mesma mina. Os controles permitem alternar Mapa/Satélite, aproximar/afastar e retornar ao enquadramento estadual. O [manual de uso](docs/MANUAL_USO.md) descreve a operação.
+
+## Escolhas e limites do MVP
+
+Mantido o mapa atual para demonstrar integração de dados públicos, sem contratação Google ou visualizador 3D. Acesso público não significa consumo ilimitado. Os cinco temas são uma seleção documental para o MVP sem validação de especialista da Vale; não fazem diagnóstico, classificação ou recomendação. Datas e escalas variam por base. O relevo Topodata deriva de SRTM de 2000 e não descreve a cava atual. Consulte [justificativa e referências para apresentação](docs/ESCOLHAS_TERRITORIAIS.md) e [proveniência das camadas](docs/DADOS_GEOGRAFICOS.md).
+
+Todas as áreas confirmadas ficam apenas na memória da página; atualizar ou fechar descarta as demarcações. Cada uma pode ser selecionada, ajustada ou removida sem apagar as demais. É um recorte de estudo escolhido pelo usuário, não o limite oficial da mina. Consulte [Área de estudo](docs/AREA_ESTUDO.md) e [Trilhas de Nova Lima](docs/TRILHAS_NOVA_LIMA.md).
+
+O contorno municipal vem da [API oficial de malhas simplificadas do IBGE](docs/LIMITE_MUNICIPAL.md), somente para a mina selecionada. O [polígono ANM](docs/ANM.md) representa o processo minerário, não o perímetro físico da mina; fase cadastral não é situação operacional. A consulta não requer arquivos MG/KMZ nem Selenium.

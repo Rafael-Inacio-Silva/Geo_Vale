@@ -1,32 +1,46 @@
-# Verificação da versão 2.0
+# Validação da entrega
 
-## Revisão de 24/10/2026
+Revisão de **26/10/2026**, versão **3.3.0**, em macOS, Python 3.12 e Node 24. Execução local em `127.0.0.1:8000`; código e documentos destinados ao GitHub por solicitação do usuário, sem implantação pública.
 
-Entrada exclusivamente por arquivo GeoJSON do computador. **119 testes Python e 2 testes frontend passaram**, assim como TypeScript e build Vite. A verificação de URLs antigas confirmou que elas não criam áreas. No navegador, Rapatee foi enviado pelo seletor do computador: mapa de 162,29 ha, análise e comparação 0,974 / 0,719 / 0,013; Trocar mapa retornou à entrada. O servidor local da porta 8024 foi atualizado.
+## Verificações automatizadas
 
-## Cobertura automatizada
+- **81 testes Python aprovados**: 13 de mapa, 15 de validação de área, 24 de trilhas, 19 de ANM e 10 de limite municipal.
+- **Dois testes de pesquisa aprovados**: nome atual/anterior, normalização e ausência de correspondência, com uma única mina no catálogo.
+- **TypeScript e build Vite aprovados**, incluindo as barras recolhíveis, coleção de áreas, consulta cadastral e limite IBGE. Sem novas dependências nesta adição.
 
-Validação GeoJSON, AHP/TOPSIS com valores analíticos, pesos inválidos, empates, sensibilidade, relevo conhecido, NoData, jornadas dos dois recortes reais, isolamento de sessão, integridade de fontes, revisões e relatórios. Testes frontend cobrem total dos pesos e invalidação do resultado/exportação ao editar prioridades. TypeScript e build Vite verificam o código distribuído.
+Os testes da ANM conferem identidade do processo, atributos, origem, geometria preservada, descarte de rótulos oficiais na validação manual, cache concorrente/expiração/cópia defensiva, truncamento e respostas incompatíveis, falha e recuperação sem expor detalhes internos. Os municipais conferem código fixado no catálogo, ausência de consulta inicial/para mina desconhecida, geometria/CRS/extensão, cache, falha e recuperação independente. Consulta de códigos/processos arbitrários não é oferecida ao cliente.
 
-## Evidências anteriores preservadas
+O desenho é validado individualmente: buracos, anel aberto, interseções, degeneração, coordenadas inválidas/excessivas, limite de 500 vértices e corpo HTTP de 128 KiB. A coleção contém várias Features Polygon; o contrato não foi ampliado para MultiPolygon. Os testes de trilhas verificam cobertura, respostas truncadas, renderer oficial, cor/rótulo, legenda do recorte e cache compartilhado.
 
-- Verificador offline confirmou os hashes de 20 arquivos e a leitura de duas geometrias válidas do GeoPackage.
-- Plano de relevo com gradiente 1 produziu 45°; vizinhança com NoData não foi preenchida.
-- AHP conferido com vetor conhecido, inconsistência e reciprocidade; TOPSIS com caso analítico de benefício/custo, invariância de escala, colunas nulas e empates.
-- Envio manual dos dois arquivos reais pelo navegador: Rapatee, 162,29 ha; Burning Star 3, 530,55 ha. Fotos e análises responderam. Os índices neutros de referência foram 0,974 / 0,719 / 0,013 e 0,981 / 0,306 / 0,010, respectivamente.
-- Total inválido desabilitou comparação e ocultou resultado/links desatualizados. AHP conflitante foi recusado; mesma importância foi aceita.
-- Os HTMLs simples e técnico da mesma revisão contêm mapa PNG embutido e não contêm scripts. Estrutura e conteúdo foram conferidos em arquivos e testes HTTP. A abertura visual das URLs locais desses HTMLs foi bloqueada pelo navegador automatizado; não se declara inspeção visual desses documentos abertos.
-- Abertura medida em 320×640, 390×844, 816×890, 844×390, 1024×768, 1280×720, 1366×768, 1536×824, 1920×1031 e 1920×1080, sem overflow horizontal nem cortes nos rótulos das etapas. Caixa centralizada na vertical nas telas com duas colunas. Verificação por viewport, sem aparelho físico.
-- O mapa conservou a poligonal inteira após os redimensionamentos verificados. A foto é histórica; não afirmar imagem atual.
+O TestClient emite um aviso de depreciação do adaptador HTTPX da Starlette. O servidor não usa esse adaptador em operação. Leaflet.draw pode emitir aviso de uma função legada do Leaflet; os fluxos de desenho/edição foram concluídos.
 
-## Limites
+## Fontes reais e interface
 
-Os testes verificam software e coerência do fluxo. Não demonstram validade científica das notas, concordância de especialistas, viabilidade de uso ou homologação de uma mina pela Vale. Não houve estudo geotécnico, análise financeira/social, auditoria externa, teste de carga, execução Linux ou interface QGIS. Há um aviso de depreciação Starlette/TestClient relacionado a HTTPX, sem falha nas verificações anteriores. Não há implantação remota.
+A consulta direta da ANM e a rota local retornaram o processo **003.964/1950**, VALE S.A., CONCESSÃO DE LAVRA, FERRO e 471,39 ha, em GeoJSON solicitado EPSG:4326. A prévia desenhou a poligonal cadastral real. O cartão mostrou os atributos e data de consulta dentro da seção expansível, sem cartão separado abaixo.
 
-Reprodução e ambiente: [README](../README.md) e [Dependências](DEPENDENCIAS.md).
+A API IBGE retornou uma única Feature Polygon para **Nova Lima, código 3144805**, qualidade máxima da API simplificada, com 355 posições no anel incluindo fechamento. A rota local entregou o contorno e a fonte/data; o frontend o enquadrou com o ponto da mina. Na abertura não havia município. Voltar para MG removeu os caminhos municipais e o crédito IBGE, fechou os detalhes e desabilitou Polígono ANM. A data de consulta não foi apresentada como ano da malha.
 
-## Revisão geral antes do versionamento — 24/10/2026
+As onze bases temáticas continuam no catálogo. A verificação real de dez GetMap/dez legendas WMS e da fonte municipal de trilhas ocorreu em 25/10/2026, sem representar nova validação integral de cada fornecedor em 26/10. As trilhas têm cores e nomes oficiais; os testes de integração com sua fonte simulada passaram nesta revisão.
 
-A suíte completa passou com 119 testes Python em macOS e 2 testes frontend; TypeScript e build Vite aprovados. Os 11 novos casos cobrem posições 2D/3D em Polygon/MultiPolygon, inteiros extremos em altitude/pesos/AHP e os dois relatórios diante de fotografia alterada, incluindo um manifesto atualizado que diverge da revisão salva. As falhas numéricas não alteram a análise aceita, e uma fonte diferente impede exportação sem reescrever a revisão.
+## Áreas independentes e barras
 
-O verificador offline confirmou novamente dez arquivos por pacote, as duas geometrias do GeoPackage e os índices neutros de referência. Vinte arquivos Python foram analisados sintaticamente; links locais e versões diretas do lock frontend foram conferidos. A seleção de arquivos publicáveis passou pela checagem de instruções locais, bancos, dependências, builds e padrões de credenciais. Mantido apenas o aviso já conhecido de depreciação Starlette/TestClient. Não se declara execução Linux, abertura da interface QGIS ou implantação remota.
+Verificado em navegador com a aplicação compilada:
+
+- Polígono ANM desabilitado antes de selecionar a mina; seleção habilitou, consulta trouxe prévia e confirmação preservou origem cadastral.
+- Adicionar duas demarcações manuais além da área ANM resultou em **três áreas simultâneas**. As três geometrias apareceram no SVG, com a ativa amarela e as demais verdes.
+- Ocultar a barra de áreas com dois pontos já marcados, reabrir, adicionar o terceiro e confirmar manteve o mesmo desenho e a área anterior.
+- Cancelar a adição de uma quarta área preservou as três confirmações e a seleção anterior. Remover a terceira deixou duas geometrias e selecionou a última restante.
+- Selecionar a área ANM, arrastar um vértice e confirmar produziu área manual com 12 pontos, conservando a segunda área e retirando a atribuição de área cadastral. O cartão cadastral permaneceu independente.
+- Ocultar/reabrir a consulta preservou a coleção e ampliou o mapa. Recarregar descartou as áreas, conforme o contrato de memória da página.
+- Ferramentas à esquerda, mapa central, pesquisa/cartão/camadas à direita. Nenhum painel de áreas sobre o mapa. As setas são botões com rótulo, estado expandido e controle da barra correspondente.
+- Faixa superior amarela contínua entre cada barra e sua seta: borda de 4 px e a mesma cor RGB (255, 195, 41) nos quatro elementos.
+
+A coleção foi testada com recortes manuais de verificação, sem certificar que representem cava, barragem ou limite de intervenção real. Não se criou dado de exemplo no catálogo.
+
+## Responsividade e limites
+
+Conferidas larguras **375, 768 e 1280 px** nesta revisão, sem transbordamento horizontal. Em 375×812 e 768×1024, ferramentas antes do mapa e consulta depois, com atalhos de ocultação no topo. O mapa continua com altura utilizável. Em 1280×900, as barras rolam independentemente; recolher expande a área central sem desmontar o desenho. Não houve teste em aparelhos físicos ou execução Linux.
+
+Falhas das fontes ANM/IBGE e sua recuperação têm cobertura automatizada. Não foi interrompida a conexão física nem aguardado manualmente cada timeout externo. Não houve nova simulação visual de todos os erros nesta versão. As fontes continuam externas e sujeitas à disponibilidade e condições de uso.
+
+Não há persistência das áreas, análise espacial, medição, ranking ou recomendação de uso futuro. Fase cadastral não comprova operação; processo ANM não é perímetro físico; malha municipal simplificada não é certificação cadastral; trilha não comprova acesso ou segurança. Fontes regionais não descrevem necessariamente a condição atual da cava.
