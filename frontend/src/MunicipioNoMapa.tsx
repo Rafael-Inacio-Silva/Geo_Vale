@@ -29,7 +29,7 @@ export default function MunicipioNoMapa({mapa, mina, podeEnquadrar}: {mapa: L.Ma
         attribution: 'Município: <a href="https://servicodados.ibge.gov.br/api/docs/malhas?versao=3">IBGE</a>',
         style: {color: '#276c99', weight: 3, dashArray: '8 5', fillOpacity: 0},
       }).addTo(mapa);
-      // A chegada do município não desfaz desenho, prévia ANM ou navegação do engenheiro.
+      // A chegada do município não desfaz desenho, consulta de referência ou navegação do engenheiro.
       const centro = mapa.getCenter();
       if (permissaoAtual.current() && mapa.getZoom() === 14 && Math.abs(centro.lat - latitude) < .0001 && Math.abs(centro.lng - longitude) < .0001) {
         mapa.fitBounds(camada.getBounds().extend([latitude, longitude]), {paddingTopLeft: [32, 70], paddingBottomRight: [32, 70], animate: false});

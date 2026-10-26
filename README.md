@@ -1,10 +1,10 @@
 # GeoVale
 
-Mapa territorial com navegação mundial, aberto em **Minas Gerais**, contorno oficial do estado e pesquisa de uma única mina: **Mina Horizontes — Vale — Nova Lima/MG**. O cartão seleciona a mina, mostra o contorno de Nova Lima pelo IBGE e enquadra município e referência; novo clique desmarca e retorna para MG. A bolinha aproxima a mina sem reenquadrar o município. A seta do cartão revela empresa, município, complexo e dados cadastrais consultados diretamente na ANM (processo, titular, fase e área cadastrada). Cinco temas territoriais permitem sobrepor relevo, água, solos, vegetação/conservação e entorno/infraestrutura, com intensidade ajustável e legendas oficiais. Uma sexta opção mostra **Trilhas de Nova Lima**, de fonte municipal independente, com cores e nomes da configuração oficial e legenda dos traçados no enquadramento. O engenheiro pode **desenhar, ajustar e confirmar várias áreas de estudo independentes**, ou adicionar o polígono cadastral do processo ANM diretamente no mapa.
+Mapa territorial com navegação mundial, aberto em **Minas Gerais**, contorno oficial do estado e pesquisa de uma única mina: **Mina Horizontes — Vale — Nova Lima/MG**. O cartão seleciona a mina, mostra o contorno de Nova Lima pelo IBGE e enquadra município e referência; novo clique desmarca e retorna para MG. A bolinha aproxima a mina sem reenquadrar o município. A seta do cartão revela empresa, município, complexo e dados cadastrais consultados diretamente na ANM (processo, titular, fase e área cadastrada). Cinco temas territoriais permitem sobrepor relevo, água, solos, vegetação/conservação e entorno/infraestrutura, com intensidade ajustável e legendas oficiais. Uma sexta opção mostra **Trilhas de Nova Lima**, de fonte municipal independente, com cores e nomes da configuração oficial e legenda dos traçados no enquadramento. O engenheiro pode **desenhar, ajustar e confirmar várias áreas de estudo independentes**, adicionar a **área de mineração de referência do OpenStreetMap** e visualizar **quatro recortes de influência com a mina sombreada**, preparados localmente, com influência do parecer FEAM.
 
 A interface usa React, TypeScript e Leaflet. A API local usa Python/FastAPI e consulta o WFS público da IDE-Sisema para obter o limite estadual. O fundo cartográfico é carregado por região e zoom, por OpenStreetMap ou Esri World Imagery. Temas da IDE-Sisema são carregados diretamente pelo navegador via WMS, somente quando marcados e para a região visível. A cobertura desses temas é estadual; a navegação de fundo é mundial. As trilhas são consultadas via API local no ArcGIS REST da Prefeitura de Nova Lima, em GeoJSON e somente para a região visível. A confirmação do desenho usa validação geométrica local, sem enviar o polígono aos fornecedores. **É necessário acesso à internet para as fontes geográficas.**
 
-O ponto da Horizontes é uma referência aproximada para navegação, derivada do centroide de um processo minerário vinculado documentalmente ao empreendimento. Não representa um limite físico da mina. Fontes e precisão estão em [Dados geográficos](docs/DADOS_GEOGRAFICOS.md).
+O ponto da Horizontes é uma referência aproximada para navegação, derivada do centro visual do contorno de mineração OpenStreetMap. Não representa um limite físico da mina. Fontes e precisão estão em [Dados geográficos](docs/DADOS_GEOGRAFICOS.md).
 
 ## Executar
 
@@ -44,11 +44,14 @@ As tecnologias utilizadas e suas justificativas estão em [Ferramentas](docs/FER
 - `backend/geovale/camadas.py`: catálogo fixo: cinco temas estaduais/dez bases e uma camada municipal de trilhas.
 - `backend/geovale/mapa.py`: consulta WFS, validação, simplificação visual e cache em memória.
 - `backend/geovale/trilhas.py`: consulta municipal, validação e cache temporário.
-- `backend/geovale/anm.py`: consulta do processo e polígono cadastral ANM.
+- `backend/geovale/anm.py`: consulta dos atributos cadastrais ANM, sem geometria.
 - `backend/geovale/municipio.py`: consulta do município selecionado na API IBGE.
 - `backend/geovale/area.py`: validação do polígono manual.
 - `frontend/src`: navegação, pesquisa, camadas, desenho e identidade visual.
 - `dados/minas.json`: cadastro da única mina e proveniência de sua localização.
+- `dados/referencias`: referência vetorial OSM, influências aproximadas do parecer e receita de preparo.
+- `backend/geovale/referencias.py`: leitura e conferência do pacote local.
+- `ferramentas/preparar_referencias.py`: preparo reproduzível dos contornos.
 - `tests` e `frontend/tests`: testes do escopo territorial.
 - `docs`: documentação atual; consulte o [índice](docs/INDICE.md).
 
@@ -60,4 +63,8 @@ Mantido o mapa atual para demonstrar integração de dados públicos, sem contra
 
 Todas as áreas confirmadas ficam apenas na memória da página; atualizar ou fechar descarta as demarcações. Cada uma pode ser selecionada, ajustada ou removida sem apagar as demais. É um recorte de estudo escolhido pelo usuário, não o limite oficial da mina. Consulte [Área de estudo](docs/AREA_ESTUDO.md) e [Trilhas de Nova Lima](docs/TRILHAS_NOVA_LIMA.md).
 
-O contorno municipal vem da [API oficial de malhas simplificadas do IBGE](docs/LIMITE_MUNICIPAL.md), somente para a mina selecionada. O [polígono ANM](docs/ANM.md) representa o processo minerário, não o perímetro físico da mina; fase cadastral não é situação operacional. A consulta não requer arquivos MG/KMZ nem Selenium.
+O contorno municipal vem da [API oficial de malhas simplificadas do IBGE](docs/LIMITE_MUNICIPAL.md), somente para a mina selecionada. A [ANM](docs/ANM.md) fornece somente cadastro; fase cadastral não é situação operacional. Os botões documentais usam [referências locais OSM/parecer](docs/REFERENCIAS_TERRITORIAIS.md), sem consultar geometria ANM e sem representar limites de fechamento. A consulta não requer arquivos MG/KMZ nem Selenium.
+
+A referência da mina é o contorno vetorial do OpenStreetMap marcado com símbolos de mineração. Os quatro contornos de influência são aproximados, digitalizados da Figura 2.3 (p. PDF 18) do parecer FEAM. A influência inclui Tamanduá/Horizontes. O desenho manual é livre e pode ser sobreposto a esses recortes; não há comparação por cálculo. Os arquivos locais não exigem consulta externa; o restante das fontes continua dependendo de internet.
+
+Os três modos Manual, Referência e Influência são independentes da fase de edição: alternar não adiciona áreas, preserva filtros e permite retomar o rascunho. Usar como área é explícito e reutiliza a referência OSM intacta já existente. O último contexto pode apoiar o desenho em Manual e tem opção Ocultar. [Fluxo de interação](docs/AREA_ESTUDO.md).

@@ -1,58 +1,43 @@
-# Validação da entrega
+# Validação da etapa territorial
 
-Revisão de **26/10/2026**, versão **3.3.0**, em macOS, Python 3.12 e Node 24. Execução local em `127.0.0.1:8000`; código e documentos destinados ao GitHub por solicitação do usuário, sem implantação pública.
+Revisão de 26/10/2026, versão **3.4.0**, em macOS, Python 3.12 e Node 24. Servidor em `127.0.0.1:8000`, sem implantação pública.
 
-## Verificações automatizadas
+## Verificações automatizadas executadas
 
-- **81 testes Python aprovados**: 13 de mapa, 15 de validação de área, 24 de trilhas, 19 de ANM e 10 de limite municipal.
-- **Dois testes de pesquisa aprovados**: nome atual/anterior, normalização e ausência de correspondência, com uma única mina no catálogo.
-- **TypeScript e build Vite aprovados**, incluindo as barras recolhíveis, coleção de áreas, consulta cadastral e limite IBGE. Sem novas dependências nesta adição.
+- **79 testes Python aprovados**: mapa, desenho manual, trilhas, atributos ANM, município e referências locais. Os testes específicos do antigo importador geométrico ANM foram retirados; permanecem os de identidade, atributos, cache, falha e recuperação cadastral.
+- **2 testes Node aprovados**, cobrindo pesquisa do catálogo único e ausência de resultados inventados.
+- **TypeScript e build Vite aprovados**.
+- O pacote local foi reproduzido pelo script de preparo. A referência entregue conserva exatamente as coordenadas do snapshot OpenStreetMap. Todos os cinco recortes têm geometria válida; a referência é Polygon editável com 65 vértices.
 
-Os testes da ANM conferem identidade do processo, atributos, origem, geometria preservada, descarte de rótulos oficiais na validação manual, cache concorrente/expiração/cópia defensiva, truncamento e respostas incompatíveis, falha e recuperação sem expor detalhes internos. Os municipais conferem código fixado no catálogo, ausência de consulta inicial/para mina desconhecida, geometria/CRS/extensão, cache, falha e recuperação independente. Consulta de códigos/processos arbitrários não é oferecida ao cliente.
+Os testes de referência verificam fonte/CRS/hash, os cinco identificadores, página/figura dos quatro recortes de influência, identidade OSM, igualdade com snapshot, marcador dentro da referência, conversão para origem manual ao validar edição e 404/503/recuperação de pacote inválido. A rota não consulta fontes externas.
 
-O desenho é validado individualmente: buracos, anel aberto, interseções, degeneração, coordenadas inválidas/excessivas, limite de 500 vértices e corpo HTTP de 128 KiB. A coleção contém várias Features Polygon; o contrato não foi ampliado para MultiPolygon. Os testes de trilhas verificam cobertura, respostas truncadas, renderer oficial, cor/rótulo, legenda do recorte e cache compartilhado.
+## Fontes reais conferidas
 
-O TestClient emite um aviso de depreciação do adaptador HTTPX da Starlette. O servidor não usa esse adaptador em operação. Leaflet.draw pode emitir aviso de uma função legada do Leaflet; os fluxos de desenho/edição foram concluídos.
+- PDF público do parecer: HTTP 200, `application/pdf`, SHA-256 igual ao arquivo fornecido pelo usuário. Figura 2.3/p. PDF 18 conferida visualmente com o traçado digitalizado.
+- OpenStreetMap: API oficial `/api/0.6/way/315221699/full.json` retornou Mina Capitão do Mato, `landuse=quarry`, 66 posições incluindo fechamento, way versão 5, timestamp 31/01/2019. Snapshot salvo sem simplificar/reparar sua geometria. A data do way não foi apresentada como data do terreno ou imagem.
+- API local de referências: HTTP 200, uma referência OSM e quatro recortes do parecer, sem chamada externa na entrega.
+- ANM: consulta real retornou processo 003.964/1950, VALE S.A., CONCESSÃO DE LAVRA, FERRO e 471,39 ha. Resposta local contém apenas propriedades e fonte, sem geometria. Teste confere `returnGeometry=false` e `f=json`.
+- IBGE e limite estadual: retornos HTTP 200 observados no navegador/servidor. Houve uma falha inicial 503 do limite estadual; os controles locais e o restante do mapa permaneceram utilizáveis e a consulta seguinte recuperou o contorno. Não houve interrupção física de rede nem simulação visual de todos os timeouts.
 
-## Fontes reais e interface
+## Jornada conferida no navegador
 
-A consulta direta da ANM e a rota local retornaram o processo **003.964/1950**, VALE S.A., CONCESSÃO DE LAVRA, FERRO e 471,39 ha, em GeoJSON solicitado EPSG:4326. A prévia desenhou a poligonal cadastral real. O cartão mostrou os atributos e data de consulta dentro da seção expansível, sem cartão separado abaixo.
+- Abertura com botões documentais desabilitados; selecionar Horizontes habilitou os dois controles locais e acrescentou Nova Lima.
+- Modo Referência mostrou a área cinza com símbolos de mineração, contorno vetorial OSM e atribuição. Usar como área acrescentou uma entrada independente; visitar Referência novamente ofereceu Selecionar esta área e manteve apenas uma referência.
+- Desenho manual de segunda área com três vértices, fechamento, ajuste e confirmação pela API manteve a referência anterior.
+- Ajustar a referência apresentou os pontos editáveis; Cancelar restaurou a confirmação sem perder a segunda área. Outro ajuste confirmado resultou em recorte manual com 66 pontos e retirou a atribuição de referência daquela área.
+- Renomear por Enter atualizou a identificação e a lista para “Referência ajustada”, mantendo a outra área.
+- Área de influência mostrou cinco feições: quatro filtros e referência OSM sombreada. Desmarcar os quatro filtros deixou uma feição de contexto (a mina sombreada), preservando duas áreas de estudo. Os créditos acompanharam as fontes visíveis.
+- Ocultar/reabrir a barra preservou filtros e áreas. Desmarcar a mina retornou a MG, retirou influência e município e manteve as duas áreas confirmadas.
+- Layout desktop 1440 × 900 e celular 390 × 844 conferidos; largura de conteúdo igual à largura do viewport, sem rolagem horizontal. Os controles continuam fora do mapa. Redimensionar conservou as áreas.
 
-A API IBGE retornou uma única Feature Polygon para **Nova Lima, código 3144805**, qualidade máxima da API simplificada, com 355 posições no anel incluindo fechamento. A rota local entregou o contorno e a fonte/data; o frontend o enquadrou com o ponto da mina. Na abertura não havia município. Voltar para MG removeu os caminhos municipais e o crédito IBGE, fechou os detalhes e desabilitou Polígono ANM. A data de consulta não foi apresentada como ano da malha.
+## Alcance
 
-As onze bases temáticas continuam no catálogo. A verificação real de dez GetMap/dez legendas WMS e da fonte municipal de trilhas ocorreu em 25/10/2026, sem representar nova validação integral de cada fornecedor em 26/10. As trilhas têm cores e nomes oficiais; os testes de integração com sua fonte simulada passaram nesta revisão.
+Não houve nova conferência visual individual das dez bases WMS e todas as legendas nesta mudança; os testes de seus contratos e trilhas continuam aprovados. Não foram adicionados cálculos de comparação, área, distância, interseção, ranking, diagnóstico ou persistência.
 
-## Áreas independentes e barras
+A referência OSM não é perímetro certificado ou levantamento atual. As influências são digitalizações aproximadas do meio físico de Tamanduá/Horizontes, sem acurácia cadastral e sem representar fechamento. A validade geométrica não certifica a precisão territorial. ANM informa cadastro; IBGE, contexto administrativo; trilhas, cadastro municipal. Ausência de feição não comprova ausência de risco.
 
-Verificado em navegador com a aplicação compilada:
+## Alternância de modos conferida
 
-- Polígono ANM desabilitado antes de selecionar a mina; seleção habilitou, consulta trouxe prévia e confirmação preservou origem cadastral.
-- Adicionar duas demarcações manuais além da área ANM resultou em **três áreas simultâneas**. As três geometrias apareceram no SVG, com a ativa amarela e as demais verdes.
-- Ocultar a barra de áreas com dois pontos já marcados, reabrir, adicionar o terceiro e confirmar manteve o mesmo desenho e a área anterior.
-- Cancelar a adição de uma quarta área preservou as três confirmações e a seleção anterior. Remover a terceira deixou duas geometrias e selecionou a última restante.
-- Selecionar a área ANM, arrastar um vértice e confirmar produziu área manual com 12 pontos, conservando a segunda área e retirando a atribuição de área cadastral. O cartão cadastral permaneceu independente.
-- Ocultar/reabrir a consulta preservou a coleção e ampliou o mapa. Recarregar descartou as áreas, conforme o contrato de memória da página.
-- Ferramentas à esquerda, mapa central, pesquisa/cartão/camadas à direita. Nenhum painel de áreas sobre o mapa. As setas são botões com rótulo, estado expandido e controle da barra correspondente.
-- Faixa superior amarela contínua entre cada barra e sua seta: borda de 4 px e a mesma cor RGB (255, 195, 41) nos quatro elementos.
+Referência → Influência → Referência conservou zero áreas até a ação explícita Usar como área. Repetir a consulta e selecionar a referência manteve uma única entrada. Um desenho aberto de três pontos foi pausado pelos modos Referência/Influência e retomado em Manual: contagem e estilos/posições dos três marcadores no DOM foram exatamente iguais, com retorno ao enquadramento anterior. O ajuste fechado também foi suspenso e retomado com seus seis marcadores; confirmou como segunda área manual de três pontos. O contexto de influência permaneceu como apoio sob o desenho.
 
-A coleção foi testada com recortes manuais de verificação, sem certificar que representem cava, barragem ou limite de intervenção real. Não se criou dado de exemplo no catálogo.
-
-## Responsividade e limites
-
-Conferidas larguras **375, 768 e 1280 px** nesta revisão, sem transbordamento horizontal. Em 375×812 e 768×1024, ferramentas antes do mapa e consulta depois, com atalhos de ocultação no topo. O mapa continua com altura utilizável. Em 1280×900, as barras rolam independentemente; recolher expande a área central sem desmontar o desenho. Não houve teste em aparelhos físicos ou execução Linux.
-
-Falhas das fontes ANM/IBGE e sua recuperação têm cobertura automatizada. Não foi interrompida a conexão física nem aguardado manualmente cada timeout externo. Não houve nova simulação visual de todos os erros nesta versão. As fontes continuam externas e sujeitas à disponibilidade e condições de uso.
-
-Não há persistência das áreas, análise espacial, medição, ranking ou recomendação de uso futuro. Fase cadastral não comprova operação; processo ANM não é perímetro físico; malha municipal simplificada não é certificação cadastral; trilha não comprova acesso ou segurança. Fontes regionais não descrevem necessariamente a condição atual da cava.
-
-## Opções recolhíveis de camada
-
-Conferência de 26/10/2026: ativar relevo e água manteve intensidade/legenda recolhidas; cada seta expandiu somente seu tema. A intensidade de relevo foi alterada por teclado de 50% para 55%; recolher e reabrir preservou 55% e as duas camadas ativas. A legenda oficial de declividade abriu pela seção interna; recolher água não afetou relevo. Botões têm `aria-expanded` e `aria-controls`. Mensagens de carregamento/falha ficam fora do trecho oculto. TypeScript e build aprovados; nenhuma alteração no backend ou nos contratos das fontes.
-
-## Seleção e zoom da mina
-
-Em 26/10/2026, o navegador confirmou: cartão seleciona e enquadra Nova Lima; segundo clique desmarca e volta para escala estadual, com zero caminhos municipais e Polígono ANM desabilitado. Clicar na bolinha selecionou a mina e aproximou para escala de 500 m no viewport utilizado. Depois de o contorno municipal carregar (um caminho municipal presente), repetir por Enter manteve a escala de 500 m e a seleção. A consulta municipal deixou de depender da identidade do objeto Mina, preservando o enquadramento do marcador. TypeScript/build e dois testes de pesquisa aprovados; não houve mudança no backend. Pesquisa de 3D consultou documentação pública, sem chave, ativação de faturamento ou teste de cobertura real da API Google na mina.
-
-## Nome personalizado da área
-
-Em 26/10/2026, o formulário de Renomear rejeitou somente espaços e normalizou “   Cava   principal   ” para “Cava principal”. Lista e identificação refletiram o nome; a geometria SVG permaneceu exatamente igual e a origem/atribuição ANM foi conservada. O tooltip do polígono exibiu “Cava principal”. Cancelar por Escape preservou o nome anterior. Na versão final, salvar por Enter retornou o foco ao botão Renomear. Durante a edição do nome, a seleção de áreas ficou desabilitada. TypeScript e build aprovados. Não há nova rota, alteração de validação geométrica ou persistência.
+Na versão final, a alternância rápida Referência → Influência → Referência terminou imediatamente na referência, com uma feição de contexto e zero áreas criadas, escala de 500 m no desktop testado. Depois de usar a referência e consultar influência, desmarcar a mina retornou a escala estadual (200 km), modo Manual, zero feições de contexto e uma área conservada. No celular 390 px, os três seletores ocuparam cerca de 109 px cada, sem rolagem horizontal. Desmarcar AII, visitar Referência e voltar a Influência manteve os estados `[false, true, true, true]`; o filtro foi restaurado ao terminar. O tamanho normal do navegador foi restaurado.

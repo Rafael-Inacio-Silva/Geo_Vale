@@ -8,19 +8,18 @@ from threading import Lock
 from time import monotonic
 from urllib.parse import urlencode
 from urllib.request import urlopen
-from geovale.area import validar_area
 from geovale.mapa import FonteIndisponivel
 
 SERVICO = 'https://geo.anm.gov.br/arcgis/rest/services/SIGMINE/dados_anm/MapServer/0'
 
 
 def consultar_processo(numero, ano):
-    """Consulta o serviço fixo com identidade numérica do catálogo e saída em WGS84."""
+    """Consulta o serviço fixo com identidade numérica do catálogo, sem geometria."""
     parametros = {
         'where': f'NUMERO = {numero} AND ANO = {ano}',
         'outFields': 'PROCESSO,NUMERO,ANO,NOME,FASE,AREA_HA,SUBS,UF,DSProcesso',
-        'returnGeometry': 'true', 'returnZ': 'false', 'outSR': '4326',
-        'resultRecordCount': '2', 'f': 'geojson',
+        'returnGeometry': 'false',
+        'resultRecordCount': '2', 'f': 'json',
     }
     with urlopen(SERVICO + '/query?' + urlencode(parametros), timeout=15) as resposta:
         bruto = resposta.read(2 * 1024 * 1024 + 1)
@@ -30,22 +29,17 @@ def consultar_processo(numero, ano):
 
 
 def preparar_processo(documento, numero, ano):
-    """Confere identidade, atributos e polígono simples suportado, sem reparo ou simplificação."""
+    """Confere a identidade e os atributos cadastrais, sem ler contornos minerários."""
     try:
-        if documento.get('type') != 'FeatureCollection' or documento.get('exceededTransferLimit'):
+        if documento.get('error') or documento.get('exceededTransferLimit'):
             raise ValueError()
         feicoes = documento['features']
         if not isinstance(feicoes, list) or len(feicoes) != 1:
             raise ValueError()
-        feicao = feicoes[0]
-        propriedades = feicao['properties']
-        if feicao['type'] != 'Feature' or type(propriedades['NUMERO']) is not int or type(propriedades['ANO']) is not int:
+        propriedades = feicoes[0]['attributes']
+        if type(propriedades['NUMERO']) is not int or type(propriedades['ANO']) is not int:
             raise ValueError()
         if propriedades['NUMERO'] != numero or propriedades['ANO'] != ano or propriedades['UF'] != 'MG':
-            raise ValueError()
-        if (documento.get('properties') or {}).get('exceededTransferLimit'):
-            raise ValueError()
-        if 'crs' in documento and documento['crs'].get('properties', {}).get('name') not in ('EPSG:4326', 'urn:ogc:def:crs:OGC:1.3:CRS84', 'urn:ogc:def:crs:EPSG::4326'):
             raise ValueError()
         campos = {}
         for origem, destino in (('NOME', 'titular'), ('FASE', 'fase'), ('SUBS', 'substancia')):
@@ -56,15 +50,11 @@ def preparar_processo(documento, numero, ano):
         area = propriedades['AREA_HA']
         if type(area) not in (int, float) or not 0 < area < 1000000 or not math.isfinite(area):
             raise ValueError()
-        desenho = validar_area(feicao)
-        if any(not (-51.3 <= x <= -38.7 and -23.5 <= y <= -14) for x, y in desenho['geometry']['coordinates'][0]):
-            raise ValueError()
-        desenho['properties'].update(campos)
-        desenho['properties'].update({
-            'origem': 'processo_anm', 'processo': f'{numero:06d}'[:3] + '.' + f'{numero:06d}'[3:] + f'/{ano}',
+        campos.update({
+            'processo': f'{numero:06d}'[:3] + '.' + f'{numero:06d}'[3:] + f'/{ano}',
             'numero': numero, 'ano': ano, 'area_ha': area, 'uf': 'MG',
         })
-        return desenho
+        return {'properties': campos}
     except (ValueError, KeyError, TypeError, AttributeError, OverflowError):
         raise FonteIndisponivel() from None
 
@@ -91,6 +81,6 @@ class ProcessosANM:
                 dados = preparar_processo(self.consultar(numero, ano), numero, ano)
             except Exception:
                 raise FonteIndisponivel() from None
-            dados['fonte'] = {'nome': 'Agência Nacional de Mineração — SIGMINE', 'url': SERVICO, 'consultado_em': datetime.now(timezone.utc).isoformat(), 'crs': 'EPSG:4326'}
+            dados['fonte'] = {'nome': 'Agência Nacional de Mineração — SIGMINE', 'url': SERVICO, 'consultado_em': datetime.now(timezone.utc).isoformat()}
             self.cache[chave] = (self.relogio(), dados)
             return deepcopy(dados)

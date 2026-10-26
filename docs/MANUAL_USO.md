@@ -10,19 +10,25 @@ O mapa abre em Minas Gerais. Arraste e use zoom, roda do mouse ou gestos para ap
 
 ## Sobrepor camadas
 
-Na lateral, marque um ou mais temas: **Relevo e declividade**, **Água e drenagem**, **Solos e condição ambiental**, **Vegetação e conservação**, **Entorno e infraestrutura**. Esses cinco temas têm alcance em Minas Gerais. A sexta opção, **Trilhas de Nova Lima**, mostra cadastro da Prefeitura apenas na sua cobertura municipal. Não é necessário selecionar a mina antes.
+Na lateral, marque um ou mais temas: **Relevo e declividade**, **Água e drenagem**, **Solos**, **Vegetação e conservação**, **Entorno e infraestrutura**. Esses cinco temas têm alcance em Minas Gerais. A sexta opção, **Trilhas de Nova Lima**, mostra cadastro da Prefeitura apenas na sua cobertura municipal. Não é necessário selecionar a mina antes.
 
 Cada tema marcado carrega a representação oficial (imagens WMS ou linhas municipais). Use a **seta da camada** para expandir ou recolher **Intensidade** e **Legenda**. As opções começam recolhidas; fechar a seta mantém a camada e a intensidade escolhida. Reduza a intensidade quando cores encobrirem outra camada. Abra Legenda para consultar as cores/classes de cada base do tema. Desmarque para remover. A ordem das sobreposições é fixa; o último clique não altera essa ordem. Trocar fundo, escolher mina e voltar ao estado preservam as camadas ativas. Recarregar a página limpa as escolhas e a área desenhada. Nas trilhas, cada traçado usa sua cor da Prefeitura; a legenda mostra apenas os nomes presentes no enquadramento, na ordem da fonte. A lista é rolável e acompanha a navegação. Passe o cursor sobre a linha ou toque nela para consultar o nome cadastrado.
 
-## Delimitar a área de estudo
+## Alternar modos e delimitar
 
-Clique em **Desenhar área**. Clique ou toque no mapa para marcar pelo menos três pontos. **Desfazer ponto** remove o último; **Cancelar** abandona o rascunho. Use **Fechar contorno** ou o primeiro ponto para fechar. Arraste os vértices para ajustar; os marcadores intermediários permitem acrescentar pontos. Clique em **Confirmar área**. Caso a geometria seja inválida, ajuste o contorno e confirme novamente.
+Na barra Áreas de estudo, escolha **Manual**, **Referência** ou **Influência**. O modo ativo fica verde. Referência e Influência só ficam disponíveis depois de selecionar a mina. Pode alternar livremente: isso não cria áreas duplicadas.
 
-Após confirmar, **Adicionar área** começa outro polígono sem apagar os anteriores. A lista Áreas ou o clique em um contorno inativo seleciona qual será editado; amarelo indica a seleção e verde indica as demais. **Polígono ANM**, habilitado ao selecionar a mina, oferece uma prévia cadastral para confirmar como outra área independente. Editar e confirmar esse polígono o transforma em recorte manual.
+**Referência** mostra a área cinza de mineração do OpenStreetMap. **Usar como área** acrescenta esse contorno à sua coleção e abre Manual. Se ele já estiver na coleção sem alterações, o botão será **Selecionar esta área**, reutilizando-o. É uma referência colaborativa, sem certificação de limite atual.
 
-Na área selecionada, **Ver área** enquadra o desenho; **Ajustar** permite editar, **Redesenhar** começa outro e **Remover** apaga apenas ela. **Renomear** permite trocar “Área 1” por uma identificação sua; digite o nome e use **Salvar nome** ou Enter. Cancelar/Escape mantém o nome anterior. O nome aparece na lista e no rótulo do mapa, acompanha as edições e também se perde ao recarregar a página. Cancelar uma edição/redesenho restaura a última área confirmada. Escape cancela o desenho em andamento. Todas as áreas permanecem ao navegar e alternar camadas/fundo, mas se perde ao atualizar ou fechar a página. Não há salvamento permanente.
+**Influência** mostra quatro filtros: ADA unificada, AID água subterrânea, AID águas/solos e AII águas/solos. Marque/desmarque cada um; a mina permanece sombreada. Os filtros são conservados ao alternar. Fonte e significado explica as siglas e abre a evidência. Os recortes são do projeto Tamanduá/Horizontes, não fechamento.
 
-O contorno é a área escolhida para estudo, não o perímetro físico ou operacional da mina. [Limites do desenho](AREA_ESTUDO.md).
+**Manual** permite desenhar ou retomar o trabalho. Use Desenhar área/Adicionar área; marque pelo menos três pontos; Desfazer ponto remove o último e Cancelar abandona o rascunho. Feche pelo primeiro ponto ou Fechar contorno, ajuste os vértices e confirme. Se a geometria for inválida, ajuste e confirme novamente. É possível manter várias áreas independentes.
+
+Se quiser consultar Referência ou Influência no meio do desenho, ajuste ou renomeação, clique no modo. O trabalho fica guardado; volte a Manual para retomar os mesmos pontos/texto e enquadramento. Clicar novamente no modo não reinicia o trabalho. O último contexto consultado continua visível em Manual como apoio; **Ocultar**, ao lado de Contexto, remove somente essa sobreposição. Ainda não há comparação automática.
+
+Escolha uma área na lista ou mapa para Ver área, Ajustar, Redesenhar, Renomear ou Remover somente ela. Renomear aceita identificação pessoal; Salvar nome/Enter confirma, Cancelar/Escape conserva o anterior. Cancelar edição/redesenho restaura a confirmação anterior. A referência editada e confirmada torna-se recorte manual, sem mudar o arquivo de origem.
+
+Navegar, alternar modos/fundos/camadas e ocultar barras preserva o trabalho. **Atualizar ou fechar a página descarta áreas, rascunhos e nomes.** Não há salvamento permanente. [Regras e limites](AREA_ESTUDO.md).
 
 ## Falhas e interpretação
 

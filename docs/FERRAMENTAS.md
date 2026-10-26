@@ -1,6 +1,6 @@
 # Ferramentas utilizadas e justificativas
 
-Registro de 26/10/2026, correspondente à versão 3.3.0. Escopo demonstrado: abrir o mapa em Minas Gerais, localizar a Mina Horizontes e explorar cinco temas estaduais, consultar trilhas municipais e delimitar várias áreas de estudo, consultar o cadastro ANM e mostrar o município selecionado pelo IBGE. As escolhas abaixo se referem ao que está implementado no projeto.
+Registro de 26/10/2026, correspondente à versão 3.4.0. Escopo demonstrado: abrir o mapa em Minas Gerais, localizar a Mina Horizontes e explorar cinco temas estaduais, consultar trilhas municipais e delimitar várias áreas de estudo, consultar o cadastro ANM e mostrar o município selecionado pelo IBGE. As escolhas abaixo se referem ao que está implementado no projeto.
 
 ## Aplicação
 
@@ -25,13 +25,13 @@ Evidências no código: [App](../frontend/src/App.tsx), [controles de camadas](.
 | OpenStreetMap | Fundo Mapa, com ruas e localidades. | Contexto cartográfico para navegação, com atribuição e respeito à política de uso do serviço público. |
 | Esri World Imagery | Fundo Satélite. | Contexto visual aproveitando a integração existente. Data e resolução variam por lugar e zoom; a imagem não comprova a condição atual da mina. |
 | Prefeitura de Nova Lima / ArcGIS REST | Trilhas cadastradas por consulta GeoJSON da região visível e cores/nomes pelo renderer do item oficial. | Testa uma segunda infraestrutura oficial. Cobertura municipal, cadastro sem garantia de acesso ou segurança. |
-| ANM / SIGMINE — ArcGIS REST | Processo associado à Horizontes, titular, fase, área cadastrada e polígono. | Fonte primária cadastral, sem copiar o portal nem presumir perímetro físico ou situação operacional. |
+| ANM / SIGMINE — ArcGIS REST | Processo associado à Horizontes, titular, fase e área cadastrada, sem geometria. | Fonte primária cadastral, sem copiar o portal nem presumir perímetro físico ou situação operacional. |
 | IBGE — API de malhas | Contorno de Nova Lima na seleção da mina. | Fonte oficial para contexto municipal, simplificada para web, sem carregar todas as cidades ou certificar limites locais. |
 | IDE-Sisema | Serviço de acesso ao contorno estadual e às dez bases dos cinco temas. | Integração com uma infraestrutura pública oficial de Minas Gerais, com identificadores e legendas documentados. Os produtores dos dados são identificados separadamente. |
 
 A IDE-Sisema distribui dados de diferentes instituições. O contorno tem origem nos limites da FJP. Os cinco temas reúnem INPE/Topodata, ANA/Igam, UFV/Cetec/UFLA/Sisema, MapBiomas, IEF/ICMBio/municípios e IBGE/DNIT. **Leaflet mostra os dados; esses fornecedores produzem ou disponibilizam os dados.**
 
-Vale, FEAM e o cadastro minerário da ANM sustentam a identificação e a proveniência da referência da Horizontes descritas em [Dados geográficos](DADOS_GEOGRAFICOS.md). O cadastro da única mina fica em `dados/minas.json`; a identificação lê esse cadastro local; dados cadastrais atuais vêm da ANM e o limite municipal vem do IBGE.
+Vale, FEAM, OpenStreetMap e o cadastro minerário da ANM sustentam a identificação e a proveniência dos dados da Horizontes descritas em [Dados geográficos](DADOS_GEOGRAFICOS.md). O cadastro da única mina fica em `dados/minas.json`; a identificação lê esse cadastro local; dados cadastrais atuais vêm da ANM e o limite municipal vem do IBGE.
 
 Mantivemos os fundos atuais para concentrar o MVP na integração e exploração das informações. Os serviços públicos têm condições de uso e disponibilidade; não foram classificados como ilimitados. A decisão sobre Google, 3D e atualidade das imagens está registrada em [Escolhas territoriais](ESCOLHAS_TERRITORIAIS.md).
 
@@ -68,10 +68,16 @@ Versões e instalação em [Dependências](DEPENDENCIAS.md). Resultados executad
 
 ## Explicação curta para apresentação
 
-> “Construí a interface com React e TypeScript e usei Leaflet para navegar no mapa e sobrepor informações. O backend Python com FastAPI organiza o acesso aos dados, e o Shapely prepara o contorno estadual para visualização. Integrei bases públicas da IDE-Sisema por serviços geográficos padronizados, mantendo a origem dos dados identificada. Assim, o protótipo permite explorar o território da Mina Horizontes e combinar cinco temas relevantes ao contexto pós-mineração, incorporar trilhas de outra fonte oficial e delimitar várias áreas de estudo. O IBGE fornece o município selecionado e a ANM fornece o cadastro minerário e sua poligonal, sem confundi-la com o limite físico da mina. A confirmação valida a geometria sem produzir um diagnóstico.”
+> “Construí a interface com React e TypeScript e usei Leaflet para navegar no mapa e sobrepor informações. O backend Python com FastAPI organiza o acesso aos dados, e o Shapely prepara o contorno estadual para visualização. Integrei bases públicas da IDE-Sisema por serviços geográficos padronizados, mantendo a origem dos dados identificada. Assim, o protótipo permite explorar o território da Mina Horizontes e combinar cinco temas relevantes ao contexto pós-mineração, incorporar trilhas de outra fonte oficial e delimitar várias áreas de estudo. O IBGE fornece o município selecionado e a ANM fornece os atributos cadastrais. A referência vetorial da mina vem do OpenStreetMap e a influência aproximada vem do parecer FEAM; ambas são servidas localmente, com fonte identificada. A confirmação valida a geometria sem produzir um diagnóstico.”
 
 A justificativa temática vem dos estudos e referências corporativas reunidos em [Escolhas territoriais](ESCOLHAS_TERRITORIAIS.md). As cinco escolhas são um recorte documental de MVP, ainda sem validação de especialista da Vale. A apresentação deve distinguir a exploração visual implementada da avaliação técnica de usos futuros.
 
 Para organizar posteriormente o roteiro, este registro segue a sequência: **necessidade → ferramenta → justificativa → resultado demonstrável**. A integração municipal está em [Trilhas](TRILHAS_NOVA_LIMA.md), e o desenho em [Área de estudo](AREA_ESTUDO.md). A arquitetura detalhada permanece em [Arquitetura](ARQUITETURA.md).
 
 As ferramentas de áreas ficam na barra esquerda; pesquisa, detalhes e camadas na direita. Ambas podem ser ocultadas por setas sem perder dados da página. A integração [ANM](ANM.md) e o [IBGE](LIMITE_MUNICIPAL.md) usam biblioteca HTTP padrão Python e Shapely existente, sem novos pacotes ou Selenium. A coleção de áreas é memória do navegador, não banco geográfico.
+
+## Referências locais de duas fontes
+
+GeoJSON versionado guarda a área de mineração OpenStreetMap e quatro recortes aproximados do meio físico do parecer. A receita registra pixels e grade UTM; Python/Shapely reproduz o preparo sem nova dependência. A API local entrega os arquivos, sem download externo ao clicar. Essa escolha permite demonstrar integração de evidência documental com bases públicas, mantendo a diferença entre digitalização aproximada, cadastro e desenho pessoal. [Método e limites](REFERENCIAS_TERRITORIAIS.md).
+
+Os modos Manual/Referência/Influência preservam rascunhos e filtros ao alternar. Usar como área adiciona a referência explicitamente ou seleciona a já existente; o último contexto pode permanecer sob o desenho, com opção Ocultar. [Fluxo](AREA_ESTUDO.md).

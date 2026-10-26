@@ -4,7 +4,7 @@ import type {EstadoANM, ProcessoANM} from './tipos.ts';
 
 const VAZIO: EstadoANM = {dados: null, carregando: false, erro: ''};
 
-/** Compartilha a consulta entre os detalhes e o botão, cancelando respostas de outra seleção. */
+/** Consulta apenas os atributos do cartão, cancelando respostas de outra seleção. */
 export function useProcessoANM(minaId: string | undefined) {
   const [estado, setEstado] = useState<EstadoANM & {id?: string}>(VAZIO);
   const atual = useRef(estado);
@@ -38,5 +38,5 @@ export function useProcessoANM(minaId: string | undefined) {
     };
   }, [minaId, carregar]);
 
-  return {estado: estado.id === minaId ? estado : VAZIO, obter: carregar, recarregar: () => {void carregar(true).catch(() => {});}};
+  return {estado: estado.id === minaId ? estado : VAZIO, recarregar: () => {void carregar(true).catch(() => {});}};
 }

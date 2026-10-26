@@ -101,7 +101,7 @@ export default function App() {
       <div className={`territorio${barraAreas ? '' : ' areas-ocultas'}${barraConsulta ? '' : ' consulta-oculta'}`}>
         <aside id="barra-areas" className="painel-areas" aria-label="Ferramentas de áreas" hidden={!barraAreas}>
           <h2>Áreas de estudo</h2>
-          <AreaEstudo mapa={mapa} minaId={selecionada?.id} obterProcessoANM={anm.obter} aoInteragir={preservarArea}/>
+          <AreaEstudo mapa={mapa} minaId={selecionada?.id} aoInteragir={preservarArea}/>
         </aside>
         <button type="button" className="alternar-painel alternar-areas" aria-controls="barra-areas" aria-expanded={barraAreas} aria-label={barraAreas ? 'Ocultar áreas' : 'Mostrar áreas'} title={barraAreas ? 'Ocultar áreas' : 'Mostrar áreas'} onClick={() => setBarraAreas(valor => !valor)}><svg viewBox="0 0 24 24" aria-hidden="true"><path d={barraAreas ? 'm14 7-5 5 5 5' : 'm10 7 5 5-5 5'}/></svg><span>Áreas</span></button>
         <button type="button" className="alternar-painel alternar-consulta" aria-controls="barra-consulta" aria-expanded={barraConsulta} aria-label={barraConsulta ? 'Ocultar mina e camadas' : 'Mostrar mina e camadas'} title={barraConsulta ? 'Ocultar mina e camadas' : 'Mostrar mina e camadas'} onClick={() => setBarraConsulta(valor => !valor)}><svg viewBox="0 0 24 24" aria-hidden="true"><path d={barraConsulta ? 'm10 7 5 5-5 5' : 'm14 7-5 5 5 5'}/></svg><span>Mina e camadas</span></button>

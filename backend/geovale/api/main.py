@@ -4,10 +4,12 @@ import json
 from pathlib import Path
 
 from fastapi import FastAPI, Request
+from shapely.errors import ShapelyError
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 
 from geovale.camadas import CAMADAS
+from geovale.referencias import ler_referencias
 from geovale.anm import ProcessosANM
 from geovale.municipio import LimitesMunicipais
 from geovale.area import AreaInvalida, validar_area
@@ -19,7 +21,7 @@ RAIZ = Path(__file__).resolve().parents[3]
 
 def criar_app(limite=None, raiz=RAIZ, trilhas=None, anm=None, municipios=None):
     """Expõe mapa, temas, trilhas, município, cadastro ANM e validação individual de áreas."""
-    app = FastAPI(title='GeoVale — mapa territorial', version='3.3.0', docs_url=None, redoc_url=None, openapi_url=None)
+    app = FastAPI(title='GeoVale — mapa territorial', version='3.4.0', docs_url=None, redoc_url=None, openapi_url=None)
     fonte = limite if limite is not None else LimiteEstadual()
     fonte_trilhas = trilhas if trilhas is not None else TrilhasMunicipais()
     fonte_anm = anm if anm is not None else ProcessosANM()
@@ -29,7 +31,7 @@ def criar_app(limite=None, raiz=RAIZ, trilhas=None, anm=None, municipios=None):
     @app.get('/api/saude')
     def saude():
         """Indica disponibilidade do aplicativo, independentemente da fonte externa."""
-        return {'status': 'ok', 'versao': '3.3.0'}
+        return {'status': 'ok', 'versao': '3.4.0'}
 
     @app.get('/api/mapa')
     def configuracao():
@@ -83,6 +85,16 @@ def criar_app(limite=None, raiz=RAIZ, trilhas=None, anm=None, municipios=None):
             return JSONResponse(fonte_anm.obter(processo['numero'], processo['ano']), headers={'Cache-Control': 'no-store'})
         except FonteIndisponivel:
             return JSONResponse(status_code=503, content={'mensagem': 'Os dados da ANM estão indisponíveis. Tente novamente.'}, headers={'Cache-Control': 'no-store'})
+
+    @app.get('/api/minas/{mina_id}/referencias')
+    def referencias_territoriais(mina_id: str):
+        """Entrega somente a digitalização documental preparada para a mina do MVP."""
+        if mina_id != 'horizontes' or not any(item['id'] == mina_id for item in minas):
+            return JSONResponse(status_code=404, content={'mensagem': 'Mina não encontrada.'})
+        try:
+            return JSONResponse(ler_referencias(raiz / 'dados/referencias/horizontes.geojson'), headers={'Cache-Control': 'no-store'})
+        except (OSError, ValueError, KeyError, TypeError, ShapelyError):
+            return JSONResponse(status_code=503, content={'mensagem': 'As referências estão indisponíveis. Tente novamente.'})
 
     @app.get('/api/minas/{mina_id}/limite-municipal')
     def limite_municipal(mina_id: str):

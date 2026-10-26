@@ -1,31 +1,37 @@
 # Áreas de estudo
 
-Versão 3.3.0. O engenheiro pode demarcar **vários polígonos independentes** na mesma página: por exemplo, cava, morro e barragem. Cada área pode recortar somente uma parte do território; não é necessário demarcar a mina inteira. As áreas podem se sobrepor ou ficar separadas e não são unidas automaticamente. Não existe limite fixo de quantidade de áreas no produto; cada polígono tem de 3 a 500 vértices e o desempenho depende do navegador.
+Versão 3.4.0. Há três modos na barra esquerda: **Manual**, **Referência** e **Influência**. Os dois últimos exigem a Mina Horizontes selecionada. A jornada termina na delimitação e visualização, sem cálculo ou avaliação.
 
-## Adicionar e selecionar
+## Três modos, sem cópias por navegação
 
-**Desenhar área → marcar pontos → Fechar contorno → ajustar → Confirmar área.** Desfazer ponto retira o último; o primeiro ponto também fecha o anel. Os marcadores intermediários acrescentam vértices na edição.
+**Manual**, **Referência** e **Influência** são modos de trabalho exclusivos, com o ativo destacado. Os modos de consulta exigem mina selecionada e pacote local disponível. Alternar não cria, confirma, remove ou duplica áreas. Clicar novamente em Referência/Influência reenquadra a mesma visualização, sem desligá-la. Movimentos rápidos interrompem a transição anterior para manter o enquadramento correto.
 
-Depois da primeira confirmação, **Adicionar área** inicia outro desenho conservando os anteriores. A lista **Áreas** permite selecionar cada demarcação, inclusive por clique em um contorno inativo no mapa. A área selecionada tem borda amarela; as demais ficam verdes. A numeração é estável durante a sessão e não é reaproveitada após remover.
+- **Referência** mostra o contorno de mineração OpenStreetMap, way 315221699, como contexto de consulta. **Usar como área** é a ação explícita para acrescentá-lo à coleção. Se já houver referência OSM intacta, aparece **Selecionar esta área**, que reutiliza a existente. O contorno não é certificado. [Fonte e precisão](REFERENCIAS_TERRITORIAIS.md).
+- **Influência** apresenta quatro filtros do meio físico: ADA unificada, AID hidrogeologia, AID águas/solos e AII águas/solos. A referência OSM permanece sombreada mesmo com todos desligados. Os filtros são preservados ao visitar outro modo. São recortes do projeto Tamanduá/Horizontes, não fechamento, e não são áreas editáveis do usuário.
+- **Manual** reúne desenho, edição, coleção e nomes. Desenhar área/Adicionar área começa um novo recorte. Se não existir área ou rascunho, clicar no modo Manual também inicia o desenho. Clicar de novo durante um trabalho não o reinicia.
 
-**Ver área**, **Ajustar**, **Redesenhar**, **Renomear** e **Remover** atuam somente sobre a área selecionada. Remover escolhe a última área restante; se não restar nenhuma, volta ao estado inicial. Cancelar adição retorna à área antes selecionada; cancelar edição/redesenho restaura sua geometria confirmada. As outras áreas permanecem inalteradas. Escape cancela o desenho ou a prévia ANM quando o foco está nos controles.
+Ao entrar em Manual depois de consultar um contexto, esse contexto permanece como apoio visual. A linha **Contexto: referência/influência · Ocultar** permite removê-lo sem apagar desenhos ou filtros. Contextos não capturam cliques de desenho.
 
-**Polígono ANM** é outra forma de adicionar, disponível após selecionar a mina. Exibe a prévia do processo associado e permite confirmar ou cancelar. A geometria importada pode ser ajustada; ao confirmar qualquer ajuste, torna-se recorte manual, sem manter o rótulo de origem oficial. [Fonte e limites ANM](ANM.md).
+## Pausar, retomar e confirmar
+
+Alternar durante desenho/ajuste/renomeação **guarda o trabalho na memória da página**. Pontos e texto não são descartados; marcadores de edição são suspensos durante a consulta. Ao voltar a Manual, o desenho/ajuste e seu enquadramento são retomados. A consulta exibe um aviso curto de trabalho guardado. Não há diálogo obrigatório de confirmação para trocar de modo.
+
+Usar como área fica indisponível enquanto há trabalho manual pendente, para não substituir o rascunho; os três modos continuam acessíveis. Termine ou cancele em Manual para usar a referência. Uma validação já enviada pode terminar durante a consulta. Falha conserva o ajuste para retomar, sem ativar marcadores fora de Manual.
+
+Desenhar: marque de 3 a 500 pontos → Fechar contorno → ajustar → Confirmar área. Desfazer ponto retira o último; tocar o primeiro fecha o anel. Várias áreas são independentes, sem união automática ou limite fixo de quantidade; o desempenho depende do navegador.
+
+A lista Áreas ou um clique em contorno inativo seleciona a demarcação e abre Manual. Amarelo indica seleção; verde indica as outras. Ver área, Ajustar, Redesenhar, Renomear e Remover afetam só a selecionada. A numeração não é reutilizada. Remover seleciona a última restante. Cancelar adição/edição restaura a confirmação anterior e preserva as outras. Escape cancela o desenho quando estiver em Manual.
+
+Usar a referência intacta conserva `origem=referencia_osm`; ajustar/redesenhar e confirmar produz `origem=desenho_manual`. O snapshot de origem permanece inalterado. Ocultar barras preserva os estados. Desmarcar a mina remove o contexto, desabilita os modos documentais e retorna a Manual, preservando áreas e retomando eventual rascunho. Não há comparação por cálculo nesta etapa.
 
 ## Nome personalizado
 
-Na área selecionada, **Renomear** abre um campo na lateral. Digite um nome (por exemplo, Barragem ou Cava principal) e use **Salvar nome** ou Enter. **Cancelar** ou Escape conserva o nome anterior. O foco retorna ao botão Renomear. Enquanto o campo está aberto, a seleção de outra área fica bloqueada para não aplicar o nome ao recorte errado.
-
-O nome substitui o rótulo padrão na lista, na identificação da área selecionada e no tooltip do polígono, ativo ou inativo. É texto livre de 1 a 80 caracteres após retirar espaços nas extremidades e reduzir sequências de espaços a um. Nomes iguais são permitidos; os ids internos continuam distintos e estáveis. A numeração inicial permanece como padrão se não houver nome personalizado.
-
-Renomear não altera a geometria, a fonte, o processo ou a finalidade; é uma identificação pessoal do recorte. O nome acompanha a área após ajuste ou redesenho e é removido quando ela é excluída. É mantido separadamente das propriedades cadastrais e não é enviado ao backend ou aos fornecedores. No mapa usa `textContent`, sem interpretar HTML. Assim como os polígonos, existe apenas na memória da página e se perde ao recarregar.
+Renomear abre um campo de 1–80 caracteres após normalizar espaços. Salvar/Enter atualiza lista, identificação e tooltip; Cancelar/Escape conserva o anterior e devolve foco. Durante a renomeação, outra área não pode ser selecionada. Nomes iguais são permitidos, separados por id estável. O nome pessoal não altera geometria/origem, acompanha ajustes e é descartado ao remover ou recarregar. Usa texto seguro, sem interpretar HTML, e não é enviado ao backend ou às fontes.
 
 ## Validação e memória
 
-`POST /api/area/validar`, JSON até 128 KiB por confirmação manual. Entrada: Feature GeoJSON Polygon simples, um anel fechado sem buracos, coordenadas numéricas finitas em duas dimensões, longitude ±180° e latitude ±85°. Sem segmentos atravessando o antimeridiano; pelo menos três vértices distintos, superfície não nula e geometria válida no Shapely. Não recebe MultiPolygon: várias áreas são várias Features Polygon independentes, validadas individualmente.
+`POST /api/area/validar`, JSON até 128 KiB por confirmação manual: Feature Polygon simples, anel fechado sem buracos, 3–500 vértices distintos, superfície não nula, coordenadas numéricas finitas 2D, longitude ±180°, latitude ±85°, sem segmento atravessando o antimeridiano. Shapely rejeita autointerseção e degeneração sem corrigir, simplificar ou deslocar. Várias áreas são Features Polygon independentes, não um MultiPolygon manual.
 
-A resposta 200 preserva a geometria e devolve propriedades controladas: `origem=desenho_manual`, `finalidade=area_de_estudo`, `vertices`. Retorna 422 para desenho/JSON inválido e 413 para tamanho excedente. Sem correção, simplificação ou deslocamento silencioso. Falha mantém a área editável. A confirmação ANM preserva a Feature já validada pela consulta do backend. Não calcula área/distância, interseções ou aptidão.
+Resposta 200 preserva a geometria e entrega somente origem manual, finalidade e número de vértices. Retorna 422 para entrada inválida e 413 acima do limite; falha mantém o desenho editável. A referência OSM intacta já vem conferida pelo leitor local e sua confirmação não chama fornecedores. O desenho é enviado somente à API local para validação.
 
-As áreas confirmadas existem somente na memória da página; **recarregar ou fechar descarta todas**. Não há salvamento em arquivo, banco ou sessão do servidor. Os desenhos são enviados apenas à API local para validação, sem transmissão aos provedores externos. Leaflet.draw fornece desenho/edição; controles React mantêm a identidade visual. Navegar, alternar fundo/camadas ou voltar para MG conserva todas as demarcações.
-
-Uma área de estudo é uma escolha do usuário. Não certifica limite fundiário, ambiental, operacional ou pós-mineração. O limite municipal é contexto administrativo; o processo ANM é um cadastro minerário. Nenhum deles comprova segurança ou liberação de uso.
+Áreas e nomes existem na memória da página: fechar ou recarregar descarta todas. Não há salvamento, banco ou retomada. Navegar, alternar fundo/temas, ocultar barras ou voltar a MG preserva confirmações. Nenhuma área certifica limite fundiário, operacional, ambiental ou pós-mineração, segurança ou autorização de uso.

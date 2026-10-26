@@ -12,7 +12,8 @@ flowchart LR
     A --> G[Catálogo fixo: cinco temas e trilhas municipais]
     A --> P[ArcGIS REST de Nova Lima: trilhas]
     A --> I[API IBGE: município selecionado]
-    A --> N[ArcGIS REST ANM: cadastro e polígono]
+    A --> N[ArcGIS REST ANM: somente atributos]
+    A --> R[GeoJSON local: referência OSM e influência]
     F --> D[Leaflet.draw: várias áreas independentes]
     D --> V[POST local: validação Shapely]
     F --> S[WMS IDE-Sisema: imagens e legendas]
@@ -28,8 +29,9 @@ flowchart LR
 | `GET /api/mapa` | Enquadramento inicial, uma mina, fundos e catálogo de seis opções com suas bases, tipos, coberturas e legendas |
 | `GET /api/mapa/limite-mg` | FeatureCollection estadual simplificada, origem, data da consulta e aviso quando aplicável |
 | `GET /api/mapa/trilhas?bbox=...` | Traçados municipais no enquadramento visível; 422 para bbox inválida e 503 na falha externa |
-| `GET /api/minas/{mina_id}/processo-anm` | Feature cadastral ANM e fonte/data; 404 para mina desconhecida e 503 na falha externa |
+| `GET /api/minas/{mina_id}/processo-anm` | Atributos cadastrais ANM sem geometria e fonte/data; 404 para mina desconhecida e 503 na falha externa |
 | `GET /api/minas/{mina_id}/limite-municipal` | FeatureCollection IBGE do município selecionado; 404 para mina desconhecida e 503 na falha externa |
+| `GET /api/minas/{mina_id}/referencias` | Pacote documental local conferido; 404 para mina desconhecida, 503 para pacote ausente/incompatível |
 | `POST /api/area/validar` | Valida e devolve a Feature poligonal; 422 para desenho inválido e 413 acima de 128 KiB |
 | `GET /` | Interface compilada; 503 com orientação se o build estiver ausente |
 | `GET /assets/...` | Recursos do build |
@@ -68,7 +70,7 @@ O backend usa somente a URL ArcGIS REST fixa, recorta a bbox à extensão public
 
 ## Áreas de estudo
 
-`AreaEstudo` usa Leaflet.draw sem sua barra padrão. Os controles React seguem a identidade da interface. Estados: vazio, desenho, ajuste, validação, carregamento ANM, prévia ANM e confirmado. Um Map de áreas numeradas mantém as Features confirmadas na memória da página. Um FeatureGroup recebe o recorte ativo/rascunho; outro mantém as demais áreas, selecionáveis por clique. A lista React permite seleção por teclado. Adicionar preserva o conjunto; ajustar/redesenhar/remover afetam só o id selecionado. Cancelar retorna ao id anterior e restaura sua confirmação. A numeração não é reutilizada durante a sessão. Requests pendentes são cancelados na saída ou cancelamento. Desmontar remove handlers, eventos e grupo.
+`AreaEstudo` usa Leaflet.draw sem sua barra padrão. Os controles React seguem a identidade da interface. Estados: vazio, desenho, ajuste, validação, renomeação e confirmado. Um Map de áreas numeradas mantém as Features confirmadas na memória da página. Um FeatureGroup recebe o recorte ativo/rascunho; outro mantém as demais áreas, selecionáveis por clique. A lista React permite seleção por teclado. Adicionar preserva o conjunto; ajustar/redesenhar/remover afetam só o id selecionado. Cancelar retorna ao id anterior e restaura sua confirmação. A numeração não é reutilizada durante a sessão. Requests pendentes são cancelados na saída ou cancelamento. Desmontar remove handlers, eventos e grupo.
 
 A confirmação envia a Feature para `/api/area/validar`; Shapely rejeita autointerseção, anel aberto, degeneração, buracos, tipos diferentes de Polygon e coordenadas inválidas. Não aplica `make_valid` ao desenho. A API devolve a mesma geometria e propriedades controladas (`origem`, `finalidade`, `vertices`). Limites de latitude ±85°, longitude ±180°, sem segmentos cruzando o antimeridiano. Não calcula área/distância nem cruza com bases. A confirmação fica na memória da página; não há gravação ou retomada após reload. [Regras completas](AREA_ESTUDO.md).
 
@@ -80,7 +82,9 @@ A resposta acrescenta `legenda`, com id, nome, cor, opacidade e largura para as 
 
 ## Cartão, fontes cadastrais e município
 
-`CartaoMina` reúne identificação e detalhes sob seta com `aria-expanded/aria-controls`, em controles irmãos do botão principal. `useProcessoANM` compartilha uma única Promise pendente entre cartão e botão da área e cancela consultas de outra seleção. Metadados são consultados ao selecionar; o polígono aparece como prévia ao acionar Polígono ANM e entra na coleção após confirmar. Editar/confirmar passa pelo validador manual e perde os rótulos oficiais. Detalhes de identidade, cache, limites e erro em [ANM](ANM.md).
+`CartaoMina` reúne identificação e detalhes sob seta acessível. `useProcessoANM` consulta somente os atributos cadastrais ao selecionar e cancela pedidos de outra seleção. `returnGeometry=false`, `f=json`; o contrato não contém geometria. Detalhes de identidade/cache/falha em [ANM](ANM.md).
+
+`AreaEstudo` consulta `/api/minas/{id}/referencias` somente sob seleção. O backend lê o GeoJSON local e valida identidade, procedência, topologia e extensão. A visualização da referência não cria áreas. Usar como área adiciona a referência OSM à coleção ou seleciona a já existente. Sua edição confirmada usa o validador manual. `InfluenciasNoMapa` organiza quatro filtros e referência OSM sombreada na pane 430, abaixo das áreas de estudo em 450, com `interactive=false`. Não intercepta desenhos. Alternar o contexto remove grupo e atribuição; desmarcar a mina cancela a leitura e retira o contexto. Ocultar barras não desmonta os componentes. O pacote/receita não depende de ANM, WMS ou IBGE. [Preparo e significado](REFERENCIAS_TERRITORIAIS.md).
 
 `MunicipioNoMapa` consulta somente o código IBGE fixado no catálogo, cancela ao sair da seleção e mantém sua camada/crédito separados. Não recebe uma malha estadual de cidades. Exibe contorno em pane 420, abaixo das áreas em 450. Falha tem recuperação própria. A câmera confere se houve atividade de desenho, alteração de zoom ou deslocamento antes de enquadrar uma resposta tardia. [Contrato IBGE](LIMITE_MUNICIPAL.md).
 
@@ -91,3 +95,11 @@ A resposta acrescenta `legenda`, com id, nome, cor, opacidade e largura para as 
 Cada camada ativa tem uma seta acessível, independente do checkbox, para expandir/recolher intensidade e legenda. As opções iniciam recolhidas; ocultá-las não remove a camada nem altera sua intensidade. O conteúdo fica montado e oculto, preservando a legenda já aberta. Mensagens de carregamento, cobertura e falha ficam fora da seção recolhida.
 
 A área tem um nome pessoal opcional, separado da Feature e indexado pelo id estável. `AreaEstudo` conserva nomes em estado/ref para renderização e callbacks Leaflet; renomear refaz apenas os rótulos, preservando geometria e origem. Estado `renomeando` bloqueia a troca de área por lista ou contorno; formulário aceita 1–80 caracteres normalizados, Enter/Salvar e Escape/Cancelar, com retorno de foco. Texto React escapado e tooltip via `textContent`, sem HTML. Ajustar/redesenhar mantém o nome pelo id; remover limpa seus metadados. Sem nova rota ou persistência.
+
+## Modos de trabalho
+
+`AreaEstudo` separa `modo` (Manual/Referência/Influência) da fase de desenho. A escolha não é uma adição de área. Usar como área reutiliza uma Feature `referencia_osm` existente ou cria uma única entrada explícita. Referência/Influência só alteram contexto e enquadramento, com transição anterior interrompida e sem animação concorrente.
+
+Pontos do desenho aberto são capturados pelo evento DRAWVERTEX, usando `Marker.getLatLng`, e preservados ao suspender Leaflet.draw. Durante a consulta aparece um traço de rascunho sem interação. Retomar recria o desenho via `addVertex` com as mesmas coordenadas e restaura centro/zoom. Ajuste preserva o Polygon enquanto desabilita os marcadores; retomar reativa a edição. A suspensão não aciona a rotina de cancelamento. Texto de nome fica montado e oculto. A resposta de validação pode completar sem trocar o modo consultado; falha só reabre marcadores quando Manual estiver ativo.
+
+O último contexto pode permanecer sob o desenho em Manual, com um controle explícito para ocultar. A sobreposição de influência pode renderizar só a referência ou os quatro filtros mais a referência. O estado dos filtros não depende do modo. Mina desmarcada remove o contexto e retorna a Manual sem apagar rascunhos ou confirmações.

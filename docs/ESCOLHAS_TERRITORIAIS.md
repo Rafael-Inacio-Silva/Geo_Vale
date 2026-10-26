@@ -20,7 +20,7 @@ Formulação para a apresentação: **“O protótipo usa fontes públicas para 
 |---|---|---|---|
 | Relevo e declividade | Entender a configuração regional do terreno e diferenças de inclinação. | Declividade Topodata em seis classes. | Revisão de Pagouni e estudo GIS de Ptolemais: topografia na avaliação territorial. |
 | Água e drenagem | Observar rios e corpos d’água no território e entorno. | Principais trechos hidrográficos e massas d’água. | Ptolemais considera rios; Anglo inclui água no planejamento integrado. |
-| Solos e condição ambiental | Conhecer tipos regionais de solo, um dos componentes físicos do território. | Mapa pedológico de MG, produzido em 2010. Não há diagnóstico de contaminação. | Pagouni aborda propriedades físicas e químicas do solo e condições do local. |
+| Solos | Conhecer tipos regionais de solo, um dos componentes físicos do território. | Mapa pedológico de MG, produzido em 2010. Não há diagnóstico de contaminação. | Pagouni aborda propriedades físicas e químicas do solo e condições do local. |
 | Vegetação e conservação | Observar cobertura da terra e unidades de conservação cadastradas. | MapBiomas 2025 e UCs estaduais, federais e municipais. | Vale considera vocações ambientais; Anglo contempla terra e natureza; revisão aborda ambiente. |
 | Entorno humano e infraestrutura | Observar ocupação urbana e acessos existentes. | Áreas urbanizadas de referência 2022 e rodovias estaduais/federais. | Ptolemais usa proximidade de povoamentos e estradas; Vale aborda vocações socioeconômicas e participação social. |
 
@@ -49,6 +49,10 @@ O desenho manual permite ao engenheiro escolher o recorte que pretende estudar, 
 
 ## Contexto municipal e recortes independentes
 
-O IBGE foi acrescentado para identificar visualmente Nova Lima quando a mina é selecionada, sem exibir todas as cidades. A ANM foi acrescentada como fonte primária do cadastro minerário associado. São funções de localização e consulta cadastral, não novos critérios de aptidão. O engenheiro pode delimitar várias partes separadas (cava, morro, barragem), editar um recorte derivado da ANM ou desenhar do zero. Nenhuma escolha significa que toda a área do processo ou do município esteja disponível para uso futuro. [Município](LIMITE_MUNICIPAL.md), [ANM](ANM.md), [Áreas](AREA_ESTUDO.md).
+O IBGE foi acrescentado para identificar visualmente Nova Lima quando a mina é selecionada, sem exibir todas as cidades. A ANM foi acrescentada como fonte primária do cadastro minerário associado. São funções de localização e consulta cadastral, não novos critérios de aptidão. O engenheiro pode delimitar várias partes separadas (cava, morro, barragem), editar a referência cartográfica da mina ou desenhar do zero. Nenhuma escolha significa que toda a área do processo ou do município esteja disponível para uso futuro. [Município](LIMITE_MUNICIPAL.md), [ANM](ANM.md), [Áreas](AREA_ESTUDO.md).
 
 A consulta de 26/10/2026 sobre visualização 3D Google está registrada em [Consulta 3D](CONSULTA_3D_GOOGLE.md). Não alterou os fundos, camadas ou fontes implementadas nem ativou faturamento Google.
+
+## Delimitação documental
+
+O contorno da referência vem da feição de mineração do OpenStreetMap escolhida pelo usuário. Os recortes do meio físico do projeto conjunto vêm da Figura 2.3 do parecer FEAM. Por isso o MVP apresenta desenho manual, referência local da área de mineração OSM e influência com filtros. Não usa o processo ANM como perímetro da mina nem um raio genérico como limite de recuperação. As influências são digitalizadas aproximadamente; o contorno OSM é colaborativo. Nenhum substitui plano de fechamento. A comparação calculada não está implementada. [Evidência, datas e preparo](REFERENCIAS_TERRITORIAIS.md).

@@ -2,7 +2,7 @@
 
 ## Python 3.12
 
-Dependências diretas: FastAPI 0.159.1, Uvicorn 0.54.0 e Shapely 2.2.0. HTTPX 0.28.1 e pytest 9.1.1 são usados nos testes. Shapely utiliza NumPy e GEOS para validação/simplificação do contorno estadual, validação das linhas municipais e dos polígonos manuais, cadastral ANM e municipal IBGE.
+Dependências diretas: FastAPI 0.159.1, Uvicorn 0.54.0 e Shapely 2.2.0. HTTPX 0.28.1 e pytest 9.1.1 são usados nos testes. Shapely utiliza NumPy e GEOS para validação/simplificação do contorno estadual, validação das linhas municipais e dos polígonos manuais, referências documentais locais e município IBGE.
 
 `requirements/compatibilidade.in` declara as dependências diretas. Os locks macOS 15 x86_64 e Linux x86_64 fixam versões transitivas e hashes. Os pacotes sem uso na etapa territorial foram retirados dos arquivos de instalação. A existência de um lock Linux não comprova execução nessa plataforma.
 
@@ -20,4 +20,6 @@ WFS oficial da IDE-Sisema via HTTPS no backend. Tiles OpenStreetMap/Esri e image
 
 O papel e a justificativa de cada ferramenta estão em [Ferramentas e justificativas](FERRAMENTAS.md). Este documento reúne as versões e os procedimentos de instalação.
 
-Na versão 3.3.0, a ANM é consultada por HTTPS/ArcGIS REST e o IBGE por sua API de malhas. `urllib`, gzip, threading e cópias defensivas são da biblioteca padrão; não houve nova dependência. Cache ANM de dez minutos, municipal de uma hora. As barras laterais e a coleção de polígonos usam React/Leaflet já instalados.
+Na versão 3.4.0, a ANM é consultada por HTTPS/ArcGIS REST e o IBGE por sua API de malhas. `urllib`, gzip, threading e cópias defensivas são da biblioteca padrão; não houve nova dependência. Cache ANM de dez minutos, municipal de uma hora. As barras laterais e a coleção de polígonos usam React/Leaflet já instalados.
+
+O preparo documental usa `json`, `math`, `pathlib` e Shapely existentes. Nenhum novo pacote GIS ou serviço foi adicionado. Não há dependência de QGIS instalado no computador do usuário.

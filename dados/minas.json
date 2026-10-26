@@ -7,14 +7,14 @@
     "municipio": "Nova Lima",
     "uf": "MG",
     "complexo": "Vargem Grande",
-    "latitude": -20.12139929,
-    "longitude": -43.91708014,
-    "referencia_localizacao": "Ponto aproximado para navegação, derivado do centroide do processo ANM 003.964/1950 vinculado documentalmente ao empreendimento. Não é centroide certificado nem limite físico da mina.",
+    "latitude": -20.11834631,
+    "longitude": -43.92145769,
+    "referencia_localizacao": "Ponto aproximado para navegação, no centro visual do contorno landuse=quarry Mina Capitão do Mato, OpenStreetMap way 315221699. Referência cartográfica colaborativa, sem certificação de perímetro ou condição atual.",
     "fontes": {
       "identificacao": "https://www.vale.com/ar/w/vale-altera-nome-de-mina-e-barragem-em-nova-lima-e-reforca-posicionamento-antirracista",
       "vinculo_processo": "https://sistemas.meioambiente.mg.gov.br/licenciamento/uploads/-r1U-OgCZO3dEqex9HShmdqbrC5mgstw.pdf",
-      "localizacao": "https://geoserver.meioambiente.mg.gov.br/ows?service=WFS&version=2.0.0&request=GetFeature&typeNames=IDE%3Aide_1706_mg_processos_minerarios_pol&outputFormat=application%2Fjson&srsName=EPSG%3A4326&count=1&CQL_FILTER=numero%3D3964+AND+ano%3D1950",
-      "consulta_em": "2026-10-24"
+      "localizacao": "https://www.openstreetmap.org/way/315221699",
+      "consulta_em": "2026-10-26"
     },
     "processo_anm": {
       "numero": 3964,

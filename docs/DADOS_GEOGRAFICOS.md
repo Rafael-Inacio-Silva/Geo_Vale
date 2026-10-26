@@ -16,9 +16,9 @@ A geometria é consultada pela API e guardada temporariamente em memória. O bac
 
 O catálogo contém uma única mina: Horizontes, anteriormente Capitão do Mato, Vale, Nova Lima/MG, Complexo Vargem Grande. A identificação se apoia na [notícia oficial da Vale](https://www.vale.com/ar/w/vale-altera-nome-de-mina-e-barragem-em-nova-lima-e-reforca-posicionamento-antirracista).
 
-O ponto de navegação é **aproximado**, em longitude −43,91708014 e latitude −20,12139929, EPSG:4326. Foi derivado do centroide do polígono do processo ANM 003.964/1950 obtido no WFS da IDE-Sisema em 24/10/2026. O vínculo desse processo com o empreendimento consta de [documento público da FEAM](https://sistemas.meioambiente.mg.gov.br/licenciamento/uploads/-r1U-OgCZO3dEqex9HShmdqbrC5mgstw.pdf).
+O ponto de navegação é aproximado, longitude -43.92145769 e latitude -20.11834631, derivado do centro visual do contorno de mineração OpenStreetMap, way 315221699. Não é um centro certificado. O catálogo e sua fonte estão em `dados/minas.json`; o nome anterior pesquisa a mesma entrada.
 
-O cadastro e os links de origem estão em `dados/minas.json`. O nome anterior é somente um termo de pesquisa da mesma entrada. O marcador **não é uma localização certificada do centro da mina**, nem um polígono físico/operacional. O processo minerário pode ser adicionado pelo botão Polígono ANM, com prévia e confirmação, preservando seu significado cadastral. Não se infere condição de operação a partir de sua fase cadastral.
+A [referência OSM e os quatro recortes de influência](REFERENCIAS_TERRITORIAIS.md) estão em GeoJSON local, com receita, fonte, hash do PDF, figura, página e aviso de aproximação. A influência é do projeto de ampliação; a referência da mina é o contorno colaborativo OSM. Nenhum é limite de fechamento. Podem ser visualizados junto ao desenho pessoal. A ANM fornece somente atributos cadastrais.
 
 ## Mapas de fundo
 
@@ -46,9 +46,9 @@ As referências de catálogo foram consultadas em 24/10/2026 e os dez `GetMap` e
 | Entorno | [`ide_1401_mg_areas_urbanizadas_2022_pol`](https://idesisema.meioambiente.mg.gov.br/geonetwork/srv/por/catalog.search#/metadata/cbdfc068-5fff-4365-b4cd-9837f1373a70) | IBGE; ano de referência 2022, publicação cadastrada em 2026. Não mede demanda social nem população atual. |
 | Infraestrutura | [`ide_0401_mg_rodovias_lin`](https://idesisema.meioambiente.mg.gov.br/geonetwork/srv/por/catalog.search#/metadata/ba9062d9-15d1-4373-9638-2ef8ce885f74) | DNIT/SNV; revisão registrada em 29/06/2022. Não cobre toda via local nem atesta acesso ou capacidade operacional. |
 
-Os cinco checkboxes representam grupos, não cinco arquivos. O rótulo “Solos e condição ambiental” conserva o tema definido na discussão, mas seu conteúdo implementado é apenas o mapa pedológico; não há diagnóstico ambiental. Da mesma forma, o tema entorno inclui urbanização e rodovias, não toda infraestrutura e conhecimento social do território.
+Os cinco checkboxes representam grupos, não cinco arquivos. O tema Solos contém apenas o mapa pedológico; não há diagnóstico ambiental. Da mesma forma, o tema entorno inclui urbanização e rodovias, não toda infraestrutura e conhecimento social do território.
 
-Fundamentação e justificativa do recorte em [Escolhas territoriais](ESCOLHAS_TERRITORIAIS.md). Não há perímetro físico certificado da mina ou base de treinamento. Há várias áreas de estudo independentes, desenhadas pelo usuário ou adicionadas do processo ANM, mantidas apenas na página. Ajustar um polígono cadastral e confirmar produz recorte manual; não altera a fonte oficial.
+Fundamentação e justificativa do recorte em [Escolhas territoriais](ESCOLHAS_TERRITORIAIS.md). Não há perímetro físico certificado da mina ou base de treinamento. Há várias áreas de estudo independentes, desenhadas pelo usuário ou adicionadas da referência OSM da mina, mantidas apenas na página. Ajustar a referência e confirmar produz recorte manual; não altera o arquivo de origem.
 
 ## Sexta opção: trilhas municipais
 
@@ -58,6 +58,6 @@ Em 25/10/2026, a consulta pública contou 67 registros. O serviço informou últ
 
 ## Processo ANM e município IBGE
 
-O cadastro e a geometria do processo 003.964/1950 são consultados diretamente no SIGMINE da ANM, com saída solicitada em EPSG:4326, origem/data e campos cadastrais controlados. Consulta de 26/10/2026: VALE S.A., CONCESSÃO DE LAVRA, FERRO e 471,39 ha. Não é perímetro físico nem declaração de operação ativa. [Contrato e proveniência](ANM.md).
+Somente os atributos do processo 003.964/1950 são consultados no SIGMINE da ANM, com `returnGeometry=false`, fonte/data e campos controlados. Consulta de 26/10/2026: VALE S.A., CONCESSÃO DE LAVRA, FERRO e 471,39 ha. Não é perímetro físico nem declaração de operação ativa. [Contrato e proveniência](ANM.md).
 
 O contorno municipal vem da API de malhas simplificadas do IBGE, código Nova Lima 3144805, qualidade máxima disponível nessa API. Não se assume ano de levantamento a partir da consulta. Só o município da mina selecionada é acrescentado; não é camada temática nem área de estudo. [Precisão, fonte e operação](LIMITE_MUNICIPAL.md).

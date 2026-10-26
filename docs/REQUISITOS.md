@@ -24,16 +24,23 @@
 | RF-20 | Consultar trilhas da fonte municipal fixa com recorte visível, crédito e nome por interação; falha recuperável sem interromper outras fontes. |
 | RF-21 | Associar cada trilha ao nome e cor publicados no item oficial; legenda com categorias do enquadramento, sem duplicatas e na ordem da fonte. Ao navegar, atualizar; ao falhar ou sair da cobertura, não conservar legenda de outra região. |
 | RF-22 | Revelar os detalhes pela seta do cartão, com teclado e estado expandido; consultar titular, fase, processo e área cadastrada na ANM, com recarga na falha. |
-| RF-23 | Polígono ANM na barra esquerda junto às ferramentas de desenho, desabilitado até selecionar a mina; prévia, confirmação e cancelamento sem substituir outras áreas. |
-| RF-24 | Preservar origem cadastral ao confirmar a geometria ANM intacta; confirmar sua edição produz origem manual sem identificação oficial. |
+| RF-23 | Modo Referência habilitado sob seleção e pacote local disponível; consulta do contorno OSM sem criar área. Usar como área adiciona explicitamente ou seleciona a referência intacta existente. |
+| RF-24 | Preservar origem cartográfica OSM ao usar a referência intacta; confirmar sua edição produz origem manual. |
 | RF-25 | Selecionar a mina acrescenta apenas o município associado, via IBGE; retornar para MG retira o limite e seu crédito. Requisição tardia não desfaz desenho ou navegação. |
 | RF-26 | Adicionar várias áreas independentes; escolher uma pela lista ou contorno e editar, redesenhar, enquadrar ou remover só ela. Cancelar conserva as confirmações e demais áreas. |
 | RF-27 | Validar cada polígono individualmente e descartar todas as áreas ao recarregar. Sem unir automaticamente áreas separadas ou sobrepostas. |
 | RF-28 | Renomear individualmente a área selecionada com 1–80 caracteres; atualizar lista/identificação/tooltip sem alterar geometria ou origem. Salvar/Enter e Cancelar/Escape; preservar nome ao editar/redesenhar e descartar com a área ou reload. |
 
+| RF-29 | Modo Influência apresenta os quatro recortes documentais da Figura 2.3 por filtros independentes, mantendo a referência OSM da mina sombreada, sem criar área de estudo ou capturar cliques de desenho. |
+| RF-30 | Referências em pacote local versionado com origem, hash, figura, página e método; nenhuma consulta externa para entregar os contornos. Retirar a influência ao desmarcar a mina e preservar áreas confirmadas. |
+| RF-31 | ANM solicita apenas atributos, sem geometria; falha cadastral não interrompe referência ou desenho. |
+
+| RF-32 | Alternar Manual/Referência/Influência com modo ativo destacado, sem cópias ou confirmação obrigatória. Preservar filtros, áreas, rascunho e nome em andamento; retomar desenho/ajuste com o enquadramento anterior. |
+| RF-33 | Em Manual, manter o último contexto como apoio e oferecer Ocultar; não permitir Usar como área sobre um rascunho pendente. |
+
 ## Regras de interpretação
 
-Os cinco temas são adaptação para MVP, apoiada em referências, sem validação de especialista da Vale. Não equivalem a cinco critérios obrigatórios ou diagnóstico completo. Marcador aproximado e contorno estadual simplificado são apenas localização/navegação. Cada área manual é um recorte de estudo escolhido pelo usuário. O polígono ANM é cadastral, não perímetro físico ou operacional. Fase cadastral não informa operação ativa/encerrada. O limite IBGE é contexto municipal simplificado, sem certificação cadastral. Trilhas são cadastro municipal; não comprovam segurança ou permissão de acesso. Mapa de solos não comprova condição ambiental; Topodata não representa a cava atual. Há validação geométrica do desenho, mas não cruzamento espacial, pesos, ranking, ML ou relatório nesta etapa. Justificativas e limites em [Escolhas territoriais](ESCOLHAS_TERRITORIAIS.md).
+Os cinco temas são adaptação para MVP, apoiada em referências, sem validação de especialista da Vale. Não equivalem a cinco critérios obrigatórios ou diagnóstico completo. Marcador aproximado e contorno estadual simplificado são apenas localização/navegação. Cada área manual é um recorte de estudo escolhido pelo usuário. As influências são digitalizações aproximadas do projeto de ampliação e a referência da mina é colaborativa do OpenStreetMap, não perímetro atual certificado ou limite de fechamento. Fase cadastral não informa operação ativa/encerrada. O limite IBGE é contexto municipal simplificado, sem certificação cadastral. Trilhas são cadastro municipal; não comprovam segurança ou permissão de acesso. Mapa de solos não comprova condição ambiental; Topodata não representa a cava atual. Há validação geométrica do desenho, mas não cruzamento espacial, pesos, ranking, ML ou relatório nesta etapa. Justificativas e limites em [Escolhas territoriais](ESCOLHAS_TERRITORIAIS.md).
 
 ## Qualidade
 

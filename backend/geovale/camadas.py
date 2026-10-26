@@ -35,7 +35,7 @@ CAMADAS = [
         ],
     },
     {
-        'id': 'solos', 'nome': 'Solos e condição ambiental', 'cor': '#a87554',
+        'id': 'solos', 'nome': 'Solos', 'cor': '#a87554',
         'opacidade': 0.4, 'ordem': 2, 'url': SERVICO_WMS,
         'credito': 'Solos: UFV / Cetec / UFLA / Sisema',
         'bases': [base('ide_1502_mg_mapa_solos_pol', 'Tipos de solos — mapeamento de 2010', '365b8a86-6ecd-474b-ae20-30efac6107a8')],

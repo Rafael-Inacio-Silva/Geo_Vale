@@ -3,7 +3,7 @@
 Escopo implementado: mapa, seleção da Mina Horizontes, cinco temas estaduais, trilhas municipais e contorno municipal sob seleção, cadastro ANM e várias áreas de estudo independentes.
 
 - [Status](STATUS.md): estado da entrega.
-- [Cadastro ANM](ANM.md): titular, fase, processo e adição de polígono cadastral.
+- [Cadastro ANM](ANM.md): titular, fase e processo, sem geometria.
 - [Limite municipal](LIMITE_MUNICIPAL.md): API IBGE, Nova Lima somente durante a seleção da mina.
 - [Área de estudo](AREA_ESTUDO.md): desenho, edição, confirmação e limites do polígono.
 - [Trilhas de Nova Lima](TRILHAS_NOVA_LIMA.md): fonte municipal, consulta e justificativa da sexta opção.
@@ -18,3 +18,5 @@ Escopo implementado: mapa, seleção da Mina Horizontes, cinco temas estaduais, 
 - [Validação](VALIDACAO.md): verificações realizadas nesta revisão.
 
 - [Consulta 3D Google](CONSULTA_3D_GOOGLE.md): viabilidade e preços consultados; integração não implementada.
+
+- [Referências territoriais](REFERENCIAS_TERRITORIAIS.md): referência OSM, quatro recortes de influência, evidência, digitalização e limites de interpretação.

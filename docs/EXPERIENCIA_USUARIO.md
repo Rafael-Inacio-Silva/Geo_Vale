@@ -5,7 +5,7 @@
 3. Pesquisar e clicar no cartão para enquadrar Nova Lima e a referência da mina; clicar novamente no cartão desmarca e retorna a MG. A bolinha aproxima a mina e não desfaz a seleção ao repetir o clique. O contorno municipal aparece somente enquanto a mina estiver selecionada. A seta do cartão abre detalhes e cadastro ANM, sem outro cartão abaixo.
 4. Marcar um ou mais dos cinco temas estaduais ou Trilhas de Nova Lima para visualizar sobreposições. A seleção da mina é opcional para usar as camadas.
 5. Ajustar a intensidade de um tema, abrir sua legenda ou desmarcar para remover.
-6. Usar **Desenhar área**, marcar pontos e confirmar; ou **Polígono ANM**, depois de selecionar a mina, conferir a prévia e confirmar.
+6. Alternar Manual, Referência e Influência. Consultar a referência OSM não cria uma área; Usar como área adiciona explicitamente ou Selecionar esta área reutiliza a existente. Influência conserva os quatro filtros e a mina sombreada. Alternar no meio do desenho guarda os pontos para retomar em Manual, com o enquadramento anterior. O último contexto pode continuar visível como apoio; Ocultar remove somente o contexto.
 7. Usar **Adicionar área** para demarcar outros recortes (cava, morro, barragem). Escolher uma área na lista ou mapa para enquadrar, ajustar, redesenhar, renomear ou remover apenas ela. Renomear abre um campo curto na lateral, com Salvar nome e Cancelar; a identificação pessoal acompanha o mesmo recorte. Cancelar preserva as confirmações e demais áreas.
 8. Usar “Ver Minas Gerais” para retornar ao estado, desfazendo a seleção da mina e mantendo temas e áreas e retirando o contorno municipal.
 

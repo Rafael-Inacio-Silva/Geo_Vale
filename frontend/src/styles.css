@@ -161,7 +161,7 @@ button:focus-visible, input:focus-visible, a:focus-visible, [tabindex="-1"]:focu
 .erro-cadastro {color: #7b3d22;}
 .nota-area {margin: -.2rem 0 .6rem; text-align: center; color: #4f6b61; font-size: .7rem;}
 
-.area-estudo.fase-carregando_anm {text-align: center;}
+
 
 .municipio-legenda {display: inline-block; width: 1.15rem; border-top: 3px dashed #276c99;}
 .estado-municipio {position: absolute; z-index: 700; top: 5rem; left: 1rem; max-width: calc(100% - 2rem); display: flex; flex-wrap: wrap; gap: .6rem; align-items: center; padding: .6rem .8rem; color: #174d45; background: #fffffff2; border: 1px solid #b7ccc4; border-radius: .3rem; font-size: .8rem;}
@@ -231,3 +231,23 @@ button:focus-visible, input:focus-visible, a:focus-visible, [tabindex="-1"]:focu
 .renomear-area > input[aria-invalid="true"] {border-color: #a73720;}
 .lista-areas .acao-area {max-inline-size: 100%; overflow-wrap: anywhere; text-align: left;}
 .painel-areas .estado-area {overflow-wrap: anywhere;}
+
+.modos-area {display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .25rem; margin-bottom: 1rem;}
+.painel-areas .modos-area .acao-area {font-size: .68rem; padding-inline: .15rem; min-block-size: 2.8rem;}
+.modos-area .acao-area[aria-pressed="true"] {background: var(--verde); border-color: var(--verde); color: white;}
+.filtros-influencia {min-inline-size: 0; margin: 0 0 1rem; padding: .4rem; border: 1px solid #aac4b5; border-radius: .4rem; background: #eef5ef;}
+.filtros-influencia legend {padding-inline: .25rem; font-size: .75rem; font-weight: 650;}
+.filtros-influencia .seletor-tema {padding: .5rem .2rem; gap: .45rem;}
+.filtros-influencia .nome-tema {font-size: .72rem; font-weight: 500;}
+.linha-influencia {inline-size: 1.2rem; margin-left: auto; border-top: 3px solid; flex-shrink: 0;}
+.mina-sombreada {display: flex; gap: .4rem; align-items: center; margin: .5rem .2rem; font-size: .7rem;}
+.mina-sombreada i {inline-size: .8rem; block-size: .8rem; background: #00594f55; border: 2px solid #00594f; flex-shrink: 0;}
+.fonte-referencias {margin: .5rem .2rem; font-size: .7rem; color: #4f6b61;}
+.fonte-referencias summary {cursor: pointer; color: var(--escuro);}
+.fonte-referencias summary:focus-visible {outline: 2px solid var(--verde); outline-offset: 2px;}
+.fonte-referencias a {color: var(--escuro);}
+
+.painel-referencia .acao-area, .iniciar-area {inline-size: 100%; margin-bottom: .7rem;}
+.contexto-area {display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: .3rem; font-size: .7rem; color: #4f6b61; margin: 0 0 .8rem;}
+.pausa-area {padding: .65rem; background: #fff7dd; border-radius: .3rem;}
+.area-estudo > div[hidden] {display: none;}
