@@ -1,55 +1,29 @@
-# Validação do território e relatório PDF
+# Validação das fichas e prévia
 
-Revisão de 27/10/2026, versão **4.1.0**, macOS, Python 3.12 e Node 24. Fluxo local em `127.0.0.1:8024`, sem implantação pública.
+Versão 4.2.0, 27/10/2026, macOS/Python 3.12/Node 24, aplicação local em 127.0.0.1:8024.
 
-## Verificações automatizadas
+## Automatização
 
-**85 testes Python aprovados**, **2 testes Node aprovados**, TypeScript/build Vite aprovados e `pip check` sem dependências quebradas. Instalação do lock macOS com hashes executada. Lock Linux foi atualizado; execução Linux não foi conferida.
+90 testes Python aprovados no conjunto completo; os testes territoriais/fichas passaram após os ajustes de diagramação e medidas. Dois testes Node, TypeScript/build e pip check aprovados. Lock macOS instalado com hashes; lock Linux atualizado, sem execução Linux. Avisos de depreciação Starlette/HTTPX e Rasterio/NumPy permanecem sem falhas.
 
-Os testes territoriais verificam catálogo completo, recorte irregular, atributos/nulos/IDs, CRS, completude, geometrias inválidas, classes oficiais, grade/células/NoData, persistência, base nova, invalidação por recorte, isolamento por mina, repetição após falha e início automático sem clique. Os testes do PDF verificam conteúdo das onze bases, marca/autoria GeoVale, rótulo fictício, referências, marcadores, cenário inválido/alterado, invalidação de cache, inline/attachment, ausência de consulta externa e preservação dos atributos e matrizes internas. Dados pendentes/vencidos ou de outro recorte impedem relatório apresentado como completo.
+As regressões conferem recorte/persistência, todos os atributos, grade/NoData, relatórios sem reextração, cenário inválido e cache. Os testes novos verificam comprimentos métricos, área sem duplicar polígonos sobrepostos, separação fatos/comentários, ausência de rede sem IA configurada, contrato simulado de LLM e recusa de números inventados. A prévia é testada como PNG real, com manifesto acessível e hash vinculado ao PDF; inclui versões antigas ainda guardadas, versão ausente (409) e página inexistente (404).
 
-Há avisos de depreciação Starlette/TestClient/HTTPX e Rasterio/Affine/NumPy, sem falhas. Nenhuma dependência foi alterada apenas para silenciar esses avisos.
+## Dados e documento reais
 
-## Dados reais conferidos
+As onze bases persistidas da Horizontes continuam com: 68 trechos hidrográficos, 16 massas de água, 3 solos, 3 UCs estaduais/1 federal/1 municipal, 34 áreas urbanizadas, 4 rodovias e 34 trilhas; declividade com 171.428 células válidas/seis classes e cobertura com 182.154/dez classes. Não são constantes inseridas no relatório.
 
-O documento utiliza as onze bases reais persistidas no recorte comum:
+Medidas cartográficas conferidas no documento: 38,10 km de trechos hidrográficos, 213,48 ha de massas de água, 14,10 km de trechos rodoviários, 139,08 km de registros de trilhas e 1.438,02 ha urbanizados, calculados em UTM 23S. Comprimentos somam registros; áreas usam união por base. Essas medidas não são volume, vazão, qualidade ou levantamento de campo.
 
-| Base | Quantidade observada |
-|---|---:|
-| Trechos hidrográficos | 68 registros |
-| Massas d’água | 16 registros |
-| Solos | 3 registros |
-| UCs estaduais | 3 registros |
-| UCs federais | 1 registro |
-| UCs municipais | 1 registro |
-| Áreas urbanizadas | 34 registros |
-| Rodovias | 4 registros |
-| Trilhas | 34 registros |
-| Declividade | 171.428 células válidas; 6 classes |
-| Cobertura da terra | 182.154 células válidas; 10 classes |
+A emissão conferida pela API possui oito páginas, oito marcadores e 481.287 bytes. Todas as páginas foram renderizadas e inspecionadas: primeira página com todos os temas, seis mapas individuais e última ficha sem mapa com oito valores fictícios identificados. Sem anexo extenso ou classificação de usos. Cabeçalhos, tabelas, fontes e numeração legíveis.
 
-Os 164 registros vetoriais têm identificador curto conferido no texto do inventário. Foram conferidos os nomes das onze bases e a manutenção dos campos originais e GeoTIFFs no armazenamento. As contagens reais não são constantes de demonstração no aplicativo. A assinatura de coleta continua 4.0.0, sem invalidar os dados por uma mudança apenas de apresentação.
+A API retornou PDF inline/attachment com mesmos bytes e hash. O download por Baixar PDF no navegador foi comparado byte a byte com a cópia conferida e coincidiu. O manifesto contém texto de todas as páginas. As oito rotas de imagem retornaram PNGs válidos com mais de 900 x 1300 pixels. A prévia vem do próprio PDF; não é outro relatório HTML divergente.
 
-## PDF real e diagramação
+## Navegador
 
-A rota final retornou **HTTP 200, application/pdf**, inline na consulta e attachment com baixar=true. O documento conferido tem **18 páginas**, **nove marcadores de seção** e **187.905 bytes** nesta emissão. Metadados de autoria: GeoVale. Cenário técnico fictício separado de observações geográficas; sem marca corporativa, assinatura de especialista, laudo ou conclusão real de segurança.
+Ver relatório permanece disponível sem ativar Influência. A versão compilada foi verificada com canvas bloqueado e APIs JavaScript recentes removidas antes da inicialização. As oito páginas renderizaram, pois a prévia usa imagens do servidor. Uma falha de imagem foi provocada apontando temporariamente a primeira página para uma página inexistente: erro não deixou imagem antiga visível. Tentar novamente recarregou o documento e recuperou a página. O arquivo temporário foi removido do build.
 
-Todas as páginas foram renderizadas para inspeção visual. Conferidos capa/logo, mapas vetoriais, tabelas/classes, conservação, cenário, fontes e inventário. Fontes Unicode incorporadas, cabeçalhos repetidos nas tabelas e número de página. As matrizes não são despejadas em texto; aparecem como classes/contagens. Identificadores e nomes dos vetores estão no anexo, com ausência de nome preservada.
+O controle nativo do Safari não foi usado nesta conferência; o teste demonstra independência de canvas/PDF.js, sem afirmar uma execução automatizada nesse navegador. O texto acessível acompanha a imagem. Os seletores visuais não filtram dados do relatório.
 
-O download realizado por **Baixar PDF** no navegador foi comparado byte a byte com o PDF da API e coincidiu. A cópia conferida é gerada do estado atual e não substitui a geração dinâmica por um arquivo fixo no repositório. SQLite e arquivos gerados não são publicados em lote no Git.
+## IA e alcance
 
-## Fluxo no navegador
-
-- Antes da seleção: Influência desabilitada e Ver relatório ausente. Selecionar a mina mostra o contorno e Ver relatório, sem exigir Influência.
-- Ver relatório abre diálogo; PDF.js/worker no build oficial legacy carregam sob demanda. Capa e página de contagens reais renderizadas, com texto também disponível para leitor de tela.
-- Anterior/Próxima atualizam a página; download salva o documento visualizado. Fechar preserva seleção e retorna o foco ao botão.
-- Falha de conexão provocada desligando somente o servidor de verificação apresentou Tentar novamente. Reinício e nova tentativa recuperaram o relatório de 18 páginas sem perder a seleção.
-- Em celular 390 x 844, largura do documento HTML igual a 390, diálogo com 374 pixels e canvas com 340 pixels; sem rolagem horizontal. Os controles permaneceram disponíveis.
-
-A compatibilidade foi verificada em sessão controlada do navegador com `Map.prototype.getOrInsertComputed`, `Uint8Array.prototype.toBase64` e `Uint8Array.fromBase64` removidos antes de carregar o leitor. O build moderno reproduziu TypeError ao renderizar; o legacy renderizou as 18 páginas do PDF real. Na interface compilada sob as mesmas ausências, uma falha transitória de canvas foi provocada: Tentar novamente recuperou a capa sem fechar o diálogo e Próxima exibiu a tabela das onze bases. Essa verificação simula APIs ausentes; não equivale a execução automatizada no Safari do usuário, cujo controle nativo não respondeu. Os arquivos temporários de reprodução foram removidos do build após a conferência.
-
-A representação temática do mapa continua independente do documento. Os controles visuais não escolhem dados do relatório; o armazenamento real é separado do cenário local fictício. As verificações do novo fluxo não certificam condições ambientais, estabilidade ou precisão do contorno.
-
-## Alcance
-
-O documento é caracterização territorial com cenário técnico simulado. Não é plano de fechamento da Horizontes, laudo, avaliação de aptidão ou ranking. Não houve validação por especialista da mina. O recorte comum permanece uma aproximação do estudo conjunto Tamanduá/Horizontes e os dados conservam suas idades/escalas próprias. [Relatório e cenário](RELATORIO.md), [dados](DADOS_TERRITORIAIS.md), [recorte](INFLUENCIA.md).
+A integração OpenAI Responses / GPT-5 nano está preparada, com chave exclusivamente no arquivo local ignorado pelo Git. O arquivo permanece vazio, sem chamada real à OpenAI. O contrato foi testado com respostas controladas, incluindo JSON Schema, ausência de temperature, saída completada e recusa de números inventados; o documento atual identifica comentários por regras. Não houve ML treinado, chamada paga, validação de especialista, ensaio real de pH/estabilidade ou decisão de pós-mineração. Os oito números técnicos são fictícios, com asterisco e nota. As fontes reais e o recorte comum mantêm suas datas, escalas e limitações. [Método](RELATORIO.md), [dados](DADOS_TERRITORIAIS.md), [recorte](INFLUENCIA.md).

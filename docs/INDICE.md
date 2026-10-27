@@ -1,6 +1,6 @@
 # Documentação atual
 
-- [Relatório e cenário](RELATORIO.md): documento padronizado, dados reais e premissas fictícias.
+- [Relatório e cenário](RELATORIO.md): fichas com mapas, dados objetivos, comentários e valores técnicos fictícios.
 - [Status](STATUS.md): o que funciona no MVP.
 - [Manual de uso](MANUAL_USO.md): selecionar mina, influência, expansão visual e relatório PDF.
 - [Influência](INFLUENCIA.md): único recorte comum, mina sombreada, evidência e precisão.

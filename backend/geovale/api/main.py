@@ -1,5 +1,6 @@
 """API local e entrega da interface de navegação do GeoVale."""
 
+import hashlib
 import json
 import sqlite3
 import zlib
@@ -37,7 +38,7 @@ def criar_app(limite=None, raiz=RAIZ, trilhas=None, anm=None, municipios=None, t
         finally:
             fonte_territorios.encerrar()
 
-    app = FastAPI(title='GeoVale — mapa territorial', version='4.1.0', docs_url=None, redoc_url=None, openapi_url=None, lifespan=ciclo_vida)
+    app = FastAPI(title='GeoVale — mapa territorial', version='4.2.0', docs_url=None, redoc_url=None, openapi_url=None, lifespan=ciclo_vida)
     fonte = limite if limite is not None else LimiteEstadual()
     fonte_trilhas = trilhas if trilhas is not None else TrilhasMunicipais()
     fonte_anm = anm if anm is not None else ProcessosANM()
@@ -47,7 +48,7 @@ def criar_app(limite=None, raiz=RAIZ, trilhas=None, anm=None, municipios=None, t
     @app.get('/api/saude')
     def saude():
         """Indica disponibilidade do aplicativo, independentemente da fonte externa."""
-        return {'status': 'ok', 'versao': '4.1.0'}
+        return {'status': 'ok', 'versao': '4.2.0'}
 
     @app.get('/api/mapa')
     def configuracao():
@@ -134,9 +135,31 @@ def criar_app(limite=None, raiz=RAIZ, trilhas=None, anm=None, municipios=None, t
         try:
             bruto = relatorios.obter(mina_id)
             disposicao = 'attachment' if baixar else 'inline'
-            return Response(bruto, media_type='application/pdf', headers={'Content-Disposition': f'{disposicao}; filename="geovale-{mina_id}.pdf"', 'Cache-Control': 'no-store'})
+            return Response(bruto, media_type='application/pdf', headers={'Content-Disposition': f'{disposicao}; filename="geovale-{mina_id}.pdf"', 'Cache-Control': 'no-store', 'X-Relatorio-Versao': hashlib.sha256(bruto).hexdigest()})
         except (OSError, ValueError, KeyError, TypeError, ShapelyError, sqlite3.Error, zlib.error):
             return JSONResponse(status_code=503, content={'mensagem': 'O relatório ainda está sendo preparado. Tente novamente.'}, headers={'Cache-Control': 'no-store'})
+
+    @app.get('/api/minas/{mina_id}/relatorio/previa')
+    def previa_relatorio(mina_id: str, versao: str):
+        """Entrega paginação e texto acessível da versão já aberta, sem regenerar comentários."""
+        if not any(m['id']==mina_id for m in minas):
+            return JSONResponse(status_code=404,content={'mensagem':'Mina não encontrada.'})
+        try:
+            return JSONResponse(relatorios.descrever(mina_id,versao),headers={'Cache-Control':'no-store'})
+        except ValueError:
+            return JSONResponse(status_code=409,content={'mensagem':'Reabra o relatório para atualizar a prévia.'})
+
+    @app.get('/api/minas/{mina_id}/relatorio/paginas/{numero}')
+    def pagina_relatorio(mina_id: str, numero: int, versao: str):
+        """Exibe a página renderizada no servidor; não depende de canvas, fontes ou worker do navegador."""
+        if not any(m['id']==mina_id for m in minas):
+            return JSONResponse(status_code=404,content={'mensagem':'Mina não encontrada.'})
+        try:
+            return Response(relatorios.pagina(mina_id,versao,numero),media_type='image/png',headers={'Cache-Control':'private, max-age=3600'})
+        except IndexError:
+            return JSONResponse(status_code=404,content={'mensagem':'Página não encontrada.'})
+        except ValueError:
+            return JSONResponse(status_code=409,content={'mensagem':'Reabra o relatório para atualizar a prévia.'})
 
     @app.get('/api/minas/{mina_id}/territorio')
     def territorio_mina(mina_id: str):

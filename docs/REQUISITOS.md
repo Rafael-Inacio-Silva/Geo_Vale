@@ -14,7 +14,7 @@
 | RF-10 | Vetores conservam todos os atributos publicados, valores nulos e ID; geometrias são recortadas pela influência irregular, com contagem única por registro. |
 | RF-11 | Descobrir esquema WFS e consultar todos os campos; trilhas usam outFields=*. Conferir completude, identidade, CRS e validade; rejeitar truncamento/excesso sem apresentar resultado parcial da base como completo. |
 | RF-12 | Rasters via WCS mantêm grade nativa, resolução e todas as células selecionadas pelo centro, NoData separado, classes da legenda padrão oficial e GeoTIFF guardado. Sem leitura de cores WMS, amostra isolada ou reamostragem. |
-| RF-13 | Selecionar a mina oferece Ver relatório sem exigir Influência. PDF GeoVale com todas as bases, cenário fictício separado, síntese, fontes e inventário; visualizador paginado e download do mesmo arquivo. Bases incompletas/vencidas impedem geração; dados completos permanecem internos. |
+| RF-13 | Selecionar a mina oferece Ver relatório sem exigir Influência. PDF GeoVale com mapa geral e seis mapas temáticos, fatos e comentários separados por dado, ficha técnica fictícia com asterisco e fontes; prévia por imagens renderizadas no servidor e download do mesmo arquivo. Bases incompletas/vencidas impedem geração; dados completos permanecem internos. |
 | RF-14 | Atualizar automaticamente após 24 h enquanto servidor ligado; conferir pendências a cada minuto e repetir falhas após cinco minutos. |
 | RF-15 | Base nova integrada ao catálogo entra no processamento sem botão; mudança de recorte/evidência invalida resultados incompatíveis. |
 | RF-16 | Distinguir pendente/processando/pronto/erro e dados anteriores. Fonte indisponível não vira zero; resposta vazia completa é identificada como tal. |

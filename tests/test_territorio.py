@@ -299,10 +299,10 @@ def test_relatorio_pdf_usa_catalogo_inteiro_sem_rede_e_preserva_dados_internos(t
     assert resposta.headers['cache-control'] == 'no-store'
     assert resposta.content.startswith(b'%PDF')
     pdf = PdfReader(BytesIO(resposta.content))
-    assert pdf.metadata.author == 'GeoVale' and len(pdf.outline) == 9
+    assert pdf.metadata.author == 'GeoVale' and len(pdf.outline) == 8
     texto = '\n'.join(p.extract_text() for p in pdf.pages)
     assert 'VALE S.A.' not in texto
-    assert 'Cenário técnico simulado' in texto and 'Premissas fictícias' in texto
+    assert 'Dados técnicos sem camada' in texto and 'Dados fictícios' in texto
     assert 'Fonte' in texto and 'Minas-Rio' in texto and '15' in texto
     relatorio = fonte.relatorio('horizontes')
     assert relatorio['completo'] and len(relatorio['bases']) == 11
@@ -380,7 +380,7 @@ def test_pdf_invalida_cache_se_cenario_muda_e_recusa_cenario_sem_rotulo_simulado
     assert relatorios.obter('horizontes') is primeiro
     p = raiz / 'dados/cenarios/horizontes.json'
     c = json.loads(p.read_text())
-    c['premissas'][0]['situacao'] = 'Revisão fictícia demonstrativa'
+    c['dados'][0]['nome'] = 'Revisão fictícia demonstrativa'
     p.write_text(json.dumps(c))
     segundo = relatorios.obter('horizontes')
     assert primeiro != segundo

@@ -8,11 +8,11 @@ Diretas: FastAPI 0.159.1, Uvicorn 0.54.0, Shapely 2.2.0, Rasterio 1.5.0 e NumPy 
 
 Use o ambiente virtual dedicado, sem substituir o Python pessoal. Instale com `pip install --require-hashes -r requirements/compatibilidade-macos15-x86_64.txt` no macOS suportado. Não é necessário instalar QGIS ou GDAL pelo sistema para os wheels usados nesta entrega.
 
-ReportLab acrescenta Pillow 12.3.0 e charset-normalizer 3.5.2, fixados com hashes do PyPI oficial. As fontes Vera distribuídas pelo ReportLab são incorporadas ao PDF.
+pypdfium2 5.14.0 inclui o PDFium para renderização local, fixado com hashes do PyPI oficial nos dois locks. Não requer um navegador ou plugin PDF. ReportLab acrescenta Pillow 12.3.0 e charset-normalizer 3.5.2, fixados com hashes do PyPI oficial. As fontes Vera distribuídas pelo ReportLab são incorporadas ao PDF.
 
 ## Node 24
 
-React/React DOM 19.3.1 e Leaflet 1.9.4, com pdfjs-dist 6.4.299 no visualizador sob demanda. Leitor e worker usam o build oficial legacy dessa versão, com polyfills para navegadores sem APIs JavaScript recentes; não se altera a versão nem se baixa código de CDN. TypeScript 7.0.2 e Vite 8.3.5 para compilação. Dependências atuais em `frontend/package.json` e lock npm. `npm test` confere pesquisa; `npm run build` confere tipos e gera frontend/dist. Node não precisa rodar para servir o build pelo backend.
+React/React DOM 19.3.1 e Leaflet 1.9.4. TypeScript 7.0.2 e Vite 8.3.5 para compilação. A prévia usa imagens PNG e texto acessível, sem biblioteca PDF no frontend. Dependências e hashes no lock npm. `npm test` e `npm run build` verificam pesquisa, tipos e compilação. Node não precisa rodar para servir o build pelo backend.
 
 ## Dados e rede
 

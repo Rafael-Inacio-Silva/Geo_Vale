@@ -1,6 +1,6 @@
 # Escolhas territoriais e justificativas para apresentação
 
-Versão 4.1.0. O MVP permite conhecer o território e consultar automaticamente os dados de todas as bases em um recorte comum. Não avalia ou recomenda alternativas de uso futuro.
+Versão 4.2.0. O MVP permite conhecer o território e consultar automaticamente os dados de todas as bases em um recorte comum. Não avalia ou recomenda alternativas de uso futuro.
 
 ## Mapa e imagens de contexto
 
@@ -53,3 +53,7 @@ Rios/trechos, solos, vegetação, conservação, urbanização, vias e trilhas s
 O cenário autorizado usa a estrutura de planejamento, vistoria e reabilitação do plano Minas-Rio, seções 8.2.1.3-8.2.1.5, 11.11.3 e 11.11.7.6. Considera, ficticiamente, estabilização adequada para iniciar revegetação e drenagem implantada; mantém preparo do solo, avaliação de uma edificação e uso público como pendências. Não copia parâmetros geotécnicos, custos ou resultados de outra mina como se fossem da Horizontes. Cada premissa traz sua referência metodológica.
 
 A escolha demonstra uma entrada técnica complementar às APIs, em relatório legível com nossa marca, sem substituir dados reais ou inventar vistorias executadas. A síntese reúne condições e lacunas para uma avaliação posterior; matriz multicritério, pesos e ranking ainda não foram definidos. [Estrutura e rastreabilidade](RELATORIO.md).
+
+## Dado, conhecimento e decisão
+
+Para apresentar: “As fontes e cálculos geram fatos reproduzíveis. As fichas mostram o mapa e os dados de cada tema, mais uma leitura contextual separada por dado. Ensaios e informações que as camadas não trazem são demonstrados em uma ficha fictícia com asterisco. IA generativa poderá redigir comentários a partir desses fatos, sem mudar valores ou preencher lacunas. Nesta entrega, sem chave OpenAI configurada, os comentários são por regras identificadas. ML preditivo precisaria de histórico rotulado e validação que não possuímos. A decisão estratégica de pós-mineração permanece uma etapa posterior.”

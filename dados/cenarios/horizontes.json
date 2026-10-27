@@ -1,10 +1,10 @@
 {
   "mina_id": "horizontes",
-  "versao": "1.0",
+  "versao": "2.0",
   "natureza": "simulado",
   "titulo": "Cenário técnico simulado",
   "horizonte": "Pós-fechamento hipotético",
-  "descricao": "Premissas fictícias para demonstração do GeoVale. Não correspondem a vistorias, laudos ou intervenções realizados na mina.",
+  "descricao": "* Dados fictícios criados para demonstrar entradas técnicas do MVP. Não medidos na Horizontes e não copiados do plano Minas-Rio.",
   "referencia": {
     "titulo": "Plano de Fechamento de Mina - Complexo Minerário Sistema Minas-Rio",
     "instituicao": "Anglo American",
@@ -14,48 +14,70 @@
     "paginas_pdf": "40-44; 68-69; 84",
     "paginas_impressas": "34-38; 62-63; 78"
   },
-  "premissas": [
+  "dados": [
     {
-      "id": "estabilidade",
-      "tema": "Estabilidade física",
-      "situacao": "Atendida para iniciar revegetação",
-      "condicao": "Consideram-se concluídas as obras de estabilização. A vistoria fictícia admite o início da revegetação nas superfícies preparadas. Essa premissa não abrange liberação para visitação.",
-      "base": "Seção 11.11.3, p. 62-63"
+      "id": "fator_seguranca",
+      "nome": "Fator de segurança de talude",
+      "valor": 1.55,
+      "unidade": "adimensional",
+      "metodo": "Análise estática hipotética; geometria e parâmetros não levantados",
+      "comentario": "Um fator isolado não comprova estabilidade. Método, geometria, cargas e investigação precisam acompanhar uma avaliação geotécnica."
     },
     {
-      "id": "drenagem",
-      "tema": "Drenagem",
-      "situacao": "Implantada e em funcionamento",
-      "condicao": "Os drenos são considerados implantados e operacionais na vistoria fictícia, com manutenção prevista. A condição não representa medição de qualidade da água.",
-      "base": "Seção 11.11.3, p. 62-63"
+      "id": "vazao_drenagem",
+      "nome": "Vazão de projeto de drenagem",
+      "valor": 120,
+      "unidade": "L/s",
+      "metodo": "Dimensionamento hipotético, não medição de rio",
+      "comentario": "A capacidade de projeto é diferente da vazão natural. Compatibilidade com chuvas, bacia e manutenção precisa de estudo específico."
     },
     {
-      "id": "solo",
-      "tema": "Preparo do solo",
-      "situacao": "Adequações pendentes",
-      "condicao": "Admite-se compactação em parte das superfícies de intervenção, exigindo preparo e avaliação do solo antes do plantio. A extensão não foi medida nem atribuída ao mapa pedológico.",
-      "base": "Seções 11.10 e 11.11.3, p. 60 e 62-63"
+      "id": "ph",
+      "nome": "pH de uma amostra de água",
+      "valor": 7.2,
+      "unidade": "pH",
+      "metodo": "Uma amostra hipotética, sem ponto geográfico ou campanha real",
+      "comentario": "Uma amostra isolada não caracteriza a qualidade de toda a água. Faltam campanha, localização, outros parâmetros e série temporal."
     },
     {
-      "id": "revegetacao",
-      "tema": "Revegetação",
-      "situacao": "Prevista",
-      "condicao": "Prevê-se plantio de espécies nativas e acompanhamento do estabelecimento da vegetação. São ações futuras do cenário, sem comprovação de execução.",
-      "base": "Seções 11.10 e 11.11.7.6, p. 60 e 78"
+      "id": "compactacao",
+      "nome": "Resistência do solo à penetração",
+      "valor": 2.0,
+      "unidade": "MPa",
+      "metodo": "Ensaio hipotético; umidade e profundidade não informadas",
+      "comentario": "O valor depende do método e da umidade. Não substitui análise de fertilidade, contaminação ou projeto de preparo do solo."
     },
     {
-      "id": "estrutura",
-      "tema": "Estruturas existentes",
-      "situacao": "Uma edificação candidata",
-      "condicao": "Admite-se uma edificação potencialmente reaproveitável. Sua existência, localização e condição são fictícias; a avaliação específica permanece pendente.",
-      "base": "Seção 8.2.1.4, p. 35-37"
+      "id": "sobrevivencia",
+      "nome": "Sobrevivência de mudas em parcela",
+      "valor": 82,
+      "unidade": "%",
+      "metodo": "Parcela hipotética de 100 mudas, avaliação aos 12 meses",
+      "comentario": "Sobrevivência em uma parcela é um indicador de implantação. Não comprova recuperação do ecossistema ou resultado para toda a influência."
     },
     {
-      "id": "uso_publico",
-      "tema": "Uso público e participação",
-      "situacao": "Avaliações pendentes",
-      "condicao": "Segurança para visitantes, acesso autorizado e interesse da comunidade não foram caracterizados. O cadastro de trilhas não supre essas avaliações.",
-      "base": "Seções 8.2.1.3 a 8.2.1.5, p. 34-38"
+      "id": "edificacao",
+      "nome": "Área de uma edificação candidata",
+      "valor": 320,
+      "unidade": "m²",
+      "metodo": "Uma edificação fictícia, sem localização no mapa",
+      "comentario": "Área construída dimensiona uma estrutura. Reuso depende também de inspeção, acessibilidade, estado de conservação e finalidade."
+    },
+    {
+      "id": "acesso",
+      "nome": "Acessos liberados ao público",
+      "valor": 0,
+      "unidade": "acessos",
+      "metodo": "Estado administrativo fictício; não avalia segurança real",
+      "comentario": "Cadastro de estrada ou trilha não equivale a autorização de acesso. O dado administrativo deve ser tratado separadamente da geometria."
+    },
+    {
+      "id": "participacao",
+      "nome": "Participantes de consulta comunitária",
+      "valor": 24,
+      "unidade": "pessoas",
+      "metodo": "Consulta inteiramente fictícia, sem entrevista real ou preferências atribuídas",
+      "comentario": "Número de participantes não identifica preferências, representatividade ou beneficiários. A participação real exige escopo e registro próprios."
     }
   ]
 }

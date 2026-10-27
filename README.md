@@ -2,7 +2,7 @@
 
 MVP de caracterização territorial para apoiar a exploração de informações relevantes à ressignificação de áreas pós-mineração. Abre um mapa mundial em **Minas Gerais**, com contorno oficial estadual e uma mina no catálogo: **Horizontes — Vale — Nova Lima/MG**.
 
-Selecionar a mina pelo cartão ou pela bolinha mostra automaticamente seu contorno. O engenheiro ativa **Influência** para conhecer o território maior. O mapa mostra o contorno, a mina sombreada e os seis temas/onze bases somente dentro desse território. Marcar uma camada à direita amplia sua visualização para além da influência; desmarcar volta ao recorte. **Ver relatório**, disponível ao selecionar a mina mesmo sem ativar Influência, abre um PDF GeoVale com mapa, tabelas das onze bases, cenário técnico simulado e inventário. É possível navegar pelas páginas e baixar o mesmo documento. A tela permanece centrada no mapa, sem tabelas de atributos ou instruções de procedimento.
+Selecionar a mina pelo cartão ou pela bolinha mostra automaticamente seu contorno. O engenheiro ativa **Influência** para conhecer o território maior. O mapa mostra o contorno, a mina sombreada e os seis temas/onze bases somente dentro desse território. Marcar uma camada à direita amplia sua visualização para além da influência; desmarcar volta ao recorte. **Ver relatório**, disponível ao selecionar a mina mesmo sem ativar Influência, abre um PDF GeoVale com visão geral, seis mapas temáticos, dados objetivos e comentários separados, mais dados técnicos fictícios com asterisco. É possível navegar pelas páginas e baixar o mesmo documento. A tela permanece centrada no mapa, sem tabelas de atributos ou instruções de procedimento.
 
 Os dados são consultados automaticamente e guardados por mina em SQLite local. A aplicação conserva todos os atributos dos registros vetoriais recortados e as células dos dois rasters, com fontes, datas e metadados. Novas bases integradas ao catálogo entram no mesmo processamento. Fundos OpenStreetMap/Esri, WMS e trilhas continuam oferecendo exploração visual independente.
 
@@ -40,8 +40,10 @@ npm run build
 - `backend/geovale/camadas.py`: catálogo único de visualização e processamento, com onze bases.
 - `backend/geovale/fontes_territorio.py`: adaptadores WFS/WCS/ArcGIS, atributos completos, interseção e células.
 - `backend/geovale/territorio.py`: preparação automática e persistência por mina/base.
-- `backend/geovale/relatorio.py`: PDF padronizado, mapas vetoriais, tabelas, cenário e inventário.
-- `dados/cenarios/horizontes.json`: premissas fictícias e referência metodológica do cenário.
+- `backend/geovale/relatorio.py`: PDF e prévia versionada em PNG.
+- `backend/geovale/mapa_relatorio.py` e `fichas.py`: mapas temáticos e medidas cartográficas.
+- `backend/geovale/comentarios.py`: comentários por regras e integração OpenAI Responses / GPT-5 nano.
+- `dados/cenarios/horizontes.json`: valores técnicos fictícios, métodos hipotéticos e referência de estrutura.
 - `backend/geovale/influencia.py`: conferência do recorte local e evidências.
 - `backend/geovale/mapa.py`, `municipio.py`, `anm.py`, `trilhas.py`: navegação, município, cadastro e trilhas visuais.
 - `frontend/src/Influencia.tsx` e `CamadasNaInfluencia.tsx`: botão, camadas recortadas e relatório PDF da mina.
@@ -60,3 +62,5 @@ Dados geográficos guardados são resultados calculados das fontes. Um cenário 
 Não há classificação de aptidão, ranking, recomendação de uso, definição de beneficiários, diagnóstico de impactos ou qualidade ambiental. O relevo é regional e antigo; contagens são registros, não riscos ou rios distintos. Acesso público não significa uso ilimitado. O cenário não constitui laudo ou avaliação de segurança. O 3D Google não está integrado.
 
 [Justificativa e roteiro para apresentação](docs/ESCOLHAS_TERRITORIAIS.md), [recorte e evidência](docs/INFLUENCIA.md), [dados automáticos](docs/DADOS_TERRITORIAIS.md), [uso](docs/MANUAL_USO.md), [relatório e cenário](docs/RELATORIO.md).
+
+Os fatos são separados dos comentários por dado. A conexão de IA generativa está preparada, mas sem serviço configurado os comentários são identificados como regras. Não há ML treinado ou recomendação estratégica de uso futuro. [Configuração e método](docs/RELATORIO.md).

@@ -1,35 +1,43 @@
-# Relatório GeoVale e cenário técnico simulado
+# Relatório GeoVale: dado e contexto
 
-Versão 4.1.0, 27/10/2026. **Ver relatório** aparece ao selecionar a mina pelo cartão ou marcador, independentemente de Influência. Documento padronizado com marca e logo GeoVale, sem identidade visual ou autoria corporativa Vale.
+Versão 4.2.0, 27/10/2026. Selecionar a mina oferece **Ver relatório**, sem exigir Influência. A marca e autoria são GeoVale.
 
-## Documento gerado
+## Estrutura simples
 
-O PDF tem capa e mapa, território/bases consultadas, relevo/solos, água, vegetação/conservação, entorno/trilhas, cenário simulado, síntese, referências e Anexo A. Todos os registros vetoriais aparecem no inventário com ID curto na base, nome e descritores disponíveis. O identificador curto é o trecho final do ID publicado; prefixo e atributos completos permanecem internos. Ausência de nome é explícita.
+A primeira página apresenta influência e mina com os seis temas sobrepostos, mais um resumo de todos os dados. Seguem seis fichas: relevo, água, solos, vegetação/conservação, entorno/infraestrutura e trilhas. Cada ficha mostra somente seu tema sobre o mesmo recorte, mina sombreada, dados objetivos e comentário separado para cada dado. A ficha final reúne dados técnicos sem camada, sem mapa e com asterisco em cada valor fictício. Não há anexo de centenas de atributos, síntese de alternativas ou ranking.
 
-Rasters aparecem com todas as classes presentes, contagens, proporção de células válidas e NoData. Não se apresentam percentuais como área ou se despejam matrizes em texto. Tabelas, mapa e contagens são gerados a partir do catálogo persistido, sem números demonstrativos fixos nos blocos reais. O armazenamento mantém geometrias, todos os atributos e GeoTIFFs completos.
+Os valores observados/calculados ficam na coluna Dado / valor / origem; a leitura contextual fica em outra coluna. Os comentários não substituem ou alteram fatos. Os atributos completos e GeoTIFFs continuam no armazenamento interno e nos contratos técnicos por base.
 
-ReportLab gera o PDF com fontes Unicode incorporadas e marca vetorial. Mapas são desenhados das geometrias guardadas, projetadas para UTM 23S apenas na apresentação, com norte e escala; não baixam tiles, não usam imagem de satélite e não alteram o dado de análise. Fontes/creditos dos mapas são conservados. Marcadores PDF permitem navegar por seção no leitor externo.
+## O que é calculável
 
-## Cenário fictício autorizado
+Contagens por base, classes/valores categóricos e células sem dados vêm da coleta persistida. Comprimentos são somas dos trechos recortados em SIRGAS 2000 / UTM 23S; registros sobrepostos não são dissolvidos no comprimento. Superfícies são áreas da união dos polígonos dentro de cada base, sem duplicar sobreposição interna e sem somar esferas de conservação. São medidas cartográficas aproximadas das fontes, não levantamento cadastral ou área de recuperação.
 
-`dados/cenarios/horizontes.json` contém natureza simulado, mina, versão, horizonte pós-fechamento hipotético, premissas e referência metodológica. Todas as condições são fictícias para demonstrar entradas técnicas que as camadas não fornecem:
+Percentuais matriciais são de células válidas, não área. O mapa usa cores oficiais dos rasters; reprojeção por vizinho mais próximo e redução de resolução ocorrem somente na apresentação. O processamento e as contagens mantêm a grade nativa. Mapas individuais não incluem outras camadas; o mapa geral compõe os seis temas com transparência e mina/contorno por cima.
 
-- Estabilidade física considerada atendida para iniciar revegetação, sem abranger visitação.
-- Drenagem considerada implantada/operacional, sem medição de qualidade da água.
-- Preparo de solo com adequações pendentes e revegetação prevista.
-- Uma edificação candidata fictícia, com avaliação específica pendente.
-- Segurança de visitantes, acesso autorizado e interesse comunitário não caracterizados.
+Geometria de rio não informa pH, profundidade, volume, vazão atual ou biota. O relatório registra essas ausências. Não há IA preenchendo lacunas como fatos observados.
 
-Referência: Plano de Fechamento Minas-Rio, Anglo American, revisão junho/2021. Seções 8.2.1.3-8.2.1.5 (PDF 40-44/impressas 34-38), 11.11.3 (68-69/62-63), 11.11.7.6 (84/78). O plano prescreve ações e verificações; não é evidência de execução na Horizontes. Não foram transferidos custos, parâmetros geotécnicos ou resultados de outra mina. A síntese cruza contexto real e premissas como condições/pendências, sem pontuação ou recomendação de uso futuro. A análise multicritério permanece por definir.
+## Dados técnicos fictícios
 
-## Fluxo técnico e atualização
+`dados/cenarios/horizontes.json` contém oito valores numéricos, unidade e método hipotético: fator de segurança de talude, vazão de projeto de drenagem, pH de uma amostra, resistência à penetração do solo, sobrevivência de mudas, área de uma edificação, acessos liberados e participantes de consulta comunitária. Todos têm **\*** e nota explícita de que não foram medidos na Horizontes. Não têm coordenadas fictícias no mapa.
 
-`GET /api/minas/{id}/relatorio` entrega application/pdf inline; `?baixar=true` entrega attachment. Mina desconhecida: 404; dados incompletos/vencidos/incompatíveis ou cenário inválido/ausente: 503, com recuperação. Todos os temas entram, sem parâmetros de checkbox/zoom.
+O Plano Minas-Rio, Anglo American, revisão junho/2021, fundamenta a estrutura de planejamento, vistoria, reabilitação e participação (8.2.1.3-8.2.1.5, 11.11.3 e 11.11.7.6). Não fornece os números simulados e não comprova resultados na mina do MVP. Fonte e URL constam da ficha.
 
-A geração lê SQLite e cenário local, sem chamadas externas. Cache por mina usa conteúdo dos dados, cenário e versão do modelo; mudanças invalidam o documento. O coletor mantém a assinatura do método 4.0.0 porque cálculos/recorte não mudaram. A API/interface é 4.1.0. Não há uma cópia fixa do PDF no repositório substituindo dados dinâmicos.
+## Comentários e IA
 
-PDF.js e worker usam o build oficial `legacy`, com os polyfills de compatibilidade do mesmo pacote/versão, e carregam apenas ao abrir o relatório. Renderizam uma página de cada vez em canvas, com texto acessível para leitores de tela e adaptação à largura. Anterior/Próxima, Baixar PDF e Fechar são os controles. Download utiliza o mesmo Blob aberto. Fechar/Escape devolve foco e libera recursos; falha de carregamento ou renderização oferece Tentar novamente, reiniciando o leitor do mesmo Blob. O canvas permanece montado durante a mensagem e o erro é limpo ao renderizar outra página, permitindo recuperação sem fechar o diálogo. Um diálogo aberto permanece retratando sua coleta, mesmo se houver atualização posterior do banco.
+IA generativa é adequada para redigir a leitura contextual de fatos fornecidos. ML preditivo exigiria base rotulada e validação; nenhum modelo foi treinado e nenhuma estratégia de pós-mineração é classificada nesta etapa.
 
-[Dados territoriais](DADOS_TERRITORIAIS.md), [justificativas](ESCOLHAS_TERRITORIAIS.md), [verificação](VALIDACAO.md).
+`comentarios.py` separa os comentários dos fatos por ID. A integração usa a **OpenAI Responses API** e o modelo **gpt-5-nano**, exatamente o solicitado. O modelo está confirmado na [documentação oficial](https://developers.openai.com/api/docs/models/gpt-5-nano), com [Structured Outputs](https://developers.openai.com/api/docs/guides/structured-outputs).
 
-A escolha do build segue a [orientação oficial de compatibilidade do PDF.js](https://github.com/mozilla/pdf.js/wiki/Frequently-Asked-Questions). O build moderno depende de APIs recentes como Map.getOrInsertComputed; carregar o PDF e saber seu número de páginas não garante que o navegador consiga renderizá-lo.
+A chave é colocada somente em `.local/ia.env`, na linha `OPENAI_API_KEY=`. O arquivo tem permissão 600, é ignorado por `.gitignore` e não é enviado ao frontend, PDF, logs ou GitHub. O leitor usa esse arquivo local, não credenciais globais do computador. É relido ao abrir uma emissão; preencher/alterar a chave invalida o cache sem exigir reiniciar o servidor. Uma sessão já aberta deve ser fechada e reaberta.
+
+A aplicação envia somente fichas compactas para `https://api.openai.com/v1/responses`, sem matrizes/geometrias, com `store=false`, raciocínio baixo, limite de 9.000 tokens de saída e timeout de 45 s. Não envia temperature, incompatível com a configuração escolhida do GPT-5 nano. O JSON Schema é estrito e limita IDs aos dados fornecidos. A resposta precisa estar completa; recusa, erro ou truncamento retornam às regras. Cada texto tem até 240 caracteres, todos os IDs precisam estar presentes e números não fornecidos são recusados.
+
+Sem chave ou com serviço indisponível, os comentários continuam sendo por regras, com procedência explícita. Não se apresentam esses textos como IA. Não houve chamada real nesta entrega porque o arquivo de chave está vazio; o contrato foi testado com respostas controladas. Verificações de formato não garantem correção semântica de um LLM; revisão técnica continua necessária. Cache por dados/cenário/modelo evita chamadas por página ou download. Valores de fontes, cálculos e exemplos fictícios não são alterados pelo modelo.
+
+## PDF e prévia
+
+ReportLab gera o PDF. `GET /api/minas/{id}/relatorio` retorna PDF inline; `baixar=true` altera apenas Content-Disposition. Bases incompletas/vencidas ou cenário inválido impedem geração (503); mina desconhecida retorna 404. O cabeçalho `X-Relatorio-Versao` contém o hash do PDF.
+
+A prévia usa PDFium no servidor: `/relatorio/previa?versao=...` entrega paginação/textos acessíveis; `/relatorio/paginas/{numero}?versao=...` entrega PNG. PDFium opera sob mutex global e fecha recursos explicitamente. São guardadas até quatro versões de PDF e doze imagens, com escala fixa. Versão ausente retorna 409 para reabrir; página inválida retorna 404. O navegador não renderiza PDF em canvas. Uma falha de imagem não exibe página antiga junto com erro; Tentar novamente recarrega o PDF/manifesto e a página, recuperando também uma versão expirada após reinício do servidor. Download salva o mesmo Blob da versão aberta.
+
+A assinatura do coletor continua 4.0.0 porque coleta/recorte não mudaram. O PDF é gerado do banco atual, não de um arquivo demonstrativo fixo no repositório.

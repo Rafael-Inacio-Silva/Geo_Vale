@@ -1,6 +1,6 @@
 # Dados do território — preparação automática
 
-Versão 4.1.0. O sistema associa os dados de **todas as bases do catálogo** a cada mina e ao seu único recorte de influência. O engenheiro consulta o resultado preparado. Seletores visuais, intensidade, fundo e enquadramento não são parâmetros de processamento.
+Versão 4.2.0. O sistema associa os dados de **todas as bases do catálogo** a cada mina e ao seu único recorte de influência. O engenheiro consulta o resultado preparado. Seletores visuais, intensidade, fundo e enquadramento não são parâmetros de processamento.
 
 ## Catálogo único e abrangência
 
@@ -26,7 +26,7 @@ Declividade Topodata e cobertura MapBiomas 2025 são obtidas por **WCS 2.0.1**, 
 
 Rasterio transforma o contorno para o CRS da grade e seleciona todas as células cujo **centro** está no polígono (`all_touched=false`). Guarda os valores na posição original, mascarando fora do recorte/NoData. Conserva grade, transformação, resolução, tags, metadados e GeoTIFF; não interpola valores. O histórico de idade dos dados permanece sendo o das fontes.
 
-Os códigos, nomes e cores vêm do **estilo padrão oficial** via GetStyles. Outra classificação alternativa no mesmo SLD não é misturada. Classe sem legenda oficial gera falha. O relatório conserva quantidades por classe e percentual de **células válidas**, nunca percentual de área ou medição cadastral. Células sem dados são informadas separadamente. Todos os valores ficam no GeoTIFF guardado. O PDF resume as classes e mantém o inventário dos vetores; não reproduz matrizes ou listas de coordenadas em texto. O armazenamento interno conserva os dados completos.
+Os códigos, nomes e cores vêm do **estilo padrão oficial** via GetStyles. Outra classificação alternativa no mesmo SLD não é misturada. Classe sem legenda oficial gera falha. O relatório conserva quantidades por classe e percentual de **células válidas**, nunca percentual de área ou medição cadastral. Células sem dados são informadas separadamente. Todos os valores ficam no GeoTIFF guardado. O PDF apresenta classes, contagens e medidas geométricas por tema; não reproduz matrizes ou listas de coordenadas em texto. O armazenamento interno conserva os dados completos.
 
 ## Persistência e atualização
 
@@ -46,9 +46,9 @@ As imagens WMS oficiais mantêm estilo/ordem e são mascaradas no navegador por 
 
 A representação visual consulta os serviços atuais; o relatório é uma fotografia dos dados persistidos na data indicada por base. Não se promete igualdade temporal entre uma imagem WMS atual e uma coleta anterior. Erros visuais não apagam o banco nem viram ausência de registros.
 
-**Ver relatório**, disponível ao selecionar a mina, lê `GET /api/minas/{id}/relatorio`. A API gera PDF a partir dos dados persistidos e do cenário local de `dados/cenarios/horizontes.json`. Todas as bases entram no documento, independentemente de Influência ou seletores. O PDF apresenta mapa vetorial, contagens, classes, inventário de todos os registros e descritores selecionados; fontes e datas ficam no fim. Atributos/GeoTIFF completos continuam internos. A API de registros por base permanece sendo um contrato técnico, sem exportação JSON na interface.
+**Ver relatório**, disponível ao selecionar a mina, lê `GET /api/minas/{id}/relatorio`. A API gera PDF a partir dos dados persistidos e do cenário local de `dados/cenarios/horizontes.json`. Todas as bases entram no documento, independentemente de Influência ou seletores. O PDF apresenta visão geral de todos os temas, um mapa por tema, contagens, classes, medidas calculadas e comentários separados; fontes e datas acompanham cada ficha. Atributos/GeoTIFF completos continuam internos. A API de registros por base permanece sendo um contrato técnico, sem exportação JSON na interface.
 
-A geração exige bases completas e atuais na assinatura vigente. Preparação, erro, vencimento ou mudança de recorte impedem apresentar um relatório como completo (503). O cenário precisa estar explicitamente identificado como simulado e vinculado à mina. ReportLab gera o PDF e a marca em vetor; PDF.js renderiza o mesmo arquivo no navegador, por página. Download usa os mesmos bytes visualizados. [Formato, cenário e limites](RELATORIO.md).
+A geração exige bases completas e atuais na assinatura vigente. Preparação, erro, vencimento ou mudança de recorte impedem apresentar um relatório como completo (503). O cenário precisa estar explicitamente identificado como simulado e vinculado à mina. ReportLab gera o PDF e a marca; PDFium renderiza as páginas em PNG no servidor, entregues por versão ao navegador com texto acessível. Download usa os mesmos bytes visualizados. [Formato, cenário e limites](RELATORIO.md).
 
 ## Justificativa e limites para apresentação
 

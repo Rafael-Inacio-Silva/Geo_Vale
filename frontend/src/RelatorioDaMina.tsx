@@ -6,7 +6,7 @@ const PreviaPDF = lazy(() => import('./PreviaPDF.tsx'));
 export default function RelatorioDaMina({minaId, pronto}: {minaId: string; pronto: boolean}) {
   const [aberto, setAberto] = useState(false);
   const [url, setUrl] = useState('');
-  const [arquivo, setArquivo] = useState<Blob | null>(null);
+  const [versao, setVersao] = useState('');
   const [erro, setErro] = useState(false);
   const [tentativa, setTentativa] = useState(0);
   const dialogo = useRef<HTMLDialogElement>(null);
@@ -19,7 +19,7 @@ export default function RelatorioDaMina({minaId, pronto}: {minaId: string; pront
 
   useEffect(() => {
     setUrl('');
-    setArquivo(null);
+    setVersao('');
     setErro(false);
     if (!aberto) return;
     const controle = new AbortController();
@@ -32,7 +32,9 @@ export default function RelatorioDaMina({minaId, pronto}: {minaId: string; pront
         if (controle.signal.aborted) return;
         objeto = URL.createObjectURL(arquivo);
         setUrl(objeto);
-        setArquivo(arquivo);
+        const assinatura = resposta.headers.get('X-Relatorio-Versao');
+        if (!assinatura) throw new Error();
+        setVersao(assinatura);
       } catch {
         if (!controle.signal.aborted) setErro(true);
       }
@@ -51,7 +53,7 @@ export default function RelatorioDaMina({minaId, pronto}: {minaId: string; pront
           <button type="button" aria-label="Fechar relatório" onClick={() => dialogo.current?.close()}>Fechar <span aria-hidden="true">×</span></button>
         </div>
       </header>
-      {arquivo ? <Suspense fallback={<div className="estado-relatorio" role="status">Abrindo PDF…</div>}><PreviaPDF arquivo={arquivo}/></Suspense>
+      {versao ? <Suspense fallback={<div className="estado-relatorio" role="status">Abrindo PDF…</div>}><PreviaPDF minaId={minaId} versao={versao} aoRecarregar={() => setTentativa(v => v + 1)}/></Suspense>
         : <div className="estado-relatorio">{erro ? <div role="alert"><p>Não foi possível abrir o relatório.</p><button className="tentar-novamente" type="button" onClick={() => setTentativa(v => v + 1)}>Tentar novamente</button></div> : <p role="status">Gerando relatório…</p>}</div>}
     </dialog>
   </>;
