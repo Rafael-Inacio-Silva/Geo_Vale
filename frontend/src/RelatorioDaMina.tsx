@@ -2,8 +2,8 @@ import {lazy, Suspense, useEffect, useRef, useState} from 'react';
 
 const PreviaPDF = lazy(() => import('./PreviaPDF.tsx'));
 
-/** Abre o PDF da mina selecionada e permite baixar exatamente o documento visualizado. */
-export default function RelatorioDaMina({minaId, pronto}: {minaId: string; pronto: boolean}) {
+/** Abre o PDF da mina selecionada, com os pesos da sugestão, e permite baixar exatamente o documento visualizado. */
+export default function RelatorioDaMina({minaId, pronto, pesos}: {minaId: string; pronto: boolean; pesos: number[] | null}) {
   const [aberto, setAberto] = useState(false);
   const [url, setUrl] = useState('');
   const [versao, setVersao] = useState('');
@@ -11,6 +11,7 @@ export default function RelatorioDaMina({minaId, pronto}: {minaId: string; pront
   const [tentativa, setTentativa] = useState(0);
   const dialogo = useRef<HTMLDialogElement>(null);
   const gatilho = useRef<HTMLButtonElement>(null);
+  const consulta = pesos ? `?pesos=${pesos.join(',')}` : '';
 
   useEffect(() => {
     if (aberto) dialogo.current?.showModal();
@@ -26,7 +27,7 @@ export default function RelatorioDaMina({minaId, pronto}: {minaId: string; pront
     let objeto = '';
     async function carregar() {
       try {
-        const resposta = await fetch(`/api/minas/${encodeURIComponent(minaId)}/relatorio`, {signal: AbortSignal.any([controle.signal, AbortSignal.timeout(60000)])});
+        const resposta = await fetch(`/api/minas/${encodeURIComponent(minaId)}/relatorio${consulta}`, {signal: AbortSignal.any([controle.signal, AbortSignal.timeout(60000)])});
         if (!resposta.ok || !resposta.headers.get('content-type')?.startsWith('application/pdf')) throw new Error();
         const arquivo = await resposta.blob();
         if (controle.signal.aborted) return;
@@ -41,7 +42,7 @@ export default function RelatorioDaMina({minaId, pronto}: {minaId: string; pront
     }
     void carregar();
     return () => {controle.abort(); if (objeto) URL.revokeObjectURL(objeto);};
-  }, [aberto, minaId, tentativa]);
+  }, [aberto, minaId, tentativa, consulta]);
 
   return <>
     <button ref={gatilho} type="button" className="relatorio-territorio" disabled={!pronto} onClick={() => setAberto(true)}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h8l4 4v14H6zM14 3v5h4M9 12h6M9 16h6"/></svg>{pronto ? 'Ver relatório' : 'Preparando relatório…'}</button>

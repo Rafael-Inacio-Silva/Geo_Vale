@@ -24,6 +24,7 @@ LIMITES_AGUA = {
 PARAMETROS_AGUA = {'ph': ('pH', ''), 'turbidez': ('Turbidez', 'UNT'),
                    'fe_dissolvido': ('Ferro dissolvido', 'mg/L'), 'mn_total': ('Manganês total', 'mg/L')}
 GRAUS_CAVIDADES = ['muito alto', 'alto', 'medio', 'baixo', 'ocorrencia improvavel']
+NATIVA = re.compile(r'formacao|afloramento|campo alagado|restinga|mangue|apicum')
 
 
 def formato(valor, casas=0):
@@ -157,7 +158,7 @@ def chave_base(b):
     """Reconhece a base pelo nome da camada publicada, mantendo tratamento genérico para novas bases."""
     camada = b['base']['camada']
     for chave in ('cavidades', 'massa_dagua', 'hidrografia_principal', 'reg_vazao', 'enq_corpos', 'unidades_conservacao',
-                  'apps_fbds', 'areas_urbanizadas', 'rodovias', 'barragens'):
+                  'apps_fbds', 'areas_urbanizadas', 'rodovias', 'linhas_transmissao', 'zas_pae', 'barragens'):
         if chave in camada:
             return chave
     return b['base']['tema_id'] if b['tipo'] == 'vetor' else 'raster_' + b['base']['tema_id']
@@ -314,7 +315,7 @@ def fatos_cobertura(f, b, ctx):
     if grade is None:
         return
     total, linhas = distribuicao(grade, b.get('classes', []), grade['validos'])
-    nativa = sum(c['percentual'] for c in linhas if re.search(r'formacao|afloramento|campo alagado|restinga|mangue|apicum', normalizar(c['nome'])))
+    nativa = sum(c['percentual'] for c in linhas if NATIVA.search(normalizar(c['nome'])))
     m = ctx['mineracao']
     f.fato(b['base']['id'] + '.classes', 'Uso e cobertura da terra', texto_classes(linhas), b['base']['nome'] + ' · área das células em UTM 23S',
            f'Vegetação nativa ocupa {formato(nativa, 1)}% do recorte: a matriz natural favorece reconexão ecológica e revegetação com espécies locais.'
@@ -376,11 +377,17 @@ def fatos_proximidade(f, b, ctx, tipo):
         if d['dentro']:
             comentario += f" Os {ha(d['dentro'])} sobrepostos mostram classificação divergente entre IBGE e MapBiomas."
         resumo = f"Áreas urbanizadas: {ha(d['total'])}" + (f', {perto}' if perto else '')
-    else:
+    elif tipo == 'via':
         perto = '' if dist is None else 'cruzam ou encostam na área minerada' if dist < .005 else f'a {km(dist)} da área minerada'
         comentario = ((f'Rodovias {perto}: ' if perto else '') +
                       'o acesso existente reduz o custo de usos que recebem público ou carga. Cadastro não comprova condição da via.')
         resumo = f"Rodovias: {km(d['total'])}" + (f', {perto}' if perto else '')
+    else:
+        perto = '' if dist is None else 'cruzam ou encostam na área minerada' if dist < .005 else f'a {km(dist)} da área minerada'
+        comentario = ((f'Linhas de transmissão {perto}: ' if perto else '') +
+                      'a conexão próxima à rede reduz o custo de geração solar; a faixa de servidão impede construções sob a linha. '
+                      'Só as linhas dentro do recorte foram consultadas.')
+        resumo = f"Linhas de transmissão: {km(d['total'])}" + (f', {perto}' if perto else '')
     f.fato(b['base']['id'] + '.medidas', b['base']['nome'], valor, 'Cadastro publicado · medidas em UTM 23S', comentario, resumo=resumo)
 
 
@@ -409,9 +416,17 @@ def fatos_barragens(f, b, ctx):
            'Barragens alteadas a montante devem ser descaracterizadas (Lei 14.066/2020); até a conclusão, o reservatório e a área a jusante '
            'ficam indisponíveis para usos com permanência de pessoas.' if montante else
            'Sem alteamento a montante no cadastro; ainda assim, estruturas ativas condicionam o uso a jusante.')
-    f.fato('barragens.zas', 'Zona de autossalvamento (ZAS)', 'Não integrada', 'Limitação do MVP',
-           'A camada pública de ZAS excede o limite de 32 MiB por consulta do adaptador. Em uso real, a ZAS é restrição obrigatória '
-           'para usos com permanência de pessoas.')
+
+
+def fatos_zas(f, b, ctx):
+    fs = b['dados']['features']
+    d = dividir(fs, ctx['mineracao'])
+    estruturas = sorted({str(x['properties'].get('estrutura') or x.get('id')) for x in fs})
+    valor = texto_divisao(d) + f"\n{formato(d['total'] * 100 / ctx['recorte_ha'], 1)}% do recorte\n" + '\n'.join('- ' + e for e in estruturas)
+    f.fato(b['base']['id'] + '.ha', 'Zonas de autossalvamento (ZAS)', valor, b['base']['nome'] + ' · união em UTM 23S',
+           'Na ZAS não há tempo para socorro externo se houver ruptura (Lei 12.334/2010, alterada pela Lei 14.066/2020): enquanto a barragem '
+           'existir, usos com permanência de pessoas ficam inadequados ali. Geometrias inválidas publicadas foram corrigidas e contadas.',
+           resumo=f"ZAS: {ha(d['total'])}" + (f", {ha(d['dentro'])} na área minerada" if d['dentro'] else ''))
 
 
 def fatos_trilhas(f, b, ctx):
@@ -497,8 +512,9 @@ def fatos_tecnicos(f, cenario, ctx, recorte_utm):
 ESPECIFICOS = {'cavidades': fatos_cavidades, 'massa_dagua': fatos_massas, 'hidrografia_principal': fatos_trechos,
                'enq_corpos': fatos_enquadramento, 'reg_vazao': fatos_vazao, 'solos': fatos_solos, 'raster_relevo': fatos_relevo,
                'raster_vegetacao': fatos_cobertura, 'apps_fbds': fatos_apps, 'barragens': fatos_barragens, 'trilhas': fatos_trilhas,
-               'areas_urbanizadas': lambda f, b, c: fatos_proximidade(f, b, c, 'urbano'),
-               'rodovias': lambda f, b, c: fatos_proximidade(f, b, c, 'via')}
+               'zas_pae': fatos_zas, 'areas_urbanizadas': lambda f, b, c: fatos_proximidade(f, b, c, 'urbano'),
+               'rodovias': lambda f, b, c: fatos_proximidade(f, b, c, 'via'),
+               'linhas_transmissao': lambda f, b, c: fatos_proximidade(f, b, c, 'rede')}
 
 
 def montar_fichas(dados, cenario):
@@ -513,7 +529,8 @@ def montar_fichas(dados, cenario):
         bases = [b for b in dados['bases'] if b['base']['tema_id'] == tema]
         f = Ficha()
         ucs = [b for b in bases if chave_base(b) == 'unidades_conservacao']
-        for b in bases:
+        # A ZAS vem antes no catálogo para ficar sob os pontos no WMS; na ficha, a lista de barragens vem primeiro.
+        for b in sorted(bases, key=lambda b: chave_base(b) == 'zas_pae'):
             chave = chave_base(b)
             if chave == 'unidades_conservacao':
                 if b is ucs[0]:

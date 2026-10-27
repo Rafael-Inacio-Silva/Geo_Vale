@@ -27,11 +27,11 @@ O [único recorte de influência e o sombreado OSM](INFLUENCIA.md) estão em Geo
 
 Leaflet é a biblioteca de visualização; não é o fornecedor desses dados. As imagens são solicitadas diretamente pelo navegador. O contorno estadual é solicitado pelo nosso backend. A camada estadual cobre MG; o fundo continua navegável globalmente. A caracterização usa somente o recorte comum de cada mina, não toda a extensão visível.
 
-## Seis temas e quinze bases oficiais
+## Seis temas e dezessete bases oficiais
 
 Sobreposições estaduais provenientes do WMS da IDE-Sisema: `https://geoserver.meioambiente.mg.gov.br/ows`. O catálogo fixo está em `backend/geovale/camadas.py`. As imagens são reprojetadas pelo fornecedor para EPSG:3857 no `GetMap` WMS 1.1.1; a localização e o WFS estadual usam EPSG:4326. O serviço publica as bases nativas em SIRGAS 2000/EPSG:4674. Não há cálculo de área/distância em Web Mercator nesta etapa.
 
-As referências de catálogo das dez primeiras bases foram consultadas em 24/10/2026 e seus `GetMap`/`GetLegendGraphic` verificados em 25/10/2026 com retorno PNG válido. As cinco bases acrescentadas na 4.3.0 tiveram metadado consultado e coleta WFS conferida em 27/10/2026; suas imagens WMS foram vistas no mapa recortado. Data de revisão do metadado é distinta do ano de referência dos dados. Cada linha abaixo tem link para a ficha oficial.
+As referências de catálogo das dez primeiras bases foram consultadas em 24/10/2026 e seus `GetMap`/`GetLegendGraphic` verificados em 25/10/2026 com retorno PNG válido. As cinco bases acrescentadas na 4.3.0 e as duas da 4.4.0 tiveram metadado consultado e coleta WFS conferida em 27/10/2026. Data de revisão do metadado é distinta do ano de referência dos dados. Cada linha abaixo tem link para a ficha oficial.
 
 | Tema | Identificador WMS (prefixo `IDE:`) | Origem / referência e limite |
 |---|---|---|
@@ -49,6 +49,8 @@ As referências de catálogo das dez primeiras bases foram consultadas em 24/10/
 | Conservação | [`ide_240905_sf5_apps_fbds_pol`](https://idesisema.meioambiente.mg.gov.br/geonetwork/srv/por/catalog.search#/metadata/a61b73f1-ca5b-4776-808a-a708209254f1) | FBDS; APPs hídricas do Rio das Velhas (nascentes, cursos e massas d’água) com faixa publicada. Mapeamento regional; o recorte não alcança outra circunscrição. |
 | Entorno | [`ide_1401_mg_areas_urbanizadas_2022_pol`](https://idesisema.meioambiente.mg.gov.br/geonetwork/srv/por/catalog.search#/metadata/cbdfc068-5fff-4365-b4cd-9837f1373a70) | IBGE; ano de referência 2022, publicação cadastrada em 2026. Não mede demanda social nem população atual. |
 | Infraestrutura | [`ide_0401_mg_rodovias_lin`](https://idesisema.meioambiente.mg.gov.br/geonetwork/srv/por/catalog.search#/metadata/ba9062d9-15d1-4373-9638-2ef8ce885f74) | DNIT/SNV; revisão registrada em 29/06/2022. Não cobre toda via local nem atesta acesso ou capacidade operacional. |
+| Infraestrutura | [`ide_0501_mg_linhas_transmissao_ons_lin`](https://idesisema.meioambiente.mg.gov.br/geonetwork/srv/por/catalog.search#/metadata/aae1c08d-8afd-4321-b362-e3b6c9aacd29) | ONS; linhas de transmissão com tensão e concessionária. Duas linhas de 345 kV cruzam o recorte. Critério de rede elétrica da sugestão. |
+| Barragens | [`ide_1903_mg_zas_pae_pol`](https://idesisema.meioambiente.mg.gov.br/geonetwork/srv/por/catalog.search#/metadata/1d2e7b81-f729-454d-bf7f-035266599d52) | FEAM; zonas de autossalvamento dos PAEBM. A resposta conjunta excede 32 MiB: cada registro é lido separadamente. 13 das 19 geometrias publicadas são inválidas e são corrigidas com make_valid, declarado e contado. |
 | Barragens | [`ide_1901_mg_barragens_rejeitos_residuos_pto`](https://idesisema.meioambiente.mg.gov.br/geonetwork/srv/por/catalog.search#/metadata/e0197766-b7af-4e1e-8766-7b1de8f2002c) | FEAM; barragens de rejeitos e resíduos, ano base 2024, com método construtivo, finalidade, PDA e classe. Não informa nível de emergência atual (SIGBM/ANM). |
 
 Os seis checkboxes estaduais representam grupos, não arquivos únicos. O tema Solos contém apenas o mapa pedológico; não há diagnóstico ambiental. Da mesma forma, o tema entorno inclui urbanização e rodovias, não toda infraestrutura e conhecimento social do território.
@@ -57,7 +59,7 @@ Fundamentação e justificativa do recorte em [Escolhas territoriais](ESCOLHAS_T
 
 ## Opção municipal: trilhas
 
-A camada **Trilhas de Nova Lima** utiliza o cadastro publicado pela Prefeitura, independente do WMS da IDE-Sisema. São sete opções e dezesseis bases, com seis grupos estaduais. A camada municipal chama-se `Trilhas_Decreto_6773_2016_fev_2024`; fonte nativa EPSG:31983, consultada em EPSG:4326 e projetada pelo Leaflet para exibição. Campos consumidos: identificador e nome, associados às cores e rótulos do renderer oficial do item. A configuração consultada contém 59 categorias e 12 cores diferentes para os 67 registros; categorias distintas podem compartilhar uma cor. Limite publicado aproximado: oeste −44,005238; sul −20,211133; leste −43,749501; norte −19,923718.
+A camada **Trilhas de Nova Lima** utiliza o cadastro publicado pela Prefeitura, independente do WMS da IDE-Sisema. São sete opções e dezoito bases, com seis grupos estaduais. A camada municipal chama-se `Trilhas_Decreto_6773_2016_fev_2024`; fonte nativa EPSG:31983, consultada em EPSG:4326 e projetada pelo Leaflet para exibição. Campos consumidos: identificador e nome, associados às cores e rótulos do renderer oficial do item. A configuração consultada contém 59 categorias e 12 cores diferentes para os 67 registros; categorias distintas podem compartilhar uma cor. Limite publicado aproximado: oeste −44,005238; sul −20,211133; leste −43,749501; norte −19,923718.
 
 Em 25/10/2026, a consulta pública contou 67 registros. O serviço informou última edição em **22/04/2024, 16:34:49 UTC**; isso não data cada levantamento. A identificação do decreto é o título fornecido pelo cadastro, sem verificação jurídica do ato nesta etapa. Metadados técnicos, links e limites em [Trilhas de Nova Lima](TRILHAS_NOVA_LIMA.md). A ausência de informação explícita de licença no item não foi interpretada como autorização irrestrita de redistribuição.
 
@@ -70,6 +72,6 @@ O contorno municipal vem da API de malhas simplificadas do IBGE, código Nova Li
 
 ## Caracterização persistida de todas as bases
 
-As mesmas dezesseis bases do catálogo são processadas automaticamente: treze vetores WFS estaduais, dois rasters WCS e trilhas ArcGIS. Vetores preservam todos os atributos publicados e geometrias recortadas. Declividade e MapBiomas preservam valores/células no GeoTIFF nativo EPSG:4674, com seleção pelo centro e NoData separado. Rótulos/classes vêm do estilo padrão oficial. A fonte visual WMS não é usada para inferir valores numéricos.
+As mesmas dezoito bases do catálogo são processadas automaticamente: quinze vetores WFS estaduais, dois rasters WCS e trilhas ArcGIS. Vetores preservam todos os atributos publicados e geometrias recortadas. Declividade e MapBiomas preservam valores/células no GeoTIFF nativo EPSG:4674, com seleção pelo centro e NoData separado. Rótulos/classes vêm do estilo padrão oficial. A fonte visual WMS não é usada para inferir valores numéricos.
 
 O contorno externo AII águas/solos é o recorte comum do protótipo, uma simplificação que não certifica influência temática ou limites de recuperação. SQLite conserva os dados por mina e a aplicação atualiza automaticamente. Data de consulta não é data de levantamento. [Recorte](INFLUENCIA.md), [campos, células, atualização e limites](DADOS_TERRITORIAIS.md).

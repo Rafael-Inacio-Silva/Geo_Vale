@@ -3,9 +3,10 @@ import L from 'leaflet';
 import {requisitar} from './api.ts';
 import CamadasNaInfluencia from './CamadasNaInfluencia.tsx';
 import RelatorioDaMina from './RelatorioDaMina.tsx';
+import SugestaoUso from './SugestaoUso.tsx';
 import type {CamadaTerritorial, CamadasAtivas, InfluenciaTerritorial, LegendaTrilha, TerritorioPreparado} from './tipos.ts';
 
-/** Alterna o território no mapa e oferece o relatório PDF da mina selecionada. */
+/** Alterna o território no mapa, sugere usos e oferece o relatório PDF da mina selecionada. */
 export default function Influencia({mapa, minaId, temas, expandidas, aoConsultar, informarLegenda}: {
   mapa: L.Map | null; minaId?: string; temas: CamadaTerritorial[]; expandidas: CamadasAtivas;
   aoConsultar: () => void; informarLegenda: (legenda: LegendaTrilha[]) => void;
@@ -15,9 +16,11 @@ export default function Influencia({mapa, minaId, temas, expandidas, aoConsultar
   const [territorio, setTerritorio] = useState<TerritorioPreparado | null>(null);
   const [erro, setErro] = useState('');
   const [tentativa, setTentativa] = useState(0);
+  const [pesos, setPesos] = useState<number[] | null>(null);
 
   useEffect(() => {
     setAberta(false);
+    setPesos(null);
     setContorno(null);
     setTerritorio(null);
     setErro('');
@@ -73,6 +76,7 @@ export default function Influencia({mapa, minaId, temas, expandidas, aoConsultar
     {aberta && mapa && contorno && minaId ? <>
       <CamadasNaInfluencia mapa={mapa} minaId={minaId} contorno={contorno} temas={temas} expandidas={expandidas} informarLegenda={informarLegenda}/>
     </> : null}
-    {minaId ? <RelatorioDaMina key={minaId} minaId={minaId} pronto={territorio?.completo ?? false}/> : null}
+    {minaId ? <RelatorioDaMina key={minaId} minaId={minaId} pronto={territorio?.completo ?? false} pesos={pesos}/> : null}
+    {minaId ? <SugestaoUso key={`sugestao-${minaId}`} mapa={mapa} minaId={minaId} pronto={territorio?.completo ?? false} pesos={pesos} alterarPesos={setPesos}/> : null}
   </section>;
 }

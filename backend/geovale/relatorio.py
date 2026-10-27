@@ -11,6 +11,7 @@ import pypdfium2 as pdfium
 from geovale.mapa_relatorio import MapaTerritorial
 from geovale.fichas import PARAMETROS_AGUA, formato, ha, montar_fichas, preparar, projetar
 from geovale.comentarios import Comentarista
+from geovale.multicriterio import SugestoesUso, USOS, entrada_ia, nome_setor, resumo_pesos, texto_setor
 from xml.sax.saxutils import escape
 from zoneinfo import ZoneInfo
 
@@ -132,7 +133,7 @@ class DocumentoPDF(SimpleDocTemplate):
             self.canv.bookmarkPage(chave);self.canv.addOutlineEntry(elemento.getPlainText(),chave,level=0)
 
 
-def gerar_pdf(dados,cenario,fichas,comentarios):
+def gerar_pdf(dados,cenario,fichas,comentarios,sugestao=None,explicacoes=None):
     """Relatório simples: mapa, fatos e leitura contextual em campos separados."""
     destino=BytesIO();mina=dados['mina']
     doc=DocumentoPDF(destino,pagesize=A4,leftMargin=42,rightMargin=42,topMargin=91,bottomMargin=43,
@@ -157,14 +158,16 @@ def gerar_pdf(dados,cenario,fichas,comentarios):
         alvo='Área minerada não identificada na cobertura; as fichas descrevem o recorte inteiro.'
     adicionar(paragrafo('Visão geral | '+mina['nome'],'secao'),
               paragrafo(f'{mina["municipio"]}/{mina["uf"]} | '+data_local(dados['gerado_em']),'pequeno'),
-              MapaTerritorial(dados,altura=225),Spacer(1,8),Paragraph(alvo,ESTILOS['texto']))
+              MapaTerritorial(dados,altura=170),Spacer(1,6),Paragraph(alvo,ESTILOS['texto']))
     resumos=[[ficha['nome'],' | '.join(d['resumo'] for d in ficha['dados'] if d.get('resumo'))] for ficha in fichas[:-1]]
     resumos.append(['Dados simulados *','; '.join(d['resumo'] for d in fichas[-1]['dados'] if d.get('resumo'))])
+    if sugestao:
+        resumos.append(['Sugestão multicritério','; '.join(f"{s['id']} ({ha(s['ha'])}): {s['ranking'][0]['nome']} {formato(s['ranking'][0]['nota'])}" for s in sugestao['setores'])])
     resumo=tabela(['Tema','Dados objetivos do território'],resumos,[LARGURA*.24,LARGURA*.76])
     resumo.setStyle(TableStyle([('TOPPADDING',(0,1),(-1,-1),5),('BOTTOMPADDING',(0,1),(-1,-1),5)]))
     adicionar(resumo,Spacer(1,6),
               paragrafo(cenario['descricao'],'pequeno'),
-              paragrafo('Recorte comum aproximado da AII águas/solos (FEAM, Figura 2.3), usado como contexto; não define área de intervenção ou fechamento. Os comentários indicam implicações para o planejamento, sem alterar valores, classificar aptidão ou recomendar usos.','pequeno'))
+              paragrafo('Recorte comum aproximado da AII águas/solos (FEAM, Figura 2.3), usado como contexto; não define área de intervenção ou fechamento. Os comentários indicam implicações para o planejamento sem alterar valores; a sugestão multicritério ordena usos para discussão, sem decidir.','pequeno'))
     alturas={'vegetacao':190,'agua':180,'barragens':180}
     for i,ficha in enumerate(fichas,1):
         adicionar(PageBreak(),paragrafo(f'{i:02d} | '+ficha['nome'],'secao'))
@@ -184,6 +187,26 @@ def gerar_pdf(dados,cenario,fichas,comentarios):
         else:
             ref=cenario['referencia']
             adicionar(Paragraph('Referência de estrutura: <link href="'+texto(ref['url'])+'" color="#008477">'+texto(ref['instituicao']+' - '+ref['titulo'])+'</link>, '+texto(ref['revisao'])+'. Seções '+texto(ref['secoes'])+'. Os valores com * foram criados no GeoVale. Limites de água: Resolução CONAMA 357/2005; classe do trecho: enquadramento publicado pelo Igam (dado real).',ESTILOS['pequeno']))
+    if sugestao:
+        cores={u['id']:u['cor'] for u in USOS}
+        adicionar(PageBreak(),paragrafo(f'{len(fichas)+1:02d} | Sugestão multicritério','secao'),
+                  MapaTerritorial(dados,tema='sugestao',altura=220,setores=[(s['id'],s['geometria'],cores[s['ranking'][0]['uso']]) for s in sugestao['setores']]),Spacer(1,8),
+                  paragrafo(f"Sugestão para discussão, não decisão. Setores são partes contínuas da área minerada com pelo menos {sugestao['minimo_ha']} ha "
+                            f"({ha(sugestao['fora_ha'])} em fragmentos menores ficaram fora). Restrições legais excluem usos; cada critério vira nota de 0 a 1 e "
+                            f"entra na soma com o peso abaixo. Pesos {'calculados por AHP' if sugestao['origem_pesos']=='AHP' else 'ajustados pelo engenheiro'} "
+                            f"(razão de consistência da matriz padrão: {formato(sugestao['razao_consistencia'],3)}): {resumo_pesos(sugestao)}.",'pequeno'))
+        linhas=[]
+        for s in sugestao['setores']:
+            condicoes=[f"Robustez: {'estável' if s['robustez']['estavel'] else 'sensível'} com ±{round(sugestao['variacao']*100)}% nos pesos"]
+            if s['cavidades']>=1:condicoes.append(f"cavidades com potencial alto: {formato(s['cavidades'])}%")
+            if s['montante']:condicoes.append('barragem a montante')
+            bruto=Paragraph('<b>'+texto(nome_setor(s))+'</b><br/>'+texto(texto_setor(s)).replace('\n','<br/>')+'<br/><font size="6.7" color="#536d64">'+texto('; '.join(condicoes))+'</font>',ESTILOS['celula'])
+            linhas.append([bruto,paragrafo(explicacoes['textos'][s['id']],'celula')])
+        tab=tabela(['Setor e notas (0 a 100)','Por que (explicação separada das notas)'],linhas,[LARGURA*.46,LARGURA*.54])
+        tab.setStyle(TableStyle([('TOPPADDING',(0,1),(-1,-1),6),('BOTTOMPADDING',(0,1),(-1,-1),6)]))
+        adicionar(tab,Spacer(1,8),paragrafo(explicacoes['rotulo']+'. A decisão de uso é do engenheiro e das partes interessadas.','pequeno'),
+                  paragrafo('Restrições: '+'; '.join(f"{r['nome']} admite {', '.join(n['nome'].lower() for n in USOS if n['id'] in r['permite'])} ({r['base']})" for r in sugestao['restricoes'])+'.','pequeno'),
+                  paragrafo('Relevo da Topodata (SRTM, 2000): dentro da área minerada não representa a cava atual; substituir por levantamento topográfico atual. Métodos e evidências em docs/MULTICRITERIO.md.','pequeno'))
     def pagina(tela,d):
         tela.saveState();tela.setFillColor(VERDE);tela.rect(0,A4[1]-70,A4[0],70,fill=1,stroke=0);logo(tela,40,A4[1]-57,.9)
         tela.setFillColor(AMARELO);tela.rect(0,A4[1]-73,A4[0],3,fill=1,stroke=0)
@@ -194,20 +217,23 @@ def gerar_pdf(dados,cenario,fichas,comentarios):
 
 class RelatoriosPDF:
     """PDF e prévia por versão: o navegador exibe páginas prontas do mesmo documento baixável."""
-    def __init__(self,fonte,raiz,comentarista=None):
+    def __init__(self,fonte,raiz,comentarista=None,sugestoes=None):
         self.fonte,self.raiz=fonte,raiz;self.cache={};self.documentos=OrderedDict();self.imagens=OrderedDict();self.manifestos={}
-        self.trava=Lock();self.comentarista=comentarista or Comentarista(raiz=raiz)
+        self.trava=Lock();self.comentarista=comentarista or Comentarista(raiz=raiz);self.sugestoes=sugestoes or SugestoesUso(fonte)
 
-    def obter(self,mina_id):
-        """Atualiza fatos por coleta/cenário e comentários por modelo, sem reextrair fontes."""
+    def obter(self,mina_id,pesos=None):
+        """Atualiza fatos por coleta/cenário/pesos e explicações por modelo, sem reextrair fontes."""
         dados=self.fonte.relatorio(mina_id);cenario=ler_cenario(self.raiz,mina_id)
-        chave=hashlib.sha256(json.dumps({'dados':{k:v for k,v in dados.items() if k!='gerado_em'},'cenario':cenario,'modelo':'4.3.0','comentarios':self.comentarista.assinatura},sort_keys=True,ensure_ascii=False).encode()).hexdigest()
+        chave=hashlib.sha256(json.dumps({'dados':{k:v for k,v in dados.items() if k!='gerado_em'},'cenario':cenario,'modelo':'4.4.0',
+                                         'pesos':None if pesos is None else [round(float(p),6) for p in pesos],'comentarios':self.comentarista.assinatura},sort_keys=True,ensure_ascii=False).encode()).hexdigest()
         with self.trava:
             anterior=self.cache.get(mina_id)
             if anterior and anterior[0]==chave:return anterior[1]
             dados['rasters']={b['base']['id']:self.fonte.arquivo(mina_id,b['base']['id']) for b in dados['bases'] if b['tipo']=='raster'}
             fichas=montar_fichas(preparar(dados),cenario);comentarios=self.comentarista.gerar(fichas)
-            pdf=gerar_pdf(dados,cenario,fichas,comentarios);versao=hashlib.sha256(pdf).hexdigest()
+            sugestao=self.sugestoes.obter(mina_id,pesos,dados) if dados.get('area_minerada') else None
+            explicacoes=self.comentarista.explicar(entrada_ia(sugestao),{s['id']:s['explicacao'] for s in sugestao['setores']}) if sugestao else None
+            pdf=gerar_pdf(dados,cenario,fichas,comentarios,sugestao,explicacoes);versao=hashlib.sha256(pdf).hexdigest()
             self.cache[mina_id]=(chave,pdf);self.documentos[(mina_id,versao)]=pdf
             while len(self.documentos)>4:
                 removido,_=self.documentos.popitem(last=False);self.manifestos.pop(removido,None)

@@ -14,6 +14,10 @@ flowchart LR
     B --> A[FastAPI: leitura do território]
     A --> U[ReportLab: PDF padronizado]
     S[Cenário técnico fictício local] --> U
+    B --> M[Multicritério: setores, restrições, AHP]
+    M --> U
+    M --> L[IA opcional: explicação conferida]
+    L --> U
     U --> J[PDFium: PNG por página + texto]
     J --> N[Navegador: imagem e paginação]
     C --> V[Leaflet: seletores somente visuais]
@@ -26,15 +30,16 @@ flowchart LR
 
 | Método e rota | Resposta |
 |---|---|
-| GET /api/saude | Saúde e versão 4.3.0 |
-| GET /api/mapa | Uma mina, fundos e catálogo de sete temas/dezesseis bases |
+| GET /api/saude | Saúde e versão 4.4.0 |
+| GET /api/mapa | Uma mina, fundos e catálogo de sete temas/dezoito bases |
 | GET /api/mapa/limite-mg | Contorno estadual, fonte/data e aviso de cache quando aplicável |
 | GET /api/mapa/trilhas?bbox=... | Trilhas visuais e legenda do enquadramento; 422/503 |
 | GET /api/minas/{id}/processo-anm | Atributos cadastrais e fonte, sem geometria; 404/503 |
 | GET /api/minas/{id}/limite-municipal | Somente município associado; 404/503 |
 | GET /api/minas/{id}/relatorio/previa?versao=hash | Número/texto das páginas de uma versão já aberta; 404/409 |
 | GET /api/minas/{id}/relatorio/paginas/{numero}?versao=hash | PNG da página da mesma versão; 404/409 |
-| GET /api/minas/{id}/relatorio | PDF GeoVale inline; ?baixar=true entrega attachment; 404/503 |
+| GET /api/minas/{id}/relatorio | PDF GeoVale inline; ?baixar=true entrega attachment; ?pesos= leva os pesos da sugestão; 404/422/503 |
+| GET /api/minas/{id}/sugestao | Setores da área minerada, ranking de usos, restrições, sensibilidade e explicação por regras; ?pesos= com sete valores de 0 a 100; 404/422/503 |
 | GET /api/minas/{id}/trilhas-influencia | Trilhas visuais geometricamente recortadas e legenda; 404/503 |
 | GET /api/minas/{id}/influencia | Duas Features: influência comum e mina sombreada; 404/503 |
 | GET /api/minas/{id}/territorio | Estado/resumo de todas as bases persistidas, independente de visibilidade; 404/503 |
@@ -60,12 +65,14 @@ Selecionar pelo cartão ou pela bolinha mostra o contorno da mina, independentem
 
 Com Influência ativa, `CamadasNaInfluencia.tsx` mostra os seis temas WMS mascarados no navegador pelo polígono irregular, mais trilhas intersectadas no backend. A máscara `clip-path` acompanha coordenadas da camada, zoom/redimensionamento; imagens recortadas ocultam durante animação de zoom. Marcar um tema substitui sua versão recortada pela versão expandida de `MapaTerritorio.tsx`; desmarcar restaura o recorte. Sem Influência os seletores mostram/retiram a versão normal. Ordem, timeout, intensidade e legendas permanecem. Imagens atuais do fornecedor são independentes da data do relatório persistido. Trilhas visuais usam a configuração oficial de cores/nomes, consulta leve por bbox e cache de dez minutos/16 enquadramentos. Contorno estadual tem cache de uma hora, simplificação visual e aviso no reaproveitamento vencido; ANM, dez minutos; município, uma hora. Esses caches de navegação são separados do armazenamento territorial.
 
-As barras ocultam sem desmontar o painel; ResizeObserver atualiza o tamanho Leaflet. Desktop mantém rolagem nas laterais; celular dispõe território, mapa e consulta em sequência. Créditos acompanham as camadas. Um ResizeObserver mede a atribuição Leaflet e atualiza a variável CSS --altura-creditos; legenda territorial e escala ficam acima dela com espaçamento, mesmo com várias linhas. Sem autenticação/implantação pública, ranking ou chave OpenAI configurada; existe conector opcional no servidor.
+As barras ocultam sem desmontar o painel; ResizeObserver atualiza o tamanho Leaflet. Desktop mantém rolagem nas laterais; celular dispõe território, mapa e consulta em sequência. Créditos acompanham as camadas. Um ResizeObserver mede a atribuição Leaflet e atualiza a variável CSS --altura-creditos; legenda territorial e escala ficam acima dela com espaçamento, mesmo com várias linhas. `SugestaoUso.tsx` acrescenta **Sugerir uso** na barra esquerda: pinta os setores pelo 1º uso em pane próprio, abre ranking e explicação por clique (texto seguro, sem HTML) e mostra os pesos em controles deslizantes. Mudar um peso espera 350 ms e recalcula; os mesmos pesos seguem para o relatório. Sem autenticação/implantação pública ou chave OpenAI configurada; existe conector opcional no servidor.
 
 ## Documento e cenário
 
 `fichas.py` delimita a área minerada pela classe Mineração do MapBiomas guardado e deriva dados objetivos no total, na área minerada e no entorno: em UTM 23S, comprimentos por registro, área da união de polígonos, contagem de pontos e área das células matriciais pelos vértices projetados. Agrupa UCs pelo grupo publicado e confere os pontos de água simulados com a classe do trecho e os limites da CONAMA 357/2005. Não altera geometrias guardadas nem presume volume, pH, profundidade ou biota reais. `mapa_relatorio.py` compõe todos os temas do recorte, mapas individuais, a área minerada, barragens numeradas e os pontos simulados. Reprojeta/reamostra rasters por vizinho mais próximo somente no desenho; cálculos usam a grade nativa.
 
-`comentarios.py` mantém comentários em estrutura separada por ID do dado. Sem serviço configurado usa regras rotuladas. Conector opcional recebe fatos compactos, pede JSON, confere IDs e rejeita números não fornecidos; resposta ausente/inválida retorna às regras com rótulo explícito. Não executa ferramentas ou avaliações de aptidão. A configuração de IA é somente de servidor.
+`multicriterio.py` mede uma vez por coleta, para cada célula de 30 m da área minerada, as sete variáveis, as restrições legais e o setor; guarda em cache e, quando os pesos mudam, refaz só a soma ponderada (cerca de 0,4 s contra 11 s do preparo inicial). Pesos padrão vêm do autovetor da matriz AHP, com razão de consistência calculada. A sensibilidade varia cada peso em ±20%. [Método e porquês](MULTICRITERIO.md).
 
-O cache do PDF usa dados, cenário, modelo do documento e configuração do comentarista. O coletor conserva assinatura 4.0.0; API/interface são 4.3.0. `X-Relatorio-Versao` vincula o manifesto/PNGs ao PDF baixável. Versão não guardada: 409 para reabertura; página inexistente: 404. A versão já aberta não mistura páginas de outra emissão.
+`comentarios.py` mantém comentários das fichas por regras, separados por ID do dado. A IA opcional só explica a sugestão: recebe números já formatados por setor, pede JSON com a lista exata de setores, rejeita números não fornecidos e volta às regras com rótulo explícito em qualquer falha. Não escolhe uso nem pesos. A configuração de IA é somente de servidor.
+
+O cache do PDF usa dados, cenário, pesos, modelo do documento e configuração do comentarista. O coletor conserva assinatura 4.0.0; API/interface são 4.4.0. `X-Relatorio-Versao` vincula o manifesto/PNGs ao PDF baixável. Versão não guardada: 409 para reabertura; página inexistente: 404. A versão já aberta não mistura páginas de outra emissão.

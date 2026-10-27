@@ -8,6 +8,7 @@ from rasterio.enums import Resampling
 from reportlab.lib import colors
 from reportlab.lib.utils import ImageReader
 from reportlab.platypus import Flowable
+from shapely.geometry import mapping, shape
 
 CORES={'relevo':'#b06f36','agua':'#237bba','solos':'#a87554','vegetacao':'#538343','entorno':'#a44663','barragens':'#c8462b','trilhas':'#8a4fa0'}
 ORDEM_VETORES={'solos':0,'vegetacao':1,'relevo':2,'entorno':3,'trilhas':4,'agua':5,'barragens':6}
@@ -15,13 +16,15 @@ ORDEM_VETORES={'solos':0,'vegetacao':1,'relevo':2,'entorno':3,'trilhas':4,'agua'
 
 class MapaTerritorial(Flowable):
     """Compõe somente dados do recorte; reprojeção matricial ocorre apenas na imagem de apresentação."""
-    def __init__(self,dados,tema=None,altura=240,pontos=()):
+    def __init__(self,dados,tema=None,altura=240,pontos=(),setores=()):
         super().__init__();self.width=511.27559055118115;self.height=altura;self.tema=tema;self.dados=dados;self.pontos=pontos
+        self.setores=[(rotulo,transform_geom('EPSG:4326','EPSG:31983',g),cor) for rotulo,g,cor in setores]
         self.feicoes={f['properties']['id']:transform_geom('EPSG:4326','EPSG:31983',f['geometry']) for f in dados['influencia']['features']}
         minerada=dados.get('area_minerada')
         self.minerada=(transform_geom('EPSG:4326','EPSG:31983',minerada['geojson']),minerada['cor']) if minerada else None
         # A ficha simulada mostra só a drenagem enquadrada como referência dos pontos de água.
-        self.bases=[b for b in dados['bases'] if 'enq_corpos' in b['base']['camada']] if tema=='tecnicos' else [b for b in dados['bases'] if tema is None or b['base']['tema_id']==tema]
+        self.bases=([b for b in dados['bases'] if 'enq_corpos' in b['base']['camada']] if tema=='tecnicos' else [] if tema=='sugestao'
+                    else [b for b in dados['bases'] if tema is None or b['base']['tema_id']==tema])
 
     def draw(self):
         t=self.canv;t.saveState();t.setFillColor(colors.HexColor('#f3f6f2'));t.roundRect(0,0,self.width,self.height,8,fill=1,stroke=0)
@@ -70,7 +73,10 @@ class MapaTerritorial(Flowable):
                     rotulo=str(f['properties'].get('name') or '').split(' - ')[0] if self.tema else ''
                     marcadores+=[(xy(p),cor,rotulo) for p in ([g['coordinates']] if g['type']=='Point' else g['coordinates'])];continue
                 pol='Polygon' in g['type']
-                t.setFillAlpha(.12 if self.tema is None else .22);t.drawPath(caminho(g),fill=int(pol),stroke=1,fillMode=0)
+                # Simplificação de 3 m só no desenho (abaixo de 0,1 pt nesta escala); medidas usam a geometria guardada.
+                t.setFillAlpha(.12 if self.tema is None else .22);t.drawPath(caminho(mapping(shape(g).simplify(3))),fill=int(pol),stroke=1,fillMode=0)
+        for _,g,cor in self.setores:
+            t.setFillColor(colors.HexColor(cor));t.setStrokeColor(colors.white);t.setLineWidth(.6);t.setFillAlpha(.75);t.drawPath(caminho(g),fill=1,stroke=1,fillMode=0)
         t.setFillAlpha(1);t.restoreState();t.setStrokeColor(colors.HexColor('#ffc329'));t.setLineWidth(1.3);t.drawPath(caminho(contorno),stroke=1,fill=0)
         t.setFillColor(colors.HexColor('#8bb8a8'));t.setStrokeColor(colors.HexColor('#00594f'));t.setLineWidth(1.5)
         t.setFillAlpha(.65);t.drawPath(caminho(self.feicoes['mina']),fill=1,stroke=1,fillMode=0);t.setFillAlpha(1)
@@ -81,6 +87,8 @@ class MapaTerritorial(Flowable):
         for (x,y),cor,rotulo in marcadores:
             t.setFillColor(cor);t.setStrokeColor(colors.white);t.setLineWidth(.8);t.circle(x,y,3.4,fill=1,stroke=1)
             if rotulo:etiqueta(x,y,rotulo)
+        for rotulo,g,_ in self.setores:
+            p=shape(g).representative_point();etiqueta(*xy((p.x,p.y)),rotulo)
         vistos=set()
         for rotulo,lon,lat in self.pontos:
             if rotulo in vistos:continue
@@ -91,5 +99,9 @@ class MapaTerritorial(Flowable):
         t.line(self.width-24,self.height-37,self.width-24,self.height-23);t.line(self.width-24,self.height-23,self.width-28,self.height-29);t.line(self.width-24,self.height-23,self.width-20,self.height-29)
         t.setFont('GeoRegular',6.5);t.line(12,27,12+1000*escala,27);t.drawString(16+1000*escala,24,'1 km - UTM 23S')
         legenda='Influência: amarelo | '+('Área minerada (MapBiomas): contorno vinho | ' if self.minerada else '')+'Mina OSM: verde | '
-        t.drawString(12,11,legenda+('Todos os temas sobrepostos' if self.tema is None else 'Pontos simulados *' if self.tema=='tecnicos' else 'Somente o tema desta ficha'))
+        if self.tema=='sugestao':
+            legenda='Setores pelo 1º uso: verde conservação | laranja ecoturismo | marrom silvicultura | azul solar | Influência: amarelo | Mina OSM: verde'
+            t.drawString(12,11,legenda)
+        else:
+            t.drawString(12,11,legenda+('Todos os temas sobrepostos' if self.tema is None else 'Pontos simulados *' if self.tema=='tecnicos' else 'Somente o tema desta ficha'))
         t.restoreState()

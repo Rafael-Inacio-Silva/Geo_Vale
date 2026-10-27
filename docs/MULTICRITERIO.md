@@ -1,0 +1,98 @@
+# Sugestão multicritério e explicação por IA
+
+Versão 4.4.0, 27/10/2026. Esta etapa vem depois da caracterização: o relatório organiza o território e a sugestão ordena usos pós-mineração para cada setor da área minerada. Na referência da Vale, corresponde a apoiar a etapa **Conceber** depois de **Conhecer** ([Fechamento de mina e uso futuro](https://www.vale.com/pt/esg/fechamento-de-mina-e-uso-futuro)). O sistema não decide: o engenheiro ajusta os pesos e leva a sugestão para discussão.
+
+## Fluxo
+
+1. O engenheiro seleciona a mina e clica em **Sugerir uso**.
+2. O sistema divide a área minerada em setores contínuos de pelo menos 20 ha.
+3. Exclui de cada célula de 30 m os usos que a lei não admite ali: UC de proteção integral, APP, ZAS e superfície d’água.
+4. Converte sete critérios em notas de 0 a 1 para cada uso e soma com os pesos. O padrão vem do AHP.
+5. Mostra no mapa o 1º uso de cada setor; o clique abre o ranking e a explicação.
+6. Testa se o 1º lugar muda com ±20% em cada peso e marca os setores sensíveis.
+7. O engenheiro move os pesos; o mapa recalcula. **Ver relatório** leva os mesmos pesos para a ficha "Sugestão multicritério".
+8. No PDF, a IA explica cada setor quando há chave configurada; sem chave, a explicação por regras aparece identificada.
+
+## Decisões e porquês — fase 3
+
+| Decisão | Por quê | Evidência |
+|---|---|---|
+| Unidade de decisão: setores contínuos da área minerada (≥ 20 ha) | O uso futuro é decidido no terreno minerado, não nos 15 mil ha da AII. Cava, pilha e barragem não têm cadastro público separado; setores contínuos são a menor unidade honesta com dados públicos. 20 ha evita decidir sobre fragmentos de poucos pixels; o fechamento de 30 m (uma célula) une vizinhos na diagonal. | Plano Minas-Rio 11.7–11.8 (ações na ADA); MapBiomas 30 m, classe Mineração. Na Horizontes, 120,4 ha em fragmentos ficaram fora. |
+| Quatro usos | São os quatro grupos do estudo de Ptolemais, adaptados: agricultura vira silvicultura, porque os solos do recorte (Cambissolo e Neossolo litólico) são rasos; parques recreativos viram ecoturismo, que usa as trilhas existentes; uso industrial, que no estudo inclui fotovoltaica, vira energia solar e infraestrutura. | Servou et al. (2023); ficha de solos; Vale, uso futuro. |
+| Restrições excluem, não pontuam | Um fator compensa outro numa soma; uma proibição legal não pode ser compensada por boa declividade. Por isso a restrição zera o uso na célula e o setor informa a porcentagem permitida. | Eastman (1999) e Malczewski (2006): restrições booleanas separadas de fatores. |
+| Proteção integral só admite conservação; parque e monumento natural também admitem ecoturismo | O SNUC admite apenas uso indireto na proteção integral; parque e monumento natural admitem visitação, estação ecológica não. | Lei 9.985/2000, arts. 7º, 9º, 11 e 12; campos `grupo` e `categoria` de cada UC. |
+| APP admite conservação e ecoturismo | Trilha para ecoturismo é atividade de baixo impacto admitida em APP; plantio comercial e estruturas não. | Lei 12.651/2012, arts. 3º (X, c), 4º e 8º. |
+| ZAS admite conservação e silvicultura | Na ZAS não há tempo para socorro externo em caso de ruptura; usos com permanência de pessoas (visitação, instalações) ficam inadequados enquanto a barragem existir. | Lei 12.334/2010, alterada pela Lei 14.066/2020; ZAS dos PAEBM publicadas pela FEAM. |
+| Superfície d’água admite conservação e ecoturismo | Não se planta nem se instala placa solar sobre reservatório ou lago. | Massas d’água ANA/Igam. |
+| Cavidades como condicionante, não restrição | O mapa nacional (1:2.500.000) indica potencial, não cavernas localizadas; excluir 96% da área minerada por ele seria falsa precisão. O setor mostra a porcentagem com potencial alto e pede prospecção. | Decreto 99.556/1990; Jansen, Cavalcanti e Lamblém (2012). |
+| Sete critérios | Seguem os critérios físicos do estudo de Ptolemais (declividade e distâncias a povoados, rios, estradas e linhas de transmissão) e acrescentam dois dados locais já integrados: vegetação nativa no entorno e trilhas. | Servou et al. (2023); Pagouni et al. (2024). |
+| Notas de 0 a 1 por funções lineares | Cada critério tem unidade própria (classe, metros, fração); a padronização permite somar. Os limites (por exemplo, acesso ideal até 1 km e nulo a 8 km) são valores de partida documentados em `multicriterio.py`, para calibrar com especialistas. | Servou et al. (2023) usam fuzzificação em SIG; Malczewski (2006). |
+| Relevo pelas classes da Embrapa | É a classificação da própria Topodata; usos mecanizados e com estruturas preferem plano e suave ondulado, enquanto conservação ganha em relevo forte, onde os outros usos perdem. | Classes de relevo da Embrapa (1979) adotadas pela Topodata. |
+| Soma ponderada e média por área do setor | Método compensatório mais usado e fácil de explicar: cada critério contribui com pontos visíveis. Células excluídas valem zero, então a restrição reduz a nota na proporção da área afetada. | Malczewski (2006); Eastman (1999). |
+| Pesos padrão por AHP | Os pesos vêm de comparações par a par documentadas, com consistência medida. Relevo pesa mais porque define que usos são fisicamente possíveis; vegetação nativa em seguida porque a matriz natural do recorte (71%) favorece restauração; acesso, cidade, rede e trilhas pesam menos porque afetam um ou dois usos. | Saaty (1980): razão de consistência até 0,10. Matriz atual: 0,012. Soltanmohammadi et al. (2010) aplicam AHP ao uso pós-mineração. |
+| Engenheiro ajusta os pesos | O estudo de Ptolemais conclui que o modelo matemático sozinho não basta e precisa de informação qualitativa da mineração. O controle deixa essa informação entrar. Simplificação: um peso por critério, aplicado aos usos em que ele participa; pesos por uso ficam como evolução. | Servou et al. (2023). |
+| Sensibilidade ±20% em cada peso | Mostra se a ordem depende de um julgamento frágil. Setor sensível pede discussão antes de qualquer conclusão. | Chen, Yu e Khan (2013); Ligmann-Zielinska e Jankowski (2014): variação de um peso por vez. |
+| Relevo de 2000 mantido, com aviso | É o único relevo público integrado; dentro da área minerada não representa a cava atual. O PDF diz isso e a função aceita trocar a fonte por levantamento atual. | Topodata (SRTM, 2000). |
+
+### Pesos AHP e respostas por uso
+
+| Critério | Peso AHP | Conservação | Ecoturismo | Silvicultura | Solar e infraestrutura |
+|---|---|---|---|---|---|
+| Relevo (classe Embrapa) | 33,8% | melhor em forte ondulado a escarpado | melhor em suave a ondulado | melhor em plano a suave | melhor em plano |
+| Vegetação nativa em ~1 km | 22,0% | sobe de 10% a 60% de nativa | idem, com piso 0,3 | — | — |
+| Distância da drenagem | 13,5% | melhor até 100 m | melhor até 200 m | melhor após 200 m | melhor após 300 m |
+| Acesso por rodovia | 12,6% | — | melhor até 1 km | melhor até 1 km | melhor até 1 km |
+| Proximidade urbana | 7,3% | melhor longe (pressão menor) | melhor perto (demanda) | — | melhor perto (carga) |
+| Rede elétrica | 5,8% | — | — | — | melhor até 1 km |
+| Trilhas existentes | 5,0% | — | melhor até 300 m | — | — |
+
+Distâncias são medidas em UTM 23S do centro de cada célula até o registro mais próximo dentro do recorte; vias e linhas fora do recorte não foram consultadas.
+
+## Resultado atual da Horizontes (pesos AHP)
+
+| Setor | Área | Estruturas | 1º uso | Nota | Robustez |
+|---|---|---|---|---|---|
+| S1 | 1.431,9 ha | cava OSM; barragens 405 e 407 | Ecoturismo e lazer | 74 | estável |
+| S2 | 925,8 ha | barragens 363 e 365 (Vargem Grande, a montante) | Conservação e restauração | 67 | sensível (Ecoturismo a 0,1 ponto) |
+| S3 | 434,6 ha | barragens 331 (B3/B4, a montante), 473 e 476 | Ecoturismo e lazer | 80 | estável |
+| S4 | 202,2 ha | — | Conservação e restauração | 84 | estável |
+| S5 | 58,3 ha | — | Conservação e restauração | 88 | estável |
+
+Solar e silvicultura ficam atrás em todos os setores principalmente pelo relevo forte. S1 a S3 têm mais de 95% de potencial alto de cavidades, o que exige prospecção antes de qualquer intervenção. Os números vêm da coleta de 27/10/2026 e mudam com novas coletas.
+
+## Decisões e porquês — fase 4 (IA)
+
+| Decisão | Por quê | Evidência |
+|---|---|---|
+| IA só explica a sugestão | Na sugestão há muitos números por setor (quatro usos, sete critérios, restrições, sensibilidade). Transformá-los em texto curto é onde um modelo de linguagem acrescenta valor. | Pedido do projeto: usar IA onde faz sentido. |
+| Fichas descritivas ficam por regras | A implicação de cada dado já é calculada de forma determinística a partir do número medido. Um modelo ali só repetiria a regra com risco de inventar. | Ji et al. (2023): alucinação em geração de texto. |
+| A IA não escolhe uso nem pesos | A decisão é do engenheiro e das partes interessadas; o modelo não tem informação além dos números enviados. | Servou et al. (2023); Vale, participação social no uso futuro. |
+| Saída estruturada e conferida | JSON Schema estrito com a lista exata de setores; todos presentes; até 420 caracteres; qualquer número fora dos dados enviados derruba a resposta e volta às regras. | [OpenAI Structured Outputs](https://developers.openai.com/api/docs/guides/structured-outputs). |
+| Envio mínimo | Só números já calculados e formatados como devem aparecer, sem geometria, `store=false`, chave apenas em `.local/ia.env`. | Configuração da integração em [Relatório](RELATORIO.md). |
+| Explicação por regras sempre disponível | A interface mostra a explicação por regras, instantânea; o PDF identifica se o texto veio da IA ou das regras. | Rótulo impresso abaixo da tabela. |
+| Sem ML treinado | Não há histórico rotulado de usos pós-mineração bem-sucedidos para treinar ou validar um modelo. | — |
+| Modelo gpt-5-nano | Escolha do projeto: tarefa curta de redação sobre números dados; custo e latência baixos. | [Documentação do modelo](https://developers.openai.com/api/docs/models/gpt-5-nano). |
+
+## Limites e evolução
+
+- Cava, pilha e barragem não são separadas: exige o cadastro interno de estruturas da Vale.
+- Topografia atual (LiDAR ou drone) deve substituir a Topodata dentro da área minerada.
+- 13 das 19 ZAS publicadas têm geometria inválida e foram corrigidas com make_valid, declarado e contado na coleta.
+- Os limites das funções e os julgamentos AHP são de partida; devem ser calibrados com especialistas e comunidade.
+- Pesos por uso, custo de implantação e demanda social medida ficam para a evolução.
+- Ver também [Escolhas territoriais](ESCOLHAS_TERRITORIAIS.md) e [Relatório](RELATORIO.md).
+
+## Referências
+
+- Chen, Y.; Yu, J.; Khan, S. (2013). The spatial framework for weight sensitivity analysis in AHP-based multi-criteria decision making. *Environmental Modelling & Software* 48, 129–140.
+- Eastman, J. R. (1999). Multi-criteria evaluation and GIS. In: Longley et al. (eds.), *Geographical Information Systems*. Wiley, 493–502.
+- Embrapa (1979). Classes de relevo adotadas pela [Topodata](http://www.dsr.inpe.br/topodata/).
+- Jansen, D. C.; Cavalcanti, L. F.; Lamblém, H. S. (2012). Mapa de potencialidade de ocorrência de cavernas no Brasil, 1:2.500.000. *Revista Brasileira de Espeleologia* 2(1).
+- Ji, Z. et al. (2023). Survey of hallucination in natural language generation. *ACM Computing Surveys* 55(12).
+- Ligmann-Zielinska, A.; Jankowski, P. (2014). Spatially-explicit integrated uncertainty and sensitivity analysis of criteria weights in multicriteria land suitability evaluation. *Environmental Modelling & Software* 57.
+- Malczewski, J. (2006). GIS-based multicriteria decision analysis: a survey of the literature. *International Journal of Geographical Information Science* 20(7), 703–726.
+- Pagouni, C. et al. (2024). Transitional and post-mining land uses: a global review. *Land* 13(7), 1051. [DOI](https://doi.org/10.3390/land13071051).
+- Saaty, T. L. (1980). *The Analytic Hierarchy Process*. McGraw-Hill.
+- Servou, A.; Paraskevis, N.; Roumpos, C.; Pavloudakis, F. (2023). A geospatial analysis model for the selection of post-mining land uses in surface lignite mines: application in the Ptolemais mines, Greece. *Sustainability* 15(19), 14388. [DOI](https://doi.org/10.3390/su151914388).
+- Soltanmohammadi, H.; Osanloo, M.; Aghajani Bazzazi, A. (2010). An analytical approach with a reliable logic and a ranking policy for post-mining land-use determination. *Land Use Policy* 27(2), 364–372.
+- Leis: 9.985/2000 (SNUC), 12.651/2012 (Código Florestal), 12.334/2010 e 14.066/2020 (segurança de barragens); Decreto 99.556/1990 (cavidades).

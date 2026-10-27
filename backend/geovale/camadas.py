@@ -6,11 +6,12 @@ SERVICO_WMS = 'https://geoserver.meioambiente.mg.gov.br/ows'
 CATALOGO = 'https://idesisema.meioambiente.mg.gov.br/geonetwork/srv/por/catalog.search#/metadata/'
 
 
-def base(nome, titulo, metadado, extras=(), z_zero=False):
+def base(nome, titulo, metadado, extras=(), z_zero=False, por_registro=False, reparar=False):
     """Identifica uma base e sua legenda oficial, sem copiar o conjunto geográfico.
 
     `extras` lista campos que o serviço publica no GeoJSON sem declará-los no DescribeFeatureType;
-    `z_zero` declara pontos publicados com cota constante zero.
+    `z_zero` declara pontos publicados com cota constante zero; `por_registro` consulta um registro
+    por vez quando a resposta conjunta excede o limite; `reparar` aplica make_valid declarado e contado.
     """
     camada = f'IDE:{nome}'
     dados = {
@@ -23,8 +24,9 @@ def base(nome, titulo, metadado, extras=(), z_zero=False):
     }
     if extras:
         dados['campos_extras'] = list(extras)
-    if z_zero:
-        dados['z_zero'] = True
+    for chave, ativo in (('z_zero', z_zero), ('por_registro', por_registro), ('reparar', reparar)):
+        if ativo:
+            dados[chave] = True
     return dados
 
 
@@ -70,17 +72,21 @@ CAMADAS = [
     {
         'id': 'entorno', 'nome': 'Entorno e infraestrutura', 'cor': '#a44663',
         'opacidade': 0.8, 'ordem': 5, 'url': SERVICO_WMS,
-        'credito': 'Entorno: IBGE / DNIT / IDE-Sisema',
+        'credito': 'Entorno: IBGE / DNIT / ONS / IDE-Sisema',
         'bases': [
             base('ide_1401_mg_areas_urbanizadas_2022_pol', 'Áreas urbanizadas — referência 2022', 'cbdfc068-5fff-4365-b4cd-9837f1373a70'),
             base('ide_0401_mg_rodovias_lin', 'Rodovias estaduais e federais', 'ba9062d9-15d1-4373-9638-2ef8ce885f74'),
+            base('ide_0501_mg_linhas_transmissao_ons_lin', 'Linhas de transmissão de energia', 'aae1c08d-8afd-4321-b362-e3b6c9aacd29'),
         ],
     },
     {
         'id': 'barragens', 'nome': 'Barragens', 'cor': '#c8462b',
         'opacidade': 1.0, 'ordem': 7, 'url': SERVICO_WMS,
-        'credito': 'Barragens: FEAM / IDE-Sisema',
-        'bases': [base('ide_1901_mg_barragens_rejeitos_residuos_pto', 'Barragens — ano base 2024', 'e0197766-b7af-4e1e-8766-7b1de8f2002c', extras=['name'], z_zero=True)],
+        'credito': 'Barragens e ZAS: FEAM / IDE-Sisema',
+        'bases': [
+            base('ide_1903_mg_zas_pae_pol', 'Zonas de autossalvamento (PAEBM)', '1d2e7b81-f729-454d-bf7f-035266599d52', por_registro=True, reparar=True),
+            base('ide_1901_mg_barragens_rejeitos_residuos_pto', 'Barragens — ano base 2024', 'e0197766-b7af-4e1e-8766-7b1de8f2002c', extras=['name'], z_zero=True),
+        ],
     },
 ]
 

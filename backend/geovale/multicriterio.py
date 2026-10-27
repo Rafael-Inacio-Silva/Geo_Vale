@@ -1,0 +1,339 @@
+"""Sugestão multicritério de uso pós-mineração por setor da área minerada.
+
+Restrições legais excluem usos; fatores padronizados de 0 a 1 são combinados por soma ponderada
+com pesos do engenheiro (padrão calculado por AHP). O resultado ordena usos para discussão; não decide.
+"""
+import hashlib
+import json
+import math
+import threading
+
+import numpy as np
+import shapely
+from rasterio.warp import transform, transform_geom
+from shapely.geometry import mapping
+from shapely.ops import unary_union
+
+from geovale.fichas import NATIVA, UTM, chave_base, formato, ha, normalizar, preparar, projetar
+
+CRITERIOS = [
+    {'id': 'relevo', 'nome': 'Relevo (declividade)', 'curto': 'relevo'},
+    {'id': 'vegetacao', 'nome': 'Vegetação nativa no entorno', 'curto': 'vegetação nativa'},
+    {'id': 'drenagem', 'nome': 'Distância da drenagem', 'curto': 'drenagem'},
+    {'id': 'acesso', 'nome': 'Acesso por rodovia', 'curto': 'acesso'},
+    {'id': 'urbano', 'nome': 'Proximidade urbana', 'curto': 'proximidade urbana'},
+    {'id': 'rede', 'nome': 'Rede elétrica', 'curto': 'rede elétrica'},
+    {'id': 'trilhas', 'nome': 'Trilhas existentes', 'curto': 'trilhas'},
+]
+IDS = [c['id'] for c in CRITERIOS]
+USOS = [
+    {'id': 'conservacao', 'nome': 'Conservação e restauração', 'cor': '#2e7d32'},
+    {'id': 'ecoturismo', 'nome': 'Ecoturismo e lazer', 'cor': '#e09b00'},
+    {'id': 'silvicultura', 'nome': 'Silvicultura', 'cor': '#8d6e63'},
+    {'id': 'solar', 'nome': 'Energia solar e infraestrutura', 'cor': '#1565c0'},
+]
+# Julgamentos par a par na escala de Saaty (1 a 9): quanto o primeiro critério importa mais que o segundo.
+JULGAMENTOS = {
+    ('relevo', 'vegetacao'): 2, ('relevo', 'drenagem'): 3, ('relevo', 'acesso'): 3, ('relevo', 'urbano'): 4, ('relevo', 'rede'): 5, ('relevo', 'trilhas'): 5,
+    ('vegetacao', 'drenagem'): 2, ('vegetacao', 'acesso'): 2, ('vegetacao', 'urbano'): 3, ('vegetacao', 'rede'): 4, ('vegetacao', 'trilhas'): 4,
+    ('drenagem', 'acesso'): 1, ('drenagem', 'urbano'): 2, ('drenagem', 'rede'): 3, ('drenagem', 'trilhas'): 3,
+    ('acesso', 'urbano'): 2, ('acesso', 'rede'): 2, ('acesso', 'trilhas'): 3,
+    ('urbano', 'rede'): 1, ('urbano', 'trilhas'): 2, ('rede', 'trilhas'): 1,
+}
+INDICE_ALEATORIO = {3: .58, 4: .90, 5: 1.12, 6: 1.24, 7: 1.32, 8: 1.41, 9: 1.45}
+MINIMO_HA = 20
+VARIACAO = .2
+
+
+def decresce(a, b, piso=0.):
+    """1 até `a` metros, caindo linearmente até `piso` em `b`."""
+    return lambda x: piso + (1 - piso) * np.clip((b - x) / (b - a), 0, 1)
+
+
+def cresce(a, b, piso=0.):
+    """`piso` até `a`, subindo linearmente até 1 em `b`."""
+    return lambda x: piso + (1 - piso) * np.clip((x - a) / (b - a), 0, 1)
+
+
+def por_classe(tabela):
+    """Nota por classe de relevo da Embrapa (1 plano a 6 escarpado); sem dado vale 0,5."""
+    tabela_completa = np.full(256, .5)
+    for classe, nota in tabela.items():
+        tabela_completa[classe] = nota
+    return lambda x: tabela_completa[x.astype(int)]
+
+
+# Como cada uso responde a cada critério; critério ausente não participa do uso.
+RESPOSTAS = {
+    'conservacao': {'relevo': por_classe({1: .5, 2: .5, 3: .7, 4: 1, 5: 1, 6: 1}), 'vegetacao': cresce(.1, .6),
+                    'drenagem': decresce(100, 600, .3), 'urbano': cresce(500, 3000, .3)},
+    'ecoturismo': {'relevo': por_classe({1: .8, 2: 1, 3: 1, 4: .8, 5: .5, 6: .2}), 'vegetacao': cresce(.1, .6, .3),
+                   'drenagem': decresce(200, 1500, .3), 'acesso': decresce(1000, 8000), 'urbano': decresce(2000, 10000, .2),
+                   'trilhas': decresce(300, 3000)},
+    'silvicultura': {'relevo': por_classe({1: 1, 2: 1, 3: .7, 4: .3, 5: 0, 6: 0}), 'drenagem': cresce(30, 200),
+                     'acesso': decresce(1000, 8000, .2)},
+    'solar': {'relevo': por_classe({1: 1, 2: .8, 3: .3, 4: 0, 5: 0, 6: 0}), 'drenagem': cresce(50, 300),
+              'acesso': decresce(1000, 8000), 'urbano': decresce(3000, 10000, .3), 'rede': decresce(1000, 10000)},
+}
+RESTRICOES = [
+    {'id': 'pi_restrita', 'nome': 'UC de proteção integral sem visitação', 'curto': 'UC de proteção integral', 'permite': ['conservacao'], 'base': 'Lei 9.985/2000, arts. 7º e 9º'},
+    {'id': 'pi_visitacao', 'nome': 'Parque ou monumento natural', 'curto': 'parque ou monumento natural', 'permite': ['conservacao', 'ecoturismo'], 'base': 'Lei 9.985/2000, arts. 7º, 11 e 12'},
+    {'id': 'app', 'nome': 'APP hídrica', 'curto': 'APP', 'permite': ['conservacao', 'ecoturismo'], 'base': 'Lei 12.651/2012, arts. 3º (X, c), 4º e 8º'},
+    {'id': 'zas', 'nome': 'Zona de autossalvamento', 'curto': 'ZAS', 'permite': ['conservacao', 'silvicultura'], 'base': 'Lei 12.334/2010, alterada pela Lei 14.066/2020'},
+    {'id': 'agua', 'nome': 'Superfície d’água', 'curto': 'superfície d’água', 'permite': ['conservacao', 'ecoturismo'], 'base': 'Massas d’água ANA/Igam'},
+]
+
+
+def pesos_ahp():
+    """Autovetor principal da matriz recíproca e razão de consistência de Saaty."""
+    n = len(IDS)
+    matriz = np.ones((n, n))
+    for (a, b), valor in JULGAMENTOS.items():
+        i, j = IDS.index(a), IDS.index(b)
+        matriz[i, j], matriz[j, i] = valor, 1 / valor
+    valores, vetores = np.linalg.eig(matriz)
+    k = int(np.argmax(valores.real))
+    pesos = np.abs(vetores[:, k].real)
+    return pesos / pesos.sum(), ((valores[k].real - n) / (n - 1)) / INDICE_ALEATORIO[n]
+
+
+def ler_pesos(texto):
+    """Pesos do engenheiro na ordem de CRITERIOS, separados por vírgula; normalizados para somar 1."""
+    if texto is None:
+        return None
+    partes = texto.split(',')
+    valores = [float(p) for p in partes]
+    if len(valores) != len(IDS) or not all(math.isfinite(v) and 0 <= v <= 100 for v in valores) or sum(valores) <= 0:
+        raise ValueError('Pesos inválidos')
+    return np.array(valores) / sum(valores)
+
+
+def soma_janela(matriz, raio):
+    """Soma de cada janela quadrada (2·raio+1) por imagem integral, sem dependências extras."""
+    p = np.pad(matriz, ((raio + 1, raio), (raio + 1, raio)))
+    c = p.cumsum(0).cumsum(1)
+    n = 2 * raio + 1
+    return c[n:, n:] - c[:-n, n:] - c[n:, :-n] + c[:-n, :-n]
+
+
+def preparar_calculo(dados):
+    """Mede, uma vez por coleta, fatores e restrições de cada célula da área minerada (30 m, MapBiomas)."""
+    mineracao = dados.get('area_minerada')
+    if mineracao is None:
+        raise ValueError('Área minerada indisponível')
+    cobertura = next(b for b in dados['bases'] if chave_base(b) == 'raster_vegetacao')
+    grade = dados['grades'][cobertura['base']['id']]
+    codigos = [c['codigo'] for c in cobertura['classes'] if 'minera' in normalizar(c['nome'])]
+    lin, col = np.nonzero(grade['validos'] & np.isin(grade['valores'], codigos))
+    xs, ys = (np.asarray(v) for v in grade['transform'] @ (col + .5, lin + .5))
+    ex, ny = (np.asarray(v) for v in transform(grade['crs'], UTM, xs, ys))
+    area = grade['area'][lin, col]
+    pontos = shapely.points(ex, ny)
+
+    def feicoes(chave):
+        return [x for b in dados['bases'] if b['tipo'] == 'vetor' and chave_base(b) == chave for x in b['dados']['features']]
+
+    def distancia(fs):
+        saida = np.full(len(ex), np.inf)
+        if fs:
+            indices, d = shapely.STRtree([projetar(x['geometry']) for x in fs]).query_nearest(pontos, return_distance=True, all_matches=False)
+            saida[indices[0]] = d
+        return saida
+
+    def dentro(fs):
+        return shapely.contains_xy(unary_union([projetar(x['geometry']) for x in fs]), ex, ny) if fs else np.zeros(len(ex), bool)
+
+    relevo = next((b for b in dados['bases'] if chave_base(b) == 'raster_relevo'), None)
+    classe = np.zeros(len(ex), dtype=int)
+    if relevo is not None and relevo['base']['id'] in dados['grades']:
+        topo = dados['grades'][relevo['base']['id']]
+        tx, ty = (np.asarray(v) for v in transform(grade['crs'], topo['crs'], xs, ys))
+        c, r = (np.floor(np.asarray(v)).astype(int) for v in ~topo['transform'] @ (tx, ty))
+        ok = (r >= 0) & (r < topo['valores'].shape[0]) & (c >= 0) & (c < topo['valores'].shape[1])
+        classe[ok] = np.where(topo['validos'][r[ok], c[ok]], topo['valores'][r[ok], c[ok]], 0)
+    nativos = [c['codigo'] for c in cobertura['classes'] if NATIVA.search(normalizar(c['nome']))]
+    raio = 16  # janela de 33 células, cerca de 1 km
+    fracao = (soma_janela((grade['validos'] & np.isin(grade['valores'], nativos)).astype(float), raio)
+              / np.maximum(soma_janela(grade['validos'].astype(float), raio), 1))[lin, col]
+    variaveis = {'relevo': classe, 'vegetacao': fracao, 'drenagem': distancia(feicoes('enq_corpos') or feicoes('hidrografia_principal')),
+                 'acesso': distancia(feicoes('rodovias')), 'urbano': distancia(feicoes('areas_urbanizadas')),
+                 'rede': distancia(feicoes('linhas_transmissao')), 'trilhas': distancia(feicoes('trilhas'))}
+    ucs = [x for x in feicoes('unidades_conservacao') if normalizar(x['properties'].get('grupo')) == 'protecao integral']
+    visitacao = [x for x in ucs if normalizar(x['properties'].get('categoria')).startswith(('par', 'mona', 'monumento'))]
+    restricao = {'pi_restrita': dentro([x for x in ucs if x not in visitacao]), 'pi_visitacao': dentro(visitacao),
+                 'app': dentro(feicoes('apps_fbds')), 'zas': dentro(feicoes('zas_pae')), 'agua': dentro(feicoes('massa_dagua'))}
+    permitido = {}
+    for uso in USOS:
+        livre = np.ones(len(ex), bool)
+        for r in RESTRICOES:
+            if uso['id'] not in r['permite']:
+                livre &= ~restricao[r['id']]
+        permitido[uso['id']] = livre
+
+    # Fechamento de 30 m une células vizinhas na diagonal; setores menores que o mínimo ficam fora da sugestão.
+    fechado = mineracao['utm'].buffer(30).buffer(-30)
+    candidatos = sorted(getattr(fechado, 'geoms', [fechado]), key=lambda p: -p.area)
+    setor, partes = np.full(len(ex), -1), []
+    for parte in candidatos:
+        sel = (setor < 0) & shapely.contains_xy(parte, ex, ny)
+        if area[sel].sum() / 1e4 >= MINIMO_HA:
+            setor[sel] = len(partes)
+            partes.append(parte)
+    altos = [x for x in feicoes('cavidades') if normalizar(x['properties'].get('grau_de_po')) in ('alto', 'muito alto')]
+    cavidade = dentro(altos)
+    cava = projetar(next(f['geometry'] for f in dados['influencia']['features'] if f['properties']['id'] == 'mina'))
+    barragens = [(projetar(x['geometry']), x['properties']) for x in feicoes('barragens')]
+
+    fatores = {u: {c: RESPOSTAS[u][c](variaveis[c]) for c in RESPOSTAS[u]} for u in RESPOSTAS}
+    setores = []
+    for i, parte in enumerate(partes):
+        sel = setor == i
+        peso = area[sel] / area[sel].sum()
+        media = {u: {c: float((peso * permitido[u][sel] * f[sel]).sum()) for c, f in fatores[u].items()} for u in fatores}
+        bloqueio = {u: {r['id']: float((peso * restricao[r['id']][sel]).sum()) for r in RESTRICOES if u not in r['permite']} for u in fatores}
+        proprias = [p for g, p in barragens if parte.buffer(30).intersects(g)]
+        setores.append({
+            'id': f'S{i + 1}', 'ha': float(area[sel].sum() / 1e4), 'media': media, 'bloqueio': bloqueio,
+            'permitido': {u: float((peso * permitido[u][sel]).sum()) for u in permitido},
+            'restricoes': {r['id']: float((peso * restricao[r['id']][sel]).sum()) for r in RESTRICOES},
+            'cavidades': float((peso * cavidade[sel]).sum()), 'cava_ha': parte.intersection(cava).area / 1e4,
+            'barragens': [str(p.get('name') or p.get('nome_estru')) for p in proprias],
+            'montante': [str(p.get('name') or p.get('nome_estru')) for p in proprias if normalizar(p.get('metodo_con')) == 'montante'],
+            'geometria': transform_geom(UTM, 'EPSG:4326', mapping(parte.simplify(15))),
+        })
+    return {'setores': setores, 'area_minerada_ha': mineracao['ha'],
+            'fora_ha': float(area[setor < 0].sum() / 1e4), 'celulas': int(len(ex))}
+
+
+def notas(setor, pesos):
+    """Soma ponderada normalizada pelos critérios que participam de cada uso; restrição vale zero."""
+    saida = {}
+    for uso in USOS:
+        u = uso['id']
+        total = sum(pesos[IDS.index(c)] for c in RESPOSTAS[u])
+        saida[u] = 100 * (sum(pesos[IDS.index(c)] * v for c, v in setor['media'][u].items()) / total if total else setor['permitido'][u])
+    return saida
+
+
+def calcular(base, pesos=None):
+    """Ordena os usos de cada setor e testa se o primeiro lugar resiste a ±20% em cada peso."""
+    ahp, consistencia = pesos_ahp()
+    w = ahp if pesos is None else pesos
+    resultado = {'criterios': [{**c, 'peso': float(w[i]), 'peso_ahp': float(ahp[i])} for i, c in enumerate(CRITERIOS)],
+                 'origem_pesos': 'AHP' if pesos is None else 'engenheiro', 'razao_consistencia': float(consistencia),
+                 'usos': USOS, 'restricoes': RESTRICOES, 'minimo_ha': MINIMO_HA, 'variacao': VARIACAO,
+                 'area_minerada_ha': base['area_minerada_ha'], 'fora_ha': base['fora_ha'], 'setores': []}
+    for s in base['setores']:
+        nota = notas(s, w)
+        ordem = sorted(USOS, key=lambda u: -nota[u['id']])
+        muda = []
+        for i, criterio in enumerate(CRITERIOS):
+            for fator in (1 - VARIACAO, 1 + VARIACAO):
+                teste = w.copy()
+                teste[i] *= fator
+                outra = notas(s, teste / teste.sum())
+                if max(outra, key=outra.get) != ordem[0]['id']:
+                    muda.append(f"{criterio['curto']} {'-' if fator < 1 else '+'}{round(VARIACAO * 100)}%")
+        total = {u: sum(w[IDS.index(c)] for c in RESPOSTAS[u]) for u in RESPOSTAS}
+        contribuicoes = {u['id']: {c: 100 * w[IDS.index(c)] * v / total[u['id']] for c, v in s['media'][u['id']].items()} if total[u['id']] else {}
+                         for u in USOS}
+        estruturas = (['inclui a cava (OSM)'] if s['cava_ha'] >= 1 else []) + \
+                     (['barragens ' + ', '.join(b.split(' - ')[0] for b in s['barragens'])] if s['barragens'] else [])
+        resultado['setores'].append({
+            'id': s['id'], 'ha': s['ha'], 'descricao': '; '.join(estruturas),
+            'ranking': [{'uso': u['id'], 'nome': u['nome'], 'cor': u['cor'], 'nota': nota[u['id']], 'permitido': 100 * s['permitido'][u['id']]} for u in ordem],
+            'margem': nota[ordem[0]['id']] - nota[ordem[1]['id']], 'contribuicoes': contribuicoes,
+            'bloqueio': {u: {r: 100 * v for r, v in b.items()} for u, b in s['bloqueio'].items()},
+            'restricoes': {r: 100 * v for r, v in s['restricoes'].items()}, 'cavidades': 100 * s['cavidades'],
+            'barragens': s['barragens'], 'montante': s['montante'], 'robustez': {'estavel': not muda, 'muda_com': muda},
+            'geometria': s['geometria'],
+        })
+    return resultado
+
+
+def explicar_por_regras(setor, resultado):
+    """Explicação determinística: o que puxou o 1º lugar, o que bloqueia os outros e o que mudaria o resultado."""
+    nomes = {c['id']: c['curto'] for c in resultado['criterios']}
+    restricoes = {r['id']: r['curto'] for r in resultado['restricoes']}
+    primeiro, segundo = setor['ranking'][0], setor['ranking'][1]
+    principais = sorted(setor['contribuicoes'][primeiro['uso']].items(), key=lambda i: -i[1])[:2]
+    margem = formato(setor['margem'], 1 if setor['margem'] < 10 else 0)
+    texto = [f"{primeiro['nome']} lidera com {formato(primeiro['nota'])} de 100; pesaram mais "
+             + ' e '.join(f'{nomes[c]} ({formato(v)} pontos)' for c, v in principais) + '.',
+             f"{segundo['nome']} fica {margem} {'ponto' if setor['margem'] < 2 else 'pontos'} atrás."]
+    for uso in setor['ranking'][1:]:
+        if uso['permitido'] < 90:
+            motivo = max(setor['bloqueio'][uso['uso']].items(), key=lambda i: i[1])
+            texto.append(f"{uso['nome']}: restrição em {formato(100 - uso['permitido'])}% do setor, sobretudo por {restricoes[motivo[0]]}.")
+    if setor['montante']:
+        texto.append('Há barragem alteada a montante: o uso depende da descaracterização.')
+    if setor['cavidades'] >= 50:
+        texto.append(f"{formato(setor['cavidades'])}% do setor tem potencial alto de cavidades: exige prospecção antes de intervir.")
+    if setor['robustez']['estavel']:
+        texto.append(f"O 1º lugar se mantém com ±{round(resultado['variacao'] * 100)}% em cada peso.")
+    else:
+        criterios = sorted({m.rsplit(' ', 1)[0] for m in setor['robustez']['muda_com']})
+        texto.append(f"Resultado sensível: o 1º lugar muda com ±{round(resultado['variacao'] * 100)}% em " + ', '.join(criterios) + '.')
+    return ' '.join(texto)
+
+
+class SugestoesUso:
+    """Guarda o cálculo por coleta; mudar pesos só refaz a soma ponderada."""
+
+    def __init__(self, fonte):
+        self.fonte = fonte
+        self.cache = {}
+        self.trava = threading.Lock()
+
+    def base(self, mina_id, dados=None):
+        """Reaproveita dados já preparados pelo relatório; sem eles, lê o banco e mede as grades."""
+        dados = dados if dados is not None else self.fonte.relatorio(mina_id)
+        chave = hashlib.sha256(json.dumps([(b['base']['camada'], b['consultado_em'], b['recorte']['assinatura']) for b in dados['bases']],
+                                          sort_keys=True).encode()).hexdigest()
+        with self.trava:
+            if self.cache.get(mina_id, (None,))[0] == chave:
+                return self.cache[mina_id][1]
+        if 'grades' not in dados:
+            dados['rasters'] = {b['base']['id']: self.fonte.arquivo(mina_id, b['base']['id']) for b in dados['bases'] if b['tipo'] == 'raster'}
+            preparar(dados)
+        calculo = preparar_calculo(dados)
+        with self.trava:
+            self.cache[mina_id] = (chave, calculo)
+        return calculo
+
+    def obter(self, mina_id, pesos=None, dados=None):
+        resultado = calcular(self.base(mina_id, dados), pesos)
+        for setor in resultado['setores']:
+            setor['explicacao'] = explicar_por_regras(setor, resultado)
+        return resultado
+
+
+def entrada_ia(resultado):
+    """Resumo compacto para o modelo, com números já formatados como devem aparecer no texto."""
+    nomes = {c['id']: c['curto'] for c in resultado['criterios']}
+    restricoes = {r['id']: r['curto'] for r in resultado['restricoes']}
+    return {'escala': 100, 'variacao_pesos_pct': round(resultado['variacao'] * 100),
+            'pesos_pct': {nomes[c['id']]: formato(100 * c['peso']) for c in resultado['criterios']},
+            'setores': [{'id': s['id'], 'area_ha': formato(s['ha'], 1), 'estruturas': s['descricao'],
+                         'ranking': [{'uso': u['nome'], 'nota': formato(u['nota']), 'permitido_pct': formato(u['permitido'])} for u in s['ranking']],
+                         'pontos_por_criterio_do_1o': {nomes[c]: formato(v) for c, v in s['contribuicoes'][s['ranking'][0]['uso']].items()},
+                         'diferenca_para_2o': formato(s['margem'], 1),
+                         'restricoes_pct': {restricoes[r]: formato(v) for r, v in s['restricoes'].items() if v >= .5},
+                         'barragem_a_montante': bool(s['montante']), 'cavidades_alto_pct': formato(s['cavidades']),
+                         'estavel_com_variacao': s['robustez']['estavel'],
+                         'criterios_que_mudam_o_1o': sorted({m.rsplit(' ', 1)[0] for m in s['robustez']['muda_com']})}
+                        for s in resultado['setores']]}
+
+
+def resumo_pesos(resultado):
+    return '; '.join(f"{c['nome']}: {formato(100 * c['peso'])}%" for c in resultado['criterios'])
+
+
+def texto_setor(setor):
+    linhas = [f"{i}º {u['nome']}: {formato(u['nota'])}" + ('' if u['permitido'] >= 99.5 else f" (permitido em {formato(u['permitido'])}%)")
+              for i, u in enumerate(setor['ranking'], 1)]
+    return '\n'.join(linhas)
+
+
+def nome_setor(setor):
+    return f"{setor['id']} · {ha(setor['ha'])}" + (f" · {setor['descricao']}" if setor['descricao'] else '')

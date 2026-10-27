@@ -1,25 +1,27 @@
-# Validação das fichas e prévia
+# Validação das fichas, da sugestão e da prévia
 
-Versão 4.3.0, 27/10/2026, macOS/Python 3.12/Node 24.
+Versão 4.4.0, 27/10/2026, macOS/Python 3.12/Node 24.
 
 ## Automatização
 
-96 testes Python aprovados no conjunto completo. Testes Node aprovados, sem falhas. O código da interface não mudou nesta versão, além do número de versão; TypeScript/build não foram reexecutados. Avisos de depreciação Starlette/HTTPX e Rasterio/NumPy permanecem sem falhas.
+101 testes Python aprovados no conjunto completo. Dois testes Node aprovados. TypeScript (`tsc --noEmit`) e build aprovados. Avisos de depreciação Starlette/HTTPX e Rasterio/NumPy permanecem sem falhas.
 
-Os testes novos verificam: campo extra e cota zero aceitos somente quando declarados no catálogo; área das células em UTM 23S igual à extensão projetada da grade; área minerada vinda da classe Mineração, com divisão de linhas, polígonos e pontos entre área minerada e entorno; UCs agrupadas pelo grupo publicado, com ou sem acento; pontos de água conferidos com a classe do trecho mais próximo, classe 2 por padrão e classe especial sem padrão numérico; cenário com ponto, parâmetro, rótulo, referência ou ID inválido recusado. Os testes anteriores derivam do catálogo o número de bases e marcadores.
+Testes da 4.3.0: campo extra e cota zero aceitos só quando declarados; área das células em UTM igual à extensão projetada; área minerada pela classe Mineração com divisão de linhas, polígonos e pontos; UCs por grupo publicado; pontos de água contra a classe do trecho e os limites da CONAMA 357/2005; cenário inválido recusado.
+
+Testes da 4.4.0: pesos AHP somam 1 e têm consistência abaixo de 0,10; pesos do engenheiro são validados e normalizados; contribuições por critério somam a nota; restrição zera o uso; a sensibilidade aponta o critério que troca o 1º lugar; a API devolve 404, 422 e 503 nos casos certos e, com dados sintéticos em que APP, ZAS e água cobrem tudo, só conservação fica permitida; pesos do engenheiro mudam o PDF e aparecem como "ajustados pelo engenheiro". As fichas não chamam a IA mesmo com chave; a explicação por IA só é aceita com todos os setores e sem número fora dos dados enviados.
 
 ## Dados e documento reais
 
-As cinco bases novas e a declividade (assinatura alterada pelo novo nome do tema) foram coletadas em 27/10/2026 numa cópia isolada do banco local, com o código 4.3.0. O servidor que estava em execução com o código 4.2.0 não foi reiniciado; o banco do projeto recebe as bases novas quando o servidor for reiniciado.
+Coleta em 27/10/2026 numa cópia isolada do banco local, com o código 4.4.0. O servidor que estava em execução com a versão anterior não foi reiniciado; o banco do projeto recebe as bases novas quando ele for reiniciado.
 
-Resultados da Horizontes: 602 trechos com vazão regionalizada, 603 trechos enquadrados, 6 polígonos de potencial de cavidades, 362 APPs hídricas e 10 barragens, além das bases anteriores. A soma das células medidas em UTM 23S deu 15.309,2 ha na declividade e 15.308,9 ha na cobertura, para um recorte de 15.308,5 ha. Área minerada: 3.173,3 ha; mina OSM: 512,2 ha, dos quais 508,1 ha dentro da área minerada.
+ZAS: 19 registros listados no BBOX, 12 no recorte, 13 geometrias corrigidas e registradas no aviso; a coleta completa levou 160 s. Linhas de transmissão: 2 no recorte. Área minerada: 3.173,3 ha; 120,4 ha em fragmentos abaixo de 20 ha ficaram fora dos setores. O preparo da sugestão levou 11 s; o recálculo com novos pesos, 0,4 s.
 
-A emissão conferida tem 11 páginas, 9 marcadores e 2.168.139 bytes. O texto de todas as páginas foi extraído. Foram renderizadas e inspecionadas a visão geral, relevo, água, entorno, barragens e dados simulados: mapas com área minerada, barragens numeradas pelo código publicado e pontos simulados rotulados; tabelas e fontes legíveis.
+A emissão com pesos AHP tem 14 páginas, 2.328.323 bytes. Foram renderizadas e inspecionadas a visão geral, barragens (com ZAS) e a sugestão multicritério: setores coloridos e rotulados, tabela de notas, robustez, condicionantes e explicação.
 
 ## Navegador
 
-Numa instância isolada (porta 8031, cópia do banco), a mina foi selecionada e Influência mostrou as camadas recortadas, com o tema Barragens no painel. Ver relatório abriu a prévia com 11 páginas. Não houve erro no console nem no servidor. O download byte a byte e a falha provocada de imagem foram conferidos na 4.2.0; esse mecanismo não mudou e não foi repetido.
+Numa instância isolada (porta 8031, cópia do banco): mina selecionada, Sugerir uso calculou e pintou os setores, os pesos AHP apareceram nos controles, o popup de um setor mostrou ranking e explicação, e mudar o peso da vegetação nativa recalculou a lista (S2 passou a ecoturismo, marcado como sensível). Ver relatório pediu o PDF com os mesmos pesos (`?pesos=34,90,13,13,7,6,5`) e a ficha impressa "Pesos ajustados pelo engenheiro". O download byte a byte e a falha provocada de imagem foram conferidos na 4.2.0; esse mecanismo não mudou e não foi repetido.
 
 ## IA e alcance
 
-A integração OpenAI Responses / GPT-5 nano está preparada, com chave exclusivamente no arquivo local ignorado pelo Git. O arquivo permanece vazio, sem chamada real à OpenAI. O contrato foi testado com respostas controladas; o documento atual identifica comentários por regras. Não houve ML treinado, chamada paga, validação de especialista, ensaio real de água/estabilidade ou decisão de pós-mineração. A camada de ZAS não foi integrada porque a resposta pública excede 32 MiB. [Método](RELATORIO.md), [dados](DADOS_TERRITORIAIS.md), [recorte](INFLUENCIA.md).
+O arquivo de chave permanece vazio: não houve chamada real à OpenAI. O contrato foi testado com respostas controladas. Não houve ML treinado, chamada paga, validação de especialista, ensaio real ou decisão de pós-mineração. Os limites das funções e os julgamentos AHP são valores de partida documentados, não calibrados com especialistas. [Multicritério e IA](MULTICRITERIO.md), [método](RELATORIO.md), [dados](DADOS_TERRITORIAIS.md).

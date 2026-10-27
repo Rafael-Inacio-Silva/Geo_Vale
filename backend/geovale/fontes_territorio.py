@@ -11,7 +11,7 @@ import numpy as np
 from rasterio.features import geometry_mask
 from rasterio.io import MemoryFile
 from rasterio.warp import transform_bounds, transform_geom
-from shapely import force_2d, get_coordinates, union_all
+from shapely import force_2d, get_coordinates, make_valid, union_all
 from shapely.geometry import mapping, shape
 
 from geovale.camadas import SERVICO_WMS
@@ -44,10 +44,11 @@ def ler_json(bruto):
     return dados
 
 
-def recortar_vetores(documento, recorte, tipos, campos, z_zero=False):
+def recortar_vetores(documento, recorte, tipos, campos, z_zero=False, reparos=None):
     """Preserva todos os atributos publicados e recorta cada registro sem duplicar sua contagem.
 
     `z_zero` aceita somente cota publicada exatamente igual a zero, removida antes da validação; outra cota falha.
+    `reparos`, quando informado, recebe os IDs corrigidos por make_valid; sem ele, geometria inválida falha.
     """
     if documento.get('type') != 'FeatureCollection' or not isinstance(documento.get('features'), list):
         raise FonteIndisponivel('Coleção vetorial inválida.')
@@ -63,6 +64,9 @@ def recortar_vetores(documento, recorte, tipos, campos, z_zero=False):
         geom = shape(f['geometry'])
         if z_zero and geom.has_z and not get_coordinates(geom, include_z=True)[:, 2].any():
             geom = force_2d(geom)
+        if reparos is not None and not geom.is_valid:
+            geom = union_all(partes_da_dimensao(make_valid(geom), tipos))
+            reparos.append(identidade)
         if geom.geom_type not in tipos or geom.is_empty or not geom.is_valid or geom.has_z:
             raise FonteIndisponivel('Geometria inválida; nenhum reparo automático foi aplicado.')
         x0, y0, x1, y1 = geom.bounds
@@ -98,34 +102,55 @@ def esquema_wfs(bruto):
     return g['name'], tipos, [c for c in campos if c is not g]
 
 
+def conferir_colecao(dados, limite=MAX_REGISTROS, crs=True):
+    """Exige contagem completa e, quando há geometria, CRS geográfico esperado."""
+    n, devolvidos = dados.get('numberMatched'), dados.get('numberReturned')
+    if (type(n) is not int or type(devolvidos) is not int or not 0 <= n <= limite
+            or n != devolvidos or n != len(dados.get('features', []))):
+        raise FonteIndisponivel('Resposta vetorial incompleta ou excede o limite de registros.')
+    if crs and dados.get('crs', {}).get('properties', {}).get('name') not in ('urn:ogc:def:crs:EPSG::4326', 'EPSG:4326', 'urn:ogc:def:crs:OGC:1.3:CRS84'):
+        raise FonteIndisponivel('CRS vetorial incompatível.')
+    return n
+
+
 def obter_wfs(base, recorte):
     """Consulta todos os campos por WFS, verificando que o retorno não foi truncado."""
     esquema = consultar(SERVICO_WMS, {'service': 'WFS', 'version': '2.0.0', 'request': 'DescribeFeatureType', 'typeNames': base['camada']}, 1024 * 1024)
     geometria, tipos, campos = esquema_wfs(esquema)
-    bruto = consultar(SERVICO_WMS, {
-        'service': 'WFS', 'version': '2.0.0', 'request': 'GetFeature', 'typeNames': base['camada'],
-        'outputFormat': 'application/json', 'srsName': 'EPSG:4326', 'count': MAX_REGISTROS + 1,
-        'CQL_FILTER': f"BBOX({geometria},{','.join(map(str, recorte.bounds))},'EPSG:4326')",
-    })
-    dados = ler_json(bruto)
-    n, devolvidos = dados.get('numberMatched'), dados.get('numberReturned')
-    if (type(n) is not int or type(devolvidos) is not int or not 0 <= n <= MAX_REGISTROS
-            or n != devolvidos or n != len(dados.get('features', []))):
-        raise FonteIndisponivel('Resposta vetorial incompleta ou excede o limite de registros.')
-    crs = dados.get('crs', {}).get('properties', {}).get('name')
-    if crs not in ('urn:ogc:def:crs:EPSG::4326', 'EPSG:4326', 'urn:ogc:def:crs:OGC:1.3:CRS84'):
-        raise FonteIndisponivel('CRS vetorial incompatível.')
+    pedido = {'service': 'WFS', 'version': '2.0.0', 'request': 'GetFeature', 'typeNames': base['camada'], 'outputFormat': 'application/json'}
+    filtro = f"BBOX({geometria},{','.join(map(str, recorte.bounds))},'EPSG:4326')"
+    if base.get('por_registro'):
+        # A resposta conjunta excede o limite de leitura: lista os IDs e lê cada registro completo separadamente.
+        lista = ler_json(consultar(SERVICO_WMS, {**pedido, 'count': MAX_REGISTROS + 1, 'CQL_FILTER': filtro, 'propertyName': campos[0]['name']}))
+        n = conferir_colecao(lista, crs=False)
+        feicoes, hashes = [], []
+        for item in lista['features']:
+            parte_bruta = consultar(SERVICO_WMS, {**pedido, 'srsName': 'EPSG:4326', 'resourceId': item.get('id')})
+            parte = ler_json(parte_bruta)
+            conferir_colecao(parte, limite=1)
+            if len(parte['features']) != 1 or parte['features'][0].get('id') != item.get('id'):
+                raise FonteIndisponivel('Registro consultado não corresponde ao identificador listado.')
+            feicoes += parte['features']
+            hashes.append(hashlib.sha256(parte_bruta).hexdigest())
+        dados, bruto = {'type': 'FeatureCollection', 'features': feicoes}, ''.join(hashes).encode()
+    else:
+        bruto = consultar(SERVICO_WMS, {**pedido, 'srsName': 'EPSG:4326', 'count': MAX_REGISTROS + 1, 'CQL_FILTER': filtro})
+        dados = ler_json(bruto)
+        n = conferir_colecao(dados)
     # Campo publicado só no GeoJSON é aceito apenas quando declarado no catálogo.
     extras = [e for e in base.get('campos_extras', []) if e not in {c['name'] for c in campos}]
     campos = campos + [{'name': e, 'origem': 'GeoJSON do serviço; ausente do DescribeFeatureType'} for e in extras]
-    registros = recortar_vetores(dados, recorte, tipos, [c['name'] for c in campos], z_zero=base.get('z_zero', False))
+    reparos = [] if base.get('reparar') else None
+    registros = recortar_vetores(dados, recorte, tipos, [c['name'] for c in campos], z_zero=base.get('z_zero', False), reparos=reparos)
     aviso = 'Atributos preservados da fonte. Áreas, comprimentos e datas cadastrais não foram recalculados para o recorte.'
     if base.get('z_zero'):
         aviso += ' Cota publicada igual a zero removida; geometria tratada em 2D.'
+    if reparos:
+        aviso += f' {len(reparos)} de {n} geometrias publicadas eram inválidas e foram corrigidas com make_valid, conforme declarado no catálogo.'
     return {'tipo': 'vetor', 'quantidade': len(registros), 'registros_consultados': n,
             'campos': campos, 'dados': {'type': 'FeatureCollection', 'features': registros},
-            'sha256_resposta': hashlib.sha256(bruto).hexdigest(), 'servico': 'WFS 2.0.0',
-            'crs': 'EPSG:4326', 'aviso': aviso}, None
+            'sha256_resposta': hashlib.sha256(bruto).hexdigest(), 'servico': 'WFS 2.0.0' + (' (um registro por consulta)' if base.get('por_registro') else ''),
+            'crs': 'EPSG:4326', 'aviso': aviso, **({'reparados': [str(i) for i in reparos]} if reparos else {})}, None
 
 
 def obter_trilhas(base, recorte):

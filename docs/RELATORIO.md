@@ -1,10 +1,10 @@
 # Relatório GeoVale: dado e contexto
 
-Versão 4.3.0, 27/10/2026. Selecionar a mina oferece **Ver relatório**, sem exigir Influência. A marca e autoria são GeoVale.
+Versão 4.4.0, 27/10/2026. Selecionar a mina oferece **Ver relatório**, sem exigir Influência. A marca e autoria são GeoVale.
 
 ## Estrutura
 
-A primeira página apresenta influência, área minerada e mina com todos os temas sobrepostos, a área minerada em hectares e um resumo por tema. Seguem sete fichas: relevo e cavidades, água, solos, vegetação/conservação, entorno/infraestrutura, barragens e trilhas. Cada ficha mostra somente seu tema sobre o mesmo recorte, com área minerada e mina, dados objetivos e comentário separado para cada dado. A ficha final reúne os dados técnicos simulados, com mapa dos pontos e asterisco em cada valor fictício. Não há anexo de atributos, síntese de alternativas ou ranking.
+A primeira página apresenta influência, área minerada e mina com todos os temas sobrepostos, a área minerada em hectares e um resumo por tema. Seguem sete fichas: relevo e cavidades, água, solos, vegetação/conservação, entorno/infraestrutura, barragens e trilhas. Cada ficha mostra somente seu tema sobre o mesmo recorte, com área minerada e mina, dados objetivos e comentário separado para cada dado. Depois vem a ficha de dados técnicos simulados, com mapa dos pontos e asterisco em cada valor fictício. A última ficha é a **sugestão multicritério**: mapa dos setores pelo 1º uso, pesos usados (AHP ou do engenheiro), notas de 0 a 100 por uso, porcentagem permitida, robustez, condicionantes e explicação por setor, além das restrições com base legal. Não há anexo de atributos.
 
 Os valores observados/calculados ficam na coluna Dado / valor / origem; a leitura contextual fica em outra coluna. Os comentários não substituem ou alteram fatos. Os atributos completos e GeoTIFFs continuam no armazenamento interno.
 
@@ -30,19 +30,19 @@ O Plano Minas-Rio, Anglo American, revisão junho/2021, fundamenta a estrutura d
 
 ## Comentários e IA
 
-Cada comentário indica a implicação do dado para o planejamento pós-mineração (o que favorece, limita ou exige estudo) e um limite do dado, sem classificar aptidão ou recomendar uso. Os comentários por regras usam os valores calculados, por exemplo a parcela do entorno acima de 20% de declividade ou os quilômetros de drenagem que cruzam a área minerada.
+Cada comentário das fichas indica a implicação do dado para o planejamento pós-mineração (o que favorece, limita ou exige estudo) e um limite do dado. São sempre por regras, porque usam os valores calculados de forma determinística, por exemplo a parcela do entorno acima de 20% de declividade ou os quilômetros de drenagem que cruzam a área minerada.
 
-`comentarios.py` separa os comentários dos fatos por ID. A integração usa a **OpenAI Responses API** e o modelo **gpt-5-nano**, exatamente o solicitado. O modelo está confirmado na [documentação oficial](https://developers.openai.com/api/docs/models/gpt-5-nano), com [Structured Outputs](https://developers.openai.com/api/docs/guides/structured-outputs).
+A IA só explica a sugestão multicritério, setor por setor. O porquê dessa divisão está em [Multicritério e IA](MULTICRITERIO.md). `comentarios.py` separa comentários e explicações dos fatos por ID. A integração usa a **OpenAI Responses API** e o modelo **gpt-5-nano**, exatamente o solicitado. O modelo está confirmado na [documentação oficial](https://developers.openai.com/api/docs/models/gpt-5-nano), com [Structured Outputs](https://developers.openai.com/api/docs/guides/structured-outputs).
 
 A chave é colocada somente em `.local/ia.env`, na linha `OPENAI_API_KEY=`. O arquivo tem permissão 600, é ignorado por `.gitignore` e não é enviado ao frontend, PDF, logs ou GitHub. O leitor usa esse arquivo local, não credenciais globais do computador. É relido ao abrir uma emissão; preencher/alterar a chave invalida o cache sem exigir reiniciar o servidor. Uma sessão já aberta deve ser fechada e reaberta.
 
-A aplicação envia somente ID, nome, valor, origem e marcação de simulado para `https://api.openai.com/v1/responses`, sem matrizes/geometrias, com `store=false`, raciocínio baixo, limite de 9.000 tokens de saída e timeout de 45 s. Não envia temperature, incompatível com a configuração escolhida do GPT-5 nano. O JSON Schema é estrito e limita IDs aos dados fornecidos. A resposta precisa estar completa; recusa, erro ou truncamento retornam às regras. Cada texto tem até 240 caracteres, todos os IDs precisam estar presentes e números não fornecidos são recusados.
+A aplicação envia somente os números da sugestão, já formatados como devem aparecer no texto (pesos, notas, porcentagem permitida, pontos por critério, restrições, robustez), para `https://api.openai.com/v1/responses`, sem matrizes/geometrias, com `store=false`, raciocínio baixo, limite de 9.000 tokens de saída e timeout de 45 s. Não envia temperature, incompatível com a configuração escolhida do GPT-5 nano. O JSON Schema é estrito e limita os setores aos enviados. A resposta precisa estar completa; recusa, erro ou truncamento retornam às regras. Cada texto tem até 420 caracteres, todos os setores precisam estar presentes e números não fornecidos são recusados.
 
-Sem chave ou com serviço indisponível, os comentários continuam sendo por regras, com procedência explícita. Não houve chamada real porque o arquivo de chave está vazio; o contrato foi testado com respostas controladas. Verificações de formato não garantem correção semântica de um LLM; revisão técnica continua necessária. Valores de fontes, cálculos e exemplos fictícios não são alterados pelo modelo.
+Sem chave ou com serviço indisponível, a explicação por regras aparece com procedência explícita. Não houve chamada real porque o arquivo de chave está vazio; o contrato foi testado com respostas controladas. Verificações de formato não garantem correção semântica de um LLM; revisão técnica continua necessária. Valores de fontes, cálculos e exemplos fictícios não são alterados pelo modelo.
 
 ## PDF e prévia
 
-ReportLab gera o PDF. `GET /api/minas/{id}/relatorio` retorna PDF inline; `baixar=true` altera apenas Content-Disposition. Bases incompletas/vencidas ou cenário inválido impedem geração (503); mina desconhecida retorna 404. O cabeçalho `X-Relatorio-Versao` contém o hash do PDF.
+ReportLab gera o PDF. `GET /api/minas/{id}/relatorio` retorna PDF inline; `baixar=true` altera apenas Content-Disposition; `pesos=` leva os sete pesos da sugestão (inválidos: 422). Bases incompletas/vencidas ou cenário inválido impedem geração (503); mina desconhecida retorna 404. O cabeçalho `X-Relatorio-Versao` contém o hash do PDF.
 
 A prévia usa PDFium no servidor: `/relatorio/previa?versao=...` entrega paginação/textos acessíveis; `/relatorio/paginas/{numero}?versao=...` entrega PNG. PDFium opera sob mutex global e fecha recursos explicitamente. São guardadas até quatro versões de PDF e doze imagens, com escala fixa. Versão ausente retorna 409 para reabrir; página inválida retorna 404. Download salva o mesmo Blob da versão aberta.
 

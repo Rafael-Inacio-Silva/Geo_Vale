@@ -209,6 +209,20 @@ button:focus-visible, input:focus-visible, a:focus-visible, [tabindex="-1"]:focu
 .abrir-influencia:disabled, .relatorio-territorio:disabled {opacity: .5; cursor: default;}
 .abrir-influencia svg, .relatorio-territorio svg {width: 1.15rem; height: 1.15rem; fill: none; stroke: currentColor; stroke-width: 1.8; flex-shrink: 0;}
 .relatorio-territorio {justify-content: center; margin-top: .75rem; font-size: .75rem; background: transparent;}
+.sugestao-uso {margin-top: .75rem;}
+.painel-sugestao {display: grid; gap: .6rem; margin-top: .6rem;}
+.legenda-usos {list-style: none; margin: 0; padding: 0; display: grid; gap: .25rem; font-size: .68rem;}
+.legenda-usos li {display: flex; align-items: center; gap: .4rem;}
+.legenda-usos i {inline-size: .8rem; block-size: .8rem; border-radius: .15rem; flex-shrink: 0;}
+.pesos-criterios {display: grid; gap: .35rem; margin: 0; padding: .5rem .6rem; border: 1px solid #d5e0d9; border-radius: .35rem; min-inline-size: 0;}
+.pesos-criterios legend {padding: 0 .25rem; font-size: .72rem; font-weight: 650;}
+.peso-criterio {display: grid; gap: .1rem; font-size: .66rem; color: #4a6e60;}
+.peso-criterio span {display: flex; justify-content: space-between; gap: .4rem;}
+.peso-criterio input[type="range"] {inline-size: 100%; margin: 0; accent-color: var(--verde); cursor: pointer;}
+.setores-sugeridos {margin: 0; padding-left: 1.1rem; font-size: .7rem; line-height: 1.5;}
+.popup-setor {font-size: .75rem; line-height: 1.45;}
+.popup-setor ol {margin: .3rem 0; padding-left: 1.1rem;}
+.popup-setor p {margin: .3rem 0 0;}
 .nota-territorio, .erro-territorio {font-size: .72rem; line-height: 1.5; overflow-wrap: anywhere;}
 .nota-territorio {color: #4f6b61;}
 .erro-territorio {color: #7b3d22;}

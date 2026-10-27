@@ -1,6 +1,6 @@
 # Ferramentas e justificativas
 
-Versão 4.3.0. As ferramentas abaixo correspondem ao mapa e à caracterização territorial automática implementados.
+Versão 4.4.0. As ferramentas abaixo correspondem ao mapa e à caracterização territorial automática implementados.
 
 | Necessidade | Ferramenta | Motivo e resultado |
 |---|---|---|
@@ -12,6 +12,7 @@ Versão 4.3.0. As ferramentas abaixo correspondem ao mapa e à caracterização 
 | API local | FastAPI/Uvicorn | Serve interface e dados na mesma origem e inicia a preparação no ciclo do servidor. |
 | Interseção vetorial | Shapely/GEOS | Recorta registros no polígono comum e preserva partes/atributos. Também confere contornos de navegação. |
 | Células e georreferenciamento | Rasterio/GDAL e NumPy | Lê valores GeoTIFF, transforma o recorte para o CRS da grade, mascara células e resume classes sem reamostragem. |
+| Análise multicritério | NumPy e Shapely (STRtree) | AHP por autovetor, vegetação no entorno por imagem integral e distâncias pelo vizinho mais próximo, sem nova dependência. Cálculo por célula guardado em cache; mudar pesos refaz só a soma. |
 | Persistência por mina | SQLite | Biblioteca padrão Python, transações locais e armazenamento leve de atributos/GeoTIFF; evita refazer consultas a cada clique ou reinício. |
 | Limitar concorrência/rede | urllib, threading e ThreadPoolExecutor | Consultas HTTP limitadas e até três bases em paralelo, com repetição automática e estados. |
 | Relatório PDF | ReportLab | Marca, mapas em vetor, tabelas e paginação; geração local a partir dos dados guardados. |
@@ -26,8 +27,8 @@ Versão 4.3.0. As ferramentas abaixo correspondem ao mapa e à caracterização 
 |---|---|
 | OpenStreetMap e Esri World Imagery | Fundos de navegação/contexto; OSM também fornece snapshot do sombreado da mina. |
 | FEAM / Vale / Amplo | Evidência do contorno externo do estudo conjunto, digitalizado aproximadamente. |
-| IDE-Sisema / WMS | Imagens dos quinze conjuntos estaduais, mascaradas no navegador dentro da influência ou ampliadas por checkbox. |
-| IDE-Sisema / WFS | Contorno estadual e treze bases vetoriais com atributos completos para o território. |
+| IDE-Sisema / WMS | Imagens dos dezessete conjuntos estaduais, mascaradas no navegador dentro da influência ou ampliadas por checkbox. |
+| IDE-Sisema / WFS | Contorno estadual e quinze bases vetoriais com atributos completos para o território. |
 | IDE-Sisema / WCS | Coberturas numéricas de declividade e MapBiomas, em GeoTIFF nativo. |
 | Prefeitura de Nova Lima / ArcGIS REST | Trilhas, atributos completos para caracterização e simbologia oficial para visualização. |
 | ANM / SIGMINE | Processo, titular e fase cadastral; não fornece o recorte do MVP. |

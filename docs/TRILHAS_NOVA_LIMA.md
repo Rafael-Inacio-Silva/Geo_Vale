@@ -1,6 +1,6 @@
 # Trilhas de Nova Lima — integração municipal
 
-Opção de sobreposição municipal, disponível desde a versão 4.2.0. Os seis temas estaduais/quinze bases da IDE-Sisema continuam disponíveis. Esta camada acrescenta uma **segunda infraestrutura pública**, com informação municipal específica para conhecer o entorno da Mina Horizontes.
+Opção de sobreposição municipal, disponível desde a versão 4.2.0. Os seis temas estaduais/dezessete bases da IDE-Sisema continuam disponíveis. Esta camada acrescenta uma **segunda infraestrutura pública**, com informação municipal específica para conhecer o entorno da Mina Horizontes.
 
 ## Fonte verificada em 25/10/2026
 

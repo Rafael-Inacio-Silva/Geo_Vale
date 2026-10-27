@@ -22,29 +22,32 @@ def test_medidas_usam_metros_e_dissolvem_area_sobreposta():
     assert .9<medidas([{'geometry':linha}])['km']<1.1
 
 
-def test_comentarios_sem_configuracao_nao_usam_rede_nem_alteram_fatos():
+def test_comentarios_das_fichas_sao_regras_mesmo_com_chave_e_nao_alteram_fatos():
     fatos=[{'dados':[{'id':'a','nome':'Rios','valor':'2','origem':'Cadastro','comentario':'São registros, não rios distintos.'}]}]
     antes=json.dumps(fatos)
-    c=Comentarista(ambiente={},abrir=lambda *a,**k:pytest.fail('Não há IA configurada'))
+    c=Comentarista(ambiente={'OPENAI_API_KEY':'credencial-ficticia'},abrir=lambda *a,**k:pytest.fail('Fichas não chamam IA'))
     saida=c.gerar(fatos)
-    assert saida['metodo']=='regras' and 'não configurada' in saida['rotulo']
+    assert saida['metodo']=='regras' and saida['comentarios']=={'a':'São registros, não rios distintos.'}
     assert json.dumps(fatos)==antes
+    sem_chave=Comentarista(ambiente={},abrir=lambda *a,**k:pytest.fail('Não há IA configurada')).explicar({'setores':[]},{'S1':'Regra.'})
+    assert sem_chave['metodo']=='regras' and 'não configurada' in sem_chave['rotulo'] and sem_chave['textos']=={'S1':'Regra.'}
 
 
-def test_ia_aceita_so_ids_completos_e_recusa_numeros_inventados():
-    fatos=[{'dados':[{'id':'a','nome':'Trechos','valor':'2','origem':'Publicado','comentario':'Referência de contexto.'}]}]
-    def abrir(texto):
+def test_ia_explica_sugestao_so_com_setores_completos_e_numeros_fornecidos():
+    entrada={'setores':[{'id':'S1','ranking':[{'uso':'Conservação','nota':'78'}],'pesos_pct':{'relevo':'34'}}]}
+    def abrir(texto,setor='S1'):
         def resposta(req,timeout):
             payload=json.loads(req.data)
-            assert payload['model']=='gpt-5-nano' and 'comentario' not in payload['input']
-            assert req.full_url=='https://api.openai.com/v1/responses'
-            assert payload['store'] is False and payload['text']['format']['strict'] is True
-            assert 'temperature' not in payload
-            return BytesIO(json.dumps({'status':'completed','output':[{'type':'reasoning'},{'type':'message','content':[{'type':'output_text','text':json.dumps({'comentarios':[{'id':'a','texto':texto}]})}]}]}).encode())
+            assert payload['model']=='gpt-5-nano' and req.full_url=='https://api.openai.com/v1/responses'
+            assert payload['store'] is False and payload['text']['format']['strict'] is True and 'temperature' not in payload
+            assert payload['text']['format']['schema']['properties']['explicacoes']['items']['properties']['setor']['enum']==['S1']
+            return BytesIO(json.dumps({'status':'completed','output':[{'type':'reasoning'},{'type':'message','content':[{'type':'output_text','text':json.dumps({'explicacoes':[{'setor':setor,'texto':texto}]})}]}]}).encode())
         return resposta
     env={'OPENAI_API_KEY':'credencial-ficticia-do-teste'}
-    assert Comentarista(env,abrir('Os 2 trechos são registros cadastrais.')).gerar(fatos)['metodo']=='ia'
-    assert Comentarista(env,abrir('O volume é 999 litros.')).gerar(fatos)['metodo']=='regras'
+    padrao={'S1':'Conservação lidera pela regra.'}
+    assert Comentarista(env,abrir('No S1, conservação lidera com 78 porque o relevo pesa 34%.')).explicar(entrada,padrao)['metodo']=='ia'
+    assert Comentarista(env,abrir('No S1, conservação lidera com 91 e custa pouco.')).explicar(entrada,padrao)['textos']==padrao
+    assert Comentarista(env,abrir('No S2, conservação lidera com 78 pelo relevo.',setor='S2')).explicar(entrada,padrao)['metodo']=='regras'
 
 
 def test_previa_renderiza_png_da_mesma_versao_e_preserva_documento_aberto(tmp_path):

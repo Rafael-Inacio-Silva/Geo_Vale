@@ -71,3 +71,14 @@ export type LimiteMunicipal = FeatureCollection<Polygon | MultiPolygon, {codigo_
 
 
 export interface TerritorioPreparado {completo: boolean}
+
+export interface UsoSugerido {uso: string; nome: string; cor: string; nota: number; permitido: number}
+export interface SetorSugerido {
+  id: string; ha: number; descricao: string; ranking: UsoSugerido[]; margem: number; cavidades: number; montante: string[];
+  robustez: {estavel: boolean; muda_com: string[]}; explicacao: string; geometria: Polygon | MultiPolygon;
+}
+export interface SugestaoUso {
+  criterios: {id: string; nome: string; curto: string; peso: number; peso_ahp: number}[];
+  origem_pesos: 'AHP' | 'engenheiro'; razao_consistencia: number; minimo_ha: number; fora_ha: number; variacao: number;
+  usos: {id: string; nome: string; cor: string}[]; setores: SetorSugerido[];
+}

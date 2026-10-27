@@ -15,6 +15,7 @@ from fastapi.staticfiles import StaticFiles
 
 from geovale.territorio import DadosTerritoriais
 from geovale.relatorio import RelatoriosPDF
+from geovale.multicriterio import SugestoesUso, ler_pesos
 from geovale.camadas import CAMADAS
 from geovale.influencia import ler_influencia
 from geovale.anm import ProcessosANM
@@ -28,7 +29,8 @@ RAIZ = Path(__file__).resolve().parents[3]
 def criar_app(limite=None, raiz=RAIZ, trilhas=None, anm=None, municipios=None, territorios=None):
     """Expõe navegação, fontes territoriais e caracterização automática por mina."""
     fonte_territorios = territorios if territorios is not None else DadosTerritoriais(raiz)
-    relatorios = RelatoriosPDF(fonte_territorios, raiz)
+    sugestoes = SugestoesUso(fonte_territorios)
+    relatorios = RelatoriosPDF(fonte_territorios, raiz, sugestoes=sugestoes)
 
     @asynccontextmanager
     async def ciclo_vida(app):
@@ -38,7 +40,7 @@ def criar_app(limite=None, raiz=RAIZ, trilhas=None, anm=None, municipios=None, t
         finally:
             fonte_territorios.encerrar()
 
-    app = FastAPI(title='GeoVale — mapa territorial', version='4.3.0', docs_url=None, redoc_url=None, openapi_url=None, lifespan=ciclo_vida)
+    app = FastAPI(title='GeoVale — mapa territorial', version='4.4.0', docs_url=None, redoc_url=None, openapi_url=None, lifespan=ciclo_vida)
     fonte = limite if limite is not None else LimiteEstadual()
     fonte_trilhas = trilhas if trilhas is not None else TrilhasMunicipais()
     fonte_anm = anm if anm is not None else ProcessosANM()
@@ -48,7 +50,7 @@ def criar_app(limite=None, raiz=RAIZ, trilhas=None, anm=None, municipios=None, t
     @app.get('/api/saude')
     def saude():
         """Indica disponibilidade do aplicativo, independentemente da fonte externa."""
-        return {'status': 'ok', 'versao': '4.3.0'}
+        return {'status': 'ok', 'versao': '4.4.0'}
 
     @app.get('/api/mapa')
     def configuracao():
@@ -127,13 +129,31 @@ def criar_app(limite=None, raiz=RAIZ, trilhas=None, anm=None, municipios=None, t
         except (FonteIndisponivel, OSError, ValueError, KeyError, TypeError, ShapelyError):
             return JSONResponse(status_code=503, content={'mensagem': 'As trilhas estão indisponíveis. Tente novamente.'})
 
-    @app.get('/api/minas/{mina_id}/relatorio')
-    def relatorio_territorio(mina_id: str, baixar: bool = False):
-        """Visualiza ou baixa o PDF GeoVale com dados reais e cenário técnico simulado."""
+    @app.get('/api/minas/{mina_id}/sugestao')
+    def sugestao_uso(mina_id: str, pesos: str | None = None):
+        """Ordena usos por setor da área minerada; sem pesos, usa os calculados por AHP."""
         if not any(item['id'] == mina_id for item in minas):
             return JSONResponse(status_code=404, content={'mensagem': 'Mina não encontrada.'})
         try:
-            bruto = relatorios.obter(mina_id)
+            valores = ler_pesos(pesos)
+        except ValueError:
+            return JSONResponse(status_code=422, content={'mensagem': 'Informe um peso de 0 a 100 para cada critério, com soma maior que zero.'})
+        try:
+            return JSONResponse(sugestoes.obter(mina_id, valores), headers={'Cache-Control': 'no-store'})
+        except (OSError, ValueError, KeyError, TypeError, StopIteration, ShapelyError, sqlite3.Error, zlib.error):
+            return JSONResponse(status_code=503, content={'mensagem': 'A sugestão depende do território completo. Tente novamente.'}, headers={'Cache-Control': 'no-store'})
+
+    @app.get('/api/minas/{mina_id}/relatorio')
+    def relatorio_territorio(mina_id: str, baixar: bool = False, pesos: str | None = None):
+        """Visualiza ou baixa o PDF GeoVale com dados reais, cenário técnico simulado e sugestão com os pesos informados."""
+        if not any(item['id'] == mina_id for item in minas):
+            return JSONResponse(status_code=404, content={'mensagem': 'Mina não encontrada.'})
+        try:
+            valores = ler_pesos(pesos)
+        except ValueError:
+            return JSONResponse(status_code=422, content={'mensagem': 'Pesos inválidos.'})
+        try:
+            bruto = relatorios.obter(mina_id, valores)
             disposicao = 'attachment' if baixar else 'inline'
             return Response(bruto, media_type='application/pdf', headers={'Content-Disposition': f'{disposicao}; filename="geovale-{mina_id}.pdf"', 'Cache-Control': 'no-store', 'X-Relatorio-Versao': hashlib.sha256(bruto).hexdigest()})
         except (OSError, ValueError, KeyError, TypeError, ShapelyError, sqlite3.Error, zlib.error):
