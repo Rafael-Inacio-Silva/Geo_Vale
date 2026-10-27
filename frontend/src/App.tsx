@@ -2,7 +2,7 @@ import {useCallback, useEffect, useRef, useState} from 'react';
 import {requisitar} from './api.ts';
 import {filtrarMinas} from './busca.mjs';
 import type L from 'leaflet';
-import AreaEstudo from './AreaEstudo.tsx';
+import Influencia from './Influencia.tsx';
 import MapaTerritorio from './MapaTerritorio.tsx';
 import CamadasTerritorio from './CamadasTerritorio.tsx';
 import CartaoMina from './CartaoMina.tsx';
@@ -29,13 +29,13 @@ function carregarLimite() {
   return limitePendente;
 }
 
-/** Organiza mapa central, consulta à direita e várias áreas de estudo na barra esquerda. */
+/** Organiza mapa central, consulta à direita e influência e dados do território na barra esquerda. */
 export default function App() {
-  const [barraAreas, setBarraAreas] = useState(true);
+  const [barraTerritorio, setBarraTerritorio] = useState(true);
   const [barraConsulta, setBarraConsulta] = useState(true);
-  const [mapa, setMapa] = useState<L.DrawMap | null>(null);
-  const prioridadeArea = useRef(false);
-  const preservarArea = useCallback(() => {prioridadeArea.current = true;}, []);
+  const [mapa, setMapa] = useState<L.Map | null>(null);
+  const prioridadeTerritorio = useRef(false);
+  const priorizarTerritorio = useCallback(() => {prioridadeTerritorio.current = true;}, []);
   const [configuracao, setConfiguracao] = useState<ConfiguracaoMapa | null>(null);
   const [limite, setLimite] = useState<LimiteMG | null>(null);
   const [enquadrarMunicipio, setEnquadrarMunicipio] = useState(true);
@@ -98,12 +98,12 @@ export default function App() {
     </header>
     <main className="conteudo">
       <h1 className="somente-leitor">GeoVale — mapa territorial</h1>
-      <div className={`territorio${barraAreas ? '' : ' areas-ocultas'}${barraConsulta ? '' : ' consulta-oculta'}`}>
-        <aside id="barra-areas" className="painel-areas" aria-label="Ferramentas de áreas" hidden={!barraAreas}>
-          <h2>Áreas de estudo</h2>
-          <AreaEstudo mapa={mapa} minaId={selecionada?.id} aoInteragir={preservarArea}/>
+      <div className={`territorio${barraTerritorio ? '' : ' territorio-oculto'}${barraConsulta ? '' : ' consulta-oculta'}`}>
+        <aside id="barra-territorio" className="painel-territorio" aria-label="Território da mina" hidden={!barraTerritorio}>
+          <h2>Território da mina</h2>
+          <Influencia mapa={mapa} minaId={selecionada?.id} temas={configuracao?.camadas ?? []} expandidas={ativas} aoConsultar={priorizarTerritorio} informarLegenda={setLegendaTrilhas}/>
         </aside>
-        <button type="button" className="alternar-painel alternar-areas" aria-controls="barra-areas" aria-expanded={barraAreas} aria-label={barraAreas ? 'Ocultar áreas' : 'Mostrar áreas'} title={barraAreas ? 'Ocultar áreas' : 'Mostrar áreas'} onClick={() => setBarraAreas(valor => !valor)}><svg viewBox="0 0 24 24" aria-hidden="true"><path d={barraAreas ? 'm14 7-5 5 5 5' : 'm10 7 5 5-5 5'}/></svg><span>Áreas</span></button>
+        <button type="button" className="alternar-painel alternar-territorio" aria-controls="barra-territorio" aria-expanded={barraTerritorio} aria-label={barraTerritorio ? 'Ocultar território' : 'Mostrar território'} title={barraTerritorio ? 'Ocultar território' : 'Mostrar território'} onClick={() => setBarraTerritorio(valor => !valor)}><svg viewBox="0 0 24 24" aria-hidden="true"><path d={barraTerritorio ? 'm14 7-5 5 5 5' : 'm10 7 5 5-5 5'}/></svg><span>Território</span></button>
         <button type="button" className="alternar-painel alternar-consulta" aria-controls="barra-consulta" aria-expanded={barraConsulta} aria-label={barraConsulta ? 'Ocultar mina e camadas' : 'Mostrar mina e camadas'} title={barraConsulta ? 'Ocultar mina e camadas' : 'Mostrar mina e camadas'} onClick={() => setBarraConsulta(valor => !valor)}><svg viewBox="0 0 24 24" aria-hidden="true"><path d={barraConsulta ? 'm10 7 5 5-5 5' : 'm14 7-5 5 5 5'}/></svg><span>Mina e camadas</span></button>
         <aside id="barra-consulta" className="pesquisa" aria-label="Pesquisa de minas" hidden={!barraConsulta}>
           <label htmlFor="pesquisa-mina">Pesquisar mina</label>
@@ -118,7 +118,7 @@ export default function App() {
           {erro ? <div className="erro" role="alert"><p>{erro}</p><button type="button" className="tentar-novamente" onClick={() => setTentativa(atual => atual + 1)}>Tentar novamente</button></div> : null}
         </aside>
         <section id="territorio" className="painel-mapa" aria-label="Mapa territorial" tabIndex={-1}>
-          {configuracao ? <MapaTerritorio enquadrarMunicipio={enquadrarMunicipio} configuracao={configuracao} limite={limite} selecionada={selecionada} selecionar={selecionarMina} ativas={ativas} recargas={recargasCamadas} informarEstado={informarEstado} informarLegendaTrilhas={setLegendaTrilhas} informarMapa={setMapa} prioridadeArea={prioridadeArea} voltar={() => setSelecionada(null)}/> : <div className="mapa-carregando" role="status">{erroConfiguracao ? 'Mapa indisponível.' : 'Abrindo mapa…'}</div>}
+          {configuracao ? <MapaTerritorio enquadrarMunicipio={enquadrarMunicipio} configuracao={configuracao} limite={limite} selecionada={selecionada} selecionar={selecionarMina} ativas={ativas} recargas={recargasCamadas} informarEstado={informarEstado} informarLegendaTrilhas={setLegendaTrilhas} informarMapa={setMapa} prioridadeTerritorio={prioridadeTerritorio} voltar={() => setSelecionada(null)}/> : <div className="mapa-carregando" role="status">{erroConfiguracao ? 'Mapa indisponível.' : 'Abrindo mapa…'}</div>}
           {limite?.aviso ? <p className="aviso-fonte" role="status">{limite.aviso}</p> : null}
         </section>
       </div>

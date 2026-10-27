@@ -2,6 +2,8 @@
 fastapi==0.159.1
 uvicorn==0.54.0
 shapely==2.2.0
+rasterio==1.5.0
+numpy==2.5.4
 # Verificações automatizadas.
 httpx==0.28.1
 pytest==9.1.1

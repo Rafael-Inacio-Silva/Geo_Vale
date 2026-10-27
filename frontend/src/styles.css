@@ -52,7 +52,7 @@ button:focus-visible, input:focus-visible, a:focus-visible, [tabindex="-1"]:focu
 .fundos button:first-child {border-radius: .3rem 0 0 .3rem;}
 .fundos button:last-child {border-radius: 0 .3rem .3rem 0; border-left: 0;}
 .fundos button[aria-pressed="true"] {background: var(--escuro); border-color: var(--escuro); color: white;}
-.legenda-mapa {position: absolute; bottom: 2.6rem; left: 1rem; display: flex; gap: 1rem; align-items: center; z-index: 500; background: #fffffff2; border: 1px solid #c1d0c6; border-radius: .3rem; padding: .55rem .7rem; font-size: .65rem; box-shadow: 0 2px 8px #123c3012;}
+.legenda-mapa {position: absolute; bottom: calc(var(--altura-creditos, 1rem) + 2.8rem); left: 1rem; display: flex; gap: 1rem; align-items: center; z-index: 500; background: #fffffff2; border: 1px solid #c1d0c6; border-radius: .3rem; padding: .55rem .7rem; font-size: .65rem; box-shadow: 0 2px 8px #123c3012;}
 .legenda-mapa > span {display: inline-flex; align-items: center; gap: .4rem;}
 .linha-legenda {inline-size: 1rem; border-top: 3px solid var(--verde);}
 .ponto-legenda {inline-size: .55rem; block-size: .55rem; background: var(--verde); border-radius: 50%;}
@@ -64,6 +64,7 @@ button:focus-visible, input:focus-visible, a:focus-visible, [tabindex="-1"]:focu
 .aviso-fonte {inset: auto 1rem 5.5rem;}
 .rodape {display: flex; flex-wrap: wrap; justify-content: space-between; gap: .4rem 1rem; padding: .85rem clamp(1rem, 3vw, 3rem); background: var(--escuro); color: #fff; border-top: 2px solid var(--amarelo); font-size: .65rem;}
 .leaflet-container {font: inherit;}
+.leaflet-bottom.leaflet-left {bottom: calc(var(--altura-creditos, 1rem) + .45rem);}
 .leaflet-control-attribution {max-inline-size: calc(100vw - 1rem); font-size: .6rem;}
 .leaflet-control-attribution a {color: #00594f;}
 .leaflet-tooltip {font-size: .8rem; color: var(--escuro); font-weight: 650;}
@@ -117,22 +118,8 @@ button:focus-visible, input:focus-visible, a:focus-visible, [tabindex="-1"]:focu
   .painel-mapa {min-block-size: 0;}
 }
 
-.area-estudo {inline-size: 100%; min-inline-size: 0;}
 
-.estado-area {margin: 0 0 .5rem; text-align: center; color: var(--escuro); font-size: .75rem; font-weight: 600;}
-.acoes-area {display: flex; flex-wrap: wrap; gap: .45rem; justify-content: center;}
-.acao-area {min-block-size: 2.6rem; padding: .55rem .75rem; font-size: .75rem; font-weight: 650; color: var(--escuro); background: #fff; border: 1px solid #aac4b5; border-radius: .3rem;}
-.acao-area.primaria {background: var(--amarelo); border-color: #e9ae12;}
-.acao-area:hover {background: #e5f1e7;}
-.acao-area.primaria:hover {background: #ffd45c;}
-.acao-area:disabled {cursor: default; opacity: .5;}
-.erro-area {max-inline-size: 24rem; margin: .5rem 0 0; color: #7b3d22; font-size: .75rem;}
-.leaflet-draw-tooltip {font: inherit; font-size: .75rem; background: #004d44ed; border-color: #fff; color: #fff;}
-.leaflet-edit-marker-selected {background: var(--amarelo);}
-@media (max-width: 48rem) {
-  .acoes-area {gap: .35rem;}
-  .acao-area {font-size: .7rem; padding-inline: .6rem;}
-}
+
 
 /* Os renderizadores geográficos têm dimensão calculada pelo Leaflet. */
 .leaflet-pane > svg {max-inline-size: none;}
@@ -159,7 +146,6 @@ button:focus-visible, input:focus-visible, a:focus-visible, [tabindex="-1"]:focu
 .fonte-cadastro, .estado-cadastro, .erro-cadastro {font-size: .7rem; margin: .8rem 0 0;}
 .fonte-cadastro {color: #4f6b61;}
 .erro-cadastro {color: #7b3d22;}
-.nota-area {margin: -.2rem 0 .6rem; text-align: center; color: #4f6b61; font-size: .7rem;}
 
 
 
@@ -167,17 +153,13 @@ button:focus-visible, input:focus-visible, a:focus-visible, [tabindex="-1"]:focu
 .estado-municipio {position: absolute; z-index: 700; top: 5rem; left: 1rem; max-width: calc(100% - 2rem); display: flex; flex-wrap: wrap; gap: .6rem; align-items: center; padding: .6rem .8rem; color: #174d45; background: #fffffff2; border: 1px solid #b7ccc4; border-radius: .3rem; font-size: .8rem;}
 .estado-municipio button {background: transparent; border: 0; color: #006b61; text-decoration: underline; cursor: pointer; font: inherit; font-weight: 700;}
 
-.lista-areas {display: flex; flex-wrap: wrap; gap: .35rem; justify-content: center; align-items: center; padding-bottom: .45rem; border-bottom: 1px solid #d6e2dc; margin-bottom: .5rem; max-height: 14rem; overflow-y: auto;}
-.lista-areas > span {font-size: .75rem; color: #49685f; padding: .3rem;}
-.lista-areas .acao-area {padding: .35rem .55rem; min-height: 2rem;}
-.lista-areas .acao-area[aria-pressed="true"] {background: #007f73; border-color: #007f73; color: white;}
 
 /* Ferramentas e consulta ocupam barras independentes, sem cobrir o mapa. */
-.territorio.areas-ocultas {grid-template-columns: 0 1.7rem minmax(0, 1fr) 1.7rem 18rem;}
+.territorio.territorio-oculto {grid-template-columns: 0 1.7rem minmax(0, 1fr) 1.7rem 18rem;}
 .territorio.consulta-oculta {grid-template-columns: 15rem 1.7rem minmax(0, 1fr) 1.7rem 0;}
-.territorio.areas-ocultas.consulta-oculta {grid-template-columns: 0 1.7rem minmax(0, 1fr) 1.7rem 0;}
-.painel-areas {grid-column: 1; grid-row: 1; overflow-y: auto; min-inline-size: 0; padding: 1rem; border-top: 4px solid var(--amarelo); background: var(--papel);}
-.painel-areas h2 {font-size: 1.05rem; color: var(--escuro); margin: 0 0 1rem;}
+.territorio.territorio-oculto.consulta-oculta {grid-template-columns: 0 1.7rem minmax(0, 1fr) 1.7rem 0;}
+.painel-territorio {grid-column: 1; grid-row: 1; overflow-y: auto; min-inline-size: 0; padding: 1rem; border-top: 4px solid var(--amarelo); background: var(--papel);}
+.painel-territorio h2 {font-size: 1.05rem; color: var(--escuro); margin: 0 0 1rem;}
 .pesquisa {grid-column: 5; grid-row: 1; border-right: 0; padding: 1rem;}
 .painel-mapa {grid-column: 3; grid-row: 1;}
 .alternar-painel {grid-row: 1; display: flex; justify-content: center; align-items: flex-start; padding: 1rem 0; min-inline-size: 0; color: var(--escuro); background: #eef3ed; border: 0; border-inline: 1px solid #d5e0d9; border-top: 4px solid var(--amarelo);}
@@ -185,32 +167,24 @@ button:focus-visible, input:focus-visible, a:focus-visible, [tabindex="-1"]:focu
 .alternar-painel:focus-visible {outline-offset: -3px;}
 .alternar-painel svg {width: 1.25rem; height: 1.25rem; fill: none; stroke: currentColor; stroke-width: 2; flex-shrink: 0;}
 .alternar-painel span {display: none;}
-.alternar-areas {grid-column: 2;}
+.alternar-territorio {grid-column: 2;}
 .alternar-consulta {grid-column: 4;}
-.painel-areas[hidden], .pesquisa[hidden] {display: none;}
-.painel-areas .acoes-area {display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); justify-content: stretch;}
-.painel-areas .acao-area {font-size: .75rem; padding-inline: .35rem;}
-.painel-areas .acoes-area .primaria {grid-column: 1 / -1;}
-.painel-areas .fase-vazia .acoes-area {grid-template-columns: minmax(0, 1fr);}
-.painel-areas .estado-area {text-align: left; margin-block: .8rem;}
-.painel-areas .nota-area {text-align: left; font-size: .75rem;}
-.painel-areas .lista-areas {justify-content: flex-start;}
+.painel-territorio[hidden], .pesquisa[hidden] {display: none;}
 @media (max-width: 64rem) and (min-width: 48.01rem) {
   .territorio {grid-template-columns: 12rem 1.6rem minmax(0, 1fr) 1.6rem 15rem;}
-  .territorio.areas-ocultas {grid-template-columns: 0 1.6rem minmax(0, 1fr) 1.6rem 15rem;}
+  .territorio.territorio-oculto {grid-template-columns: 0 1.6rem minmax(0, 1fr) 1.6rem 15rem;}
   .territorio.consulta-oculta {grid-template-columns: 12rem 1.6rem minmax(0, 1fr) 1.6rem 0;}
-  .territorio.areas-ocultas.consulta-oculta {grid-template-columns: 0 1.6rem minmax(0, 1fr) 1.6rem 0;}
+  .territorio.territorio-oculto.consulta-oculta {grid-template-columns: 0 1.6rem minmax(0, 1fr) 1.6rem 0;}
 }
 @media (max-width: 48rem) {
-  .territorio, .territorio.areas-ocultas, .territorio.consulta-oculta, .territorio.areas-ocultas.consulta-oculta {grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: auto auto minmax(24rem, 1fr) auto;}
+  .territorio, .territorio.territorio-oculto, .territorio.consulta-oculta, .territorio.territorio-oculto.consulta-oculta {grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: auto auto minmax(24rem, 1fr) auto;}
   .alternar-painel {grid-row: 1; align-items: center; padding: .6rem; gap: .35rem; font-size: .75rem;}
   .alternar-painel span {display: inline;}
-  .alternar-areas {grid-column: 1;}
+  .alternar-territorio {grid-column: 1;}
   .alternar-consulta {grid-column: 2;}
-  .painel-areas {grid-column: 1 / -1; grid-row: 2; overflow: visible;}
+  .painel-territorio {grid-column: 1 / -1; grid-row: 2; overflow: visible;}
   .painel-mapa {grid-column: 1 / -1; grid-row: 3;}
   .pesquisa {grid-column: 1 / -1; grid-row: 4;}
-  .painel-areas .lista-areas {max-height: 7rem;}
   .legenda-mapa {gap: .6rem; max-inline-size: calc(100% - 1.5rem); flex-wrap: wrap;}
 }
 
@@ -225,39 +199,16 @@ button:focus-visible, input:focus-visible, a:focus-visible, [tabindex="-1"]:focu
 .estado-camada:empty {display: none;}
 .estado-camada > p {margin: 0 0 .5rem;}
 
-.renomear-area {display: grid; gap: .6rem;}
-.renomear-area > label {font-size: .8rem; font-weight: 600; color: var(--escuro);}
-.renomear-area > input {min-inline-size: 0; inline-size: 100%; padding: .65rem; border: 1px solid #aac4b5; border-radius: .3rem; background: #fff; color: #153f3b; font-size: .85rem;}
-.renomear-area > input[aria-invalid="true"] {border-color: #a73720;}
-.lista-areas .acao-area {max-inline-size: 100%; overflow-wrap: anywhere; text-align: left;}
-.painel-areas .estado-area {overflow-wrap: anywhere;}
 
-.modos-area {display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .25rem; margin-bottom: 1rem;}
-.painel-areas .modos-area .acao-area {font-size: .68rem; padding-inline: .15rem; min-block-size: 2.8rem;}
-.modos-area .acao-area[aria-pressed="true"] {background: var(--verde); border-color: var(--verde); color: white;}
-.filtros-influencia {min-inline-size: 0; margin: 0 0 1rem; padding: .4rem; border: 1px solid #aac4b5; border-radius: .4rem; background: #eef5ef;}
-.filtros-influencia legend {padding-inline: .25rem; font-size: .75rem; font-weight: 650;}
-.filtros-influencia .seletor-tema {padding: .5rem .2rem; gap: .45rem;}
-.filtros-influencia .nome-tema {font-size: .72rem; font-weight: 500;}
-.linha-influencia {inline-size: 1.2rem; margin-left: auto; border-top: 3px solid; flex-shrink: 0;}
-.mina-sombreada {display: flex; gap: .4rem; align-items: center; margin: .5rem .2rem; font-size: .7rem;}
-.mina-sombreada i {inline-size: .8rem; block-size: .8rem; background: #00594f55; border: 2px solid #00594f; flex-shrink: 0;}
-.fonte-referencias {margin: .5rem .2rem; font-size: .7rem; color: #4f6b61;}
-.fonte-referencias summary {cursor: pointer; color: var(--escuro);}
-.fonte-referencias summary:focus-visible {outline: 2px solid var(--verde); outline-offset: 2px;}
-.fonte-referencias a {color: var(--escuro);}
 
-.painel-referencia .acao-area, .iniciar-area {inline-size: 100%; margin-bottom: .7rem;}
-.contexto-area {display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: .3rem; font-size: .7rem; color: #4f6b61; margin: 0 0 .8rem;}
-.pausa-area {padding: .65rem; background: #fff7dd; border-radius: .3rem;}
-.area-estudo > div[hidden] {display: none;}
 
-.extracao-agua {border-top: 1px solid #cadbd1; padding-top: .8rem; margin-bottom: 1rem;}
-.extracao-agua h3 {font-size: .95rem; margin: 0 0 .5rem;}
-.extracao-agua > .acao-area {width: 100%;}
-.resumo-agua {display: grid; grid-template-columns: 1fr 1fr; gap: .5rem; margin-top: .8rem;}
-.resumo-agua p {margin: 0; padding: .6rem; background: #e4f0e8; border-radius: .35rem; font-size: .72rem;}
-.resumo-agua strong {display: block; color: var(--escuro); font-size: 1.4rem;}
-.extracao-agua .seletor-tema {font-size: .72rem; gap: .45rem;}
-.registros-agua {padding-left: 1.1rem;}
-.registros-agua li {margin-bottom: .75rem; overflow-wrap: anywhere;}
+
+.influencia-territorio {min-inline-size: 0;}
+.abrir-influencia, .exportar-territorio {width: 100%; display: flex; justify-content: space-between; align-items: center; gap: .5rem; min-height: 2.8rem; padding: .7rem; border: 1px solid #aac4b5; border-radius: .35rem; background: #fff; color: var(--escuro); font: inherit; font-size: .85rem; font-weight: 650;}
+.abrir-influencia[aria-pressed="true"] {background: var(--verde); color: #fff; border-color: var(--verde);}
+.abrir-influencia:disabled, .exportar-territorio:disabled {opacity: .5; cursor: default;}
+.abrir-influencia svg, .exportar-territorio svg {width: 1.15rem; height: 1.15rem; fill: none; stroke: currentColor; stroke-width: 1.8; flex-shrink: 0;}
+.exportar-territorio {justify-content: center; margin-top: .75rem; font-size: .75rem; background: transparent;}
+.nota-territorio, .erro-territorio {font-size: .72rem; line-height: 1.5; overflow-wrap: anywhere;}
+.nota-territorio {color: #4f6b61;}
+.erro-territorio {color: #7b3d22;}

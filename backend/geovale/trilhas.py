@@ -10,7 +10,9 @@ from threading import Lock
 from time import monotonic
 from urllib.parse import urlencode
 from urllib.request import urlopen
-from shapely.geometry import shape
+from shapely import union_all
+from shapely.geometry import shape, mapping
+from geovale.geometria import partes_da_dimensao
 from geovale.mapa import FonteIndisponivel
 
 SERVICO = 'https://services3.arcgis.com/8p5P2iPRkT0RXnI3/arcgis/rest/services/Trilhas/FeatureServer/0'
@@ -178,3 +180,18 @@ class TrilhasMunicipais:
             while len(self.cache) > 16:
                 self.cache.popitem(last=False)
             return deepcopy(dados)
+
+
+def recortar_trilhas(dados, recorte):
+    """Recorta linhas visuais pelo polígono irregular, preservando nomes e símbolos oficiais."""
+    saida = deepcopy(dados)
+    saida['features'] = []
+    nomes = set()
+    for feicao in dados['features']:
+        linha = union_all(partes_da_dimensao(shape(feicao['geometry']).intersection(recorte), ('LineString', 'MultiLineString')))
+        if linha.is_empty:
+            continue
+        saida['features'].append({**deepcopy(feicao), 'geometry': mapping(linha)})
+        nomes.add(feicao['properties']['nome'].casefold())
+    saida['legenda'] = [c for c in saida['legenda'] if c['nome'].casefold() in nomes or c['id'].casefold() in nomes]
+    return saida

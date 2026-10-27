@@ -41,7 +41,7 @@ function LegendasTema({bases, trilhas, estado}: {bases: CamadaTerritorial['bases
 export default function CamadasTerritorio({camadas, ativas, estados, legendaTrilhas, alterar, recarregar}: Propriedades) {
   const [expandidas, setExpandidas] = useState<Record<string, boolean>>({});
   return <section className="camadas" aria-labelledby="titulo-camadas">
-    <div className="cabecalho-camadas"><h2 id="titulo-camadas">Camadas</h2><span>Fontes públicas</span></div>
+    <div className="cabecalho-camadas"><h2 id="titulo-camadas">Camadas</h2><span>Expandir no mapa</span></div>
     <div className="lista-camadas">
       {camadas.map(camada => {
         const ativa = ativas[camada.id] !== undefined;

@@ -1,39 +1,51 @@
 """API local e entrega da interface de navegação do GeoVale."""
 
 import json
+import sqlite3
+import zlib
+from contextlib import asynccontextmanager
 from pathlib import Path
 
-from fastapi import FastAPI, Request
+from fastapi import FastAPI
 from shapely.errors import ShapelyError
-from fastapi.responses import FileResponse, JSONResponse
+from shapely.geometry import shape
+from fastapi.responses import FileResponse, JSONResponse, Response
 from fastapi.staticfiles import StaticFiles
 
-from geovale.agua import ExtracaoAgua
+from geovale.territorio import DadosTerritoriais
 from geovale.camadas import CAMADAS
-from geovale.referencias import ler_referencias
+from geovale.influencia import ler_influencia
 from geovale.anm import ProcessosANM
 from geovale.municipio import LimitesMunicipais
-from geovale.area import AreaInvalida, validar_area
-from geovale.trilhas import TrilhasMunicipais
+from geovale.trilhas import TrilhasMunicipais, recortar_trilhas
 from geovale.mapa import FonteIndisponivel, LimiteEstadual
 
 RAIZ = Path(__file__).resolve().parents[3]
 
 
-def criar_app(limite=None, raiz=RAIZ, trilhas=None, anm=None, municipios=None, agua=None):
-    """Expõe navegação, fontes territoriais, áreas e extração preliminar de água."""
-    app = FastAPI(title='GeoVale — mapa territorial', version='3.5.0', docs_url=None, redoc_url=None, openapi_url=None)
+def criar_app(limite=None, raiz=RAIZ, trilhas=None, anm=None, municipios=None, territorios=None):
+    """Expõe navegação, fontes territoriais e caracterização automática por mina."""
+    fonte_territorios = territorios if territorios is not None else DadosTerritoriais(raiz)
+
+    @asynccontextmanager
+    async def ciclo_vida(app):
+        fonte_territorios.iniciar()
+        try:
+            yield
+        finally:
+            fonte_territorios.encerrar()
+
+    app = FastAPI(title='GeoVale — mapa territorial', version='4.0.0', docs_url=None, redoc_url=None, openapi_url=None, lifespan=ciclo_vida)
     fonte = limite if limite is not None else LimiteEstadual()
     fonte_trilhas = trilhas if trilhas is not None else TrilhasMunicipais()
     fonte_anm = anm if anm is not None else ProcessosANM()
     fonte_municipios = municipios if municipios is not None else LimitesMunicipais()
-    fonte_agua = agua if agua is not None else ExtracaoAgua()
     minas = json.loads((raiz / 'dados/minas.json').read_text(encoding='utf-8'))
 
     @app.get('/api/saude')
     def saude():
         """Indica disponibilidade do aplicativo, independentemente da fonte externa."""
-        return {'status': 'ok', 'versao': '3.5.0'}
+        return {'status': 'ok', 'versao': '4.0.0'}
 
     @app.get('/api/mapa')
     def configuracao():
@@ -88,26 +100,83 @@ def criar_app(limite=None, raiz=RAIZ, trilhas=None, anm=None, municipios=None, a
         except FonteIndisponivel:
             return JSONResponse(status_code=503, content={'mensagem': 'Os dados da ANM estão indisponíveis. Tente novamente.'}, headers={'Cache-Control': 'no-store'})
 
-    @app.get('/api/minas/{mina_id}/referencias')
-    def referencias_territoriais(mina_id: str):
-        """Entrega somente a digitalização documental preparada para a mina do MVP."""
-        if mina_id != 'horizontes' or not any(item['id'] == mina_id for item in minas):
+    @app.get('/api/minas/{mina_id}/influencia')
+    def influencia_mina(mina_id: str):
+        """Entrega o recorte comum aproximado e a mina cartográfica sombreada."""
+        if not any(item['id'] == mina_id for item in minas):
             return JSONResponse(status_code=404, content={'mensagem': 'Mina não encontrada.'})
         try:
-            return JSONResponse(ler_referencias(raiz / 'dados/referencias/horizontes.geojson'), headers={'Cache-Control': 'no-store'})
-        except (OSError, ValueError, KeyError, TypeError, ShapelyError):
-            return JSONResponse(status_code=503, content={'mensagem': 'As referências estão indisponíveis. Tente novamente.'})
+            dados = ler_influencia(raiz / 'dados/influencias' / f'{mina_id}.geojson', mina_id)
+            return JSONResponse(dados, headers={'Cache-Control': 'no-store'})
+        except (OSError, ValueError, KeyError, TypeError, ShapelyError, sqlite3.Error, zlib.error):
+            return JSONResponse(status_code=503, content={'mensagem': 'O contorno de influência está indisponível. Tente novamente.'})
 
-    @app.get('/api/minas/{mina_id}/agua-influencia')
-    def agua_influencia(mina_id: str):
-        """Extrai duas bases fixas de água na AID documental, sem consultas arbitrárias."""
-        if mina_id != 'horizontes' or not any(item['id'] == mina_id for item in minas):
+    @app.get('/api/minas/{mina_id}/trilhas-influencia')
+    def trilhas_influencia(mina_id: str):
+        """Entrega trilhas visuais somente dentro do contorno local validado."""
+        if not any(item['id'] == mina_id for item in minas):
             return JSONResponse(status_code=404, content={'mensagem': 'Mina não encontrada.'})
         try:
-            referencias = ler_referencias(raiz / 'dados/referencias/horizontes.geojson')
-            return JSONResponse(fonte_agua.obter(referencias), headers={'Cache-Control': 'no-store'})
-        except (OSError, ValueError, KeyError, TypeError, ShapelyError, FonteIndisponivel):
-            return JSONResponse(status_code=503, content={'mensagem': 'Não foi possível concluir a extração das duas bases de água. Tente novamente.'}, headers={'Cache-Control': 'no-store'})
+            dados = ler_influencia(raiz / 'dados/influencias' / f'{mina_id}.geojson', mina_id)
+            recorte = shape(next(f['geometry'] for f in dados['features'] if f['properties']['id'] == 'influencia'))
+            trilhas = fonte_trilhas.obter(','.join(map(str, recorte.bounds)))
+            return JSONResponse(recortar_trilhas(trilhas, recorte), headers={'Cache-Control': 'no-store'})
+        except (FonteIndisponivel, OSError, ValueError, KeyError, TypeError, ShapelyError):
+            return JSONResponse(status_code=503, content={'mensagem': 'As trilhas estão indisponíveis. Tente novamente.'})
+
+    @app.get('/api/minas/{mina_id}/relatorio')
+    def relatorio_territorio(mina_id: str):
+        """Baixa um JSON completo com atributos, geometrias, matrizes, fontes e datas guardados."""
+        if not any(item['id'] == mina_id for item in minas):
+            return JSONResponse(status_code=404, content={'mensagem': 'Mina não encontrada.'})
+        try:
+            dados = fonte_territorios.relatorio(mina_id)
+            bruto = json.dumps(dados, ensure_ascii=False, allow_nan=False).encode()
+            if len(bruto) > 64 * 1024 * 1024:
+                return JSONResponse(status_code=413, content={'mensagem': 'O relatório excede o limite de exportação.'})
+            return Response(bruto, media_type='application/json', headers={'Content-Disposition': f'attachment; filename="geovale-{mina_id}.json"', 'Cache-Control': 'no-store'})
+        except (OSError, ValueError, KeyError, TypeError, ShapelyError, sqlite3.Error, zlib.error):
+            return JSONResponse(status_code=503, content={'mensagem': 'O relatório completo ainda não está disponível. Tente novamente.'})
+
+    @app.get('/api/minas/{mina_id}/territorio')
+    def territorio_mina(mina_id: str):
+        """Lê o catálogo inteiro já associado à mina, sem parâmetros de visibilidade."""
+        if not any(item['id'] == mina_id for item in minas):
+            return JSONResponse(status_code=404, content={'mensagem': 'Mina não encontrada.'})
+        try:
+            return JSONResponse(fonte_territorios.obter(mina_id), headers={'Cache-Control': 'no-store'})
+        except (OSError, ValueError, KeyError, TypeError, ShapelyError, sqlite3.Error, zlib.error):
+            return JSONResponse(status_code=503, content={'mensagem': 'Os dados do território estão indisponíveis. A preparação automática continua.'}, headers={'Cache-Control': 'no-store'})
+
+    @app.get('/api/minas/{mina_id}/territorio/{base_id}')
+    def registros_territorio(mina_id: str, base_id: str):
+        """Lê todos os atributos/recortes persistidos de uma base identificada no catálogo."""
+        if not any(item['id'] == mina_id for item in minas):
+            return JSONResponse(status_code=404, content={'mensagem': 'Mina não encontrada.'})
+        try:
+            dados = fonte_territorios.registros(mina_id, base_id)
+            if dados is None:
+                return JSONResponse(status_code=503, content={'mensagem': 'Esta base ainda está sendo preparada.'})
+            return JSONResponse(dados, headers={'Cache-Control': 'no-store'})
+        except KeyError:
+            return JSONResponse(status_code=404, content={'mensagem': 'Base não encontrada.'})
+        except (OSError, ValueError, TypeError, ShapelyError, sqlite3.Error, zlib.error):
+            return JSONResponse(status_code=503, content={'mensagem': 'Os registros estão temporariamente indisponíveis.'})
+
+    @app.get('/api/minas/{mina_id}/territorio/{base_id}/arquivo')
+    def arquivo_territorio(mina_id: str, base_id: str):
+        """Entrega os valores matriciais guardados em GeoTIFF, sem nova extração externa."""
+        if not any(item['id'] == mina_id for item in minas):
+            return JSONResponse(status_code=404, content={'mensagem': 'Mina não encontrada.'})
+        try:
+            bruto = fonte_territorios.arquivo(mina_id, base_id)
+            if bruto is None:
+                return JSONResponse(status_code=404, content={'mensagem': 'Arquivo matricial não disponível.'})
+            return Response(bruto, media_type='image/tiff', headers={'Content-Disposition': f'attachment; filename="territorio-{base_id}.tif"', 'Cache-Control': 'no-store'})
+        except KeyError:
+            return JSONResponse(status_code=404, content={'mensagem': 'Base não encontrada.'})
+        except (OSError, ValueError, TypeError, ShapelyError, sqlite3.Error, zlib.error):
+            return JSONResponse(status_code=503, content={'mensagem': 'O arquivo está temporariamente indisponível.'})
 
     @app.get('/api/minas/{mina_id}/limite-municipal')
     def limite_municipal(mina_id: str):
@@ -119,22 +188,6 @@ def criar_app(limite=None, raiz=RAIZ, trilhas=None, anm=None, municipios=None, a
             return JSONResponse(fonte_municipios.obter(mina['codigo_municipio_ibge']), headers={'Cache-Control': 'no-store'})
         except FonteIndisponivel:
             return JSONResponse(status_code=503, content={'mensagem': 'O contorno municipal está indisponível. Tente novamente.'}, headers={'Cache-Control': 'no-store'})
-
-    @app.post('/api/area/validar')
-    async def validar_recorte(request: Request):
-        """Valida sem gravar o desenho e limita a entrada a 128 KiB."""
-        bruto = bytearray()
-        async for parte in request.stream():
-            bruto.extend(parte)
-            if len(bruto) > 128 * 1024:
-                return JSONResponse(status_code=413, content={'mensagem': 'O desenho excede o tamanho permitido.'})
-        try:
-            documento = json.loads(bruto)
-            return JSONResponse(validar_area(documento), headers={'Cache-Control': 'no-store'})
-        except AreaInvalida as erro:
-            return JSONResponse(status_code=422, content={'mensagem': str(erro)})
-        except (ValueError, RecursionError):
-            return JSONResponse(status_code=422, content={'mensagem': 'Não foi possível ler o contorno desenhado.'})
 
     compilado = raiz / 'frontend/dist'
     if (compilado / 'assets').is_dir():

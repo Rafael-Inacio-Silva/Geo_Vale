@@ -1,24 +1,18 @@
 # Documentação atual
 
-Escopo implementado: mapa, seleção da Mina Horizontes, cinco temas estaduais, trilhas municipais e contorno municipal sob seleção, cadastro ANM e várias áreas de estudo independentes, com caracterização preliminar de água na AID fixa.
-
-- [Status](STATUS.md): estado da entrega.
-- [Cadastro ANM](ANM.md): titular, fase e processo, sem geometria.
-- [Limite municipal](LIMITE_MUNICIPAL.md): API IBGE, Nova Lima somente durante a seleção da mina.
-- [Área de estudo](AREA_ESTUDO.md): desenho, edição, confirmação e limites do polígono.
-- [Trilhas de Nova Lima](TRILHAS_NOVA_LIMA.md): fonte municipal, consulta e justificativa da sexta opção.
-- [Escolhas territoriais](ESCOLHAS_TERRITORIAIS.md): justificativa para apresentação, mapa, cinco temas e referências acadêmicas/corporativas.
+- [Status](STATUS.md): o que funciona no MVP.
+- [Manual de uso](MANUAL_USO.md): selecionar mina, influência, expansão visual e exportação JSON.
+- [Influência](INFLUENCIA.md): único recorte comum, mina sombreada, evidência e precisão.
+- [Dados territoriais](DADOS_TERRITORIAIS.md): catálogo completo, atributos/células, SQLite e atualização automática.
+- [Escolhas territoriais](ESCOLHAS_TERRITORIAIS.md): justificativas e fala para apresentação.
 - [Requisitos](REQUISITOS.md): comportamento e aceitação.
-- [Ferramentas e justificativas](FERRAMENTAS.md): tecnologias utilizadas, papel de cada fonte e explicação curta para apresentação.
-- [Arquitetura](ARQUITETURA.md): componentes, contratos e serviços externos.
-- [Dados geográficos](DADOS_GEOGRAFICOS.md): proveniência das bases e limites.
-- [Experiência do usuário](EXPERIENCIA_USUARIO.md): jornada e organização.
-- [Manual de uso](MANUAL_USO.md): execução e operação.
-- [Dependências](DEPENDENCIAS.md): ambiente e instalação.
-- [Validação](VALIDACAO.md): verificações realizadas nesta revisão.
-
-- [Consulta 3D Google](CONSULTA_3D_GOOGLE.md): viabilidade e preços consultados; integração não implementada.
-
-- [Referências territoriais](REFERENCIAS_TERRITORIAIS.md): referência OSM, quatro recortes de influência, evidência, digitalização e limites de interpretação.
-
-- [Extração de água](EXTRACAO_AGUA.md): recorte fixo, método, bases oficiais, evidências Anglo/FEAM e justificativa para apresentação.
+- [Arquitetura](ARQUITETURA.md): componentes, contratos e ciclo de vida.
+- [Ferramentas](FERRAMENTAS.md): tecnologias e motivos de escolha.
+- [Dados geográficos](DADOS_GEOGRAFICOS.md): proveniência das onze bases e limites.
+- [Experiência do usuário](EXPERIENCIA_USUARIO.md): organização e interações.
+- [ANM](ANM.md): consulta cadastral sem geometria.
+- [Município](LIMITE_MUNICIPAL.md): contorno de Nova Lima sob seleção.
+- [Trilhas](TRILHAS_NOVA_LIMA.md): fonte municipal, visualização e caracterização.
+- [Dependências](DEPENDENCIAS.md): versões e instalação reproduzível.
+- [Validação](VALIDACAO.md): verificações executadas e alcance.
+- [Consulta 3D Google](CONSULTA_3D_GOOGLE.md): viabilidade pesquisada, sem integração ou faturamento ativado.

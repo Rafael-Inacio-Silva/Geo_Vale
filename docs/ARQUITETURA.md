@@ -1,118 +1,58 @@
-# Arquitetura — mapa territorial
+# Arquitetura — território preparado por mina
 
 ```mermaid
 flowchart LR
-    U[Navegador] --> F[React e Leaflet]
-    F --> A[FastAPI local]
-    A --> C[Cadastro da Mina Horizontes]
-    A --> W[WFS da IDE-Sisema: limite de MG]
-    A --> H[WFS: duas bases de água na AID fixa]
-    H --> X[Shapely: interseção e contagens]
-    R --> X
-    X --> F
-    W --> M[Validação e cache em memória]
-    M --> F
-    F --> T[Tiles OpenStreetMap ou Esri]
-    A --> G[Catálogo fixo: cinco temas e trilhas municipais]
-    A --> P[ArcGIS REST de Nova Lima: trilhas]
-    A --> I[API IBGE: município selecionado]
-    A --> N[ArcGIS REST ANM: somente atributos]
-    A --> R[GeoJSON local: referência OSM e influência]
-    F --> D[Leaflet.draw: várias áreas independentes]
-    D --> V[POST local: validação Shapely]
-    F --> S[WMS IDE-Sisema: imagens e legendas]
+    C[Catálogo único de bases] --> P[Preparação automática]
+    R[Recorte local de influência] --> P
+    P --> W[WFS: vetores e todos os atributos]
+    P --> T[WCS: rasters numéricos]
+    P --> G[ArcGIS: trilhas e todos os atributos]
+    W --> X[Shapely / Rasterio: recorte]
+    T --> X
+    G --> X
+    X --> B[SQLite local por mina/base]
+    B --> A[FastAPI: leitura do território]
+    A --> U[Exportação JSON completa]
+    C --> V[Leaflet: seletores somente visuais]
+    V --> F[Tiles / WMS mascarado / trilhas recortadas]
 ```
 
-`executar.py` serve o build frontend e a API na mesma origem, em `127.0.0.1:8000`. O frontend inicia duas consultas independentes em paralelo: configuração do mapa e contorno. O mapa de fundo e a pesquisa podem abrir enquanto o limite carrega. No desenvolvimento, Vite encaminha `/api` para o backend local.
+`executar.py` serve interface compilada/API em `127.0.0.1:8000`. Configuração e limite estadual são lidos em paralelo. Selecionar mina consulta ANM, município, contorno e resumo guardado sem acoplá-los: falha de uma fonte não interrompe as outras.
 
 ## Contratos
 
 | Método e rota | Resposta |
 |---|---|
-| `GET /api/saude` | Disponibilidade do aplicativo e versão |
-| `GET /api/mapa` | Enquadramento inicial, uma mina, fundos e catálogo de seis opções com suas bases, tipos, coberturas e legendas |
-| `GET /api/mapa/limite-mg` | FeatureCollection estadual simplificada, origem, data da consulta e aviso quando aplicável |
-| `GET /api/mapa/trilhas?bbox=...` | Traçados municipais no enquadramento visível; 422 para bbox inválida e 503 na falha externa |
-| `GET /api/minas/{mina_id}/processo-anm` | Atributos cadastrais ANM sem geometria e fonte/data; 404 para mina desconhecida e 503 na falha externa |
-| `GET /api/minas/{mina_id}/limite-municipal` | FeatureCollection IBGE do município selecionado; 404 para mina desconhecida e 503 na falha externa |
-| `GET /api/minas/{mina_id}/agua-influencia` | Água recortada, resumo e fontes; recorte fixo AID águas/solos, 404/503, sem resultado parcial |
-| `GET /api/minas/{mina_id}/referencias` | Pacote documental local conferido; 404 para mina desconhecida, 503 para pacote ausente/incompatível |
-| `POST /api/area/validar` | Valida e devolve a Feature poligonal; 422 para desenho inválido e 413 acima de 128 KiB |
-| `GET /` | Interface compilada; 503 com orientação se o build estiver ausente |
-| `GET /assets/...` | Recursos do build |
+| GET /api/saude | Saúde e versão 4.0.0 |
+| GET /api/mapa | Uma mina, fundos e catálogo de seis temas/onze bases |
+| GET /api/mapa/limite-mg | Contorno estadual, fonte/data e aviso de cache quando aplicável |
+| GET /api/mapa/trilhas?bbox=... | Trilhas visuais e legenda do enquadramento; 422/503 |
+| GET /api/minas/{id}/processo-anm | Atributos cadastrais e fonte, sem geometria; 404/503 |
+| GET /api/minas/{id}/limite-municipal | Somente município associado; 404/503 |
+| GET /api/minas/{id}/relatorio | JSON completo de todas as bases, matrizes incluídas, attachment; 404/503/413 |
+| GET /api/minas/{id}/trilhas-influencia | Trilhas visuais geometricamente recortadas e legenda; 404/503 |
+| GET /api/minas/{id}/influencia | Duas Features: influência comum e mina sombreada; 404/503 |
+| GET /api/minas/{id}/territorio | Estado/resumo de todas as bases persistidas, independente de visibilidade; 404/503 |
+| GET /api/minas/{id}/territorio/{base_id} | Todos os registros/atributos ou metadados matriciais guardados; 404/503 |
+| GET /api/minas/{id}/territorio/{base_id}/arquivo | GeoTIFF mascarado já preparado; 404/503 |
+| GET / e /assets/... | Interface compilada; raiz retorna 503 se o build faltar |
 
-Rotas desconhecidas retornam 404. As fontes são consultadas em leitura; a rota POST apenas valida a geometria enviada à API local, sem armazená-la ou transmiti-la a terceiros. Não há persistência em banco.
+Rotas desconhecidas retornam 404. O cliente não fornece URL, camada ou polígono arbitrário. IDs de base são derivados da camada do catálogo. Leitura do território não provoca consulta externa. Respostas locais usam no-store; datas são as de preparação da fonte guardada, não o momento de abrir o painel.
 
-## Consulta externa
+## Preparação e armazenamento
 
-O backend chama `GetFeature` WFS 2.0.0, com camada fixa `IDE:ide_1101_mg_unidade_federacao_pol`, no máximo uma feição e saída GeoJSON em EPSG:4326. Não recebe URL ou nome de camada arbitrário do navegador. A leitura limita a resposta a 6 MiB, com timeout de 15 segundos. Confere o código de UF 31, referência espacial, tipo/validade geométrica e extensão esperada de MG.
+`DadosTerritoriais` começa no lifespan FastAPI em uma thread de agendamento, independente dos clientes. Percorre as minas/recortes locais e todas as bases derivadas de CAMADAS. A cada minuto confere bases novas, alteradas, vencidas em 24 h ou falhas com espera de cinco minutos. Usa ThreadPoolExecutor com até três bases simultâneas. Encerrar o servidor para agendamento; resultados completos já gravados permanecem.
 
-O dado oficial consultado contém uma autointerseção de anel. Para a representação visual, Shapely aplica `make_valid` quando necessário, conserva os componentes poligonais e simplifica em 0,001 grau com preservação de topologia. A resposta registra `ajuste_topologico_visual`; esse tratamento não é medição nem alteração de cadastro oficial. O último contorno válido permanece em memória por uma hora. Uma trava evita downloads simultâneos duplicados. Não há tarefa periódica: após a validade, uma nova requisição pode renovar o cache. A memória é descartada quando o processo termina.
+`fontes_territorio.py` implementa adaptadores WFS/WCS/ArcGIS. Vetores são validados por esquema/contagem/CRS/IDs e intersectados em Shapely; rasters são lidos/mascarados em Rasterio mantendo grade/valores nativos. Fontes fixas do catálogo, leitura até 32 MiB/25 s por requisição, 2.000 registros/base e 4 milhões de células/raster. [Método completo](DADOS_TERRITORIAIS.md).
 
-Falha na primeira consulta retorna 503. Falha de renovação conserva a última resposta válida e a data original, com aviso. Mensagens internas do fornecedor não são enviadas ao usuário. As duas leituras iniciais são compartilhadas pelo frontend durante a montagem dupla de desenvolvimento do React.
+SQLite em `.local/territorios.sqlite3`, WAL, uma linha por mina/camada, JSON comprimido e GeoTIFF BLOB. Assinatura inclui definição da base, influência/evidência e versão do método. Gravação da base completa é atômica; falha conserva estado/última resposta válida da mesma assinatura. Mudança do recorte não exibe dados antigos incompatíveis. Arquivos gerados são ignorados pelo Git.
 
-O navegador solicita tiles apenas da região e zoom visíveis. O botão Mapa/Satélite troca o provedor. Não há aquisição em lote nem armazenamento offline dos tiles. O contorno e o marcador permanecem quando uma imagem falha. Erros do fundo têm controle de recarga.
+## Interface e mapa
 
-O componente Leaflet é desmontado corretamente; o redimensionamento apenas invalida seu tamanho, preservando a navegação do usuário. A chegada tardia do contorno não desfaz uma mina já selecionada. A seleção registra a origem da ação: cartão ou marcador. O cartão alterna seleção e permite enquadramento municipal; o marcador sempre aproxima a mina em zoom 14 e bloqueia o reenquadramento municipal, inclusive para resposta pendente. Os dados municipais dependem de id/coordenadas, sem nova consulta ao repetir o clique no marcador. A resposta também preserva a câmera se o engenheiro já navegou ou começou uma área. Desmarcar pelo cartão enquadra novamente MG. O marcador tem papel de botão, rótulo acessível e ações Enter/Espaço. “Ver Minas Gerais” enquadra o estado, remove município e seleção, mantendo áreas e temas.
+`Influencia.tsx` lê contorno e território ao selecionar. Atualiza o resumo local a cada três segundos enquanto incompleto e a cada minuto quando completo; na falha de leitura, tenta após 15 s. Esses pedidos leem SQLite. Cancela leituras ao trocar/desmarcar mina. O estado completo habilita Exportar JSON; o download lê somente dados persistidos e inclui matrizes nativas e todos os atributos. Fontes e detalhes ficam no arquivo/documentação, sem painel na tela.
 
-## Sobreposições WMS
+Selecionar pelo cartão ou pela bolinha mostra o contorno da mina, independentemente de Influência. O botão Influência mostra/esconde somente o contorno externo e camadas recortadas e enquadra o recorte por ação explícita, interrompendo transições anteriores. Mina sombreada e influência ficam em pane 430, sem interceptar cliques. O município, pane 420, não altera o enquadramento depois de uma interação da influência ou navegação. Marcador sempre aproxima em zoom 14. Dados persistidos não dependem do estado visual.
 
-`backend/geovale/camadas.py` define cinco temas compostos por dez bases. `/api/mapa` entrega o catálogo fixo com identificadores, URL WMS, intensidade inicial, ordem de desenho, atribuição e links oficiais de legenda/metadado. Não consulta o catálogo inteiro em cada abertura, não recebe URL arbitrária e não adiciona proxy de mapas. Esta etapa não usa credenciais Google nem uma API 3D.
+Com Influência ativa, `CamadasNaInfluencia.tsx` mostra os cinco temas WMS mascarados no navegador pelo polígono irregular, mais trilhas intersectadas no backend. A máscara `clip-path` acompanha coordenadas da camada, zoom/redimensionamento; imagens recortadas ocultam durante animação de zoom. Marcar um tema substitui sua versão recortada pela versão expandida de `MapaTerritorio.tsx`; desmarcar restaura o recorte. Sem Influência os seletores mostram/retiram a versão normal. Ordem, timeout, intensidade e legendas permanecem. Imagens atuais do fornecedor são independentes da data do relatório persistido. Trilhas visuais usam a configuração oficial de cores/nomes, consulta leve por bbox e cache de dez minutos/16 enquadramentos. Contorno estadual tem cache de uma hora, simplificação visual e aviso no reaproveitamento vencido; ANM, dez minutos; município, uma hora. Esses caches de navegação são separados do armazenamento territorial.
 
-`App` mantém o estado de temas ativos, intensidade e recuperação. `CamadasTerritorio` apresenta checkboxes, controles condicionais e legendas. `MapaTerritorio` mantém uma instância WMS por tema ativo, com seus componentes unidos numa requisição `GetMap` (camadas em ordem no parâmetro `layers`). Leaflet solicita PNG transparente em WMS 1.1.1, EPSG:3857, blocos de 512 pixels, `noWrap`, sem buffer e sem atualizar a cada quadro do zoom. Não há download do conjunto estadual bruto.
-
-Faixa de solicitação: envelope regional entre latitudes −23,5 e −14 e longitudes −51,3 e −38,7. Esse envelope limita tráfego; não recorta nem certifica o limite estadual ou impede pequenas bordas das fontes. Fora dele, o controle informa que o tema está disponível em MG. Não há camada temática global.
-
-Ordem fixa, de baixo para cima: vegetação/conservação, solos, declividade, água, entorno. Bases de um mesmo tema seguem a ordem do catálogo. Todas ficam abaixo do contorno e marcador. Intensidade altera `setOpacity`, sem recriar a instância. Marcar outro tema não remove os anteriores; desmarcar cancela eventos/timer e retira apenas aquele tema/crédito. Mudar fundo e navegar não altera a seleção dos temas.
-
-Eventos `loading`, `tileerror` e `load` alimentam estado público; espera de 25 segundos também informa falha. A recarga redesenha só o tema correspondente. Erro parcial não é interpretado como ausência de dados. Legendagem usa `GetLegendGraphic` por base apenas ao abrir o detalhe, com nome e recuperação para imagem indisponível. Desmontar limpa instâncias, observadores, eventos e timers. Créditos dos temas são adicionados e removidos com a sobreposição.
-
-## Trilhas municipais
-
-`TrilhasNoMapa` cria uma camada vetorial com cores oficiais por `Name`, tooltip com nome em `textContent` e crédito da Prefeitura. Ao ativar e após `moveend`, consulta `/api/mapa/trilhas` com bbox visível em EPSG:4326. O movimento cancela a consulta anterior e espera 250 ms; timeout de 20 s. Fora do envelope municipal não consulta a fonte. Intensidade altera apenas a opacidade, preservando a cor de cada feição e sem refazer a consulta. Desativar limpa camadas, eventos, timer, pedido e crédito. A pane fica abaixo do contorno e da área manual, acima das imagens WMS.
-
-O backend usa somente a URL ArcGIS REST fixa, recorta a bbox à extensão publicada, solicita `OBJECTID,Name`, geometria e `outSR=4326`. Timeout de 15 s, leitura de até 6 MiB e limite de 2.000 registros; resposta truncada é falha, não sucesso parcial. Confere FeatureCollection, linhas válidas e extensão. Expõe nome, identificador e símbolo sanitizado (cor RGB hexadecimal, alpha e largura em pixels), além da legenda filtrada; não repassa mensagens internas. Cache com trava, TTL de 600 s e até 16 enquadramentos, sem arquivos/banco. A simbologia do item oficial é compartilhada por 600 s; na primeira leitura ou expiração, geometria e configuração são consultadas em paralelo. A configuração tem timeout de 15 s e limite de 1 MiB. Falha de renovação retorna 503, sem reaproveitar resposta vencida. Documentação da fonte em [Trilhas](TRILHAS_NOVA_LIMA.md).
-
-## Áreas de estudo
-
-`AreaEstudo` usa Leaflet.draw sem sua barra padrão. Os controles React seguem a identidade da interface. Estados: vazio, desenho, ajuste, validação, renomeação e confirmado. Um Map de áreas numeradas mantém as Features confirmadas na memória da página. Um FeatureGroup recebe o recorte ativo/rascunho; outro mantém as demais áreas, selecionáveis por clique. A lista React permite seleção por teclado. Adicionar preserva o conjunto; ajustar/redesenhar/remover afetam só o id selecionado. Cancelar retorna ao id anterior e restaura sua confirmação. A numeração não é reutilizada durante a sessão. Requests pendentes são cancelados na saída ou cancelamento. Desmontar remove handlers, eventos e grupo.
-
-A confirmação envia a Feature para `/api/area/validar`; Shapely rejeita autointerseção, anel aberto, degeneração, buracos, tipos diferentes de Polygon e coordenadas inválidas. Não aplica `make_valid` ao desenho. A API devolve a mesma geometria e propriedades controladas (`origem`, `finalidade`, `vertices`). Limites de latitude ±85°, longitude ±180°, sem segmentos cruzando o antimeridiano. A validação do desenho não calcula área/distância nem cruza com bases; a extração de água é uma rota independente com AID fixa. A confirmação fica na memória da página; não há gravação ou retomada após reload. [Regras completas](AREA_ESTUDO.md).
-
-### Cores e legenda municipais
-
-O endpoint público `/sharing/rest/content/items/2504a27b4e684bfdbe0210fa7af1971d/data?f=json` fornece o renderer `uniqueValue` por `Name`. Não se usa o símbolo simples amarelo do FeatureServer para colorir os traçados. O backend confere a camada 0, campo, categorias únicas, rótulos e símbolos lineares sólidos, RGB/alpha e largura. Associa nomes ignorando diferenças de caixa presentes na fonte, sem modificar o rótulo publicado. Categoria sem símbolo conhecido é falha de integração; não recebe cor aproximada.
-
-A resposta acrescenta `legenda`, com id, nome, cor, opacidade e largura para as categorias encontradas na consulta, sem duplicatas e na ordem oficial. `TrilhasNoMapa` publica essa lista ao estado do App; `CamadasTerritorio` exibe somente quando Legenda está aberta. Nova consulta limpa a lista anterior; fora da cobertura ou na falha não reapresenta categorias antigas. A lista tem rolagem, foco e rótulo acessível. Os nomes usam texto escapado, sem HTML da fonte.
-
-## Cartão, fontes cadastrais e município
-
-`CartaoMina` reúne identificação e detalhes sob seta acessível. `useProcessoANM` consulta somente os atributos cadastrais ao selecionar e cancela pedidos de outra seleção. `returnGeometry=false`, `f=json`; o contrato não contém geometria. Detalhes de identidade/cache/falha em [ANM](ANM.md).
-
-`AreaEstudo` consulta `/api/minas/{id}/referencias` somente sob seleção. O backend lê o GeoJSON local e valida identidade, procedência, topologia e extensão. A visualização da referência não cria áreas. Usar como área adiciona a referência OSM à coleção ou seleciona a já existente. Sua edição confirmada usa o validador manual. `InfluenciasNoMapa` organiza quatro filtros e referência OSM sombreada na pane 430, abaixo das áreas de estudo em 450, com `interactive=false`. Não intercepta desenhos. Alternar o contexto remove grupo e atribuição; desmarcar a mina cancela a leitura e retira o contexto. Ocultar barras não desmonta os componentes. O pacote/receita não depende de ANM, WMS ou IBGE. [Preparo e significado](REFERENCIAS_TERRITORIAIS.md).
-
-`MunicipioNoMapa` consulta somente o código IBGE fixado no catálogo, cancela ao sair da seleção e mantém sua camada/crédito separados. Não recebe uma malha estadual de cidades. Exibe contorno em pane 420, abaixo das áreas em 450. Falha tem recuperação própria. A câmera confere se houve atividade de desenho, alteração de zoom ou deslocamento antes de enquadrar uma resposta tardia. [Contrato IBGE](LIMITE_MUNICIPAL.md).
-
-## Barras laterais
-
-`App` mantém as ferramentas/coleção de áreas à esquerda, o mapa no centro e pesquisa/cartão/camadas à direita. Cada barra tem seta independente com rótulo e estado acessível para ocultar/reabrir. Ocultar usa `hidden`, sem desmontar o componente nem perder rascunhos, áreas ou seleções. `MapaTerritorio` fornece sua instância ao estado do App; `AreaEstudo` controla o desenho nessa instância e renderiza seus botões somente na lateral. Não há barra de áreas posicionada sobre o mapa. ResizeObserver invalida o tamanho Leaflet quando as colunas mudam. Em telas estreitas, os atalhos de barras ficam no topo, ferramentas antes do mapa e consulta depois; cada seção continua ocultável.
-
-Cada camada ativa tem uma seta acessível, independente do checkbox, para expandir/recolher intensidade e legenda. As opções iniciam recolhidas; ocultá-las não remove a camada nem altera sua intensidade. O conteúdo fica montado e oculto, preservando a legenda já aberta. Mensagens de carregamento, cobertura e falha ficam fora da seção recolhida.
-
-A área tem um nome pessoal opcional, separado da Feature e indexado pelo id estável. `AreaEstudo` conserva nomes em estado/ref para renderização e callbacks Leaflet; renomear refaz apenas os rótulos, preservando geometria e origem. Estado `renomeando` bloqueia a troca de área por lista ou contorno; formulário aceita 1–80 caracteres normalizados, Enter/Salvar e Escape/Cancelar, com retorno de foco. Texto React escapado e tooltip via `textContent`, sem HTML. Ajustar/redesenhar mantém o nome pelo id; remover limpa seus metadados. Sem nova rota ou persistência.
-
-## Modos de trabalho
-
-`AreaEstudo` separa `modo` (Manual/Referência/Influência) da fase de desenho. A escolha não é uma adição de área. Usar como área reutiliza uma Feature `referencia_osm` existente ou cria uma única entrada explícita. Referência/Influência só alteram contexto e enquadramento, com transição anterior interrompida e sem animação concorrente.
-
-Pontos do desenho aberto são capturados pelo evento DRAWVERTEX, usando `Marker.getLatLng`, e preservados ao suspender Leaflet.draw. Durante a consulta aparece um traço de rascunho sem interação. Retomar recria o desenho via `addVertex` com as mesmas coordenadas e restaura centro/zoom. Ajuste preserva o Polygon enquanto desabilita os marcadores; retomar reativa a edição. A suspensão não aciona a rotina de cancelamento. Texto de nome fica montado e oculto. A resposta de validação pode completar sem trocar o modo consultado; falha só reabre marcadores quando Manual estiver ativo.
-
-O último contexto pode permanecer sob o desenho em Manual, com um controle explícito para ocultar. A sobreposição de influência pode renderizar só a referência ou os quatro filtros mais a referência. O estado dos filtros não depende do modo. Mina desmarcada remove o contexto e retorna a Manual sem apagar rascunhos ou confirmações.
-
-## Extração preliminar de água
-
-`ExtracaoAgua.tsx`, montado dentro de `AreaEstudo`, consulta `/api/minas/{id}/agua-influencia` somente por ação explícita. A API confere o pacote local e chama `ExtracaoAgua` do backend. Duas consultas WFS paralelas, com campos fixos e BBOX da AID, são validadas e intersectadas em Shapely. Identidades únicas impedem contagem repetida; `numberMatched/numberReturned` conferem completude. Limites por base: 2.000 feições, 12 MiB e 15 s. Frontend mantém timeout de 25 s e cancela ao desmarcar/desmontar.
-
-Uma única resposta completa é guardada em memória por 600 s, com trava, cópia defensiva e hash do recorte e evidência do parecer como chave. Na expiração, falha retorna 503; não entrega cache vencido. Filtro visual, enquadramento e desenhos não são parâmetros do cálculo. Retorno tem geometrias cortadas, resumo, IDs/nome/tipo/versão, metadados, consulta UTC e evidência/hash do recorte.
-
-O componente conserva resultado ao alternar modos, limpa ao desmarcar e monta o resultado azul na pane 440 somente em Influência e com o checkbox ativo. Limpa grupos/créditos em cada efeito e não altera a câmera. Nome externo vira texto seguro no React/tooltip. Uma tentativa nova limpa dados anteriores; erro não mostra sucesso parcial. [Método, fontes e regras](EXTRACAO_AGUA.md).
+As barras ocultam sem desmontar o painel; ResizeObserver atualiza o tamanho Leaflet. Desktop mantém rolagem nas laterais; celular dispõe território, mapa e consulta em sequência. Créditos acompanham as camadas. Um ResizeObserver mede a atribuição Leaflet e atualiza a variável CSS --altura-creditos; legenda territorial e escala ficam acima dela com espaçamento, mesmo com várias linhas. Sem autenticação/implantação pública, ranking ou serviços de IA.

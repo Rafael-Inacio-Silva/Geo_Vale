@@ -1,47 +1,13 @@
-# Manual de uso — mapa, camadas e desenho
+# Manual de uso
 
-## Abrir
+Prepare ambiente/build conforme o [README](../README.md). Execute `.venv-geovale/bin/python executar.py` e abra http://127.0.0.1:8000. O mapa abre em Minas Gerais e permite navegação mundial.
 
-Prepare o ambiente e compile conforme o [README](../README.md). Na raiz, execute `.venv-geovale/bin/python executar.py` e abra http://127.0.0.1:8000. Internet necessária para fundos, contorno, temas e legendas.
+1. Pesquise e selecione **Mina Horizontes**. Selecionar pelo cartão ou pela bolinha mostra automaticamente o contorno da mina. A seleção também demarca Nova Lima e habilita **Influência** na esquerda. A seta do cartão abre os detalhes; clicar novamente no cartão desmarca e retorna a MG. A bolinha aproxima a mina.
+2. Clique em **Influência**. Aparecem o contorno, a mina sombreada e todas as camadas dentro dessa extensão. Clicar novamente retira o contorno maior e as camadas recortadas; o contorno da mina continua enquanto ela estiver selecionada.
+3. Marque uma camada na direita para ampliá-la além da influência. Desmarcar volta a mostrá-la somente dentro do contorno, quando Influência estiver ativa. Sem Influência, os checkboxes mostram/retiram camadas pelo enquadramento normal.
+4. A seta de cada camada abre intensidade e legenda da versão ampliada. Mapa/Satélite troca o fundo. As setas das barras ocultam e reabrem sem perder estado.
+5. Com Influência ativa, **Exportar JSON** baixa o relatório completo da mina para análise externa. Inclui todas as bases, independentemente dos checkboxes. Durante a preparação automática o botão indica Preparando relatório. Falha de download permite tentar novamente.
 
-## Navegar e localizar
+O relatório contém atributos/IDs/geometrias vetoriais, matrizes nativas de relevo/cobertura, classes, metadados, datas e evidência do contorno. Não é diagnóstico técnico nem plano de fechamento. O servidor prepara os dados automaticamente e conserva resultados válidos entre reinícios. Fontes/datas e justificativas estão no arquivo e na documentação; a tela mantém apenas controles, estados necessários e créditos cartográficos.
 
-O mapa abre em Minas Gerais. Arraste e use zoom, roda do mouse ou gestos para aproximar/afastar. O fundo permite navegar pelo mundo; o contorno verde representa MG. Alterne **Mapa** e **Satélite**. Pesquise Horizontes, Capitão do Mato, Vale ou Nova Lima e clique na única entrada ou no marcador. Clicar no cartão seleciona a mina e enquadra Nova Lima e a referência da mina, mostrando apenas o contorno desse município. Clicar novamente no cartão desmarca e volta para Minas Gerais. Clicar na bolinha aproxima a mina em zoom 14, inclusive se ela já estiver selecionada; o contorno municipal continua visível sem desfazer a aproximação. A bolinha também aceita Enter ou Espaço pelo teclado. Abra a seta do cartão para ver identificação e dados cadastrais da ANM; Recarregar ANM recupera uma consulta com falha. **Ver Minas Gerais** desfaz a seleção, retira o limite municipal e retorna ao estado, preservando as áreas de estudo.
-
-## Sobrepor camadas
-
-Na lateral, marque um ou mais temas: **Relevo e declividade**, **Água e drenagem**, **Solos**, **Vegetação e conservação**, **Entorno e infraestrutura**. Esses cinco temas têm alcance em Minas Gerais. A sexta opção, **Trilhas de Nova Lima**, mostra cadastro da Prefeitura apenas na sua cobertura municipal. Não é necessário selecionar a mina antes.
-
-Cada tema marcado carrega a representação oficial (imagens WMS ou linhas municipais). Use a **seta da camada** para expandir ou recolher **Intensidade** e **Legenda**. As opções começam recolhidas; fechar a seta mantém a camada e a intensidade escolhida. Reduza a intensidade quando cores encobrirem outra camada. Abra Legenda para consultar as cores/classes de cada base do tema. Desmarque para remover. A ordem das sobreposições é fixa; o último clique não altera essa ordem. Trocar fundo, escolher mina e voltar ao estado preservam as camadas ativas. Recarregar a página limpa as escolhas e a área desenhada. Nas trilhas, cada traçado usa sua cor da Prefeitura; a legenda mostra apenas os nomes presentes no enquadramento, na ordem da fonte. A lista é rolável e acompanha a navegação. Passe o cursor sobre a linha ou toque nela para consultar o nome cadastrado.
-
-## Alternar modos e delimitar
-
-Na barra Áreas de estudo, escolha **Manual**, **Referência** ou **Influência**. O modo ativo fica verde. Referência e Influência só ficam disponíveis depois de selecionar a mina. Pode alternar livremente: isso não cria áreas duplicadas.
-
-**Referência** mostra a área cinza de mineração do OpenStreetMap. **Usar como área** acrescenta esse contorno à sua coleção e abre Manual. Se ele já estiver na coleção sem alterações, o botão será **Selecionar esta área**, reutilizando-o. É uma referência colaborativa, sem certificação de limite atual.
-
-**Influência** mostra quatro filtros: ADA unificada, AID água subterrânea, AID águas/solos e AII águas/solos. Marque/desmarque cada um; a mina permanece sombreada. Os filtros são conservados ao alternar. Fonte e significado explica as siglas e abre a evidência. Os recortes são do projeto Tamanduá/Horizontes, não fechamento.
-
-**Manual** permite desenhar ou retomar o trabalho. Use Desenhar área/Adicionar área; marque pelo menos três pontos; Desfazer ponto remove o último e Cancelar abandona o rascunho. Feche pelo primeiro ponto ou Fechar contorno, ajuste os vértices e confirme. Se a geometria for inválida, ajuste e confirme novamente. É possível manter várias áreas independentes.
-
-Se quiser consultar Referência ou Influência no meio do desenho, ajuste ou renomeação, clique no modo. O trabalho fica guardado; volte a Manual para retomar os mesmos pontos/texto e enquadramento. Clicar novamente no modo não reinicia o trabalho. O último contexto consultado continua visível em Manual como apoio; **Ocultar**, ao lado de Contexto, remove somente essa sobreposição. Ainda não há comparação automática.
-
-Escolha uma área na lista ou mapa para Ver área, Ajustar, Redesenhar, Renomear ou Remover somente ela. Renomear aceita identificação pessoal; Salvar nome/Enter confirma, Cancelar/Escape conserva o anterior. Cancelar edição/redesenho restaura a confirmação anterior. A referência editada e confirmada torna-se recorte manual, sem mudar o arquivo de origem.
-
-Navegar, alternar modos/fundos/camadas e ocultar barras preserva o trabalho. **Atualizar ou fechar a página descarta áreas, rascunhos e nomes.** Não há salvamento permanente. [Regras e limites](AREA_ESTUDO.md).
-
-## Falhas e interpretação
-
-Se o limite municipal falhar, use **Recarregar contorno**; isso não impede desenho ou consulta ANM. Se o contorno estadual falhar, use **Tentar novamente**. Se o fundo falhar, use **Recarregar**. Uma camada temática com falha oferece sua própria recarga; também pode ser desmarcada. A legenda tem recarga independente. Fora da cobertura de cada fonte, não há dados daquela opção. Trilhas não visíveis no enquadramento geram um aviso; isso não comprova inexistência de caminhos. Uma imagem transparente ou sem feições não certifica que a área esteja livre de riscos/restrições.
-
-As sobreposições servem à exploração regional, sem determinar segurança ou uso futuro. A abrangência e idade das bases estão em [Dados geográficos](DADOS_GEOGRAFICOS.md). Encerrar o servidor descarta os caches do contorno e das trilhas; não há persistência da seleção nem banco de dados.
-
-## Mostrar ou ocultar barras
-
-Use as setas nas bordas do mapa para recolher **Áreas** à esquerda ou **Mina e camadas** à direita. Clique novamente para reabrir; o desenho em andamento, as áreas e as escolhas são preservados. Em telas estreitas, os dois atalhos ficam no topo; ferramentas aparecem antes do mapa e consulta depois.
-
-## Extrair dados de água
-
-Selecione Horizontes, abra **Influência** e clique **Extrair dados de água**. O recorte é sempre **Águas e solos · AID**, inclusive se seu filtro visual estiver desmarcado. Não precisa desenhar ou clicar em Referência. Aguarde a consulta; veja contagens e data, ligue/desligue Mostrar água recortada no mapa e abra Registros e fontes para nomes, IDs e versões. Passe o cursor sobre os registros azuis no mapa para identificá-los.
-
-Consultar novamente pode reutilizar o cache de dez minutos, mantendo a data original. Falha permite Tentar extração novamente; não há resultado parcial. Alternar modos conserva o resumo e oculta a água extraída fora de Influência. Desmarcar a mina ou recarregar limpa o resultado. Água e drenagem na barra direita continua sendo a camada visual WMS independente. A extração não mede qualidade ou segurança nem analisa os desenhos pessoais. [Justificativa e abrangência](EXTRACAO_AGUA.md).
+Internet é necessária para imagens e atualizações externas. Uma falha visual permite Recarregar sem apagar os dados guardados. Desmarcar a mina retira município/influência; não apaga o banco. [Método e atualização](DADOS_TERRITORIAIS.md), [recorte](INFLUENCIA.md).

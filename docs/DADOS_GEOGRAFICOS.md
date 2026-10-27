@@ -1,4 +1,4 @@
-# Dados geográficos — navegação
+# Dados geográficos — navegação e território preparado
 
 ## Limite de Minas Gerais
 
@@ -18,14 +18,14 @@ O catálogo contém uma única mina: Horizontes, anteriormente Capitão do Mato,
 
 O ponto de navegação é aproximado, longitude -43.92145769 e latitude -20.11834631, derivado do centro visual do contorno de mineração OpenStreetMap, way 315221699. Não é um centro certificado. O catálogo e sua fonte estão em `dados/minas.json`; o nome anterior pesquisa a mesma entrada.
 
-A [referência OSM e os quatro recortes de influência](REFERENCIAS_TERRITORIAIS.md) estão em GeoJSON local, com receita, fonte, hash do PDF, figura, página e aviso de aproximação. A influência é do projeto de ampliação; a referência da mina é o contorno colaborativo OSM. Nenhum é limite de fechamento. Podem ser visualizados junto ao desenho pessoal. A ANM fornece somente atributos cadastrais.
+O [único recorte de influência e o sombreado OSM](INFLUENCIA.md) estão em GeoJSON local, com receita, fonte, hash do PDF, figura, página e aviso de aproximação. O contorno externo AII águas/solos é usado como recorte comum do MVP por simplificação declarada. A ANM fornece somente atributos cadastrais.
 
 ## Mapas de fundo
 
 - **Mapa:** tiles padrão do OpenStreetMap, com [atribuição](https://www.openstreetmap.org/copyright) e [política do serviço](https://operations.osmfoundation.org/policies/tiles/). Somente acesso interativo; sem pré-download ou remoção dos créditos.
 - **Satélite:** [Esri World Imagery](https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer), com atribuição Esri e fornecedores. As imagens são contexto visual; sua data e resolução variam por lugar. Não representam observação ao vivo.
 
-Leaflet é a biblioteca de visualização; não é o fornecedor desses dados. As imagens são solicitadas diretamente pelo navegador. O contorno estadual é solicitado pelo nosso backend. A camada estadual cobre MG; o fundo continua navegável globalmente.
+Leaflet é a biblioteca de visualização; não é o fornecedor desses dados. As imagens são solicitadas diretamente pelo navegador. O contorno estadual é solicitado pelo nosso backend. A camada estadual cobre MG; o fundo continua navegável globalmente. A caracterização usa somente o recorte comum de cada mina, não toda a extensão visível.
 
 ## Cinco temas e dez bases oficiais
 
@@ -48,7 +48,7 @@ As referências de catálogo foram consultadas em 24/10/2026 e os dez `GetMap` e
 
 Os cinco checkboxes representam grupos, não cinco arquivos. O tema Solos contém apenas o mapa pedológico; não há diagnóstico ambiental. Da mesma forma, o tema entorno inclui urbanização e rodovias, não toda infraestrutura e conhecimento social do território.
 
-Fundamentação e justificativa do recorte em [Escolhas territoriais](ESCOLHAS_TERRITORIAIS.md). Não há perímetro físico certificado da mina ou base de treinamento. Há várias áreas de estudo independentes, desenhadas pelo usuário ou adicionadas da referência OSM da mina, mantidas apenas na página. Ajustar a referência e confirmar produz recorte manual; não altera o arquivo de origem.
+Fundamentação e justificativa do recorte em [Escolhas territoriais](ESCOLHAS_TERRITORIAIS.md). Não há perímetro físico certificado da mina ou base de treinamento. A influência comum é uma aproximação documental; o sombreado da mina é colaborativo. Influência mostra todas as bases recortadas; cada checkbox amplia um tema além do contorno. Os dados completos são guardados por mina e exportados em JSON, independentemente da visibilidade.
 
 ## Sexta opção: trilhas municipais
 
@@ -62,8 +62,9 @@ Somente os atributos do processo 003.964/1950 são consultados no SIGMINE da ANM
 
 O contorno municipal vem da API de malhas simplificadas do IBGE, código Nova Lima 3144805, qualidade máxima disponível nessa API. Não se assume ano de levantamento a partir da consulta. Só o município da mina selecionada é acrescentado; não é camada temática nem área de estudo. [Precisão, fonte e operação](LIMITE_MUNICIPAL.md).
 
-## Água vetorial recortada
 
-As duas bases do tema Água também são consumidas em GeoJSON pelo WFS 2.0.0, sob demanda, para a AID águas/solos. Não há fonte temática nova nem mudança dos cinco temas. CRS solicitado e validado EPSG:4326; BBOX reduz a transferência e Shapely intersecta o vetor irregular local. Nenhuma métrica física é calculada em graus. A resposta conserva IDs, nome/tipo/versão quando publicados, data de consulta e fonte do recorte aproximado.
+## Caracterização persistida de todas as bases
 
-Na consulta real de 26/10/2026, 72 trechos e 18 massas foram recebidos no envelope; **42 trechos e 10 massas** permaneceram no polígono. Trechos publicam BHO 2017/versão de 2018 e GEIRH de 2022; massas encontradas trazem FBDS 2017 e BHO 2019. Isso evidencia defasagem/heterogeneidade, não condição atual da água. [Fontes, campos e limites](EXTRACAO_AGUA.md).
+As mesmas onze bases do catálogo são processadas automaticamente: oito vetores WFS estaduais, dois rasters WCS e trilhas ArcGIS. Vetores preservam todos os atributos publicados e geometrias recortadas. Declividade e MapBiomas preservam valores/células no GeoTIFF nativo EPSG:4674, com seleção pelo centro e NoData separado. Rótulos/classes vêm do estilo padrão oficial. A fonte visual WMS não é usada para inferir valores numéricos.
+
+O contorno externo AII águas/solos é o recorte comum do protótipo, uma simplificação que não certifica influência temática ou limites de recuperação. SQLite conserva os dados por mina e a aplicação atualiza automaticamente. Data de consulta não é data de levantamento. [Recorte](INFLUENCIA.md), [campos, células, atualização e limites](DADOS_TERRITORIAIS.md).

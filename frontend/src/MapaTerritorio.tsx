@@ -12,8 +12,8 @@ interface Propriedades {
   selecionar: (mina: Mina, origem: 'marcador') => void;
   enquadrarMunicipio: boolean;
   voltar: () => void;
-  informarMapa: (mapa: L.DrawMap | null) => void;
-  prioridadeArea: {current: boolean};
+  informarMapa: (mapa: L.Map | null) => void;
+  prioridadeTerritorio: {current: boolean};
   ativas: CamadasAtivas;
   recargas: Record<string, number>;
   informarEstado: (id: string, estado: EstadoCamada) => void;
@@ -21,11 +21,11 @@ interface Propriedades {
 }
 
 /** Exibe fundo mundial, temas de fontes distintas, contorno estadual e referência da mina. */
-export default function MapaTerritorio({configuracao, limite, selecionada, selecionar, voltar, ativas, recargas, informarEstado, informarLegendaTrilhas, informarMapa, prioridadeArea, enquadrarMunicipio}: Propriedades) {
-  const podeEnquadrarMunicipio = useCallback(() => enquadrarMunicipio && !prioridadeArea.current, [prioridadeArea, enquadrarMunicipio]);
+export default function MapaTerritorio({configuracao, limite, selecionada, selecionar, voltar, ativas, recargas, informarEstado, informarLegendaTrilhas, informarMapa, prioridadeTerritorio, enquadrarMunicipio}: Propriedades) {
+  const podeEnquadrarMunicipio = useCallback(() => enquadrarMunicipio && !prioridadeTerritorio.current, [prioridadeTerritorio, enquadrarMunicipio]);
   const elemento = useRef<HTMLDivElement>(null);
   const mapa = useRef<L.Map | null>(null);
-  const [instanciaAtual, setInstanciaAtual] = useState<L.DrawMap | null>(null);
+  const [instanciaAtual, setInstanciaAtual] = useState<L.Map | null>(null);
   const camadaFundo = useRef<L.TileLayer | null>(null);
   const sobreposicoes = useRef(new Map<string, {camada: L.TileLayer.WMS; recarga: number; limpar: () => void}>());
   const informarEstadoAtual = useRef(informarEstado);
@@ -69,8 +69,16 @@ export default function MapaTerritorio({configuracao, limite, selecionada, selec
     }
     const observador = new ResizeObserver(() => instancia.invalidateSize({animate: false}));
     observador.observe(elemento.current);
+    const painel = elemento.current.parentElement;
+    const creditos = instancia.attributionControl.getContainer();
+    const ajustarCreditos = () => painel?.style.setProperty('--altura-creditos', `${creditos?.getBoundingClientRect().height ?? 0}px`);
+    const observadorCreditos = new ResizeObserver(ajustarCreditos);
+    if (creditos) observadorCreditos.observe(creditos);
+    ajustarCreditos();
     return () => {
       observador.disconnect();
+      observadorCreditos.disconnect();
+      painel?.style.removeProperty('--altura-creditos');
       for (const item of sobreposicoes.current.values()) item.limpar();
       sobreposicoes.current.clear();
       informarMapa(null);
@@ -185,11 +193,11 @@ export default function MapaTerritorio({configuracao, limite, selecionada, selec
       ponto.setRadius(ativo ? 12 : 9);
       if (ativo) ponto.openTooltip(); else ponto.closeTooltip();
     }
-    prioridadeArea.current = false;
+    prioridadeTerritorio.current = false;
     if (selecionada) instancia.setView([selecionada.latitude, selecionada.longitude], 14, {animate: false});
     else if (contorno.current) instancia.fitBounds(contorno.current.getBounds(), {padding: [16, 16], animate: false});
     else instancia.setView(configuracao.estado.centro, configuracao.estado.zoom, {animate: false});
-  }, [selecionada, configuracao, prioridadeArea]);
+  }, [selecionada, configuracao, prioridadeTerritorio]);
 
   /** Retorna ao enquadramento estadual sem restringir a navegação mundial. */
   function verEstado() {

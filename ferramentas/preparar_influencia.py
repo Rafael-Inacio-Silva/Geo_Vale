@@ -1,14 +1,9 @@
-"""Reproduz GeoJSON local da receita de digitalização, sem download ou dependência adicional.
-
-Executar na raiz: .venv-geovale/bin/python ferramentas/preparar_referencias.py
-A receita contém pixels da Figura 2.3 do PDF; o snapshot OSM contém o polígono de referência.
-Ajustes topológicos se aplicam apenas à digitalização da ADA, nunca a desenhos do usuário.
-"""
+"""Reproduz o contorno externo de influência e o sombreado OSM a partir das evidências locais."""
 import json
 import math
 from pathlib import Path
 from shapely.geometry import Polygon, mapping, shape
-from shapely import make_valid, orient_polygons
+from shapely import orient_polygons
 
 RAIZ = Path(__file__).resolve().parents[1]
 
@@ -25,7 +20,7 @@ def converter_utm(leste,norte):
 
 def preparar():
     """Transforma a grade SIRGAS 2000 / UTM 23S em longitude/latitude e confere contornos."""
-    pasta = RAIZ / 'dados/referencias'
+    pasta = RAIZ / 'dados/influencias'
     receita = json.loads((pasta / 'digitalizacao.json').read_text())
     pacote = json.loads((pasta / 'horizontes.geojson').read_text())
     osm = json.loads((pasta / 'mineracao-osm.geojson').read_text())
@@ -33,9 +28,9 @@ def preparar():
         raise ValueError('Referência OSM incompatível')
     referencia = {
         'type': 'Feature', 'geometry': osm['geometry'],
-        'properties': {'id': 'mina_horizontes', 'nome': 'Área de mineração Horizontes · OSM',
-            'cor': '#00594f', 'tipo': 'referencia', 'origem': 'referencia_osm', 'aproximada': True,
-            'finalidade': 'area_de_estudo', 'vertices': len(osm['geometry']['coordinates'][0])-1,
+        'properties': {'id': 'mina', 'identificador_original': 'mina_horizontes', 'nome': 'Área de mineração Horizontes · OSM',
+            'cor': '#00594f', 'tipo': 'mina', 'origem': 'referencia_osm', 'aproximada': True,
+            'finalidade': 'contexto_cartografico',
             'fonte': osm['properties']},
     }
     feicoes = [referencia]
@@ -47,17 +42,11 @@ def preparar():
             (y0, n0), (y1, n1) = grade['y']
             return converter_utm(e0 + (ponto[0]-x0)*(e1-e0)/(x1-x0), n0 + (ponto[1]-y0)*(n1-n0)/(y1-y0))
         poligono = Polygon([projetar(p) for p in traco['pontos']])
-        if not poligono.is_valid:
-            if chave != 'ada_unificada':
-                raise ValueError(f'Digitalização inválida: {chave}')
-            poligono = make_valid(poligono)
         if poligono.geom_type not in ('Polygon', 'MultiPolygon') or not poligono.is_valid:
             raise ValueError(f'Geometria incompatível: {chave}')
         propriedades = {k: v for k, v in traco.items() if k != 'pontos'}
-        componentes = [poligono] if poligono.geom_type == 'Polygon' else list(poligono.geoms)
-        vertices = sum(len(p.exterior.coords)-1 + sum(len(a.coords)-1 for a in p.interiors) for p in componentes)
-        propriedades.update(id=chave, origem='referencia_documental', aproximada=True,
-            finalidade='contexto_de_influencia', vertices=vertices)
+        propriedades.update(id='influencia', identificador_original=chave, tipo='influencia', nome='Área de influência · recorte do MVP', origem='referencia_documental', aproximada=True,
+            finalidade='caracterizacao_territorial_mvp')
         feicoes.append({'type': 'Feature', 'properties': propriedades, 'geometry': mapping(orient_polygons(poligono))})
     pacote['features'] = feicoes
     (pasta / 'horizontes.geojson').write_text(json.dumps(pacote, ensure_ascii=False, indent=2)+'\n')

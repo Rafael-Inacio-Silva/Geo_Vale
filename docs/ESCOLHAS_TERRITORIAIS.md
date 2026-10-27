@@ -1,20 +1,16 @@
-# Justificativa do mapa e dos cinco temas
+# Escolhas territoriais e justificativas para apresentação
 
-Registro atualizado em 26/10/2026 para o MVP GeoVale. A etapa implementada é conhecer visualmente o território: mapa, localização da Mina Horizontes, sobreposições e delimitação de várias áreas de estudo, com cadastro ANM e contexto municipal IBGE. Ainda não existe avaliação ou recomendação de uso futuro.
+Versão 4.0.0. O MVP permite conhecer o território e consultar automaticamente os dados de todas as bases em um recorte comum. Não avalia ou recomenda alternativas de uso futuro.
 
-## Por que manter o mapa atual
+## Mapa e imagens de contexto
 
-Mantemos Leaflet, OpenStreetMap para o fundo cartográfico e Esri World Imagery para o fundo de imagens. Aproveitamos a navegação existente e evitamos introduzir uma conta de faturamento Google e uma integração 3D nesta etapa. Não houve contratação de Google Maps Platform. Não classificamos os serviços atuais como gratuitos e ilimitados: permanecem sujeitos às condições de uso, atribuição, disponibilidade e consumo do fornecedor. OSM estabelece [regras específicas para os tiles públicos](https://operations.osmfoundation.org/policies/tiles/); a Esri orienta a [conferir as condições de cada item e preservar os créditos](https://resources.esri.ca/education-and-research/how-to-cite-arcgis-maps-and-data).
+Mantemos Leaflet, fundo OpenStreetMap e Esri World Imagery para concentrar o esforço na integração/automação. Evitamos introduzir faturamento Google e 3D nesta etapa; não houve contratação. Fontes públicas têm regras de uso, atribuição e disponibilidade; não são ilimitadas. [Política dos tiles OSM](https://operations.osmfoundation.org/policies/tiles/) e [datas do World Imagery](https://support.esri.com/en-us/knowledge-base/faq-can-the-date-of-an-image-be-determined-from-the-wor-000012181).
 
-A imagem serve de contexto visual, não de levantamento atual certificado. Datas e resolução variam por local e zoom; consulta recente ou ano de copyright não significa fotografia recente. A discussão visual mostrou divergência entre casas observadas em Google Earth e Esri. Consultas pontuais de metadados não foram suficientes para comprovar a correspondência com cada imagem exibida; portanto não atribuímos uma data única ao mapa. Referência: [Esri — datas de World Imagery](https://support.esri.com/en-us/knowledge-base/faq-can-the-date-of-an-image-be-determined-from-the-wor-000012181).
+Data/resolução das imagens variam por local e zoom; consulta recente/copyright não significa fotografia recente. A imagem é contexto visual, sem levantamento atual certificado da mina. O protótipo usa fontes públicas; uma aplicação interna exigiria conhecer os dados e sistemas já existentes na Vale.
 
-Há evidência pública de que a Vale já trabalha com bancos de dados integrados para fechamento e aptidões territoriais e com tecnologias de monitoramento geotécnico. Isso não comprova qual sistema ou imagem atual ela possui da Horizontes. Referências: [Uso futuro e dados integrados](https://saladeimprensa.vale.com/pt/esg/fechamento-de-mina-e-uso-futuro) e [Tecnologia](https://www.vale.com/pt/esg/tecnologia).
+## Cinco temas e uma fonte municipal
 
-Formulação para a apresentação: **“O protótipo usa fontes públicas para demonstrar integração e exploração do território. Uma aplicação interna exigiria avaliar os dados, sistemas e necessidades já existentes na Vale.”** O valor pretendido está em organizar informação útil à avaliação, não em substituir sistemas corporativos ou apresentar um novo provedor de imagens.
-
-## Por que cinco temas
-
-É um recorte pequeno e verificável para um MVP sem validação de especialista da Vale. São **cinco grupos de informação**, implementados por dez bases geográficas. A quantidade é uma escolha de escopo do projeto, não uma conclusão dos artigos nem uma norma da Vale. As referências apoiam a relevância dos assuntos, sem validar automaticamente a seleção, as fontes locais ou qualquer decisão sobre a mina.
+Os cinco temas/dez bases estaduais são um recorte pequeno para MVP, sem validação de especialista da Vale. A quantidade é escolha de escopo; os artigos sustentam a relevância dos assuntos, não prescrevem os cinco seletores nem validam resultados para Horizontes. Trilhas acrescenta fonte municipal para testar integração de infraestruturas distintas.
 
 | Tema | Por que conhecer | Representação implementada | Apoio documental |
 |---|---|---|---|
@@ -24,7 +20,6 @@ Formulação para a apresentação: **“O protótipo usa fontes públicas para 
 | Vegetação e conservação | Observar cobertura da terra e unidades de conservação cadastradas. | MapBiomas 2025 e UCs estaduais, federais e municipais. | Vale considera vocações ambientais; Anglo contempla terra e natureza; revisão aborda ambiente. |
 | Entorno humano e infraestrutura | Observar ocupação urbana e acessos existentes. | Áreas urbanizadas de referência 2022 e rodovias estaduais/federais. | Ptolemais usa proximidade de povoamentos e estradas; Vale aborda vocações socioeconômicas e participação social. |
 
-A interface abre com os cinco controles estaduais e a opção municipal de trilhas desmarcados. Marcar carrega o tema por WMS; desmarcar remove. É possível combinar temas e reduzir sua intensidade para preservar a leitura das sobreposições. A lista aparece como “Entorno e infraestrutura” para manter o rótulo curto.
 
 ## Referências e o que realmente sustentam
 
@@ -33,30 +28,22 @@ A interface abre com os cinco controles estaduais e a opção municipal de trilh
 3. **Vale — [Fechamento de mina e Uso Futuro](https://www.vale.com/pt/esg/fechamento-de-mina-e-uso-futuro).** Referência corporativa para conhecer aptidões ambientais e socioeconômicas, participação social e uso futuro. As quatro etapas Conhecer, Conceber, Viabilizar e Implantar não são quatro funcionalidades já implementadas no GeoVale.
 4. **Anglo American — [Post-mine land use ecosystem model](https://www.angloamerican.com/our-stories/trusted-corporate-leader/developing-our-post-mine-land-use-ecosystem-model).** Modelo integrado de Amandelbult, África do Sul, envolvendo temas sociais, água, terra/natureza, resíduos e energia/carbono. Suas cinco frentes de valor não equivalem às cinco camadas GIS deste projeto.
 
-## Limites para a apresentação
+## Um território comum, dados completos e visibilidade independente
 
-Os cinco temas têm cobertura de Minas Gerais; a sexta opção de trilhas tem cobertura municipal em Nova Lima. O fundo permite navegação mundial. Ausência de feição visível não comprova ausência de risco ou restrição. Há recorte e contagem das duas bases de água na AID águas/solos; não há cálculo de distância, pesos, classificação de aptidão ou recomendação nesta etapa. As sobreposições não substituem estudos geotécnicos, hidrológicos, geoquímicos, licenciamento e escuta das comunidades.
+O contorno externo AII águas/solos do parecer foi escolhido como **recorte comum de caracterização**. Simplifica a jornada: a mina já tem uma extensão definida e todas as fontes são organizadas nela. A mina sombreada oferece orientação cartográfica. Não se exige delimitação do engenheiro nesta etapa.
 
-O Topodata usa SRTM de fevereiro de 2000, refinado de cerca de 90 m para pixel de aproximadamente 30 m; não é topografia atual da cava. [Fonte INPE](https://data.inpe.br/dados/topodata/). O mapa pedológico não informa a qualidade atual de solo minerado. A disponibilidade estadual de dados não garante precisão adequada para projetar uma intervenção na mina. Proveniência das dez bases em [Dados geográficos](DADOS_GEOGRAFICOS.md).
+Essa opção é uma adaptação do MVP: a AII original é do meio físico do projeto conjunto Tamanduá/Horizontes, não delimitação oficial de todos os temas ou limite de fechamento. Mantemos fonte, figura/página, data e aviso de aproximação. Não foi obtido plano de fechamento específico de Horizontes. [Evidência e precisão](INFLUENCIA.md).
 
-## Por que acrescentar trilhas de outra fonte
+O [plano de fechamento Minas-Rio da Anglo](https://brasil.angloamerican.com/~/media/Files/A/Anglo-American-Group-v5/Brazil/sustentabilidade/plano-de-fechamento-de-mina-do-minas-rio.pdf), revisão de junho/2021, distingue em 11.7–11.8 (PDF p. 64/impressa 58) ações na ADA e consideração da AID se há interferência a reabilitar, além do público do meio físico. Isso sustenta investigar contexto sem supor intervenção em toda a influência. Não prescreve nosso recorte ou automação, nem transfere limites do Minas-Rio para a Vale.
 
-A opção **Trilhas de Nova Lima** testa uma necessidade concreta: combinar a infraestrutura estadual com informação municipal mais específica. Caminhos cadastrados ajudam a observar conexões com o entorno e a levantar questões sobre acesso e possíveis usos recreativos. Não demonstram por si só viabilidade, segurança ou direito de passagem. A motivação é testar integração de outra fonte, não afirmar que as referências acima exigem uma sexta camada ou validam esses traçados.
+Guardar dados por mina e atualizar todas as bases automaticamente demonstra as atividades da vaga de **integrar dados e automatizar etapas de avaliação**. Evita depender de quais camadas o usuário decidiu enxergar. O relatório JSON é gerado pelos dados reais e não por tabela manual de valores; fontes, datas e limitações ficam no arquivo e na documentação. A tela se concentra no mapa. Vetores mantêm todos os atributos; rasters conservam as células, além de resumos. Fontes sem resposta válida são explicitamente indisponíveis.
 
-A fonte escolhida foi a Prefeitura de Nova Lima porque o portal indicado pelo usuário publica uma camada vetorial consultável por ArcGIS REST. Não se copiou o aplicativo inteiro. No inventário WMS da IDE-Sisema consultado em 24/10/2026 não foram encontrados títulos contendo “trilh”; as dez bases integradas não contêm esse cadastro. Isso não prova inexistência em toda fonte estadual. [Proveniência e consulta](TRILHAS_NOVA_LIMA.md).
+## Fala curta para apresentação
 
-O desenho manual permite ao engenheiro escolher o recorte que pretende estudar, incluindo uma parte da mina e/ou seu entorno. Essa delimitação não substitui limite oficial, validação técnica ou consulta cadastral. O desenho é confirmado geometricamente, sem análise de aptidão. A extração de água usa a AID fixa, separadamente do desenho.
+> “O engenheiro seleciona a mina e encontra um território e seus dados já organizados. Influência mostra todas as camadas dentro do território; os seletores ampliam cada tema para ver sua continuidade fora dele. O relatório JSON considera todas as bases integradas, independentemente da visualização. Os dados vêm das APIs oficiais, são recortados, guardados por mina e atualizados automaticamente, com origem e data. Usamos um recorte documental comum como simplificação do MVP. É uma caracterização preliminar para apoiar a discussão de fechamento e uso futuro, sem substituir avaliação especializada.”
 
-## Contexto municipal e recortes independentes
+## Limites
 
-O IBGE foi acrescentado para identificar visualmente Nova Lima quando a mina é selecionada, sem exibir todas as cidades. A ANM foi acrescentada como fonte primária do cadastro minerário associado. São funções de localização e consulta cadastral, não novos critérios de aptidão. O engenheiro pode delimitar várias partes separadas (cava, morro, barragem), editar a referência cartográfica da mina ou desenhar do zero. Nenhuma escolha significa que toda a área do processo ou do município esteja disponível para uso futuro. [Município](LIMITE_MUNICIPAL.md), [ANM](ANM.md), [Áreas](AREA_ESTUDO.md).
+Rios/trechos, solos, vegetação, conservação, urbanização, vias e trilhas são representações heterogêneas, com idades/escalas próprias. Não comprovam ausência de risco, qualidade da água, contaminação, estabilidade, permissão de acesso ou aptidão. Topodata deriva de SRTM de 2000; não descreve a cava atual. Percentual matricial é de células válidas, não área medida. As fontes não substituem estudos, licenciamento, campo ou escuta das comunidades. O sistema não define beneficiários ou recomenda intervenções.
 
-A consulta de 26/10/2026 sobre visualização 3D Google está registrada em [Consulta 3D](CONSULTA_3D_GOOGLE.md). Não alterou os fundos, camadas ou fontes implementadas nem ativou faturamento Google.
-
-## Delimitação documental
-
-O contorno da referência vem da feição de mineração do OpenStreetMap escolhida pelo usuário. Os recortes do meio físico do projeto conjunto vêm da Figura 2.3 do parecer FEAM. Por isso o MVP apresenta desenho manual, referência local da área de mineração OSM e influência com filtros. Não usa o processo ANM como perímetro da mina nem um raio genérico como limite de recuperação. As influências são digitalizadas aproximadamente; o contorno OSM é colaborativo. Nenhum substitui plano de fechamento. A comparação calculada não está implementada. [Evidência, datas e preparo](REFERENCIAS_TERRITORIAIS.md).
-
-## Da visualização à caracterização preliminar
-
-A primeira automação territorial consulta duas bases de água, recorta pela AID águas/solos do parecer e organiza registros/fontes/datas. Isso demonstra integração de dados e automação previstas na vaga. O plano de fechamento Minas-Rio da Anglo distingue ADA e AID: a influência pode exigir investigação, sem representar toda a superfície a recuperar. A operação GIS é uma adaptação de engenharia do nosso MVP, não método prescrito pelas empresas. O recorte da FEAM é aproximado e do projeto conjunto de ampliação, não plano de fechamento de Horizontes. [Evidências com páginas, método e fala para apresentação](EXTRACAO_AGUA.md).
+[Dados automáticos e método](DADOS_TERRITORIAIS.md), [ferramentas e motivos](FERRAMENTAS.md).

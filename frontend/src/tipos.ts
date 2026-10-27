@@ -1,4 +1,4 @@
-import type {Feature, FeatureCollection, LineString, MultiLineString, MultiPolygon, Polygon} from 'geojson';
+import type {FeatureCollection, LineString, MultiLineString, MultiPolygon, Polygon} from 'geojson';
 
 export interface Mina {
   id: string;
@@ -53,7 +53,6 @@ export type LimiteMG = FeatureCollection<Polygon | MultiPolygon> & {
   aviso: string | null;
 };
 
-export type AreaManual = Feature<Polygon, {origem: string; finalidade: string; vertices: number}>;
 export interface LegendaTrilha {id: string; nome: string; cor: string; opacidade: number; largura: number}
 export type TrilhasGeoJSON = FeatureCollection<LineString | MultiLineString, {nome: string; id: number | null; cor: string; opacidade: number; largura: number}> & {fora_cobertura: boolean; legenda: LegendaTrilha[]};
 
@@ -61,28 +60,14 @@ export interface ProcessoANM {
   properties: {processo: string; numero: number; ano: number; titular: string; fase: string; area_ha: number; substancia: string; uf: string};
   fonte: {nome: string; url: string; consultado_em: string};
 }
-export interface PropriedadesReferencia {
-  id: string; nome: string; cor: string; tipo: 'referencia' | 'influencia';
-  origem: 'referencia_documental' | 'referencia_osm'; aproximada: true; finalidade: string; vertices: number;
-  pagina_pdf?: number; figura?: string; data_mapa?: string;
-  fonte?: {osm_id: number; osm_version: number; osm_timestamp: string; url: string; consultado_em: string};
-}
-export type AreaReferencia = Feature<Polygon, PropriedadesReferencia>;
-export type ReferenciasTerritoriais = FeatureCollection<Polygon | MultiPolygon, PropriedadesReferencia> & {
-  mina_id: string;
-  fonte: {titulo: string; url: string; aviso: string; preparado_em: string; metodo: string};
-};
-export type AreaConfirmada = AreaManual | AreaReferencia;
+export type InfluenciaTerritorial = FeatureCollection<Polygon | MultiPolygon, {
+  id: 'mina' | 'influencia'; nome: string; cor: string; origem: string;
+  aproximada: true; fonte?: {url: string};
+}> & {mina_id: string; fonte: {titulo: string; url: string; aviso: string; preparado_em: string; metodo: string}};
+
 export interface EstadoANM {dados: ProcessoANM | null; carregando: boolean; erro: string}
 
 export type LimiteMunicipal = FeatureCollection<Polygon | MultiPolygon, {codigo_ibge: string}> & {fonte: {nome: string; url: string; qualidade: string; ano_referencia: null; consultado_em: string}};
 
 
-export type AguaExtraida = FeatureCollection<LineString | MultiLineString | Polygon | MultiPolygon, {
-  id_fonte: string; base: 'trechos' | 'massas'; nome: string | null;
-  tipo_publicado: string | null; versao_base: string | null; revisao_base: string | null;
-}> & {
-  mina_id: string; consultado_em: string; resumo: {trechos: number; massas: number}; aviso: string;
-  recorte: {id: string; nome: string; fonte: string; data_mapa: string; pagina_pdf: number};
-  fontes: {id: string; nome: string; metadado: string; versoes_publicadas: string[]; revisoes_publicadas: string[]}[];
-};
+export interface TerritorioPreparado {completo: boolean}

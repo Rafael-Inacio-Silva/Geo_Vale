@@ -1,41 +1,50 @@
-# Validação da etapa territorial e extração de água
+# Validação do território e relatório JSON
 
-Revisão de 26/10/2026, versão **3.5.0**, em macOS, Python 3.12 e Node 24. Servidor em `127.0.0.1:8000`, sem implantação pública.
+Revisão de 26/10/2026, versão **4.0.0**, macOS, Python 3.12 e Node 24. Servidor local em `127.0.0.1:8000`, sem implantação pública.
 
-## Verificações automatizadas executadas
+## Verificações automatizadas
 
-- **92 testes Python aprovados**: mapa, desenho manual, trilhas, atributos ANM, município, referências locais e água. A suíte permanece sem importador de geometria ANM.
-- **2 testes Node aprovados**: pesquisa do catálogo único e ausência de resultados inventados.
-- **TypeScript e build Vite aprovados**.
+**84 testes Python aprovados**, incluindo catálogo de mapa, ANM sem geometria, município, trilhas, influência, atributos completos, rasters, persistência e exportação. **2 testes Node aprovados**; TypeScript e build Vite aprovados. Instalação Python com hashes conferida por dry-run do lock macOS e `pip check`; Linux não foi executado.
 
-Os 13 testes/casos novos de água cobrem interseção no polígono irregular (excluindo registros presentes apenas no bbox), contatos sem a dimensão esperada, linhas multipartes contadas uma vez, geometria cortada e IDs preservados, nome ausente sem preenchimento inventado, resultado vazio completo, truncamento/excesso, CRS inesperado, ID incompatível/duplicado, geometria nula/inválida, campo ausente, cache defensivo/expiração/falha/recuperação/invalidação pela evidência, parâmetros WFS fixos/timeout/bytes e API 404/503/recuperação. Desenhos e filtros não entram no contrato da extração.
+Os casos territoriais verificam recorte irregular em vez de bbox, partes contadas uma vez, todos os campos/nulos/IDs, rejeição de truncamento/CRS/invalidade, classes do estilo padrão, grade/células/NoData, persistência entre instâncias, nova base automática, invalidação por recorte, isolamento por mina, retenção explícita de último dado/falha, repetição somente da base pendente e início pelo lifespan sem clique. Exportação verifica onze bases independentemente de seletores, attachment, matriz nativa/`null`, fonte/evidência, impedimento de base ausente/erro/vencida/recorte alterado e ausência de consultas externas no download. Trilhas visuais preservam nomes/cores ao intersectar o polígono e excluem contato apenas pontual.
 
-Permanece um aviso de depreciação Starlette/TestClient sobre HTTPX, sem falha da suíte. Não houve mudança de dependências por esse aviso.
+Há avisos de depreciação Starlette/TestClient/HTTPX e Rasterio/Affine/NumPy, sem falhas. Não se alteraram outras dependências para silenciar esses avisos.
 
-## Fonte oficial e fluxo real
+## Dados reais e exportação
 
-As duas consultas WFS reais da IDE-Sisema retornaram HTTP 200 e GeoJSON EPSG:4326 com contagem completa. O envelope da AID águas/solos recebeu 72 trechos e 18 massas; a interseção com o polígono aproximado resultou em **42 trechos e 10 massas d’água**. Todos os registros recebidos nessa verificação tinham geometrias válidas. O extrator com os campos selecionados produziu os mesmos totais.
+As onze bases reais foram preparadas no contorno externo comum da AII de águas/solos e guardadas em SQLite local:
 
-Trechos encontrados publicam BHO 2017, versão de 22/06/2018, revisão GEIRH de 07/11/2022; massas encontradas publicam FBDS (2017) e `bho_massa_dagua_2019`. Não são datas atuais de levantamento nem medições de qualidade. Nomes originais e registros sem nome foram conservados.
+| Base | Resultado observado | Atributos por registro |
+|---|---:|---:|
+| Trechos hidrográficos | 68 registros | 13 |
+| Massas d’água | 16 registros | 58 |
+| Solos | 3 registros | 6 |
+| UCs estaduais | 3 registros | 13 |
+| UCs federais | 1 registro | 31 |
+| UCs municipais | 1 registro | 13 |
+| Áreas urbanizadas | 34 registros | 7 |
+| Rodovias | 4 registros | 21 |
+| Trilhas | 34 registros | 13 |
+| Declividade | 171.428 células válidas; 6 classes | Raster nativo |
+| Cobertura da terra | 182.154 células válidas; 10 classes | Raster nativo |
 
-Fluxo conferido: botão no navegador → API local → duas bases WFS → interseção Shapely → resumo/52 geometrias no navegador. A API foi acionada pela interface, sem resultado de demonstração ou arquivo de água pré-preenchido.
+O JSON real retornou HTTP 200, attachment `geovale-horizontes.json`, **3.543.992 bytes** nesta verificação, todas as bases e matrizes. Conferiu-se número de registros, correspondência exata dos campos com o esquema publicado, preservação de nulos, dimensões/quantidade de células e presença de evidências/datas. As geometrias foram comparadas com o contorno com tolerância numérica de 1e-10 grau para diferenças de ponto flutuante, sem alterar as geometrias exportadas. Não se interpreta essa tolerância como precisão do recorte.
 
-## Navegação e apresentação verificadas
+Os dois GeoTIFFs reais também retornaram HTTP 200, hashes iguais aos metadados, células válidas iguais às contagens e grade nativa conservada. Uma segunda instância do armazenamento recuperou as onze bases sem consulta externa; reinício do servidor conservou as datas de consulta. `.local/territorios.sqlite3` permanece ignorado pelo Git. Valores acima são observações documentadas desta coleta, sem constantes de demonstração no aplicativo.
 
-- Abertura sem mina selecionada mantém os modos documentais desabilitados. Selecionar Horizontes habilita Influência; a extração funciona sem desenhar ou usar a referência.
-- Clique mostrou Extraindo e depois **42 trechos hidrográficos / 10 massas d’água**, data da consulta, opção do mapa e fontes.
-- Registros e fontes abriu nomes, IDs, versões, figura/página do parecer e limitações; exemplo de nome ausente apareceu Sem nome publicado.
-- Checkbox do resultado reduziu os paths da pane de água de 52 para 0; religar restaurou os 52. O resumo permaneceu.
-- Referência ocultou o resultado cartográfico; voltar a Influência restaurou 52 paths e a mesma data sem nova extração.
-- Desmarcar o filtro visual Águas e solos · AID não mudou as contagens nem as 52 geometrias extraídas. O filtro foi restaurado após conferir.
-- Ocultar/reabrir a barra preservou a água recortada no mapa, consulta e resumo.
-- Desmarcar a mina retornou à visão estadual e removeu os paths, crédito de água e resumo. Os modos documentais ficaram desabilitados.
-- Desktop 1440 × 900 e celular 390 × 844 conferidos. Largura de conteúdo igual ao viewport, sem rolagem horizontal; o resumo de duas colunas permaneceu legível no celular.
+## Interface e fluxo conferidos
 
-## Alcance da verificação
+- Sem seleção: botão Influência visível e desabilitado. Selecionar pelo nome/cartão ou pela bolinha mostra automaticamente um contorno da mina, sem ativar Influência. Desmarcar remove-o e retorna a MG; desligar Influência preserva o contorno da mina selecionada.
+- Ativar Influência: contorno, mina sombreada, cinco grupos WMS e 34 geometrias visuais de trilhas; esquerda com somente Influência e Exportar JSON ao terminar carregamento.
+- Cinco máscaras de polígono ativas no navegador, com quatro imagens carregadas por grupo no enquadramento observado. Os estilos oficiais se mantêm e as imagens ficam limitadas ao contorno irregular.
+- Marcar Água remove sua versão mascarada e usa uma única versão ampliada: quatro máscaras permanecem para os outros grupos. Desmarcar restaura cinco máscaras e uma única versão de Água.
+- Zoom atualiza coordenadas das máscaras; elas reaparecem visíveis ao terminar animação. Ocultar/reabrir a barra conserva a influência e as cinco máscaras.
+- Clique em Exportar JSON acionou a rota de download sem erro na interface; conteúdo integral foi conferido por HTTP.
+- Legenda e escala mantiveram espaçamento acima dos créditos completos, inclusive com Satélite e todos os temas. Em janela 1200 × 850, foram medidos cerca de 45 pixels da legenda até os créditos e 12 pixels da escala até os créditos. Desligar Influência removeu os créditos dos temas retirados e manteve os créditos do contorno da mina.
+- Desktop 1440 × 900, janela 1200 × 850 e celular 390 × 844 inspecionados. No celular, largura de conteúdo igual a 390 pixels, sem rolagem horizontal; controles antes do mapa e consulta depois.
 
-Nesta revisão não foram repetidos os testes manuais completos de desenho/renomeação nem a conferência individual das dez imagens WMS e suas legendas. Seus contratos automatizados continuam aprovados. Falhas/truncamentos/recuperação da nova extração foram simulados nos testes; não se provocou indisponibilidade física do fornecedor no navegador.
+A representação WMS é mascarada no navegador; os valores do relatório vêm de WFS/WCS/ArcGIS persistidos, não de leitura das cores. Imagens atuais e dados guardados podem ter datas distintas. Créditos cartográficos permanecem na tela; fontes/datas/explicações detalhadas ficam no relatório e documentação.
 
-O resultado é caracterização preliminar na **AID águas/solos do projeto conjunto Tamanduá/Horizontes**, digitalizada aproximadamente da figura. Não há análise de polígonos pessoais, distância, área, qualidade da água, impacto, aptidão, ranking, beneficiários ou persistência. A interseção computacional não torna preciso o contorno de entrada nem transforma influência em intervenção ou limite de fechamento.
+## Alcance
 
-[Justificativa e fontes para apresentação](EXTRACAO_AGUA.md).
+A validação verifica integração e contratos computacionais. Não certifica atualidade do terreno, precisão de levantamento, adequação técnica das cinco escolhas ou limites de fechamento. Não foi feita validação por especialista da Vale. O contorno comum é aproximado, do estudo conjunto Tamanduá/Horizontes, e não define intervenção ou recuperação para todos os temas. Testes de falhas usam respostas controladas; não se provocou indisponibilidade física dos fornecedores. [Método](DADOS_TERRITORIAIS.md), [evidência](INFLUENCIA.md).

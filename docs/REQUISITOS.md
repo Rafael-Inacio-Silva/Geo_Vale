@@ -1,49 +1,31 @@
-# Requisitos — mapa, camadas e área de estudo
+# Requisitos do território preparado
 
 | ID | Comportamento e aceitação |
 |---|---|
-| RF-01 | Abrir com mapa já centralizado em Minas Gerais. |
-| RF-02 | Permitir navegação mundial sem limitar o arraste ao estado. |
-| RF-03 | Consultar o limite oficial estadual no WFS da IDE-Sisema e desenhar o contorno. |
-| RF-04 | Oferecer somente Mina Horizontes; reconhecer Capitão do Mato como nome anterior da mesma entrada. |
-| RF-05 | Cartão seleciona e enquadra município/referência; novo clique no mesmo cartão desmarca e retorna a MG. Marcador sempre seleciona/aproxima a mina em zoom 14, sem reenquadramento municipal posterior; aceita teclado. Detalhes dentro do cartão expansível. |
-| RF-06 | Alternar Mapa/Satélite com créditos visíveis. |
-| RF-07 | Zoom e “Ver Minas Gerais”; retornar ao estado desfaz a seleção da mina. |
-| RF-08 | Informar carregamento e falhas, com recuperação, sem inventar geometria. |
-| RF-09 | Preservar fundo e pesquisa se o contorno falhar; avisar quando reaproveitar cache vencido. |
-| RF-10 | Exibir seis controles independentes inicialmente desmarcados: cinco temas estaduais e Trilhas de Nova Lima, conforme catálogo fixo. |
-| RF-11 | Marcar adiciona a sobreposição real WMS ou GeoJSON municipal; desmarcar remove. Combinar temas com ordem fixa e sem perder a navegação. |
-| RF-12 | Expandir/recolher pela seta as opções de cada tema ativo, inicialmente fechadas; ajustar intensidade e consultar legendas sem desligar a camada ao recolher. Manter carregamento/falhas visíveis. |
-| RF-13 | Carregar WMS e trilhas somente ao ativar e na região/zoom visíveis. Falha de uma camada não interrompe as demais; permitir recarregar. |
-| RF-14 | Manter temas ativos ao mudar fundo, selecionar mina ou retornar ao estado. Fora da cobertura, informar o alcance específico: Minas Gerais ou Nova Lima. |
-| RF-15 | Remover o título visual acima do painel e ocupar o espaço disponível com margens pequenas e iguais; preservar responsividade e mapa utilizável. |
-| RF-16 | Desenhar um polígono simples com 3 a 500 vértices, desfazer o último ponto e fechar o contorno. |
-| RF-17 | Permitir ajustar vértices antes da confirmação e validar no backend; rejeitar interseções e coordenadas inválidas sem correção silenciosa. |
-| RF-18 | Enquadrar, ajustar, redesenhar e remover a área confirmada; cancelar restaura a última confirmação. |
-| RF-19 | Conservar a área ao navegar ou alternar fundo/camadas; recarregar a página descarta o desenho. Sem persistência. |
-| RF-20 | Consultar trilhas da fonte municipal fixa com recorte visível, crédito e nome por interação; falha recuperável sem interromper outras fontes. |
-| RF-21 | Associar cada trilha ao nome e cor publicados no item oficial; legenda com categorias do enquadramento, sem duplicatas e na ordem da fonte. Ao navegar, atualizar; ao falhar ou sair da cobertura, não conservar legenda de outra região. |
-| RF-22 | Revelar os detalhes pela seta do cartão, com teclado e estado expandido; consultar titular, fase, processo e área cadastrada na ANM, com recarga na falha. |
-| RF-23 | Modo Referência habilitado sob seleção e pacote local disponível; consulta do contorno OSM sem criar área. Usar como área adiciona explicitamente ou seleciona a referência intacta existente. |
-| RF-24 | Preservar origem cartográfica OSM ao usar a referência intacta; confirmar sua edição produz origem manual. |
-| RF-25 | Selecionar a mina acrescenta apenas o município associado, via IBGE; retornar para MG retira o limite e seu crédito. Requisição tardia não desfaz desenho ou navegação. |
-| RF-26 | Adicionar várias áreas independentes; escolher uma pela lista ou contorno e editar, redesenhar, enquadrar ou remover só ela. Cancelar conserva as confirmações e demais áreas. |
-| RF-27 | Validar cada polígono individualmente e descartar todas as áreas ao recarregar. Sem unir automaticamente áreas separadas ou sobrepostas. |
-| RF-28 | Renomear individualmente a área selecionada com 1–80 caracteres; atualizar lista/identificação/tooltip sem alterar geometria ou origem. Salvar/Enter e Cancelar/Escape; preservar nome ao editar/redesenhar e descartar com a área ou reload. |
-| RF-29 | Modo Influência apresenta os quatro recortes documentais da Figura 2.3 por filtros independentes, mantendo a referência OSM da mina sombreada, sem criar área de estudo ou capturar cliques de desenho. |
-| RF-30 | Referências em pacote local versionado com origem, hash, figura, página e método; nenhuma consulta externa para entregar os contornos. Retirar a influência ao desmarcar a mina e preservar áreas confirmadas. |
-| RF-31 | ANM solicita apenas atributos, sem geometria; falha cadastral não interrompe referência ou desenho. |
-| RF-32 | Alternar Manual/Referência/Influência com modo ativo destacado, sem cópias ou confirmação obrigatória. Preservar filtros, áreas, rascunho e nome em andamento; retomar desenho/ajuste com o enquadramento anterior. |
-| RF-33 | Em Manual, manter o último contexto como apoio e oferecer Ocultar; não permitir Usar como área sobre um rascunho pendente. |
-| RF-34 | No modo Influência, Extrair dados de água consulta as duas bases fixas por WFS e recorta pela AID águas/solos local. Não exige desenho prévio; filtros, mapa visível e áreas pessoais não alteram esse recorte. |
-| RF-35 | Mostrar contagens de registros por base, fonte, ID, nome quando publicado, versões e data de consulta; preservar todas as partes de cada registro recortado sem contá-lo novamente. Sem métricas em graus ou diagnóstico. |
-| RF-36 | Controlar somente a sobreposição azul recortada por checkbox; conservar resultado ao alternar modos/barras e limpar/cancelar ao desmarcar mina. Exibir carregamento, falha e nova tentativa. |
-| RF-37 | Conferir CRS, identidade, validade e completude WFS; limitar consultas e cache. Falha de uma das bases retorna 503 sem resumo parcial. Base vazia completa não prova ausência de água ou risco. |
+| RF-01 | Abrir em Minas Gerais com navegação mundial, contorno oficial e uma Mina Horizontes. |
+| RF-02 | Cartão seleciona/enquadra município; repetir desmarca e retorna a MG. Selecionar por cartão ou bolinha já mostra o contorno da mina; bolinha sempre aproxima em zoom 14, sem resposta municipal posterior desfazer. |
+| RF-03 | Cartão com detalhes sob seta, identificação e atributos ANM sem geometria, fonte/data e recuperação. |
+| RF-04 | Seleção mostra somente Nova Lima via IBGE; desfazer retira município/crédito. |
+| RF-05 | Um único controle Influência na esquerda, habilitado sob seleção e contorno disponível; mostra contorno externo, mina OSM sombreada e todas as camadas somente dentro dele. |
+| RF-06 | Influência utiliza exatamente o mesmo vetor do processamento; fonte, figura, data e aproximação conservadas no relatório/documentação. |
+| RF-07 | Preparar todas as bases do catálogo para cada mina automaticamente na abertura do servidor, sem ação de extração na interface. |
+| RF-08 | Guardar os resultados por mina/base em SQLite local; reiniciar não descarta dados válidos. |
+| RF-09 | Considerar todos os temas e bases independentemente de checkboxes, intensidade, fundo, zoom ou barras ocultas. |
+| RF-10 | Vetores conservam todos os atributos publicados, valores nulos e ID; geometrias são recortadas pela influência irregular, com contagem única por registro. |
+| RF-11 | Descobrir esquema WFS e consultar todos os campos; trilhas usam outFields=*. Conferir completude, identidade, CRS e validade; rejeitar truncamento/excesso sem apresentar resultado parcial da base como completo. |
+| RF-12 | Rasters via WCS mantêm grade nativa, resolução e todas as células selecionadas pelo centro, NoData separado, classes da legenda padrão oficial e GeoTIFF guardado. Sem leitura de cores WMS, amostra isolada ou reamostragem. |
+| RF-13 | Exportar JSON entrega todas as bases completas, atributos/geometrias vetoriais e matrizes nativas, fontes/datas/evidências. Tela sem painel de dados ou instruções; exportação incompleta/vencida é impedida. |
+| RF-14 | Atualizar automaticamente após 24 h enquanto servidor ligado; conferir pendências a cada minuto e repetir falhas após cinco minutos. |
+| RF-15 | Base nova integrada ao catálogo entra no processamento sem botão; mudança de recorte/evidência invalida resultados incompatíveis. |
+| RF-16 | Distinguir pendente/processando/pronto/erro e dados anteriores. Fonte indisponível não vira zero; resposta vazia completa é identificada como tal. |
+| RF-17 | Limites explícitos de bytes, registros, células e tempo; no máximo três bases em paralelo. Não baixar estado/mundo em lote. |
+| RF-18 | Seis checkboxes inicialmente desmarcados ampliam o tema além da influência, com intensidade/legenda/recarga. Desmarcar restaura o recorte; sem Influência controlam a exibição normal. |
+| RF-19 | Trilhas visuais preservam nomes/cores da Prefeitura e legenda do enquadramento; consulta de dados persistida é independente da visualização. |
+| RF-20 | Preservar identidade visual, margens pequenas iguais, mapa amplo, barras ocultáveis e responsividade/teclado. |
+| RF-21 | Desmarcar mina cancela leituras da página e remove influência/município; não apaga dados guardados por mina. |
 
-## Regras de interpretação
+## Interpretação e qualidade
 
-Os cinco temas são adaptação para MVP, apoiada em referências, sem validação de especialista da Vale. Não equivalem a cinco critérios obrigatórios ou diagnóstico completo. Marcador aproximado e contorno estadual simplificado são apenas localização/navegação. Cada área manual é um recorte de estudo escolhido pelo usuário. As influências são digitalizações aproximadas do projeto de ampliação e a referência da mina é colaborativa do OpenStreetMap, não perímetro atual certificado ou limite de fechamento. Fase cadastral não informa operação ativa/encerrada. O limite IBGE é contexto municipal simplificado, sem certificação cadastral. Trilhas são cadastro municipal; não comprovam segurança ou permissão de acesso. Mapa de solos não comprova condição ambiental; Topodata não representa a cava atual. Há validação geométrica do desenho e interseção/contagem de água somente na AID fixa. Não há avaliação dos polígonos pessoais, pesos, ranking, ML ou relatório nesta etapa. Justificativas e limites em [Escolhas territoriais](ESCOLHAS_TERRITORIAIS.md).
+O contorno externo AII águas/solos do projeto conjunto é **recorte comum de caracterização por simplificação do MVP**, não influência oficial de cada tema ou limite de recuperação. O sombreado OSM não certifica perímetro atual. Fase ANM não indica operação ativa. Topodata não retrata a cava atual; solos são pedologia; trilhas não comprovam acesso/segurança. Ausência de dados não comprova ausência de riscos. Não há aptidão, ranking, ML, beneficiários, recomendação de uso ou relatório de diagnóstico. A fundamentação sustenta os temas e a caracterização; não valida decisão técnica para a mina.
 
-## Qualidade
-
-Interface limpa em português, operável por teclado, com foco e rótulos; identidade verde/amarelo e textura apenas no fundo. Sem controles decorativos ou detalhes de integração na jornada. Créditos cartográficos visíveis. API e frontend na mesma origem, execução local. WMS direto no navegador usa HTTPS; WFS tem timeout e limite de tamanho. Não há download em lote. Ausência de dados visíveis não significa ausência de risco ou restrição.
+API/interface na mesma origem, servidor local, dados gerados fora do Git, fontes e créditos identificados. Não há integração ou faturamento Google ativado. Registre somente verificações executadas.

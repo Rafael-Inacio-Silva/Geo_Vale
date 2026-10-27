@@ -1,4 +1,4 @@
-"""Catálogo de temas estaduais e trilhas municipais para visualização integrada."""
+"""Catálogo único para visualização e caracterização automática de todas as bases."""
 
 from urllib.parse import urlencode
 
@@ -11,6 +11,7 @@ def base(nome, titulo, metadado):
     camada = f'IDE:{nome}'
     return {
         'camada': camada, 'nome': titulo, 'metadado': CATALOGO + metadado,
+        'processamento': 'wcs' if nome in ('ide_0201_mg_decliv_topodata', 'ide_1402_mg_uso_terra_mapbiomas_2025') else 'wfs',
         'legenda': SERVICO_WMS + '?' + urlencode({
             'service': 'WMS', 'version': '1.1.1', 'request': 'GetLegendGraphic',
             'layer': camada, 'format': 'image/png', 'legend_options': 'fontSize:11;forceLabels:on',
@@ -76,6 +77,7 @@ CAMADAS.append({
     'alcance': 'Nova Lima',
     'credito': 'Trilhas: <a href="https://pmnl.maps.arcgis.com/apps/webappviewer/index.html?id=ff761e397b904ad4b164eb8a71cb7d86">Prefeitura de Nova Lima</a>',
     'bases': [{
+        'processamento': 'arcgis',
         'camada': 'Trilhas/FeatureServer/0', 'nome': 'Trilhas cadastradas — Decreto 6773/2016',
         'metadado': 'https://pmnl.maps.arcgis.com/home/item.html?id=2504a27b4e684bfdbe0210fa7af1971d',
         'legenda': '',

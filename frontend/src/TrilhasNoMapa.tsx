@@ -4,6 +4,7 @@ import type {CamadaTerritorial, EstadoCamada, LegendaTrilha, TrilhasGeoJSON} fro
 
 interface Propriedades {
   mapa: L.Map | null;
+  urlRecorte?: string;
   tema: CamadaTerritorial;
   opacidade: number | undefined;
   recarga: number;
@@ -12,7 +13,7 @@ interface Propriedades {
 }
 
 /** Integra traçados municipais por GeoJSON, mantendo os demais temas independentes. */
-export default function TrilhasNoMapa({mapa, tema, opacidade, recarga, informarEstado, informarLegenda}: Propriedades) {
+export default function TrilhasNoMapa({mapa, tema, opacidade, recarga, informarEstado, informarLegenda, urlRecorte}: Propriedades) {
   const camada = useRef<L.GeoJSON | null>(null);
   const legendaAtual = useRef(informarLegenda);
   legendaAtual.current = informarLegenda;
@@ -46,11 +47,11 @@ export default function TrilhasNoMapa({mapa, tema, opacidade, recarga, informarE
       linhas.clearLayers();
       legendaAtual.current([]);
       const visivel = mapa.getBounds();
-      if (!L.latLngBounds(tema.cobertura).intersects(visivel)) {informar('fora'); return;}
+      if (!urlRecorte && !L.latLngBounds(tema.cobertura).intersects(visivel)) {informar('fora'); return;}
       informar('carregando');
       const bbox = [Math.max(-180, visivel.getWest()), Math.max(-85, visivel.getSouth()), Math.min(180, visivel.getEast()), Math.min(85, visivel.getNorth())].map(v => v.toFixed(6)).join(',');
       try {
-        const resposta = await fetch(`${tema.url}?${new URLSearchParams({bbox})}`, {signal: AbortSignal.any([controle.signal, AbortSignal.timeout(20000)])});
+        const resposta = await fetch(urlRecorte ?? `${tema.url}?${new URLSearchParams({bbox})}`, {signal: AbortSignal.any([controle.signal, AbortSignal.timeout(20000)])});
         if (!resposta.ok) throw new Error();
         const dados = await resposta.json() as TrilhasGeoJSON;
         if (controle.signal.aborted || encerrado) return;
@@ -66,7 +67,7 @@ export default function TrilhasNoMapa({mapa, tema, opacidade, recarga, informarE
       clearTimeout(agendado);
       agendado = setTimeout(() => {void carregar();}, 250);
     };
-    mapa.on('moveend', aoMover);
+    if (!urlRecorte) mapa.on('moveend', aoMover);
     void carregar();
     return () => {
       encerrado = true;
@@ -76,7 +77,7 @@ export default function TrilhasNoMapa({mapa, tema, opacidade, recarga, informarE
       linhas.remove();
       camada.current = null;
     };
-  }, [mapa, tema, ativa, recarga]);
+  }, [mapa, tema, ativa, recarga, urlRecorte]);
 
   useEffect(() => {
     camada.current?.setStyle(feicao => ({opacity: (opacidade ?? 1) * (feicao?.properties.opacidade ?? 1)}));

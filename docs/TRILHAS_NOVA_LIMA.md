@@ -1,6 +1,6 @@
 # Trilhas de Nova Lima — integração municipal
 
-Sexta opção de sobreposição, disponível na versão 3.5.0. Os cinco temas estaduais/dez bases da IDE-Sisema continuam disponíveis. Esta camada acrescenta uma **segunda infraestrutura pública**, com informação municipal específica para conhecer o entorno da Mina Horizontes.
+Sexta opção de sobreposição, disponível na versão 4.0.0. Os cinco temas estaduais/dez bases da IDE-Sisema continuam disponíveis. Esta camada acrescenta uma **segunda infraestrutura pública**, com informação municipal específica para conhecer o entorno da Mina Horizontes.
 
 ## Fonte verificada em 25/10/2026
 
@@ -14,7 +14,7 @@ Sexta opção de sobreposição, disponível na versão 3.5.0. Os cinco temas es
 - Contagem observada: **67 registros**. Última edição informada pelo serviço: **22/04/2024 às 16:34:49 UTC**. Não equivale à data de levantamento de cada caminho.
 - Extensão publicada aproximada: oeste −44,005238; sul −20,211133; leste −43,749501; norte −19,923718. Cobertura municipal em Nova Lima; não cobre MG inteiro ou o mundo.
 
-A API pública respondeu sem login ou chave. Isso comprova viabilidade técnica de consulta, não uso ilimitado. O item não apresentou informação explícita de licença; não se presume autorização irrestrita de redistribuição. O GeoVale identifica e credita a fonte, sem copiar sua aplicação ou manter arquivo integral do cadastro.
+A API pública respondeu sem login ou chave. Isso comprova viabilidade técnica de consulta, não uso ilimitado. O item não apresentou informação explícita de licença; não se presume autorização irrestrita de redistribuição. O GeoVale identifica e credita a fonte, sem copiar sua aplicação. O processamento territorial guarda apenas os registros/porções que intersectam a influência, com os atributos publicados.
 
 ## Consulta implementada
 
@@ -34,9 +34,9 @@ resultRecordCount=2000
 orderByFields=OBJECTID
 ```
 
-Nome, identificador, geometria e símbolo sanitizado (cor, opacidade e largura) são encaminhados à interface, junto com a legenda filtrada. O servidor confere tipo, validade, extensão e truncamento; erro não vira lista vazia. Há timeout, limite de tamanho e cache temporário em memória (dez minutos, até 16 enquadramentos). Navegar renova a bbox; fora da cobertura não consulta a fonte. Não há Selenium, download em lote, banco ou atualização periódica automática.
+Nome, identificador, geometria e símbolo sanitizado (cor, opacidade e largura) são encaminhados à interface, junto com a legenda filtrada. O servidor confere tipo, validade, extensão e truncamento; erro não vira lista vazia. Há timeout, limite de tamanho e cache temporário em memória (dez minutos, até 16 enquadramentos). Navegar renova a bbox; fora da cobertura não consulta a fonte. A consulta visual tem cache em memória. Separadamente, o processamento territorial guarda o recorte da influência em SQLite e o atualiza automaticamente.
 
-Os traçados e a legenda usam as cores e os nomes publicados na configuração do item oficial. Não se aplica o amarelo simples do FeatureServer a todas as trilhas. A largura base de 1,5 ponto publicada é convertida para 2 pixels CSS, sem halo extra. As variações de espessura por escala do aplicativo municipal não são reproduzidas; cores e rótulos são preservados. Passar o cursor ou tocar na linha mostra o nome. Intensidade, legenda, remoção, falha e recarga seguem os controles já existentes. A camada pode ser combinada com os cinco temas estaduais e com o polígono manual, sem recortar ou analisar os dados pelo desenho.
+Os traçados e a legenda usam as cores e os nomes publicados na configuração do item oficial. Não se aplica o amarelo simples do FeatureServer a todas as trilhas. A largura base de 1,5 ponto publicada é convertida para 2 pixels CSS, sem halo extra. As variações de espessura por escala do aplicativo municipal não são reproduzidas; cores e rótulos são preservados. Passar o cursor ou tocar na linha mostra o nome. Intensidade, legenda, remoção, falha e recarga seguem os controles já existentes. A camada visual pode ser combinada com os cinco temas estaduais; seu estado não altera os dados preparados da influência.
 
 ## Justificativa e limite
 
@@ -44,7 +44,7 @@ Caminhos cadastrados são contexto para observar conexões e levantar questões 
 
 No inventário WMS da IDE-Sisema consultado em 24/10/2026, não foram encontrados títulos contendo “trilh”. As dez bases integradas não incluem esse cadastro; isso não garante ausência em todo serviço estadual. A fonte municipal foi verificada diretamente.
 
-Traçado cadastrado **não comprova acesso público, segurança, conservação, autorização de entrada ou aptidão para turismo**, nem corresponde ao limite da mina. O rótulo do decreto é o informado pela fonte, sem análise jurídica do ato. A falta de feição na região visível não comprova inexistência de caminhos. A etapa oferece exploração visual, sem avaliação automática de uso futuro.
+Traçado cadastrado **não comprova acesso público, segurança, conservação, autorização de entrada ou aptidão para turismo**, nem corresponde ao limite da mina. O rótulo do decreto é o informado pela fonte, sem análise jurídica do ato. A falta de feição na região visível não comprova inexistência de caminhos. A etapa oferece exploração visual e caracterização cadastral, sem avaliação de uso futuro.
 
 ## Configuração oficial de cores e nomes
 
@@ -54,4 +54,8 @@ Essa configuração é distinta do renderer simples amarelo publicado no endpoin
 
 A associação usa `Name` sem distinguir caixa, pois a fonte contém, por exemplo, “Trecho Substituído 08-2018” na geometria e “Trecho substituído 08-2018” na categoria. O texto exibido na legenda conserva o rótulo oficial. Se uma categoria não tiver símbolo válido, a integração informa falha em vez de inventar cor.
 
-A legenda inclui apenas as categorias retornadas pela consulta de interseção com o enquadramento, sem duplicatas e na ordem publicada pela Prefeitura. Feições são devolvidas inteiras pelo serviço, não recortadas geometricamente; a legenda se refere à consulta, não à contagem de linhas SVG. Ao navegar, a lista anterior é limpa e atualizada com os novos dados. Intensidade modifica opacidade sem mudar a associação nome/cor. Lista com rolagem e foco permite leitura sem alongar toda a lateral.
+A legenda inclui apenas as categorias retornadas pela consulta de interseção com o enquadramento, sem duplicatas e na ordem publicada pela Prefeitura. Na versão ampliada por checkbox, feições são devolvidas inteiras pelo serviço e a legenda se refere à consulta. Com Influência ativa e checkbox desmarcado, a rota trilhas-influencia intersecta as linhas no polígono irregular e filtra a legenda pelas categorias presentes, preservando símbolos oficiais. A legenda não é contagem de linhas SVG. Ao navegar, a lista anterior é limpa e atualizada com os novos dados. Intensidade modifica opacidade sem mudar a associação nome/cor. Lista com rolagem e foco permite leitura sem alongar toda a lateral.
+
+## Dados associados à influência
+
+O pipeline territorial consulta o mesmo FeatureServer com contagem prévia, metadados de campos e `outFields=*`, conservando os 13 atributos publicados observados nesta revisão. Recorta as geometrias na influência comum; não usa bbox visível ou o checkbox da camada. Os registros completos ficam guardados por mina, com fonte/data, e entram na atualização automática de todas as bases. Essa consulta é independente do renderer e do cache leve de visualização. [Método](DADOS_TERRITORIAIS.md).
