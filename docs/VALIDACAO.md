@@ -1,50 +1,53 @@
-# Validação do território e relatório JSON
+# Validação do território e relatório PDF
 
-Revisão de 26/10/2026, versão **4.0.0**, macOS, Python 3.12 e Node 24. Servidor local em `127.0.0.1:8000`, sem implantação pública.
+Revisão de 27/10/2026, versão **4.1.0**, macOS, Python 3.12 e Node 24. Fluxo local em `127.0.0.1:8024`, sem implantação pública.
 
 ## Verificações automatizadas
 
-**84 testes Python aprovados**, incluindo catálogo de mapa, ANM sem geometria, município, trilhas, influência, atributos completos, rasters, persistência e exportação. **2 testes Node aprovados**; TypeScript e build Vite aprovados. Instalação Python com hashes conferida por dry-run do lock macOS e `pip check`; Linux não foi executado.
+**85 testes Python aprovados**, **2 testes Node aprovados**, TypeScript/build Vite aprovados e `pip check` sem dependências quebradas. Instalação do lock macOS com hashes executada. Lock Linux foi atualizado; execução Linux não foi conferida.
 
-Os casos territoriais verificam recorte irregular em vez de bbox, partes contadas uma vez, todos os campos/nulos/IDs, rejeição de truncamento/CRS/invalidade, classes do estilo padrão, grade/células/NoData, persistência entre instâncias, nova base automática, invalidação por recorte, isolamento por mina, retenção explícita de último dado/falha, repetição somente da base pendente e início pelo lifespan sem clique. Exportação verifica onze bases independentemente de seletores, attachment, matriz nativa/`null`, fonte/evidência, impedimento de base ausente/erro/vencida/recorte alterado e ausência de consultas externas no download. Trilhas visuais preservam nomes/cores ao intersectar o polígono e excluem contato apenas pontual.
+Os testes territoriais verificam catálogo completo, recorte irregular, atributos/nulos/IDs, CRS, completude, geometrias inválidas, classes oficiais, grade/células/NoData, persistência, base nova, invalidação por recorte, isolamento por mina, repetição após falha e início automático sem clique. Os testes do PDF verificam conteúdo das onze bases, marca/autoria GeoVale, rótulo fictício, referências, marcadores, cenário inválido/alterado, invalidação de cache, inline/attachment, ausência de consulta externa e preservação dos atributos e matrizes internas. Dados pendentes/vencidos ou de outro recorte impedem relatório apresentado como completo.
 
-Há avisos de depreciação Starlette/TestClient/HTTPX e Rasterio/Affine/NumPy, sem falhas. Não se alteraram outras dependências para silenciar esses avisos.
+Há avisos de depreciação Starlette/TestClient/HTTPX e Rasterio/Affine/NumPy, sem falhas. Nenhuma dependência foi alterada apenas para silenciar esses avisos.
 
-## Dados reais e exportação
+## Dados reais conferidos
 
-As onze bases reais foram preparadas no contorno externo comum da AII de águas/solos e guardadas em SQLite local:
+O documento utiliza as onze bases reais persistidas no recorte comum:
 
-| Base | Resultado observado | Atributos por registro |
-|---|---:|---:|
-| Trechos hidrográficos | 68 registros | 13 |
-| Massas d’água | 16 registros | 58 |
-| Solos | 3 registros | 6 |
-| UCs estaduais | 3 registros | 13 |
-| UCs federais | 1 registro | 31 |
-| UCs municipais | 1 registro | 13 |
-| Áreas urbanizadas | 34 registros | 7 |
-| Rodovias | 4 registros | 21 |
-| Trilhas | 34 registros | 13 |
-| Declividade | 171.428 células válidas; 6 classes | Raster nativo |
-| Cobertura da terra | 182.154 células válidas; 10 classes | Raster nativo |
+| Base | Quantidade observada |
+|---|---:|
+| Trechos hidrográficos | 68 registros |
+| Massas d’água | 16 registros |
+| Solos | 3 registros |
+| UCs estaduais | 3 registros |
+| UCs federais | 1 registro |
+| UCs municipais | 1 registro |
+| Áreas urbanizadas | 34 registros |
+| Rodovias | 4 registros |
+| Trilhas | 34 registros |
+| Declividade | 171.428 células válidas; 6 classes |
+| Cobertura da terra | 182.154 células válidas; 10 classes |
 
-O JSON real retornou HTTP 200, attachment `geovale-horizontes.json`, **3.543.992 bytes** nesta verificação, todas as bases e matrizes. Conferiu-se número de registros, correspondência exata dos campos com o esquema publicado, preservação de nulos, dimensões/quantidade de células e presença de evidências/datas. As geometrias foram comparadas com o contorno com tolerância numérica de 1e-10 grau para diferenças de ponto flutuante, sem alterar as geometrias exportadas. Não se interpreta essa tolerância como precisão do recorte.
+Os 164 registros vetoriais têm identificador curto conferido no texto do inventário. Foram conferidos os nomes das onze bases e a manutenção dos campos originais e GeoTIFFs no armazenamento. As contagens reais não são constantes de demonstração no aplicativo. A assinatura de coleta continua 4.0.0, sem invalidar os dados por uma mudança apenas de apresentação.
 
-Os dois GeoTIFFs reais também retornaram HTTP 200, hashes iguais aos metadados, células válidas iguais às contagens e grade nativa conservada. Uma segunda instância do armazenamento recuperou as onze bases sem consulta externa; reinício do servidor conservou as datas de consulta. `.local/territorios.sqlite3` permanece ignorado pelo Git. Valores acima são observações documentadas desta coleta, sem constantes de demonstração no aplicativo.
+## PDF real e diagramação
 
-## Interface e fluxo conferidos
+A rota final retornou **HTTP 200, application/pdf**, inline na consulta e attachment com baixar=true. O documento conferido tem **18 páginas**, **nove marcadores de seção** e **187.905 bytes** nesta emissão. Metadados de autoria: GeoVale. Cenário técnico fictício separado de observações geográficas; sem marca corporativa, assinatura de especialista, laudo ou conclusão real de segurança.
 
-- Sem seleção: botão Influência visível e desabilitado. Selecionar pelo nome/cartão ou pela bolinha mostra automaticamente um contorno da mina, sem ativar Influência. Desmarcar remove-o e retorna a MG; desligar Influência preserva o contorno da mina selecionada.
-- Ativar Influência: contorno, mina sombreada, cinco grupos WMS e 34 geometrias visuais de trilhas; esquerda com somente Influência e Exportar JSON ao terminar carregamento.
-- Cinco máscaras de polígono ativas no navegador, com quatro imagens carregadas por grupo no enquadramento observado. Os estilos oficiais se mantêm e as imagens ficam limitadas ao contorno irregular.
-- Marcar Água remove sua versão mascarada e usa uma única versão ampliada: quatro máscaras permanecem para os outros grupos. Desmarcar restaura cinco máscaras e uma única versão de Água.
-- Zoom atualiza coordenadas das máscaras; elas reaparecem visíveis ao terminar animação. Ocultar/reabrir a barra conserva a influência e as cinco máscaras.
-- Clique em Exportar JSON acionou a rota de download sem erro na interface; conteúdo integral foi conferido por HTTP.
-- Legenda e escala mantiveram espaçamento acima dos créditos completos, inclusive com Satélite e todos os temas. Em janela 1200 × 850, foram medidos cerca de 45 pixels da legenda até os créditos e 12 pixels da escala até os créditos. Desligar Influência removeu os créditos dos temas retirados e manteve os créditos do contorno da mina.
-- Desktop 1440 × 900, janela 1200 × 850 e celular 390 × 844 inspecionados. No celular, largura de conteúdo igual a 390 pixels, sem rolagem horizontal; controles antes do mapa e consulta depois.
+Todas as páginas foram renderizadas para inspeção visual. Conferidos capa/logo, mapas vetoriais, tabelas/classes, conservação, cenário, fontes e inventário. Fontes Unicode incorporadas, cabeçalhos repetidos nas tabelas e número de página. As matrizes não são despejadas em texto; aparecem como classes/contagens. Identificadores e nomes dos vetores estão no anexo, com ausência de nome preservada.
 
-A representação WMS é mascarada no navegador; os valores do relatório vêm de WFS/WCS/ArcGIS persistidos, não de leitura das cores. Imagens atuais e dados guardados podem ter datas distintas. Créditos cartográficos permanecem na tela; fontes/datas/explicações detalhadas ficam no relatório e documentação.
+O download realizado por **Baixar PDF** no navegador foi comparado byte a byte com o PDF da API e coincidiu. A cópia conferida é gerada do estado atual e não substitui a geração dinâmica por um arquivo fixo no repositório. SQLite e arquivos gerados não são publicados em lote no Git.
+
+## Fluxo no navegador
+
+- Antes da seleção: Influência desabilitada e Ver relatório ausente. Selecionar a mina mostra o contorno e Ver relatório, sem exigir Influência.
+- Ver relatório abre diálogo; PDF.js/worker carregam sob demanda. Capa e página de contagens reais renderizadas, com texto também disponível para leitor de tela.
+- Anterior/Próxima atualizam a página; download salva o documento visualizado. Fechar preserva seleção e retorna o foco ao botão.
+- Falha de conexão provocada desligando somente o servidor de verificação apresentou Tentar novamente. Reinício e nova tentativa recuperaram o relatório de 18 páginas sem perder a seleção.
+- Em celular 390 x 844, largura do documento HTML igual a 390, diálogo com 374 pixels e canvas com 340 pixels; sem rolagem horizontal. Os controles permaneceram disponíveis.
+
+A representação temática do mapa continua independente do documento. Os controles visuais não escolhem dados do relatório; o armazenamento real é separado do cenário local fictício. As verificações do novo fluxo não certificam condições ambientais, estabilidade ou precisão do contorno.
 
 ## Alcance
 
-A validação verifica integração e contratos computacionais. Não certifica atualidade do terreno, precisão de levantamento, adequação técnica das cinco escolhas ou limites de fechamento. Não foi feita validação por especialista da Vale. O contorno comum é aproximado, do estudo conjunto Tamanduá/Horizontes, e não define intervenção ou recuperação para todos os temas. Testes de falhas usam respostas controladas; não se provocou indisponibilidade física dos fornecedores. [Método](DADOS_TERRITORIAIS.md), [evidência](INFLUENCIA.md).
+O documento é caracterização territorial com cenário técnico simulado. Não é plano de fechamento da Horizontes, laudo, avaliação de aptidão ou ranking. Não houve validação por especialista da mina. O recorte comum permanece uma aproximação do estudo conjunto Tamanduá/Horizontes e os dados conservam suas idades/escalas próprias. [Relatório e cenário](RELATORIO.md), [dados](DADOS_TERRITORIAIS.md), [recorte](INFLUENCIA.md).

@@ -1,6 +1,8 @@
 """Verifica dados completos, recorte comum, persistência e atualização independente dos seletores."""
 import copy
 import json
+from io import BytesIO
+from pypdf import PdfReader
 from pathlib import Path
 
 import numpy as np
@@ -22,7 +24,9 @@ from geovale.territorio import DadosTerritoriais, catalogar_bases
 def preparar_raiz(tmp_path):
     pasta = tmp_path / 'dados/influencias'
     pasta.mkdir(parents=True)
-    (tmp_path / 'dados/minas.json').write_text('[{"id":"horizontes"}]')
+    (tmp_path / 'dados/minas.json').write_text('[{"id":"horizontes","nome":"Mina Horizontes","municipio":"Nova Lima","uf":"MG","empresa":"VALE S.A."}]')
+    cenarios = tmp_path / 'dados/cenarios'; cenarios.mkdir()
+    (cenarios / 'horizontes.json').write_bytes((RAIZ / 'dados/cenarios/horizontes.json').read_bytes())
     original = RAIZ / 'dados/influencias/horizontes.geojson'
     (pasta / 'horizontes.geojson').write_bytes(original.read_bytes())
     return tmp_path
@@ -276,7 +280,7 @@ def test_lifespan_prepara_dados_sem_clique_e_encerra_agendamento(tmp_path):
     assert not fonte._thread.is_alive()
 
 
-def test_relatorio_completo_preserva_campos_matriz_nativa_nulos_e_procedencia(tmp_path):
+def test_relatorio_pdf_usa_catalogo_inteiro_sem_rede_e_preserva_dados_internos(tmp_path):
     raiz = preparar_raiz(tmp_path)
     def coletar(base, recorte):
         if base['processamento'] != 'wcs':
@@ -290,21 +294,32 @@ def test_relatorio_completo_preserva_campos_matriz_nativa_nulos_e_procedencia(tm
     fonte.coletar = lambda *args: pytest.fail('Exportar não pode consultar fontes')
     resposta = cliente.get('/api/minas/horizontes/relatorio?ativas=agua')
     assert resposta.status_code == 200
-    assert resposta.headers['content-disposition'] == 'attachment; filename="geovale-horizontes.json"'
+    assert resposta.headers['content-disposition'] == 'inline; filename="geovale-horizontes.pdf"'
+    assert resposta.headers['content-type'] == 'application/pdf'
     assert resposta.headers['cache-control'] == 'no-store'
-    relatorio = resposta.json()
+    assert resposta.content.startswith(b'%PDF')
+    pdf = PdfReader(BytesIO(resposta.content))
+    assert pdf.metadata.author == 'GeoVale' and len(pdf.outline) == 9
+    texto = '\n'.join(p.extract_text() for p in pdf.pages)
+    assert 'VALE S.A.' not in texto
+    assert 'Cenário técnico simulado' in texto and 'Premissas fictícias' in texto
+    assert 'Fonte' in texto and 'Minas-Rio' in texto and '15' in texto
+    relatorio = fonte.relatorio('horizontes')
     assert relatorio['completo'] and len(relatorio['bases']) == 11
-    assert relatorio['mina']['id'] == 'horizontes' and relatorio['influencia']['fonte']['sha256_pdf']
     for base in relatorio['bases']:
         assert base['consultado_em'] and base['recorte']['assinatura']
+        assert base['base']['nome'].replace('—', '-') in texto
         if base['tipo'] == 'vetor':
             assert base['dados']['features'][0]['properties'] == {'extra': 'conservado', 'vazio': None}
         else:
+            assert 'valores' not in base
             assert base['crs'] == 'EPSG:4674' and base['dimensoes'] == [8, 8]
-            assert len(base['valores']) == 8 and all(len(linha) == 8 for linha in base['valores'])
-            assert base['valores'][0][0] is None and base['valores'][3][3] is None
-            assert base['valores'][4][4] == 2
-            assert sum(v is not None for linha in base['valores'] for v in linha) == base['quantidade'] == 15
+            with MemoryFile(fonte.arquivo('horizontes', base['base']['id'])) as m, m.open() as raster:
+                valores = raster.read(1, masked=True)
+                assert valores.count() == base['quantidade'] == 15 and valores[4, 4] == 2
+    baixar = cliente.get('/api/minas/horizontes/relatorio?baixar=true')
+    assert baixar.content == resposta.content
+    assert baixar.headers['content-disposition'] == 'attachment; filename="geovale-horizontes.pdf"'
     assert cliente.get('/api/minas/outra/relatorio').status_code == 404
     with fonte.conectar() as db:
         db.execute("UPDATE bases SET estado='erro' WHERE camada=?", (CAMADAS[0]['bases'][0]['camada'],))
@@ -353,3 +368,24 @@ def test_api_trilhas_da_influencia_nao_inclui_linhas_fora_do_poligono(tmp_path):
     assert resposta.json()['features']
     assert all(roi.covers(shape(f['geometry'])) for f in resposta.json()['features'])
     assert cliente.get('/api/minas/outra/trilhas-influencia').status_code == 404
+
+
+def test_pdf_invalida_cache_se_cenario_muda_e_recusa_cenario_sem_rotulo_simulado(tmp_path):
+    from geovale.relatorio import RelatoriosPDF
+    raiz = preparar_raiz(tmp_path)
+    fonte = DadosTerritoriais(raiz, coletar=coleta_simulada)
+    fonte.atualizar()
+    relatorios = RelatoriosPDF(fonte, raiz)
+    primeiro = relatorios.obter('horizontes')
+    assert relatorios.obter('horizontes') is primeiro
+    p = raiz / 'dados/cenarios/horizontes.json'
+    c = json.loads(p.read_text())
+    c['premissas'][0]['situacao'] = 'Revisão fictícia demonstrativa'
+    p.write_text(json.dumps(c))
+    segundo = relatorios.obter('horizontes')
+    assert primeiro != segundo
+    assert 'Revisão fictícia demonstrativa' in ' '.join(' '.join(pg.extract_text() for pg in PdfReader(BytesIO(segundo)).pages).split())
+    c['natureza'] = 'real'; p.write_text(json.dumps(c))
+    with pytest.raises(ValueError): relatorios.obter('horizontes')
+    cliente = TestClient(criar_app(raiz=raiz, territorios=fonte))
+    assert cliente.get('/api/minas/horizontes/relatorio').status_code == 503

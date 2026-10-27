@@ -1,7 +1,8 @@
 # Documentação atual
 
+- [Relatório e cenário](RELATORIO.md): documento padronizado, dados reais e premissas fictícias.
 - [Status](STATUS.md): o que funciona no MVP.
-- [Manual de uso](MANUAL_USO.md): selecionar mina, influência, expansão visual e exportação JSON.
+- [Manual de uso](MANUAL_USO.md): selecionar mina, influência, expansão visual e relatório PDF.
 - [Influência](INFLUENCIA.md): único recorte comum, mina sombreada, evidência e precisão.
 - [Dados territoriais](DADOS_TERRITORIAIS.md): catálogo completo, atributos/células, SQLite e atualização automática.
 - [Escolhas territoriais](ESCOLHAS_TERRITORIAIS.md): justificativas e fala para apresentação.

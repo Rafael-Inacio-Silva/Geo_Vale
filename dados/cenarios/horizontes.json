@@ -1,0 +1,61 @@
+{
+  "mina_id": "horizontes",
+  "versao": "1.0",
+  "natureza": "simulado",
+  "titulo": "Cenário técnico simulado",
+  "horizonte": "Pós-fechamento hipotético",
+  "descricao": "Premissas fictícias para demonstração do GeoVale. Não correspondem a vistorias, laudos ou intervenções realizados na mina.",
+  "referencia": {
+    "titulo": "Plano de Fechamento de Mina - Complexo Minerário Sistema Minas-Rio",
+    "instituicao": "Anglo American",
+    "revisao": "junho de 2021",
+    "url": "https://brasil.angloamerican.com/~/media/Files/A/Anglo-American-Group-v5/Brazil/sustentabilidade/plano-de-fechamento-de-mina-do-minas-rio.pdf",
+    "secoes": "8.2.1.3 a 8.2.1.5; 11.11.3; 11.11.7.6",
+    "paginas_pdf": "40-44; 68-69; 84",
+    "paginas_impressas": "34-38; 62-63; 78"
+  },
+  "premissas": [
+    {
+      "id": "estabilidade",
+      "tema": "Estabilidade física",
+      "situacao": "Atendida para iniciar revegetação",
+      "condicao": "Consideram-se concluídas as obras de estabilização. A vistoria fictícia admite o início da revegetação nas superfícies preparadas. Essa premissa não abrange liberação para visitação.",
+      "base": "Seção 11.11.3, p. 62-63"
+    },
+    {
+      "id": "drenagem",
+      "tema": "Drenagem",
+      "situacao": "Implantada e em funcionamento",
+      "condicao": "Os drenos são considerados implantados e operacionais na vistoria fictícia, com manutenção prevista. A condição não representa medição de qualidade da água.",
+      "base": "Seção 11.11.3, p. 62-63"
+    },
+    {
+      "id": "solo",
+      "tema": "Preparo do solo",
+      "situacao": "Adequações pendentes",
+      "condicao": "Admite-se compactação em parte das superfícies de intervenção, exigindo preparo e avaliação do solo antes do plantio. A extensão não foi medida nem atribuída ao mapa pedológico.",
+      "base": "Seções 11.10 e 11.11.3, p. 60 e 62-63"
+    },
+    {
+      "id": "revegetacao",
+      "tema": "Revegetação",
+      "situacao": "Prevista",
+      "condicao": "Prevê-se plantio de espécies nativas e acompanhamento do estabelecimento da vegetação. São ações futuras do cenário, sem comprovação de execução.",
+      "base": "Seções 11.10 e 11.11.7.6, p. 60 e 78"
+    },
+    {
+      "id": "estrutura",
+      "tema": "Estruturas existentes",
+      "situacao": "Uma edificação candidata",
+      "condicao": "Admite-se uma edificação potencialmente reaproveitável. Sua existência, localização e condição são fictícias; a avaliação específica permanece pendente.",
+      "base": "Seção 8.2.1.4, p. 35-37"
+    },
+    {
+      "id": "uso_publico",
+      "tema": "Uso público e participação",
+      "situacao": "Avaliações pendentes",
+      "condicao": "Segurança para visitantes, acesso autorizado e interesse da comunidade não foram caracterizados. O cadastro de trilhas não supre essas avaliações.",
+      "base": "Seções 8.2.1.3 a 8.2.1.5, p. 34-38"
+    }
+  ]
+}

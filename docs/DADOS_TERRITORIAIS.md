@@ -1,6 +1,6 @@
 # Dados do território — preparação automática
 
-Versão 4.0.0. O sistema associa os dados de **todas as bases do catálogo** a cada mina e ao seu único recorte de influência. O engenheiro consulta o resultado preparado. Seletores visuais, intensidade, fundo e enquadramento não são parâmetros de processamento.
+Versão 4.1.0. O sistema associa os dados de **todas as bases do catálogo** a cada mina e ao seu único recorte de influência. O engenheiro consulta o resultado preparado. Seletores visuais, intensidade, fundo e enquadramento não são parâmetros de processamento.
 
 ## Catálogo único e abrangência
 
@@ -26,7 +26,7 @@ Declividade Topodata e cobertura MapBiomas 2025 são obtidas por **WCS 2.0.1**, 
 
 Rasterio transforma o contorno para o CRS da grade e seleciona todas as células cujo **centro** está no polígono (`all_touched=false`). Guarda os valores na posição original, mascarando fora do recorte/NoData. Conserva grade, transformação, resolução, tags, metadados e GeoTIFF; não interpola valores. O histórico de idade dos dados permanece sendo o das fontes.
 
-Os códigos, nomes e cores vêm do **estilo padrão oficial** via GetStyles. Outra classificação alternativa no mesmo SLD não é misturada. Classe sem legenda oficial gera falha. O relatório conserva quantidades por classe e percentual de **células válidas**, nunca percentual de área ou medição cadastral. Células sem dados são informadas separadamente. Todos os valores ficam no GeoTIFF guardado e na matriz JSON exportada; o resumo não substitui a matriz.
+Os códigos, nomes e cores vêm do **estilo padrão oficial** via GetStyles. Outra classificação alternativa no mesmo SLD não é misturada. Classe sem legenda oficial gera falha. O relatório conserva quantidades por classe e percentual de **células válidas**, nunca percentual de área ou medição cadastral. Células sem dados são informadas separadamente. Todos os valores ficam no GeoTIFF guardado. O PDF resume as classes e mantém o inventário dos vetores; não reproduz matrizes ou listas de coordenadas em texto. O armazenamento interno conserva os dados completos.
 
 ## Persistência e atualização
 
@@ -46,13 +46,13 @@ As imagens WMS oficiais mantêm estilo/ordem e são mascaradas no navegador por 
 
 A representação visual consulta os serviços atuais; o relatório é uma fotografia dos dados persistidos na data indicada por base. Não se promete igualdade temporal entre uma imagem WMS atual e uma coleta anterior. Erros visuais não apagam o banco nem viram ausência de registros.
 
-**Exportar JSON**, `GET /api/minas/{id}/relatorio`, lê somente SQLite. Entrega um arquivo com identificação da mina, geometria/evidência da influência e todas as bases do catálogo: vetores com todos os atributos e geometrias recortadas; rasters com matriz completa `[linha][coluna]`, transformação, CRS, resolução, dimensões, códigos/classes e metadados. A matriz conserva posição/valor nativo e usa `null` fora do recorte ou NoData. Fontes, datas de coleta, hashes e limitações acompanham o arquivo. Não é relatório de aptidão ou plano de fechamento como o da Anglo: é exportação estruturada para análise externa.
+**Ver relatório**, disponível ao selecionar a mina, lê `GET /api/minas/{id}/relatorio`. A API gera PDF a partir dos dados persistidos e do cenário local de `dados/cenarios/horizontes.json`. Todas as bases entram no documento, independentemente de Influência ou seletores. O PDF apresenta mapa vetorial, contagens, classes, inventário de todos os registros e descritores selecionados; fontes e datas ficam no fim. Atributos/GeoTIFF completos continuam internos. A API de registros por base permanece sendo um contrato técnico, sem exportação JSON na interface.
 
-A exportação exige todas as bases completas e atuais para a assinatura vigente. Preparação, erro, vencimento ou mudança de recorte impedem baixar um pacote apresentado como completo (503). Há limite de 64 MiB por JSON, com 413 explícito em excesso, sem truncamento. GeoTIFFs individuais permanecem disponíveis pela API. Na tela há apenas botão, exportação e estados necessários, sem lista de bases/atributos, fontes extensas ou instruções de procedimento. A interface acompanha preparo automaticamente e cancela suas leituras ao desmarcar a mina; o banco permanece associado a ela.
+A geração exige bases completas e atuais na assinatura vigente. Preparação, erro, vencimento ou mudança de recorte impedem apresentar um relatório como completo (503). O cenário precisa estar explicitamente identificado como simulado e vinculado à mina. ReportLab gera o PDF e a marca em vetor; PDF.js renderiza o mesmo arquivo no navegador, por página. Download usa os mesmos bytes visualizados. [Formato, cenário e limites](RELATORIO.md).
 
 ## Justificativa e limites para apresentação
 
-> “Cada mina tem um território e um conjunto de dados preparados automaticamente. O botão Influência mostra todas as camadas dentro do território; marcar um tema permite ver sua continuidade fora dele. O sistema guarda todas as bases integradas e exporta o conjunto completo em JSON. Consultamos os serviços oficiais, preservamos atributos e valores, recortamos pela mesma influência e guardamos fonte, data e estado. Isso demonstra integração de dados e automação para caracterização territorial preliminar, antes de avaliar alternativas de uso futuro.”
+> “Cada mina tem um território e um conjunto de dados preparados automaticamente. O botão Influência mostra todas as camadas dentro do território; marcar um tema permite ver sua continuidade fora dele. O sistema guarda todas as bases integradas e apresenta as informações em um PDF padronizado, complementado por um cenário técnico simulado identificado. Consultamos os serviços oficiais, preservamos atributos e valores, recortamos pela mesma influência e guardamos fonte, data e estado. Isso demonstra integração de dados e automação para caracterização territorial preliminar, antes de avaliar alternativas de uso futuro.”
 
 O [plano de fechamento Minas-Rio da Anglo American](https://brasil.angloamerican.com/~/media/Files/A/Anglo-American-Group-v5/Brazil/sustentabilidade/plano-de-fechamento-de-mina-do-minas-rio.pdf), revisão de junho/2021, **11.7–11.8, PDF p. 64 / impressa 58**, distingue ações na ADA e consideração da AID quando há interferência a reabilitar, e identifica público interno/população da AID física. Fundamenta separar investigação e intervenção. Não prescreve nosso pipeline ou recorte comum; ambos são adaptações explícitas do MVP. Seus limites não foram transferidos para Horizontes.
 

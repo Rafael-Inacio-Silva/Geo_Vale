@@ -1,6 +1,6 @@
 # Contorno municipal sob seleção
 
-Implementado em 26/10/2026, versão 4.0.0. O mapa abre com o contorno de Minas Gerais, sem carregar uma malha de todos os municípios. Selecionar a Mina Horizontes pela lista, seta de detalhes ou marcador acrescenta **somente Nova Lima**. Ver Minas Gerais remove esse limite e a seleção, preservando os dados guardados por mina e temas ativos.
+Implementado em 26/10/2026, versão 4.1.0. O mapa abre com o contorno de Minas Gerais, sem carregar uma malha de todos os municípios. Selecionar a Mina Horizontes pela lista, seta de detalhes ou marcador acrescenta **somente Nova Lima**. Ver Minas Gerais remove esse limite e a seleção, preservando os dados guardados por mina e temas ativos.
 
 ## Fonte oficial
 

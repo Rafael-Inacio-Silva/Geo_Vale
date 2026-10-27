@@ -204,11 +204,30 @@ button:focus-visible, input:focus-visible, a:focus-visible, [tabindex="-1"]:focu
 
 
 .influencia-territorio {min-inline-size: 0;}
-.abrir-influencia, .exportar-territorio {width: 100%; display: flex; justify-content: space-between; align-items: center; gap: .5rem; min-height: 2.8rem; padding: .7rem; border: 1px solid #aac4b5; border-radius: .35rem; background: #fff; color: var(--escuro); font: inherit; font-size: .85rem; font-weight: 650;}
+.abrir-influencia, .relatorio-territorio {width: 100%; display: flex; justify-content: space-between; align-items: center; gap: .5rem; min-height: 2.8rem; padding: .7rem; border: 1px solid #aac4b5; border-radius: .35rem; background: #fff; color: var(--escuro); font: inherit; font-size: .85rem; font-weight: 650;}
 .abrir-influencia[aria-pressed="true"] {background: var(--verde); color: #fff; border-color: var(--verde);}
-.abrir-influencia:disabled, .exportar-territorio:disabled {opacity: .5; cursor: default;}
-.abrir-influencia svg, .exportar-territorio svg {width: 1.15rem; height: 1.15rem; fill: none; stroke: currentColor; stroke-width: 1.8; flex-shrink: 0;}
-.exportar-territorio {justify-content: center; margin-top: .75rem; font-size: .75rem; background: transparent;}
+.abrir-influencia:disabled, .relatorio-territorio:disabled {opacity: .5; cursor: default;}
+.abrir-influencia svg, .relatorio-territorio svg {width: 1.15rem; height: 1.15rem; fill: none; stroke: currentColor; stroke-width: 1.8; flex-shrink: 0;}
+.relatorio-territorio {justify-content: center; margin-top: .75rem; font-size: .75rem; background: transparent;}
 .nota-territorio, .erro-territorio {font-size: .72rem; line-height: 1.5; overflow-wrap: anywhere;}
 .nota-territorio {color: #4f6b61;}
 .erro-territorio {color: #7b3d22;}
+
+.dialogo-relatorio {width: min(75rem, calc(100vw - 2rem)); height: calc(100dvh - 2rem); max-height: none; max-width: none; padding: 0; border: 1px solid #9eb5a9; border-radius: .65rem; background: var(--papel); color: var(--escuro); box-shadow: 0 15px 60px #002f2b55;}
+.dialogo-relatorio[open] {display: flex; flex-direction: column;}
+.dialogo-relatorio::backdrop {background: #002f2bb3;}
+.cabecalho-relatorio {display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: .75rem; padding: .8rem 1rem; border-top: 4px solid var(--amarelo); border-bottom: 1px solid #c1d0c6;}
+.cabecalho-relatorio h2 {margin: 0; font-size: 1rem;}
+.acoes-relatorio {display: flex; align-items: center; gap: .6rem;}
+.acoes-relatorio a, .acoes-relatorio button {font: inherit; font-size: .8rem; font-weight: 650; padding: .55rem .75rem; border: 1px solid #aac4b5; border-radius: .35rem; color: var(--escuro); background: #fff; text-decoration: none;}
+.acoes-relatorio a {background: var(--verde); color: #fff; border-color: var(--verde);}
+.estado-relatorio {flex: 1; display: grid; place-items: center; padding: 1rem; text-align: center;}
+@media (max-width: 48rem) {.dialogo-relatorio {width: calc(100vw - 1rem); height: calc(100dvh - 1rem);} .cabecalho-relatorio {padding: .7rem;}}
+
+.previa-pdf {display: flex; flex-direction: column; flex: 1; min-height: 0;}
+.paginas-relatorio {display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: .75rem; padding: .55rem; background: #edf4ef; border-bottom: 1px solid #c1d0c6; font-size: .8rem;}
+.paginas-relatorio button {padding: .4rem .7rem; border: 1px solid #aac4b5; border-radius: .3rem; color: var(--escuro); background: #fff; font: inherit;}
+.paginas-relatorio button:disabled {opacity: .45; cursor: default;}
+.folha-relatorio {flex: 1; min-height: 0; overflow: auto; padding: 1rem; background: #dce4df; text-align: center;}
+.folha-relatorio canvas {display: block; margin: 0 auto; background: #fff; box-shadow: 0 2px 12px #143e3426;}
+.carregando-folha {font-size: .75rem; color: #4f6b61;}

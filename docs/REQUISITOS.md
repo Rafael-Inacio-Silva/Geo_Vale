@@ -14,7 +14,7 @@
 | RF-10 | Vetores conservam todos os atributos publicados, valores nulos e ID; geometrias são recortadas pela influência irregular, com contagem única por registro. |
 | RF-11 | Descobrir esquema WFS e consultar todos os campos; trilhas usam outFields=*. Conferir completude, identidade, CRS e validade; rejeitar truncamento/excesso sem apresentar resultado parcial da base como completo. |
 | RF-12 | Rasters via WCS mantêm grade nativa, resolução e todas as células selecionadas pelo centro, NoData separado, classes da legenda padrão oficial e GeoTIFF guardado. Sem leitura de cores WMS, amostra isolada ou reamostragem. |
-| RF-13 | Exportar JSON entrega todas as bases completas, atributos/geometrias vetoriais e matrizes nativas, fontes/datas/evidências. Tela sem painel de dados ou instruções; exportação incompleta/vencida é impedida. |
+| RF-13 | Selecionar a mina oferece Ver relatório sem exigir Influência. PDF GeoVale com todas as bases, cenário fictício separado, síntese, fontes e inventário; visualizador paginado e download do mesmo arquivo. Bases incompletas/vencidas impedem geração; dados completos permanecem internos. |
 | RF-14 | Atualizar automaticamente após 24 h enquanto servidor ligado; conferir pendências a cada minuto e repetir falhas após cinco minutos. |
 | RF-15 | Base nova integrada ao catálogo entra no processamento sem botão; mudança de recorte/evidência invalida resultados incompatíveis. |
 | RF-16 | Distinguir pendente/processando/pronto/erro e dados anteriores. Fonte indisponível não vira zero; resposta vazia completa é identificada como tal. |
@@ -22,6 +22,7 @@
 | RF-18 | Seis checkboxes inicialmente desmarcados ampliam o tema além da influência, com intensidade/legenda/recarga. Desmarcar restaura o recorte; sem Influência controlam a exibição normal. |
 | RF-19 | Trilhas visuais preservam nomes/cores da Prefeitura e legenda do enquadramento; consulta de dados persistida é independente da visualização. |
 | RF-20 | Preservar identidade visual, margens pequenas iguais, mapa amplo, barras ocultáveis e responsividade/teclado. |
+| RF-22 | Cenário local identificado como simulado, sem atribuir autoria à Vale ou apresentar laudos/medições fictícios como reais. Documento sem ranking ou certificação técnica. |
 | RF-21 | Desmarcar mina cancela leituras da página e remove influência/município; não apaga dados guardados por mina. |
 
 ## Interpretação e qualidade

@@ -1,6 +1,6 @@
 {
   "name": "geovale-interface",
-  "version": "4.0.0",
+  "version": "4.1.0",
   "private": true,
   "type": "module",
   "engines": {
@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "leaflet": "1.9.4",
+    "pdfjs-dist": "6.4.299",
     "react": "19.3.1",
     "react-dom": "19.3.1"
   },

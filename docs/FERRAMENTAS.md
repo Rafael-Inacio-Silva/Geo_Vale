@@ -1,6 +1,6 @@
 # Ferramentas e justificativas
 
-Versão 4.0.0. As ferramentas abaixo correspondem ao mapa e à caracterização territorial automática implementados.
+Versão 4.1.0. As ferramentas abaixo correspondem ao mapa e à caracterização territorial automática implementados.
 
 | Necessidade | Ferramenta | Motivo e resultado |
 |---|---|---|
@@ -14,6 +14,8 @@ Versão 4.0.0. As ferramentas abaixo correspondem ao mapa e à caracterização 
 | Células e georreferenciamento | Rasterio/GDAL e NumPy | Lê valores GeoTIFF, transforma o recorte para o CRS da grade, mascara células e resume classes sem reamostragem. |
 | Persistência por mina | SQLite | Biblioteca padrão Python, transações locais e armazenamento leve de atributos/GeoTIFF; evita refazer consultas a cada clique ou reinício. |
 | Limitar concorrência/rede | urllib, threading e ThreadPoolExecutor | Consultas HTTP limitadas e até três bases em paralelo, com repetição automática e estados. |
+| Relatório PDF | ReportLab | Marca, mapas em vetor, tabelas e paginação; geração local a partir dos dados guardados. |
+| Visualização do documento | PDF.js | Renderiza o PDF por página no sistema sem depender de leitor nativo; carregamento sob demanda. |
 | Build e dependências | Node/npm/Vite e ambiente virtual/pip | Interface compilada e ambientes reproduzíveis com locks/hashes, preservando ambiente pessoal. |
 | Verificação/versionamento | pytest/TestClient, Node tests, navegador, Git/GitHub | Conferem contratos, falhas, persistência e fluxo real; compartilham o código autorizado. |
 
@@ -35,6 +37,6 @@ Não é necessário QGIS instalado, Selenium, credencial Google ou serviço de I
 
 ## Fala para apresentação
 
-> “Usei React/TypeScript e Leaflet para a exploração do mapa. Python/FastAPI organiza a preparação automática. Shapely recorta os registros vetoriais; Rasterio conserva os valores das imagens temáticas; SQLite guarda os resultados por mina. Influência mostra todas as camadas no território e os seletores ampliam cada tema além dele. O JSON leva todas as bases para análise externa. A escolha demonstra integração de dados e automação, com fonte, data e limitações explícitas, antes de qualquer avaliação de alternativas de uso futuro.”
+> “Usei React/TypeScript e Leaflet para a exploração do mapa. Python/FastAPI organiza a preparação automática. Shapely recorta os registros vetoriais; Rasterio conserva os valores das imagens temáticas; SQLite guarda os resultados por mina. Influência mostra todas as camadas no território e os seletores ampliam cada tema além dele. O relatório PDF organiza todas as bases e um cenário técnico simulado; as informações reais permanecem preservadas. A escolha demonstra integração de dados e automação, com fonte, data e limitações explícitas, antes de qualquer avaliação de alternativas de uso futuro.”
 
 [Justificativas temáticas e do recorte](ESCOLHAS_TERRITORIAIS.md), [método](DADOS_TERRITORIAIS.md), [versões](DEPENDENCIAS.md), [verificações](VALIDACAO.md).

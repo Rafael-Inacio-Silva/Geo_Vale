@@ -1,6 +1,6 @@
 # Escolhas territoriais e justificativas para apresentação
 
-Versão 4.0.0. O MVP permite conhecer o território e consultar automaticamente os dados de todas as bases em um recorte comum. Não avalia ou recomenda alternativas de uso futuro.
+Versão 4.1.0. O MVP permite conhecer o território e consultar automaticamente os dados de todas as bases em um recorte comum. Não avalia ou recomenda alternativas de uso futuro.
 
 ## Mapa e imagens de contexto
 
@@ -36,14 +36,20 @@ Essa opção é uma adaptação do MVP: a AII original é do meio físico do pro
 
 O [plano de fechamento Minas-Rio da Anglo](https://brasil.angloamerican.com/~/media/Files/A/Anglo-American-Group-v5/Brazil/sustentabilidade/plano-de-fechamento-de-mina-do-minas-rio.pdf), revisão de junho/2021, distingue em 11.7–11.8 (PDF p. 64/impressa 58) ações na ADA e consideração da AID se há interferência a reabilitar, além do público do meio físico. Isso sustenta investigar contexto sem supor intervenção em toda a influência. Não prescreve nosso recorte ou automação, nem transfere limites do Minas-Rio para a Vale.
 
-Guardar dados por mina e atualizar todas as bases automaticamente demonstra as atividades da vaga de **integrar dados e automatizar etapas de avaliação**. Evita depender de quais camadas o usuário decidiu enxergar. O relatório JSON é gerado pelos dados reais e não por tabela manual de valores; fontes, datas e limitações ficam no arquivo e na documentação. A tela se concentra no mapa. Vetores mantêm todos os atributos; rasters conservam as células, além de resumos. Fontes sem resposta válida são explicitamente indisponíveis.
+Guardar dados por mina e atualizar todas as bases automaticamente demonstra as atividades da vaga de **integrar dados e automatizar etapas de avaliação**. Evita depender de quais camadas o usuário decidiu enxergar. Os blocos geográficos do relatório PDF são gerados pelos dados reais; fontes, datas e limitações ficam no arquivo e na documentação. A tela se concentra no mapa. Vetores mantêm todos os atributos; rasters conservam as células, além de resumos. Fontes sem resposta válida são explicitamente indisponíveis.
 
 ## Fala curta para apresentação
 
-> “O engenheiro seleciona a mina e encontra um território e seus dados já organizados. Influência mostra todas as camadas dentro do território; os seletores ampliam cada tema para ver sua continuidade fora dele. O relatório JSON considera todas as bases integradas, independentemente da visualização. Os dados vêm das APIs oficiais, são recortados, guardados por mina e atualizados automaticamente, com origem e data. Usamos um recorte documental comum como simplificação do MVP. É uma caracterização preliminar para apoiar a discussão de fechamento e uso futuro, sem substituir avaliação especializada.”
+> “O engenheiro seleciona a mina e encontra um território e seus dados já organizados. Influência mostra todas as camadas dentro do território; os seletores ampliam cada tema para ver sua continuidade fora dele. O PDF considera todas as bases integradas e inclui um cenário técnico fictício em seção separada. Os dados vêm das APIs oficiais, são recortados, guardados por mina e atualizados automaticamente, com origem e data. Usamos um recorte documental comum como simplificação do MVP. É uma caracterização preliminar para apoiar a discussão de fechamento e uso futuro, sem substituir avaliação especializada.”
 
 ## Limites
 
 Rios/trechos, solos, vegetação, conservação, urbanização, vias e trilhas são representações heterogêneas, com idades/escalas próprias. Não comprovam ausência de risco, qualidade da água, contaminação, estabilidade, permissão de acesso ou aptidão. Topodata deriva de SRTM de 2000; não descreve a cava atual. Percentual matricial é de células válidas, não área medida. As fontes não substituem estudos, licenciamento, campo ou escuta das comunidades. O sistema não define beneficiários ou recomenda intervenções.
 
 [Dados automáticos e método](DADOS_TERRITORIAIS.md), [ferramentas e motivos](FERRAMENTAS.md).
+
+## Cenário técnico e relatório
+
+O cenário autorizado usa a estrutura de planejamento, vistoria e reabilitação do plano Minas-Rio, seções 8.2.1.3-8.2.1.5, 11.11.3 e 11.11.7.6. Considera, ficticiamente, estabilização adequada para iniciar revegetação e drenagem implantada; mantém preparo do solo, avaliação de uma edificação e uso público como pendências. Não copia parâmetros geotécnicos, custos ou resultados de outra mina como se fossem da Horizontes. Cada premissa traz sua referência metodológica.
+
+A escolha demonstra uma entrada técnica complementar às APIs, em relatório legível com nossa marca, sem substituir dados reais ou inventar vistorias executadas. A síntese reúne condições e lacunas para uma avaliação posterior; matriz multicritério, pesos e ranking ainda não foram definidos. [Estrutura e rastreabilidade](RELATORIO.md).

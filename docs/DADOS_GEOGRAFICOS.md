@@ -48,7 +48,7 @@ As referências de catálogo foram consultadas em 24/10/2026 e os dez `GetMap` e
 
 Os cinco checkboxes representam grupos, não cinco arquivos. O tema Solos contém apenas o mapa pedológico; não há diagnóstico ambiental. Da mesma forma, o tema entorno inclui urbanização e rodovias, não toda infraestrutura e conhecimento social do território.
 
-Fundamentação e justificativa do recorte em [Escolhas territoriais](ESCOLHAS_TERRITORIAIS.md). Não há perímetro físico certificado da mina ou base de treinamento. A influência comum é uma aproximação documental; o sombreado da mina é colaborativo. Influência mostra todas as bases recortadas; cada checkbox amplia um tema além do contorno. Os dados completos são guardados por mina e exportados em JSON, independentemente da visibilidade.
+Fundamentação e justificativa do recorte em [Escolhas territoriais](ESCOLHAS_TERRITORIAIS.md). Não há perímetro físico certificado da mina ou base de treinamento. A influência comum é uma aproximação documental; o sombreado da mina é colaborativo. Influência mostra todas as bases recortadas; cada checkbox amplia um tema além do contorno. Os dados completos são guardados por mina, independentemente da visibilidade; o PDF apresenta sínteses e inventário legível de todas as bases.
 
 ## Sexta opção: trilhas municipais
 

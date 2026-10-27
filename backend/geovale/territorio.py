@@ -11,7 +11,6 @@ from contextlib import contextmanager
 from datetime import datetime, timezone
 from pathlib import Path
 
-from rasterio.io import MemoryFile
 from shapely.geometry import shape
 from geovale.camadas import CAMADAS
 from geovale.fontes_territorio import coletar_base
@@ -209,7 +208,7 @@ class DadosTerritoriais:
 
 
     def relatorio(self, mina_id):
-        """Exporta o catálogo completo persistido, incluindo matrizes nativas, sem consultar fontes."""
+        """Reúne o catálogo persistido para o PDF, sem rede ou expansão de matrizes em texto."""
         influencia = self.influencia(mina_id)
         mina = next(m for m in json.loads((self.raiz / 'dados/minas.json').read_text()) if m['id'] == mina_id)
         with self.conectar() as db:
@@ -221,10 +220,6 @@ class DadosTerritoriais:
                     or linha['estado'] != 'pronto' or self.relogio() - linha['tentado'] >= PRAZO_ATUALIZACAO):
                 raise ValueError('Relatório completo ainda indisponível')
             dados = json.loads(zlib.decompress(linha['documento']))
-            if dados['tipo'] == 'raster':
-                with MemoryFile(linha['artefato']) as memoria, memoria.open() as raster:
-                    dados['valores'] = raster.read(1, masked=True).tolist()
-                dados['organizacao_valores'] = 'Matriz [linha][coluna], na grade/transformação nativa. null indica fora do recorte ou NoData.'
             bases.append({'base': base, 'estado': linha['estado'], **dados})
         return {'formato': 'geovale-territorio', 'versao': VERSAO_METODO, 'gerado_em': agora_iso(),
                 'mina': mina, 'influencia': influencia, 'completo': True, 'bases': bases,

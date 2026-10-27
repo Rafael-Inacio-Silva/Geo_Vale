@@ -2,9 +2,10 @@ import {useEffect, useState} from 'react';
 import L from 'leaflet';
 import {requisitar} from './api.ts';
 import CamadasNaInfluencia from './CamadasNaInfluencia.tsx';
+import RelatorioDaMina from './RelatorioDaMina.tsx';
 import type {CamadaTerritorial, CamadasAtivas, InfluenciaTerritorial, LegendaTrilha, TerritorioPreparado} from './tipos.ts';
 
-/** Alterna o território no mapa e exporta o relatório completo já preparado por mina. */
+/** Alterna o território no mapa e oferece o relatório PDF da mina selecionada. */
 export default function Influencia({mapa, minaId, temas, expandidas, aoConsultar, informarLegenda}: {
   mapa: L.Map | null; minaId?: string; temas: CamadaTerritorial[]; expandidas: CamadasAtivas;
   aoConsultar: () => void; informarLegenda: (legenda: LegendaTrilha[]) => void;
@@ -14,15 +15,12 @@ export default function Influencia({mapa, minaId, temas, expandidas, aoConsultar
   const [territorio, setTerritorio] = useState<TerritorioPreparado | null>(null);
   const [erro, setErro] = useState('');
   const [tentativa, setTentativa] = useState(0);
-  const [exportando, setExportando] = useState(false);
-  const [erroExportacao, setErroExportacao] = useState('');
 
   useEffect(() => {
     setAberta(false);
     setContorno(null);
     setTerritorio(null);
     setErro('');
-    setErroExportacao('');
     if (!minaId) return;
     const controle = new AbortController();
     let agendamento: ReturnType<typeof setTimeout> | undefined;
@@ -69,34 +67,12 @@ export default function Influencia({mapa, minaId, temas, expandidas, aoConsultar
     }
   }
 
-  async function exportar() {
-    if (!minaId || exportando) return;
-    setExportando(true);
-    setErroExportacao('');
-    try {
-      const resposta = await fetch(`/api/minas/${encodeURIComponent(minaId)}/relatorio`, {signal: AbortSignal.timeout(60000)});
-      if (!resposta.ok) throw new Error();
-      const arquivo = await resposta.blob();
-      const url = URL.createObjectURL(arquivo);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = `geovale-${minaId}.json`;
-      link.click();
-      setTimeout(() => URL.revokeObjectURL(url), 1000);
-    } catch {
-      setErroExportacao('Não foi possível exportar. Tente novamente.');
-    } finally {
-      setExportando(false);
-    }
-  }
-
   return <section className="influencia-territorio" aria-label="Influência da mina">
     <button type="button" className="abrir-influencia" aria-pressed={aberta} disabled={!minaId || !mapa || !contorno} onClick={alternarInfluencia}>Influência <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m4 7 7-3 9 4-3 11-10 1-3-13Z"/></svg></button>
     {erro ? <p className="erro-territorio" role="alert">{erro} <button className="tentar-novamente" type="button" onClick={() => setTentativa(v => v + 1)}>Recarregar</button></p> : null}
     {aberta && mapa && contorno && minaId ? <>
       <CamadasNaInfluencia mapa={mapa} minaId={minaId} contorno={contorno} temas={temas} expandidas={expandidas} informarLegenda={informarLegenda}/>
-      <button type="button" className="exportar-territorio" disabled={!territorio?.completo || exportando} onClick={() => {void exportar();}}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m-5-5 5 5 5-5M4 16v5h16v-5"/></svg>{exportando ? 'Exportando…' : territorio?.completo ? 'Exportar JSON' : 'Preparando relatório…'}</button>
-      {erroExportacao ? <p className="erro-territorio" role="alert">{erroExportacao}</p> : null}
     </> : null}
+    {minaId ? <RelatorioDaMina key={minaId} minaId={minaId} pronto={territorio?.completo ?? false}/> : null}
   </section>;
 }
