@@ -26,6 +26,8 @@ Numa instância isolada (porta 8031, cópia do banco): mina selecionada, Sugerir
 
 Ao reiniciar o servidor com a 4.4.0, o tema Entorno não carregou no mapa. O GetMap de cada base mostrou a causa: o estilo oficial das linhas de transmissão gera erro no banco do GeoServer ("sintaxe de entrada é inválida para tipo double precision"), e um erro derruba a imagem do tema inteiro. A base passou a declarar `mapa=False`: sai da imagem WMS e da legenda, mas continua nos dados, na sugestão e no PDF. As demais 17 bases tiveram GetMap conferido com imagem PNG válida. O aviso de falha no mapa agora diz qual tema não carregou.
 
+Na prévia do relatório, o texto oculto para leitores de tela ficava posicionado em relação ao diálogo e criava rolagem extra abaixo da página. A folha passou a ser o contêiner desse texto e o diálogo não rola mais: conferido no navegador, diálogo com 734 px de altura e rolagem igual; a folha rola 1.388 px (página de 1.356 px mais margens) e termina no fim da página.
+
 ## IA e alcance
 
 O arquivo de chave permanece vazio: não houve chamada real à OpenAI. O contrato foi testado com respostas controladas. Não houve ML treinado, chamada paga, validação de especialista, ensaio real ou decisão de pós-mineração. Os limites das funções e os julgamentos AHP são valores de partida documentados, não calibrados com especialistas. [Multicritério e IA](MULTICRITERIO.md), [método](RELATORIO.md), [dados](DADOS_TERRITORIAIS.md).

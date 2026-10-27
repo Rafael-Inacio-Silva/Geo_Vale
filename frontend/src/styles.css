@@ -227,7 +227,7 @@ button:focus-visible, input:focus-visible, a:focus-visible, [tabindex="-1"]:focu
 .nota-territorio {color: #4f6b61;}
 .erro-territorio {color: #7b3d22;}
 
-.dialogo-relatorio {width: min(75rem, calc(100vw - 2rem)); height: calc(100dvh - 2rem); max-height: none; max-width: none; padding: 0; border: 1px solid #9eb5a9; border-radius: .65rem; background: var(--papel); color: var(--escuro); box-shadow: 0 15px 60px #002f2b55;}
+.dialogo-relatorio {width: min(75rem, calc(100vw - 2rem)); height: calc(100dvh - 2rem); max-height: none; max-width: none; overflow: hidden; padding: 0; border: 1px solid #9eb5a9; border-radius: .65rem; background: var(--papel); color: var(--escuro); box-shadow: 0 15px 60px #002f2b55;}
 .dialogo-relatorio[open] {display: flex; flex-direction: column;}
 .dialogo-relatorio::backdrop {background: #002f2bb3;}
 .cabecalho-relatorio {display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: .75rem; padding: .8rem 1rem; border-top: 4px solid var(--amarelo); border-bottom: 1px solid #c1d0c6;}
@@ -242,7 +242,7 @@ button:focus-visible, input:focus-visible, a:focus-visible, [tabindex="-1"]:focu
 .paginas-relatorio {display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: .75rem; padding: .55rem; background: #edf4ef; border-bottom: 1px solid #c1d0c6; font-size: .8rem;}
 .paginas-relatorio button {padding: .4rem .7rem; border: 1px solid #aac4b5; border-radius: .3rem; color: var(--escuro); background: #fff; font: inherit;}
 .paginas-relatorio button:disabled {opacity: .45; cursor: default;}
-.folha-relatorio {flex: 1; min-height: 0; overflow: auto; padding: 1rem; background: #dce4df; text-align: center;}
+.folha-relatorio {position: relative; flex: 1; min-height: 0; overflow: auto; padding: 1rem; background: #dce4df; text-align: center;}
 .folha-relatorio img {display: block; width: 100%; max-width: 960px; height: auto; margin: 0 auto; background: #fff; box-shadow: 0 2px 12px #143e3426;}
 .folha-relatorio img[hidden] {display: none;}
 .carregando-folha {font-size: .75rem; color: #4f6b61;}
