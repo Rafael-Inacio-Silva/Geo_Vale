@@ -2,7 +2,7 @@
 
 MVP de caracterização territorial para apoiar a exploração de informações relevantes à ressignificação de áreas pós-mineração. Abre um mapa mundial em **Minas Gerais**, com contorno oficial estadual e uma mina no catálogo: **Horizontes — Vale — Nova Lima/MG**.
 
-Selecionar a mina pelo cartão ou pela bolinha mostra automaticamente seu contorno. O engenheiro ativa **Influência** para conhecer o território maior. O mapa mostra o contorno, a mina sombreada e os seis temas/onze bases somente dentro desse território. Marcar uma camada à direita amplia sua visualização para além da influência; desmarcar volta ao recorte. **Ver relatório**, disponível ao selecionar a mina mesmo sem ativar Influência, abre um PDF GeoVale com visão geral, seis mapas temáticos, dados objetivos e comentários separados, mais dados técnicos fictícios com asterisco. É possível navegar pelas páginas e baixar o mesmo documento. A tela permanece centrada no mapa, sem tabelas de atributos ou instruções de procedimento.
+Selecionar a mina pelo cartão ou pela bolinha mostra automaticamente seu contorno. O engenheiro ativa **Influência** para conhecer o território maior. O mapa mostra o contorno, a mina sombreada e os sete temas/dezesseis bases somente dentro desse território. Marcar uma camada à direita amplia sua visualização para além da influência; desmarcar volta ao recorte. **Ver relatório**, disponível ao selecionar a mina mesmo sem ativar Influência, abre um PDF GeoVale com visão geral, sete mapas temáticos, dados objetivos separados entre área minerada e entorno, comentários com a implicação de cada dado e uma ficha de dados técnicos simulados com pontos no mapa e asterisco. É possível navegar pelas páginas e baixar o mesmo documento. A tela permanece centrada no mapa, sem tabelas de atributos ou instruções de procedimento.
 
 Os dados são consultados automaticamente e guardados por mina em SQLite local. A aplicação conserva todos os atributos dos registros vetoriais recortados e as células dos dois rasters, com fontes, datas e metadados. Novas bases integradas ao catálogo entram no mesmo processamento. Fundos OpenStreetMap/Esri, WMS e trilhas continuam oferecendo exploração visual independente.
 
@@ -37,13 +37,13 @@ npm run build
 ## Organização
 
 - `backend/geovale/api/main.py`: API local, ciclo de preparação e interface compilada.
-- `backend/geovale/camadas.py`: catálogo único de visualização e processamento, com onze bases.
+- `backend/geovale/camadas.py`: catálogo único de visualização e processamento, com dezesseis bases.
 - `backend/geovale/fontes_territorio.py`: adaptadores WFS/WCS/ArcGIS, atributos completos, interseção e células.
 - `backend/geovale/territorio.py`: preparação automática e persistência por mina/base.
 - `backend/geovale/relatorio.py`: PDF e prévia versionada em PNG.
-- `backend/geovale/mapa_relatorio.py` e `fichas.py`: mapas temáticos e medidas cartográficas.
+- `backend/geovale/mapa_relatorio.py` e `fichas.py`: mapas temáticos, área minerada, medidas em UTM 23S e checagem dos pontos de água simulados.
 - `backend/geovale/comentarios.py`: comentários por regras e integração OpenAI Responses / GPT-5 nano.
-- `dados/cenarios/horizontes.json`: valores técnicos fictícios, métodos hipotéticos e referência de estrutura.
+- `dados/cenarios/horizontes.json`: pontos e valores técnicos fictícios, métodos hipotéticos e referências.
 - `backend/geovale/influencia.py`: conferência do recorte local e evidências.
 - `backend/geovale/mapa.py`, `municipio.py`, `anm.py`, `trilhas.py`: navegação, município, cadastro e trilhas visuais.
 - `frontend/src/Influencia.tsx` e `CamadasNaInfluencia.tsx`: botão, camadas recortadas e relatório PDF da mina.
@@ -55,11 +55,11 @@ npm run build
 
 ## Decisões e limites
 
-O único recorte de caracterização do MVP vem do **contorno externo AII de águas e solos**, Figura 2.3 do parecer FEAM sobre ampliação conjunta Tamanduá/Horizontes. Usá-lo para todos os temas é uma **simplificação declarada do protótipo**, não delimitação temática oficial ou área obrigatória de recuperação. A mina sombreada vem do OpenStreetMap e não certifica perímetro físico atual.
+O único recorte de caracterização do MVP vem do **contorno externo AII de águas e solos**, Figura 2.3 do parecer FEAM sobre ampliação conjunta Tamanduá/Horizontes. Usá-lo para todos os temas é uma **simplificação declarada do protótipo**, não delimitação temática oficial ou área obrigatória de recuperação. A mina sombreada vem do OpenStreetMap, representa só a cava e não certifica perímetro físico atual. A **área minerada** usada nas fichas é a classe Mineração do MapBiomas dentro do recorte (3.173,3 ha); a AII é contexto.
 
-Dados geográficos guardados são resultados calculados das fontes. Um cenário técnico fictício de pós-fechamento, identificado em seção própria, complementa o relatório para demonstrar informações que as camadas não fornecem. As premissas não alteram os dados reais. A atualização automática ocorre a cada 24 horas enquanto o servidor está ligado; falhas têm novas tentativas, mantendo data/estado explícitos. Uma fonte indisponível não vira quantidade zero. Adicionar uma base requer sua configuração no catálogo e adaptador compatível; não existe descoberta automática de todo serviço da internet.
+Dados geográficos guardados são resultados calculados das fontes. Um cenário técnico fictício de pós-fechamento, identificado em seção própria, complementa o relatório para demonstrar informações que as camadas não fornecem; seus pontos de água são conferidos com a classe real do trecho e os limites da CONAMA 357/2005. As premissas não alteram os dados reais. A atualização automática ocorre a cada 24 horas enquanto o servidor está ligado; falhas têm novas tentativas, mantendo data/estado explícitos. Uma fonte indisponível não vira quantidade zero. Adicionar uma base requer sua configuração no catálogo e adaptador compatível; não existe descoberta automática de todo serviço da internet.
 
-Não há classificação de aptidão, ranking, recomendação de uso, definição de beneficiários, diagnóstico de impactos ou qualidade ambiental. O relevo é regional e antigo; contagens são registros, não riscos ou rios distintos. Acesso público não significa uso ilimitado. O cenário não constitui laudo ou avaliação de segurança. O 3D Google não está integrado.
+Não há classificação de aptidão, ranking, recomendação de uso, definição de beneficiários, diagnóstico de impactos ou qualidade ambiental; os comentários indicam implicações para o planejamento. O relevo é regional e antigo; contagens são registros, não riscos ou rios distintos. Acesso público não significa uso ilimitado. O cenário não constitui laudo ou avaliação de segurança. O 3D Google não está integrado.
 
 [Justificativa e roteiro para apresentação](docs/ESCOLHAS_TERRITORIAIS.md), [recorte e evidência](docs/INFLUENCIA.md), [dados automáticos](docs/DADOS_TERRITORIAIS.md), [uso](docs/MANUAL_USO.md), [relatório e cenário](docs/RELATORIO.md).
 

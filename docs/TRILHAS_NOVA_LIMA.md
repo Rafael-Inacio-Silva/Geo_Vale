@@ -1,6 +1,6 @@
 # Trilhas de Nova Lima — integração municipal
 
-Sexta opção de sobreposição, disponível na versão 4.2.0. Os cinco temas estaduais/dez bases da IDE-Sisema continuam disponíveis. Esta camada acrescenta uma **segunda infraestrutura pública**, com informação municipal específica para conhecer o entorno da Mina Horizontes.
+Opção de sobreposição municipal, disponível desde a versão 4.2.0. Os seis temas estaduais/quinze bases da IDE-Sisema continuam disponíveis. Esta camada acrescenta uma **segunda infraestrutura pública**, com informação municipal específica para conhecer o entorno da Mina Horizontes.
 
 ## Fonte verificada em 25/10/2026
 
@@ -40,9 +40,9 @@ Os traçados e a legenda usam as cores e os nomes publicados na configuração d
 
 ## Justificativa e limite
 
-Caminhos cadastrados são contexto para observar conexões e levantar questões sobre acesso, circulação e uso recreativo no entorno. O objetivo desta adição é demonstrar integração de **fontes diferentes**, motivada pelo cadastro concreto encontrado no portal municipal. As referências acadêmicas dos cinco temas não foram apresentadas como validação dessa sexta escolha.
+Caminhos cadastrados são contexto para observar conexões e levantar questões sobre acesso, circulação e uso recreativo no entorno. O objetivo desta adição é demonstrar integração de **fontes diferentes**, motivada pelo cadastro concreto encontrado no portal municipal. As referências acadêmicas dos temas estaduais não foram apresentadas como validação desta escolha.
 
-No inventário WMS da IDE-Sisema consultado em 24/10/2026, não foram encontrados títulos contendo “trilh”. As dez bases integradas não incluem esse cadastro; isso não garante ausência em todo serviço estadual. A fonte municipal foi verificada diretamente.
+No inventário WMS da IDE-Sisema consultado em 24/10/2026, não foram encontrados títulos contendo “trilh”. As bases estaduais integradas não incluem esse cadastro; isso não garante ausência em todo serviço estadual. A fonte municipal foi verificada diretamente.
 
 Traçado cadastrado **não comprova acesso público, segurança, conservação, autorização de entrada ou aptidão para turismo**, nem corresponde ao limite da mina. O rótulo do decreto é o informado pela fonte, sem análise jurídica do ato. A falta de feição na região visível não comprova inexistência de caminhos. A etapa oferece exploração visual e caracterização cadastral, sem avaliação de uso futuro.
 

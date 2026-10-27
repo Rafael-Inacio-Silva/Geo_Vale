@@ -1,6 +1,6 @@
 # Documentação atual
 
-- [Relatório e cenário](RELATORIO.md): fichas com mapas, dados objetivos, comentários e valores técnicos fictícios.
+- [Relatório e cenário](RELATORIO.md): área minerada × entorno, fichas com mapas, comentários e pontos técnicos simulados.
 - [Status](STATUS.md): o que funciona no MVP.
 - [Manual de uso](MANUAL_USO.md): selecionar mina, influência, expansão visual e relatório PDF.
 - [Influência](INFLUENCIA.md): único recorte comum, mina sombreada, evidência e precisão.
@@ -9,7 +9,7 @@
 - [Requisitos](REQUISITOS.md): comportamento e aceitação.
 - [Arquitetura](ARQUITETURA.md): componentes, contratos e ciclo de vida.
 - [Ferramentas](FERRAMENTAS.md): tecnologias e motivos de escolha.
-- [Dados geográficos](DADOS_GEOGRAFICOS.md): proveniência das onze bases e limites.
+- [Dados geográficos](DADOS_GEOGRAFICOS.md): proveniência das dezesseis bases e limites.
 - [Experiência do usuário](EXPERIENCIA_USUARIO.md): organização e interações.
 - [ANM](ANM.md): consulta cadastral sem geometria.
 - [Município](LIMITE_MUNICIPAL.md): contorno de Nova Lima sob seleção.

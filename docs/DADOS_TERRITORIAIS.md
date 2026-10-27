@@ -1,10 +1,10 @@
 # Dados do território — preparação automática
 
-Versão 4.2.0. O sistema associa os dados de **todas as bases do catálogo** a cada mina e ao seu único recorte de influência. O engenheiro consulta o resultado preparado. Seletores visuais, intensidade, fundo e enquadramento não são parâmetros de processamento.
+Versão 4.3.0. O sistema associa os dados de **todas as bases do catálogo** a cada mina e ao seu único recorte de influência. O engenheiro consulta o resultado preparado. Seletores visuais, intensidade, fundo e enquadramento não são parâmetros de processamento.
 
 ## Catálogo único e abrangência
 
-`backend/geovale/camadas.py` declara as mesmas onze bases usadas na visualização: dez estaduais da IDE-Sisema e a trilha municipal. Cada base informa seu adaptador de dados: WFS, WCS ou ArcGIS REST. O ciclo percorre o catálogo completo, sem uma lista paralela de bases para análise e sem totais preenchidos manualmente.
+`backend/geovale/camadas.py` declara as mesmas dezesseis bases usadas na visualização: quinze estaduais da IDE-Sisema e a trilha municipal. Cada base informa seu adaptador de dados: WFS, WCS ou ArcGIS REST. O ciclo percorre o catálogo completo, sem uma lista paralela de bases para análise e sem totais preenchidos manualmente.
 
 Adicionar uma base com adaptador compatível ao catálogo faz sua preparação entrar automaticamente na próxima execução do ciclo. Uma fonte de outro protocolo requer implementar seu adaptador. A aplicação não descobre sozinha novas camadas externas. Alteração do código do catálogo requer reiniciar o servidor para carregá-la. Novos registros publicados na fonte entram na próxima atualização automática.
 
@@ -12,7 +12,7 @@ Todos os temas utilizam o **mesmo recorte aproximado da AII de águas/solos**, p
 
 ## Vetores: registros e todos os atributos
 
-O adaptador WFS consulta `DescribeFeatureType`, descobre campo geométrico e todos os atributos, depois solicita `GetFeature` com BBOX do recorte e EPSG:4326. Não restringe `propertyName` a nomes selecionados. Confere `numberMatched = numberReturned = número recebido`, identidades únicas, CRS, tipo/validade das geometrias e correspondência exata entre atributos e esquema. Limite de 2.000 registros por base, leitura até 32 MiB, timeout de 25 s por requisição. Excesso/truncamento é falha explícita, não primeira página apresentada como base completa.
+O adaptador WFS consulta `DescribeFeatureType`, descobre campo geométrico e todos os atributos, depois solicita `GetFeature` com BBOX do recorte e EPSG:4326. Não restringe `propertyName` a nomes selecionados. Confere `numberMatched = numberReturned = número recebido`, identidades únicas, CRS, tipo/validade das geometrias e correspondência exata entre atributos e esquema. Limite de 2.000 registros por base, leitura até 32 MiB, timeout de 25 s por requisição. Excesso/truncamento é falha explícita, não primeira página apresentada como base completa. Exceções são declaradas no catálogo por base: barragens publicam no GeoJSON o campo `name`, ausente do esquema, e pontos com cota constante zero, removida antes da validação; outra cota ou campo não declarado continuam sendo falha. A camada pública de ZAS excede o limite de 32 MiB e não foi integrada.
 
 Shapely intersecta as geometrias com o vetor irregular da influência; o envelope serve apenas para reduzir transferência. Contato apenas pontual não vira trecho, e contato apenas linear não vira superfície. Todas as partes do mesmo registro são mantidas e contadas uma vez. Geometrias inválidas são recusadas sem reparo automático.
 
@@ -26,7 +26,7 @@ Declividade Topodata e cobertura MapBiomas 2025 são obtidas por **WCS 2.0.1**, 
 
 Rasterio transforma o contorno para o CRS da grade e seleciona todas as células cujo **centro** está no polígono (`all_touched=false`). Guarda os valores na posição original, mascarando fora do recorte/NoData. Conserva grade, transformação, resolução, tags, metadados e GeoTIFF; não interpola valores. O histórico de idade dos dados permanece sendo o das fontes.
 
-Os códigos, nomes e cores vêm do **estilo padrão oficial** via GetStyles. Outra classificação alternativa no mesmo SLD não é misturada. Classe sem legenda oficial gera falha. O relatório conserva quantidades por classe e percentual de **células válidas**, nunca percentual de área ou medição cadastral. Células sem dados são informadas separadamente. Todos os valores ficam no GeoTIFF guardado. O PDF apresenta classes, contagens e medidas geométricas por tema; não reproduz matrizes ou listas de coordenadas em texto. O armazenamento interno conserva os dados completos.
+Os códigos, nomes e cores vêm do **estilo padrão oficial** via GetStyles. Outra classificação alternativa no mesmo SLD não é misturada. Classe sem legenda oficial gera falha. O armazenamento conserva quantidades por classe e percentual de **células válidas**. O relatório apresenta áreas por classe somando a área de cada célula, obtida pelos quatro vértices projetados em UTM 23S; não usa medidas em graus nem trata contagem de células como área. Células sem dados são informadas separadamente. Todos os valores ficam no GeoTIFF guardado. O PDF apresenta classes, contagens e medidas geométricas por tema; não reproduz matrizes ou listas de coordenadas em texto. O armazenamento interno conserva os dados completos.
 
 ## Persistência e atualização
 
@@ -56,4 +56,4 @@ A geração exige bases completas e atuais na assinatura vigente. Preparação, 
 
 O [plano de fechamento Minas-Rio da Anglo American](https://brasil.angloamerican.com/~/media/Files/A/Anglo-American-Group-v5/Brazil/sustentabilidade/plano-de-fechamento-de-mina-do-minas-rio.pdf), revisão de junho/2021, **11.7–11.8, PDF p. 64 / impressa 58**, distingue ações na ADA e consideração da AID quando há interferência a reabilitar, e identifica público interno/população da AID física. Fundamenta separar investigação e intervenção. Não prescreve nosso pipeline ou recorte comum; ambos são adaptações explícitas do MVP. Seus limites não foram transferidos para Horizontes.
 
-O protótipo organiza dados; não mede qualidade da água, contaminação, impacto causal, estabilidade, beneficiários ou aptidão. Não classifica alternativas nem recomenda uso futuro. A abrangência dos dados vai além dos cinco temas visuais por conter seus registros/atributos; ainda não é diagnóstico completo de um especialista. [Justificativa temática](ESCOLHAS_TERRITORIAIS.md).
+O protótipo organiza dados e indica implicações por dado; não mede qualidade da água, contaminação, impacto causal, estabilidade, beneficiários ou aptidão. Não classifica alternativas nem recomenda uso futuro. A abrangência dos dados vai além dos temas visuais por conter seus registros/atributos; ainda não é diagnóstico completo de um especialista. [Justificativa temática](ESCOLHAS_TERRITORIAIS.md).

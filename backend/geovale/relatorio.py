@@ -9,7 +9,7 @@ from collections import OrderedDict
 import math
 import pypdfium2 as pdfium
 from geovale.mapa_relatorio import MapaTerritorial
-from geovale.fichas import montar_fichas
+from geovale.fichas import PARAMETROS_AGUA, formato, ha, montar_fichas, preparar, projetar
 from geovale.comentarios import Comentarista
 from xml.sax.saxutils import escape
 from zoneinfo import ZoneInfo
@@ -97,16 +97,30 @@ TRAVA_PDFIUM = Lock()
 
 
 def ler_cenario(raiz, mina_id):
-    """Valida os dados fictícios e sua ligação explícita com a mina e fonte metodológica."""
+    """Valida os dados fictícios, seus pontos e referências, e a ligação explícita com a mina e fonte metodológica."""
     c=json.loads((Path(raiz)/'dados/cenarios'/f'{mina_id}.json').read_text())
-    if c['mina_id']!=mina_id or c['natureza']!='simulado' or not c['referencia']['secoes'] or not 1<=len(c['dados'])<=20:
+    agua=c.get('agua',[])
+    if c['mina_id']!=mina_id or c['natureza']!='simulado' or not c['referencia']['secoes'] or not 1<=len(c['dados'])+len(agua)<=20:
         raise ValueError('Cenário técnico inválido')
-    if len({d['id'] for d in c['dados']})!=len(c['dados']):raise ValueError('Dados duplicados')
+    ids=[d['id'] for d in c['dados']+agua]
+    if len(set(ids))!=len(ids):raise ValueError('Dados duplicados')
+    def numero(v):return not isinstance(v,bool) and isinstance(v,(int,float)) and math.isfinite(v)
+    def ponto(d):
+        p=d.get('ponto')
+        return p is None or (isinstance(p,list) and len(p)==2 and all(numero(v) for v in p) and -180<=p[0]<=180 and -90<=p[1]<=90
+                             and isinstance(d.get('rotulo'),str) and 1<=len(d['rotulo'])<=3)
     for d in c['dados']:
-        if not all(isinstance(d[k],str) and d[k] for k in ('id','nome','unidade','metodo','comentario')):
+        if not all(isinstance(d.get(k),str) and d[k] for k in ('id','nome','unidade','metodo','comentario')) or not ponto(d):
             raise ValueError('Dado incompleto')
-        if isinstance(d['valor'],bool) or not isinstance(d['valor'],(int,float)) or not math.isfinite(d['valor']):
+        if not numero(d['valor']):
             raise ValueError('Valor fictício inválido')
+        ref=d.get('referencia_tecnica')
+        if ref is not None and not (isinstance(ref.get('texto'),str) and len({'minimo','maximo'}&set(ref))==1 and numero(ref.get('minimo',ref.get('maximo')))):
+            raise ValueError('Referência técnica inválida')
+    for a in agua:
+        if (not all(isinstance(a.get(k),str) and a[k] for k in ('id','nome','metodo','rotulo')) or a.get('ponto') is None or not ponto(a)
+                or not a.get('parametros') or not set(a['parametros'])<=set(PARAMETROS_AGUA) or not all(numero(v) for v in a['parametros'].values())):
+            raise ValueError('Ponto de água inválido')
     return c
 
 
@@ -133,24 +147,32 @@ def gerar_pdf(dados,cenario,fichas,comentarios):
         tab=tabela(['Dado / valor / origem','Leitura contextual (separada do dado)'],linhas,[LARGURA*.48,LARGURA*.52])
         tab.setStyle(TableStyle([('TOPPADDING',(0,1),(-1,-1),6),('BOTTOMPADDING',(0,1),(-1,-1),6)]))
         adicionar(tab)
+    minerada=dados.get('area_minerada')
+    cava=projetar(next(f['geometry'] for f in dados['influencia']['features'] if f['properties']['id']=='mina')).area/1e4
+    if minerada:
+        alvo=(f"<b>Área minerada no recorte: {texto(ha(minerada['ha']))} ({texto(formato(minerada['ha']*100/dados['recorte_ha'],1))}%)</b>, "
+              f"delimitada pela classe Mineração de {texto(minerada['fonte'])}. A mina OSM ({texto(ha(cava))}) representa só a cava. "
+              'As fichas separam área minerada e entorno; o recorte AII é contexto.')
+    else:
+        alvo='Área minerada não identificada na cobertura; as fichas descrevem o recorte inteiro.'
     adicionar(paragrafo('Visão geral | '+mina['nome'],'secao'),
               paragrafo(f'{mina["municipio"]}/{mina["uf"]} | '+data_local(dados['gerado_em']),'pequeno'),
-              MapaTerritorial(dados,altura=225),Spacer(1,10))
-    resumos=[]
-    for ficha in fichas[:-1]:
-        itens=ficha['dados'];valor=' | '.join(d['nome']+': '+d['valor'].replace('\n','; ') for d in itens if not d['id'].endswith(('.classes','.nodata')) and d['origem']!='Não medido')
-        resumos.append([ficha['nome'],valor])
-    resumos.append(['Dados sem camada *','; '.join(d['nome']+': '+d['valor'] for d in fichas[-1]['dados'])])
+              MapaTerritorial(dados,altura=225),Spacer(1,8),Paragraph(alvo,ESTILOS['texto']))
+    resumos=[[ficha['nome'],' | '.join(d['resumo'] for d in ficha['dados'] if d.get('resumo'))] for ficha in fichas[:-1]]
+    resumos.append(['Dados simulados *','; '.join(d['resumo'] for d in fichas[-1]['dados'] if d.get('resumo'))])
     resumo=tabela(['Tema','Dados objetivos do território'],resumos,[LARGURA*.24,LARGURA*.76])
     resumo.setStyle(TableStyle([('TOPPADDING',(0,1),(-1,-1),5),('BOTTOMPADDING',(0,1),(-1,-1),5)]))
     adicionar(resumo,Spacer(1,6),
               paragrafo(cenario['descricao'],'pequeno'),
-              paragrafo('Recorte comum aproximado da AII águas/solos (FEAM, Figura 2.3). Não define área de intervenção ou fechamento. Os comentários não alteram os valores e não classificam usos futuros.','pequeno'))
+              paragrafo('Recorte comum aproximado da AII águas/solos (FEAM, Figura 2.3), usado como contexto; não define área de intervenção ou fechamento. Os comentários indicam implicações para o planejamento, sem alterar valores, classificar aptidão ou recomendar usos.','pequeno'))
+    alturas={'vegetacao':190,'agua':180,'barragens':180}
     for i,ficha in enumerate(fichas,1):
         adicionar(PageBreak(),paragrafo(f'{i:02d} | '+ficha['nome'],'secao'))
         if ficha['id']!='tecnicos':
-            adicionar(MapaTerritorial(dados,tema=ficha['id'],altura=190 if ficha['id']=='vegetacao' else 280 if ficha['id']=='agua' else 250),Spacer(1,9))
-        else:adicionar(paragrafo(cenario['descricao'],'pequeno'))
+            adicionar(MapaTerritorial(dados,tema=ficha['id'],altura=alturas.get(ficha['id'],250)),Spacer(1,9))
+        else:
+            adicionar(MapaTerritorial(dados,tema='tecnicos',altura=230,pontos=[(d['rotulo'],*d['ponto']) for d in ficha['dados'] if d.get('ponto')]),
+                      Spacer(1,8),paragrafo(cenario['descricao'],'pequeno'))
         fatos(ficha)
         adicionar(Spacer(1,8),paragrafo(comentarios['rotulo']+'. Comentários não constituem laudo ou decisão de uso.','pequeno'))
         if ficha['bases']:
@@ -158,10 +180,10 @@ def gerar_pdf(dados,cenario,fichas,comentarios):
             for b in ficha['bases']:
                 fontes.append('<link href="'+texto(b['base']['metadado'])+'" color="#008477">'+texto(b['base']['nome'])+'</link> ('+texto(data_local(b['consultado_em']))+')')
             adicionar(Paragraph('Fontes: '+'; '.join(fontes)+'.',ESTILOS['pequeno']))
-            adicionar(paragrafo('Mapa: cores oficiais dos rasters; geometrias recortadas. Mina: © OpenStreetMap contributors, ODbL; influência: FEAM / Amplo.','pequeno'))
+            adicionar(paragrafo('Mapa: cores oficiais dos rasters; geometrias recortadas. Área minerada: classe Mineração do MapBiomas. Mina: © OpenStreetMap contributors, ODbL; influência: FEAM / Amplo.','pequeno'))
         else:
             ref=cenario['referencia']
-            adicionar(Paragraph('Referência de estrutura: <link href="'+texto(ref['url'])+'" color="#008477">'+texto(ref['instituicao']+' - '+ref['titulo'])+'</link>, '+texto(ref['revisao'])+'. Seções '+texto(ref['secoes'])+'. Os valores com * foram criados no GeoVale.',ESTILOS['pequeno']))
+            adicionar(Paragraph('Referência de estrutura: <link href="'+texto(ref['url'])+'" color="#008477">'+texto(ref['instituicao']+' - '+ref['titulo'])+'</link>, '+texto(ref['revisao'])+'. Seções '+texto(ref['secoes'])+'. Os valores com * foram criados no GeoVale. Limites de água: Resolução CONAMA 357/2005; classe do trecho: enquadramento publicado pelo Igam (dado real).',ESTILOS['pequeno']))
     def pagina(tela,d):
         tela.saveState();tela.setFillColor(VERDE);tela.rect(0,A4[1]-70,A4[0],70,fill=1,stroke=0);logo(tela,40,A4[1]-57,.9)
         tela.setFillColor(AMARELO);tela.rect(0,A4[1]-73,A4[0],3,fill=1,stroke=0)
@@ -179,12 +201,12 @@ class RelatoriosPDF:
     def obter(self,mina_id):
         """Atualiza fatos por coleta/cenário e comentários por modelo, sem reextrair fontes."""
         dados=self.fonte.relatorio(mina_id);cenario=ler_cenario(self.raiz,mina_id)
-        chave=hashlib.sha256(json.dumps({'dados':{k:v for k,v in dados.items() if k!='gerado_em'},'cenario':cenario,'modelo':'4.2.0','comentarios':self.comentarista.assinatura},sort_keys=True,ensure_ascii=False).encode()).hexdigest()
+        chave=hashlib.sha256(json.dumps({'dados':{k:v for k,v in dados.items() if k!='gerado_em'},'cenario':cenario,'modelo':'4.3.0','comentarios':self.comentarista.assinatura},sort_keys=True,ensure_ascii=False).encode()).hexdigest()
         with self.trava:
             anterior=self.cache.get(mina_id)
             if anterior and anterior[0]==chave:return anterior[1]
-            fichas=montar_fichas(dados,cenario);comentarios=self.comentarista.gerar(fichas)
             dados['rasters']={b['base']['id']:self.fonte.arquivo(mina_id,b['base']['id']) for b in dados['bases'] if b['tipo']=='raster'}
+            fichas=montar_fichas(preparar(dados),cenario);comentarios=self.comentarista.gerar(fichas)
             pdf=gerar_pdf(dados,cenario,fichas,comentarios);versao=hashlib.sha256(pdf).hexdigest()
             self.cache[mina_id]=(chave,pdf);self.documentos[(mina_id,versao)]=pdf
             while len(self.documentos)>4:

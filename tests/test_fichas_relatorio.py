@@ -2,6 +2,7 @@
 from io import BytesIO
 import json
 from PIL import Image
+from pypdf import PdfReader
 import pytest
 from fastapi.testclient import TestClient
 from geovale.api.main import criar_app
@@ -52,8 +53,9 @@ def test_previa_renderiza_png_da_mesma_versao_e_preserva_documento_aberto(tmp_pa
     pdf=cliente.get('/api/minas/horizontes/relatorio');assert pdf.status_code==200
     versao=pdf.headers['X-Relatorio-Versao'];query='?versao='+versao
     manifesto=cliente.get('/api/minas/horizontes/relatorio/previa'+query)
-    assert manifesto.status_code==200 and len(manifesto.json()['paginas'])==8
-    for numero in [1,4,8]:
+    paginas=len(PdfReader(BytesIO(pdf.content)).pages)
+    assert manifesto.status_code==200 and len(manifesto.json()['paginas'])==paginas>=9
+    for numero in [1,4,paginas]:
         img=cliente.get('/api/minas/horizontes/relatorio/paginas/'+str(numero)+query)
         assert img.status_code==200 and img.headers['content-type']=='image/png'
         with Image.open(BytesIO(img.content)) as im:

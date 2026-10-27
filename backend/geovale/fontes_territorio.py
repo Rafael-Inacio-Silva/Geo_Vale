@@ -11,7 +11,7 @@ import numpy as np
 from rasterio.features import geometry_mask
 from rasterio.io import MemoryFile
 from rasterio.warp import transform_bounds, transform_geom
-from shapely import union_all
+from shapely import force_2d, get_coordinates, union_all
 from shapely.geometry import mapping, shape
 
 from geovale.camadas import SERVICO_WMS
@@ -44,8 +44,11 @@ def ler_json(bruto):
     return dados
 
 
-def recortar_vetores(documento, recorte, tipos, campos):
-    """Preserva todos os atributos publicados e recorta cada registro sem duplicar sua contagem."""
+def recortar_vetores(documento, recorte, tipos, campos, z_zero=False):
+    """Preserva todos os atributos publicados e recorta cada registro sem duplicar sua contagem.
+
+    `z_zero` aceita somente cota publicada exatamente igual a zero, removida antes da validação; outra cota falha.
+    """
     if documento.get('type') != 'FeatureCollection' or not isinstance(documento.get('features'), list):
         raise FonteIndisponivel('Coleção vetorial inválida.')
     saida, ids = [], set()
@@ -58,6 +61,8 @@ def recortar_vetores(documento, recorte, tipos, campos):
         if not isinstance(props, dict) or set(props) != set(campos):
             raise FonteIndisponivel('Os atributos recebidos não correspondem ao esquema completo.')
         geom = shape(f['geometry'])
+        if z_zero and geom.has_z and not get_coordinates(geom, include_z=True)[:, 2].any():
+            geom = force_2d(geom)
         if geom.geom_type not in tipos or geom.is_empty or not geom.is_valid or geom.has_z:
             raise FonteIndisponivel('Geometria inválida; nenhum reparo automático foi aplicado.')
         x0, y0, x1, y1 = geom.bounds
@@ -110,11 +115,17 @@ def obter_wfs(base, recorte):
     crs = dados.get('crs', {}).get('properties', {}).get('name')
     if crs not in ('urn:ogc:def:crs:EPSG::4326', 'EPSG:4326', 'urn:ogc:def:crs:OGC:1.3:CRS84'):
         raise FonteIndisponivel('CRS vetorial incompatível.')
-    registros = recortar_vetores(dados, recorte, tipos, [c['name'] for c in campos])
+    # Campo publicado só no GeoJSON é aceito apenas quando declarado no catálogo.
+    extras = [e for e in base.get('campos_extras', []) if e not in {c['name'] for c in campos}]
+    campos = campos + [{'name': e, 'origem': 'GeoJSON do serviço; ausente do DescribeFeatureType'} for e in extras]
+    registros = recortar_vetores(dados, recorte, tipos, [c['name'] for c in campos], z_zero=base.get('z_zero', False))
+    aviso = 'Atributos preservados da fonte. Áreas, comprimentos e datas cadastrais não foram recalculados para o recorte.'
+    if base.get('z_zero'):
+        aviso += ' Cota publicada igual a zero removida; geometria tratada em 2D.'
     return {'tipo': 'vetor', 'quantidade': len(registros), 'registros_consultados': n,
             'campos': campos, 'dados': {'type': 'FeatureCollection', 'features': registros},
             'sha256_resposta': hashlib.sha256(bruto).hexdigest(), 'servico': 'WFS 2.0.0',
-            'crs': 'EPSG:4326', 'aviso': 'Atributos preservados da fonte. Áreas, comprimentos e datas cadastrais não foram recalculados para o recorte.'}, None
+            'crs': 'EPSG:4326', 'aviso': aviso}, None
 
 
 def obter_trilhas(base, recorte):

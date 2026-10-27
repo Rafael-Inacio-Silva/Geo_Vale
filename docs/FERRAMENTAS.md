@@ -1,6 +1,6 @@
 # Ferramentas e justificativas
 
-Versão 4.2.0. As ferramentas abaixo correspondem ao mapa e à caracterização territorial automática implementados.
+Versão 4.3.0. As ferramentas abaixo correspondem ao mapa e à caracterização territorial automática implementados.
 
 | Necessidade | Ferramenta | Motivo e resultado |
 |---|---|---|
@@ -26,8 +26,8 @@ Versão 4.2.0. As ferramentas abaixo correspondem ao mapa e à caracterização 
 |---|---|
 | OpenStreetMap e Esri World Imagery | Fundos de navegação/contexto; OSM também fornece snapshot do sombreado da mina. |
 | FEAM / Vale / Amplo | Evidência do contorno externo do estudo conjunto, digitalizado aproximadamente. |
-| IDE-Sisema / WMS | Imagens dos dez conjuntos estaduais, mascaradas no navegador dentro da influência ou ampliadas por checkbox. |
-| IDE-Sisema / WFS | Contorno estadual e oito bases vetoriais com atributos completos para o território. |
+| IDE-Sisema / WMS | Imagens dos quinze conjuntos estaduais, mascaradas no navegador dentro da influência ou ampliadas por checkbox. |
+| IDE-Sisema / WFS | Contorno estadual e treze bases vetoriais com atributos completos para o território. |
 | IDE-Sisema / WCS | Coberturas numéricas de declividade e MapBiomas, em GeoTIFF nativo. |
 | Prefeitura de Nova Lima / ArcGIS REST | Trilhas, atributos completos para caracterização e simbologia oficial para visualização. |
 | ANM / SIGMINE | Processo, titular e fase cadastral; não fornece o recorte do MVP. |

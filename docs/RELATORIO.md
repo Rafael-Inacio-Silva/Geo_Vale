@@ -1,43 +1,49 @@
 # Relatório GeoVale: dado e contexto
 
-Versão 4.2.0, 27/10/2026. Selecionar a mina oferece **Ver relatório**, sem exigir Influência. A marca e autoria são GeoVale.
+Versão 4.3.0, 27/10/2026. Selecionar a mina oferece **Ver relatório**, sem exigir Influência. A marca e autoria são GeoVale.
 
-## Estrutura simples
+## Estrutura
 
-A primeira página apresenta influência e mina com os seis temas sobrepostos, mais um resumo de todos os dados. Seguem seis fichas: relevo, água, solos, vegetação/conservação, entorno/infraestrutura e trilhas. Cada ficha mostra somente seu tema sobre o mesmo recorte, mina sombreada, dados objetivos e comentário separado para cada dado. A ficha final reúne dados técnicos sem camada, sem mapa e com asterisco em cada valor fictício. Não há anexo de centenas de atributos, síntese de alternativas ou ranking.
+A primeira página apresenta influência, área minerada e mina com todos os temas sobrepostos, a área minerada em hectares e um resumo por tema. Seguem sete fichas: relevo e cavidades, água, solos, vegetação/conservação, entorno/infraestrutura, barragens e trilhas. Cada ficha mostra somente seu tema sobre o mesmo recorte, com área minerada e mina, dados objetivos e comentário separado para cada dado. A ficha final reúne os dados técnicos simulados, com mapa dos pontos e asterisco em cada valor fictício. Não há anexo de atributos, síntese de alternativas ou ranking.
 
-Os valores observados/calculados ficam na coluna Dado / valor / origem; a leitura contextual fica em outra coluna. Os comentários não substituem ou alteram fatos. Os atributos completos e GeoTIFFs continuam no armazenamento interno e nos contratos técnicos por base.
+Os valores observados/calculados ficam na coluna Dado / valor / origem; a leitura contextual fica em outra coluna. Os comentários não substituem ou alteram fatos. Os atributos completos e GeoTIFFs continuam no armazenamento interno.
+
+## Área minerada e entorno
+
+A AII é contexto; o objeto do pós-mineração é a área minerada. Ela é delimitada pelas células da classe Mineração da cobertura MapBiomas guardada, transformadas em polígono sem reamostragem. Na Horizontes: 3.173,3 ha, 20,7% do recorte. A mina OSM tem 512,2 ha e representa só a cava. Cada base vetorial é medida no total, na área minerada e no entorno: linhas pela soma dos trechos, polígonos pela união e pontos por contagem. Outras grades selecionam pelo centro as células que caem na área minerada.
+
+Relevo e solos dentro da área minerada são identificados como anteriores à mineração: Topodata deriva do SRTM de 2000 e o mapa pedológico é de 2010. O PDF informa que avaliar essa área exige levantamento topográfico atual e que o substrato atual é material minerado.
 
 ## O que é calculável
 
-Contagens por base, classes/valores categóricos e células sem dados vêm da coleta persistida. Comprimentos são somas dos trechos recortados em SIRGAS 2000 / UTM 23S; registros sobrepostos não são dissolvidos no comprimento. Superfícies são áreas da união dos polígonos dentro de cada base, sem duplicar sobreposição interna e sem somar esferas de conservação. São medidas cartográficas aproximadas das fontes, não levantamento cadastral ou área de recuperação.
+Comprimentos e áreas vetoriais são calculados em SIRGAS 2000 / UTM 23S; registros sobrepostos não são dissolvidos no comprimento. Áreas matriciais somam a área de cada célula, obtida pelos quatro vértices projetados em UTM 23S; a soma da grade coincide com a área do recorte. Percentuais de classe são percentuais dessa área.
 
-Percentuais matriciais são de células válidas, não área. O mapa usa cores oficiais dos rasters; reprojeção por vizinho mais próximo e redução de resolução ocorrem somente na apresentação. O processamento e as contagens mantêm a grade nativa. Mapas individuais não incluem outras camadas; o mapa geral compõe os seis temas com transparência e mina/contorno por cima.
+UCs de todas as esferas são agrupadas pelo campo `grupo` publicado em cada registro: proteção integral ou uso sustentável, com área da união, parte na área minerada e área de cada unidade. Barragens listam finalidade, método construtivo, PDA e classe publicados; alteamento a montante é destacado. Enquadramento soma o comprimento por classe; vazões apresentam o maior Q7,10 no recorte e na área minerada. Cavidades somam a área por grau de potencial. Áreas urbanas e rodovias informam a distância à área minerada.
 
-Geometria de rio não informa pH, profundidade, volume, vazão atual ou biota. O relatório registra essas ausências. Não há IA preenchendo lacunas como fatos observados.
+## Dados técnicos simulados
 
-## Dados técnicos fictícios
+`dados/cenarios/horizontes.json` contém três pontos de água e seis dados técnicos. Os pontos foram posicionados sobre dados reais: A1 em trecho classe 1 sem mineração a montante, A2 logo a jusante da área minerada e A3 após a confluência. pH, turbidez, ferro dissolvido e manganês total são fictícios. A classe do trecho mais próximo (até 300 m) vem do enquadramento do Igam; sem trecho próximo, vale a classe 2 (CONAMA 357/2005, art. 42). Os limites são os da Resolução CONAMA 357/2005 para a classe; a classe especial não tem padrão numérico.
 
-`dados/cenarios/horizontes.json` contém oito valores numéricos, unidade e método hipotético: fator de segurança de talude, vazão de projeto de drenagem, pH de uma amostra, resistência à penetração do solo, sobrevivência de mudas, área de uma edificação, acessos liberados e participantes de consulta comunitária. Todos têm **\*** e nota explícita de que não foram medidos na Horizontes. Não têm coordenadas fictícias no mapa.
+Os dados técnicos são fator de segurança de talude de pilha (mínimo 1,5 no talude geral com superfície freática normal, ABNT NBR 13029:2017), resistência do solo à penetração (2 MPa, limite crítico usual atribuído a Taylor et al., 1966), sobrevivência de mudas, área de edificação, acessos liberados e participantes de consulta. Os quatro primeiros têm ponto na área minerada; acesso e participação não têm localização. Todos têm **\*** e nota explícita de que não foram medidos na Horizontes.
 
-O Plano Minas-Rio, Anglo American, revisão junho/2021, fundamenta a estrutura de planejamento, vistoria, reabilitação e participação (8.2.1.3-8.2.1.5, 11.11.3 e 11.11.7.6). Não fornece os números simulados e não comprova resultados na mina do MVP. Fonte e URL constam da ficha.
+O Plano Minas-Rio, Anglo American, revisão junho/2021, fundamenta a estrutura de planejamento, vistoria, reabilitação e participação (8.2.1.3-8.2.1.5, 11.11.3 e 11.11.7.6). Não fornece os números simulados e não comprova resultados na mina do MVP.
 
 ## Comentários e IA
 
-IA generativa é adequada para redigir a leitura contextual de fatos fornecidos. ML preditivo exigiria base rotulada e validação; nenhum modelo foi treinado e nenhuma estratégia de pós-mineração é classificada nesta etapa.
+Cada comentário indica a implicação do dado para o planejamento pós-mineração (o que favorece, limita ou exige estudo) e um limite do dado, sem classificar aptidão ou recomendar uso. Os comentários por regras usam os valores calculados, por exemplo a parcela do entorno acima de 20% de declividade ou os quilômetros de drenagem que cruzam a área minerada.
 
 `comentarios.py` separa os comentários dos fatos por ID. A integração usa a **OpenAI Responses API** e o modelo **gpt-5-nano**, exatamente o solicitado. O modelo está confirmado na [documentação oficial](https://developers.openai.com/api/docs/models/gpt-5-nano), com [Structured Outputs](https://developers.openai.com/api/docs/guides/structured-outputs).
 
 A chave é colocada somente em `.local/ia.env`, na linha `OPENAI_API_KEY=`. O arquivo tem permissão 600, é ignorado por `.gitignore` e não é enviado ao frontend, PDF, logs ou GitHub. O leitor usa esse arquivo local, não credenciais globais do computador. É relido ao abrir uma emissão; preencher/alterar a chave invalida o cache sem exigir reiniciar o servidor. Uma sessão já aberta deve ser fechada e reaberta.
 
-A aplicação envia somente fichas compactas para `https://api.openai.com/v1/responses`, sem matrizes/geometrias, com `store=false`, raciocínio baixo, limite de 9.000 tokens de saída e timeout de 45 s. Não envia temperature, incompatível com a configuração escolhida do GPT-5 nano. O JSON Schema é estrito e limita IDs aos dados fornecidos. A resposta precisa estar completa; recusa, erro ou truncamento retornam às regras. Cada texto tem até 240 caracteres, todos os IDs precisam estar presentes e números não fornecidos são recusados.
+A aplicação envia somente ID, nome, valor, origem e marcação de simulado para `https://api.openai.com/v1/responses`, sem matrizes/geometrias, com `store=false`, raciocínio baixo, limite de 9.000 tokens de saída e timeout de 45 s. Não envia temperature, incompatível com a configuração escolhida do GPT-5 nano. O JSON Schema é estrito e limita IDs aos dados fornecidos. A resposta precisa estar completa; recusa, erro ou truncamento retornam às regras. Cada texto tem até 240 caracteres, todos os IDs precisam estar presentes e números não fornecidos são recusados.
 
-Sem chave ou com serviço indisponível, os comentários continuam sendo por regras, com procedência explícita. Não se apresentam esses textos como IA. Não houve chamada real nesta entrega porque o arquivo de chave está vazio; o contrato foi testado com respostas controladas. Verificações de formato não garantem correção semântica de um LLM; revisão técnica continua necessária. Cache por dados/cenário/modelo evita chamadas por página ou download. Valores de fontes, cálculos e exemplos fictícios não são alterados pelo modelo.
+Sem chave ou com serviço indisponível, os comentários continuam sendo por regras, com procedência explícita. Não houve chamada real porque o arquivo de chave está vazio; o contrato foi testado com respostas controladas. Verificações de formato não garantem correção semântica de um LLM; revisão técnica continua necessária. Valores de fontes, cálculos e exemplos fictícios não são alterados pelo modelo.
 
 ## PDF e prévia
 
 ReportLab gera o PDF. `GET /api/minas/{id}/relatorio` retorna PDF inline; `baixar=true` altera apenas Content-Disposition. Bases incompletas/vencidas ou cenário inválido impedem geração (503); mina desconhecida retorna 404. O cabeçalho `X-Relatorio-Versao` contém o hash do PDF.
 
-A prévia usa PDFium no servidor: `/relatorio/previa?versao=...` entrega paginação/textos acessíveis; `/relatorio/paginas/{numero}?versao=...` entrega PNG. PDFium opera sob mutex global e fecha recursos explicitamente. São guardadas até quatro versões de PDF e doze imagens, com escala fixa. Versão ausente retorna 409 para reabrir; página inválida retorna 404. O navegador não renderiza PDF em canvas. Uma falha de imagem não exibe página antiga junto com erro; Tentar novamente recarrega o PDF/manifesto e a página, recuperando também uma versão expirada após reinício do servidor. Download salva o mesmo Blob da versão aberta.
+A prévia usa PDFium no servidor: `/relatorio/previa?versao=...` entrega paginação/textos acessíveis; `/relatorio/paginas/{numero}?versao=...` entrega PNG. PDFium opera sob mutex global e fecha recursos explicitamente. São guardadas até quatro versões de PDF e doze imagens, com escala fixa. Versão ausente retorna 409 para reabrir; página inválida retorna 404. Download salva o mesmo Blob da versão aberta.
 
-A assinatura do coletor continua 4.0.0 porque coleta/recorte não mudaram. O PDF é gerado do banco atual, não de um arquivo demonstrativo fixo no repositório.
+A assinatura do coletor continua 4.0.0: barragens declaram no catálogo o campo `name`, publicado só no GeoJSON, e a cota constante zero dos pontos. O PDF é gerado do banco atual, não de um arquivo demonstrativo fixo no repositório.

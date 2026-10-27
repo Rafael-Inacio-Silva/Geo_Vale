@@ -20,6 +20,8 @@ from geovale.influencia import ler_influencia
 from geovale.mapa import FonteIndisponivel
 from geovale.territorio import DadosTerritoriais, catalogar_bases
 
+TOTAL = len(catalogar_bases(CAMADAS))
+
 
 def preparar_raiz(tmp_path):
     pasta = tmp_path / 'dados/influencias'
@@ -51,8 +53,8 @@ def test_catalogo_inteiro_persistido_reabre_sem_rede_e_nova_base_entra_sozinha(t
     assert fonte.obter('horizontes')['bases_prontas'] == 0
     fonte.atualizar()
     d = fonte.obter('horizontes')
-    assert d['completo'] and d['total_bases'] == 11
-    assert len(chamadas) == 11
+    assert d['completo'] and d['total_bases'] == TOTAL
+    assert len(chamadas) == TOTAL
     assert {b['tema_id'] for b in d['bases']} == {t['id'] for t in CAMADAS}
     for b in d['bases']:
         registro = fonte.registros('horizontes', b['id'])
@@ -61,11 +63,11 @@ def test_catalogo_inteiro_persistido_reabre_sem_rede_e_nova_base_entra_sozinha(t
     assert segunda.obter('horizontes')['completo']
     segunda.atualizar()
     catalogo[0]['bases'].append({**catalogo[0]['bases'][0], 'camada': 'IDE:nova_base_teste', 'nome': 'Nova base'})
-    assert fonte.obter('horizontes')['total_bases'] == 12
-    assert fonte.obter('horizontes')['bases_prontas'] == 11
+    assert fonte.obter('horizontes')['total_bases'] == TOTAL + 1
+    assert fonte.obter('horizontes')['bases_prontas'] == TOTAL
     fonte.atualizar()
     assert fonte.obter('horizontes')['completo']
-    assert len(chamadas) == 12
+    assert len(chamadas) == TOTAL + 1
     assert chamadas[-1] == 'IDE:nova_base_teste'
 
 
@@ -84,7 +86,7 @@ def test_mudar_recorte_invalida_dados_incompativeis_e_reprocessa(tmp_path):
     assert fonte.obter('horizontes')['bases_prontas'] == 0
     fonte.atualizar()
     assert fonte.obter('horizontes')['completo']
-    assert len(chamadas) == 22
+    assert len(chamadas) == 2 * TOTAL
 
 
 def test_falha_nao_vira_zero_ultimo_dado_identificado_e_recupera_so_base_com_erro(tmp_path):
@@ -104,16 +106,16 @@ def test_falha_nao_vira_zero_ultimo_dado_identificado_e_recupera_so_base_com_err
     fonte.atualizar()
     d = fonte.obter('horizontes')
     erro = next(b for b in d['bases'] if b['camada'] == camada)
-    assert not d['completo'] and d['bases_prontas'] == 10
+    assert not d['completo'] and d['bases_prontas'] == TOTAL - 1
     assert erro['estado'] == 'erro' and erro['quantidade'] == 1 and erro['consultado_em']
-    assert len(chamadas) == 22
+    assert len(chamadas) == 2 * TOTAL
     fonte.atualizar()
-    assert len(chamadas) == 22
+    assert len(chamadas) == 2 * TOTAL
     agora[0] += 301
     falhar[0] = False
     fonte.atualizar()
     assert fonte.obter('horizontes')['completo']
-    assert len(chamadas) == 23
+    assert len(chamadas) == 2 * TOTAL + 1
 
 
 def test_pacote_tem_so_contorno_externo_e_mina_sombreada():
@@ -133,7 +135,7 @@ def test_api_catalogo_completo_independe_camadas_visiveis_e_rotas_antigas_sumira
     fonte.atualizar()
     cliente = TestClient(criar_app(raiz=raiz, territorios=fonte))
     d = cliente.get('/api/minas/horizontes/territorio?ativas=agua').json()
-    assert d['completo'] and d['total_bases'] == 11
+    assert d['completo'] and d['total_bases'] == TOTAL
     assert cliente.get('/api/minas/outra/territorio').status_code == 404
     assert cliente.get('/api/minas/horizontes/influencia').status_code == 200
     assert cliente.get('/api/minas/horizontes/territorio/inexistente').status_code == 404
@@ -257,7 +259,7 @@ def test_dados_ficam_isolados_por_mina(tmp_path):
     with fonte.conectar() as db:
         db.execute('DELETE FROM bases WHERE mina=?', ('horizontes',))
     assert fonte.obter('horizontes')['bases_prontas'] == 0
-    assert fonte.obter('outra')['bases_prontas'] == 11
+    assert fonte.obter('outra')['bases_prontas'] == TOTAL
 
 
 def test_lifespan_prepara_dados_sem_clique_e_encerra_agendamento(tmp_path):
@@ -299,16 +301,16 @@ def test_relatorio_pdf_usa_catalogo_inteiro_sem_rede_e_preserva_dados_internos(t
     assert resposta.headers['cache-control'] == 'no-store'
     assert resposta.content.startswith(b'%PDF')
     pdf = PdfReader(BytesIO(resposta.content))
-    assert pdf.metadata.author == 'GeoVale' and len(pdf.outline) == 8
+    assert pdf.metadata.author == 'GeoVale' and len(pdf.outline) == len(CAMADAS) + 2
     texto = '\n'.join(p.extract_text() for p in pdf.pages)
     assert 'VALE S.A.' not in texto
-    assert 'Dados técnicos sem camada' in texto and 'Dados fictícios' in texto
+    assert 'Dados técnicos simulados' in texto and 'Valores fictícios' in texto
     assert 'Fonte' in texto and 'Minas-Rio' in texto and '15' in texto
     relatorio = fonte.relatorio('horizontes')
-    assert relatorio['completo'] and len(relatorio['bases']) == 11
+    assert relatorio['completo'] and len(relatorio['bases']) == TOTAL
     for base in relatorio['bases']:
         assert base['consultado_em'] and base['recorte']['assinatura']
-        assert base['base']['nome'].replace('—', '-') in texto
+        assert base['base']['nome'].replace('—', '-') in ' '.join(texto.split())
         if base['tipo'] == 'vetor':
             assert base['dados']['features'][0]['properties'] == {'extra': 'conservado', 'vazio': None}
         else:

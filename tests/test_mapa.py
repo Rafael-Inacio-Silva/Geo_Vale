@@ -142,10 +142,10 @@ def test_catalogo_tematico_integra_fontes_estadual_e_municipal():
     resposta = cliente.get('/api/mapa')
     assert resposta.status_code == 200
     temas = resposta.json()['camadas']
-    assert {t['id'] for t in temas} == {'relevo', 'agua', 'solos', 'vegetacao', 'entorno', 'trilhas'}
-    assert len({t['ordem'] for t in temas}) == 6
+    assert {t['id'] for t in temas} == {'relevo', 'agua', 'solos', 'vegetacao', 'entorno', 'barragens', 'trilhas'}
+    assert len({t['ordem'] for t in temas}) == 7
     bases = [b for tema in temas for b in tema['bases']]
-    assert len(bases) == len({b['camada'] for b in bases}) == 11
+    assert len(bases) == len({b['camada'] for b in bases}) == 16
     for tema in temas:
         if tema['tipo'] == 'geojson':
             assert tema['url'] == '/api/mapa/trilhas' and tema['alcance'] == 'Nova Lima'

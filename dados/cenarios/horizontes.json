@@ -1,10 +1,10 @@
 {
   "mina_id": "horizontes",
-  "versao": "2.0",
+  "versao": "3.0",
   "natureza": "simulado",
   "titulo": "Cenário técnico simulado",
   "horizonte": "Pós-fechamento hipotético",
-  "descricao": "* Dados fictícios criados para demonstrar entradas técnicas do MVP. Não medidos na Horizontes e não copiados do plano Minas-Rio.",
+  "descricao": "* Valores fictícios criados para demonstrar entradas técnicas do MVP, não medidos na Horizontes e não copiados do plano Minas-Rio. Os pontos foram posicionados sobre dados reais: área minerada (MapBiomas) e trechos enquadrados (Igam).",
   "referencia": {
     "titulo": "Plano de Fechamento de Mina - Complexo Minerário Sistema Minas-Rio",
     "instituicao": "Anglo American",
@@ -14,62 +14,82 @@
     "paginas_pdf": "40-44; 68-69; 84",
     "paginas_impressas": "34-38; 62-63; 78"
   },
+  "agua": [
+    {
+      "id": "agua_a1",
+      "rotulo": "A1",
+      "nome": "Ponto de água A1 - referência sem mineração a montante",
+      "ponto": [-43.874097, -20.067948],
+      "metodo": "Campanha hipotética única",
+      "parametros": {"ph": 7.1, "turbidez": 9.0, "fe_dissolvido": 0.12, "mn_total": 0.04}
+    },
+    {
+      "id": "agua_a2",
+      "rotulo": "A2",
+      "nome": "Ponto de água A2 - logo a jusante da área minerada",
+      "ponto": [-43.918265, -20.136398],
+      "metodo": "Campanha hipotética única",
+      "parametros": {"ph": 6.9, "turbidez": 128.0, "fe_dissolvido": 0.27, "mn_total": 0.18}
+    },
+    {
+      "id": "agua_a3",
+      "rotulo": "A3",
+      "nome": "Ponto de água A3 - jusante distante, após confluência",
+      "ponto": [-43.870436, -20.131133],
+      "metodo": "Campanha hipotética única",
+      "parametros": {"ph": 7.0, "turbidez": 46.0, "fe_dissolvido": 0.21, "mn_total": 0.08}
+    }
+  ],
   "dados": [
     {
       "id": "fator_seguranca",
-      "nome": "Fator de segurança de talude",
+      "rotulo": "T1",
+      "nome": "Fator de segurança de talude de pilha",
       "valor": 1.55,
       "unidade": "adimensional",
+      "ponto": [-43.927576, -20.107546],
       "metodo": "Análise estática hipotética; geometria e parâmetros não levantados",
-      "comentario": "Um fator isolado não comprova estabilidade. Método, geometria, cargas e investigação precisam acompanhar uma avaliação geotécnica."
-    },
-    {
-      "id": "vazao_drenagem",
-      "nome": "Vazão de projeto de drenagem",
-      "valor": 120,
-      "unidade": "L/s",
-      "metodo": "Dimensionamento hipotético, não medição de rio",
-      "comentario": "A capacidade de projeto é diferente da vazão natural. Compatibilidade com chuvas, bacia e manutenção precisa de estudo específico."
-    },
-    {
-      "id": "ph",
-      "nome": "pH de uma amostra de água",
-      "valor": 7.2,
-      "unidade": "pH",
-      "metodo": "Uma amostra hipotética, sem ponto geográfico ou campanha real",
-      "comentario": "Uma amostra isolada não caracteriza a qualidade de toda a água. Faltam campanha, localização, outros parâmetros e série temporal."
+      "referencia_tecnica": {"texto": "mínimo 1,5 no talude geral com superfície freática normal (ABNT NBR 13029:2017, pilhas)", "minimo": 1.5},
+      "comentario": "Acima do mínimo de referência: no setor simulado, a revegetação poderia começar. Um fator isolado não comprova a estabilidade de toda a estrutura."
     },
     {
       "id": "compactacao",
+      "rotulo": "S1",
       "nome": "Resistência do solo à penetração",
       "valor": 2.0,
       "unidade": "MPa",
+      "ponto": [-43.910754, -20.107998],
       "metodo": "Ensaio hipotético; umidade e profundidade não informadas",
-      "comentario": "O valor depende do método e da umidade. Não substitui análise de fertilidade, contaminação ou projeto de preparo do solo."
+      "referencia_tecnica": {"texto": "2 MPa, limite crítico usual para o crescimento de raízes (Taylor et al., 1966)", "maximo": 2.0},
+      "comentario": "No limiar restritivo: indicaria escarificação ou subsolagem antes do plantio. O valor depende do método e da umidade."
     },
     {
       "id": "sobrevivencia",
+      "rotulo": "S1",
       "nome": "Sobrevivência de mudas em parcela",
       "valor": 82,
       "unidade": "%",
+      "ponto": [-43.910754, -20.107998],
       "metodo": "Parcela hipotética de 100 mudas, avaliação aos 12 meses",
-      "comentario": "Sobrevivência em uma parcela é um indicador de implantação. Não comprova recuperação do ecossistema ou resultado para toda a influência."
+      "comentario": "Sobrevivência alta sugere espécies e preparo adequados no ponto simulado; não comprova a recuperação do ecossistema em toda a área."
     },
     {
       "id": "edificacao",
-      "nome": "Área de uma edificação candidata",
+      "rotulo": "E1",
+      "nome": "Área de uma edificação candidata a reuso",
       "valor": 320,
       "unidade": "m²",
-      "metodo": "Uma edificação fictícia, sem localização no mapa",
-      "comentario": "Área construída dimensiona uma estrutura. Reuso depende também de inspeção, acessibilidade, estado de conservação e finalidade."
+      "ponto": [-43.896756, -20.123031],
+      "metodo": "Edificação fictícia",
+      "comentario": "Uma estrutura existente pode reduzir o custo de um uso futuro, como apoio ou centro de visitantes; o reuso depende de inspeção, acessibilidade e finalidade."
     },
     {
       "id": "acesso",
       "nome": "Acessos liberados ao público",
       "valor": 0,
       "unidade": "acessos",
-      "metodo": "Estado administrativo fictício; não avalia segurança real",
-      "comentario": "Cadastro de estrada ou trilha não equivale a autorização de acesso. O dado administrativo deve ser tratado separadamente da geometria."
+      "metodo": "Estado administrativo fictício",
+      "comentario": "Sem acesso liberado, usos com visitação dependem de autorização e adequação de segurança. Cadastro de trilha ou estrada não equivale a autorização."
     },
     {
       "id": "participacao",
@@ -77,7 +97,7 @@
       "valor": 24,
       "unidade": "pessoas",
       "metodo": "Consulta inteiramente fictícia, sem entrevista real ou preferências atribuídas",
-      "comentario": "Número de participantes não identifica preferências, representatividade ou beneficiários. A participação real exige escopo e registro próprios."
+      "comentario": "Participação pequena indicaria ampliar a escuta antes de definir usos. O número não identifica preferências nem representatividade."
     }
   ]
 }
