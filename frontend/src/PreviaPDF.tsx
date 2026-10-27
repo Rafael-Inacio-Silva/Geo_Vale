@@ -1,7 +1,7 @@
 import {useEffect, useRef, useState} from 'react';
-import {getDocument, GlobalWorkerOptions} from 'pdfjs-dist';
-import type {PDFDocumentLoadingTask, PDFDocumentProxy, RenderTask} from 'pdfjs-dist';
-import trabalhador from 'pdfjs-dist/build/pdf.worker.min.mjs?url';
+import {getDocument, GlobalWorkerOptions} from 'pdfjs-dist/legacy/build/pdf.mjs';
+import type {PDFDocumentLoadingTask, PDFDocumentProxy, RenderTask} from 'pdfjs-dist/legacy/build/pdf.mjs';
+import trabalhador from 'pdfjs-dist/legacy/build/pdf.worker.min.mjs?url';
 
 GlobalWorkerOptions.workerSrc = trabalhador;
 
@@ -12,20 +12,24 @@ export default function PreviaPDF({arquivo}: {arquivo: Blob}) {
   const [largura, setLargura] = useState(600);
   const [texto, setTexto] = useState('');
   const [erro, setErro] = useState(false);
+  const [tentativa, setTentativa] = useState(0);
   const [renderizando, setRenderizando] = useState(true);
   const area = useRef<HTMLDivElement>(null);
   const tela = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
+    setDocumento(null);
+    setErro(false);
+    setRenderizando(true);
     let encerrado = false;
     let tarefa: PDFDocumentLoadingTask | undefined;
     void arquivo.arrayBuffer().then(bruto => {
       if (encerrado) return;
       tarefa = getDocument({data: new Uint8Array(bruto)});
       return tarefa.promise.then(pdf => {if (!encerrado) setDocumento(pdf);});
-    }).catch(() => {if (!encerrado) setErro(true);});
-    return () => {encerrado = true; if (tarefa) void tarefa.destroy();};
-  }, [arquivo]);
+    }).catch(falha => {if (!encerrado) {console.error('Falha ao abrir PDF:', falha); setErro(true); setRenderizando(false);}});
+    return () => {encerrado = true; if (tarefa) void tarefa.destroy().catch(() => {});};
+  }, [arquivo, tentativa]);
 
   useEffect(() => {
     const elemento = area.current;
@@ -43,6 +47,7 @@ export default function PreviaPDF({arquivo}: {arquivo: Blob}) {
     let encerrado = false;
     let tarefa: RenderTask | undefined;
     setRenderizando(true);
+    setErro(false);
     setTexto('');
     async function desenhar() {
       const folha = await documento!.getPage(pagina);
@@ -62,7 +67,7 @@ export default function PreviaPDF({arquivo}: {arquivo: Blob}) {
         setRenderizando(false);
       }
     }
-    void desenhar().catch(() => {if (!encerrado) {setErro(true); setRenderizando(false);}});
+    void desenhar().catch(falha => {if (!encerrado) {console.error('Falha ao renderizar página do PDF:', falha); setErro(true); setRenderizando(false);}});
     return () => {encerrado = true; tarefa?.cancel();};
   }, [documento, pagina, largura]);
 
@@ -78,11 +83,10 @@ export default function PreviaPDF({arquivo}: {arquivo: Blob}) {
       <button type="button" disabled={!documento || pagina === documento.numPages} onClick={() => mudarPagina(pagina + 1)}>Próxima</button>
     </nav>
     <div className="folha-relatorio" ref={area}>
-      {erro ? <p role="alert">Não foi possível visualizar esta página.</p> : <>
-        {renderizando ? <p className="carregando-folha" role="status">Carregando página…</p> : null}
-        <canvas key={pagina} ref={tela} aria-hidden="true"/>
-        <p className="somente-leitor">{texto}</p>
-      </>}
+      {erro ? <div role="alert"><p>Não foi possível visualizar esta página.</p><button className="tentar-novamente" type="button" onClick={() => setTentativa(v => v + 1)}>Tentar novamente</button></div> : null}
+      {!erro && renderizando ? <p className="carregando-folha" role="status">Carregando página…</p> : null}
+      <canvas key={pagina} ref={tela} aria-hidden="true" hidden={erro || !documento}/>
+      <p className="somente-leitor">{erro ? '' : texto}</p>
     </div>
   </div>;
 }

@@ -41,10 +41,12 @@ O download realizado por **Baixar PDF** no navegador foi comparado byte a byte c
 ## Fluxo no navegador
 
 - Antes da seleção: Influência desabilitada e Ver relatório ausente. Selecionar a mina mostra o contorno e Ver relatório, sem exigir Influência.
-- Ver relatório abre diálogo; PDF.js/worker carregam sob demanda. Capa e página de contagens reais renderizadas, com texto também disponível para leitor de tela.
+- Ver relatório abre diálogo; PDF.js/worker no build oficial legacy carregam sob demanda. Capa e página de contagens reais renderizadas, com texto também disponível para leitor de tela.
 - Anterior/Próxima atualizam a página; download salva o documento visualizado. Fechar preserva seleção e retorna o foco ao botão.
 - Falha de conexão provocada desligando somente o servidor de verificação apresentou Tentar novamente. Reinício e nova tentativa recuperaram o relatório de 18 páginas sem perder a seleção.
 - Em celular 390 x 844, largura do documento HTML igual a 390, diálogo com 374 pixels e canvas com 340 pixels; sem rolagem horizontal. Os controles permaneceram disponíveis.
+
+A compatibilidade foi verificada em sessão controlada do navegador com `Map.prototype.getOrInsertComputed`, `Uint8Array.prototype.toBase64` e `Uint8Array.fromBase64` removidos antes de carregar o leitor. O build moderno reproduziu TypeError ao renderizar; o legacy renderizou as 18 páginas do PDF real. Na interface compilada sob as mesmas ausências, uma falha transitória de canvas foi provocada: Tentar novamente recuperou a capa sem fechar o diálogo e Próxima exibiu a tabela das onze bases. Essa verificação simula APIs ausentes; não equivale a execução automatizada no Safari do usuário, cujo controle nativo não respondeu. Os arquivos temporários de reprodução foram removidos do build após a conferência.
 
 A representação temática do mapa continua independente do documento. Os controles visuais não escolhem dados do relatório; o armazenamento real é separado do cenário local fictício. As verificações do novo fluxo não certificam condições ambientais, estabilidade ou precisão do contorno.
 
