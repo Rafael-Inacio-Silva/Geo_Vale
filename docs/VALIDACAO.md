@@ -22,6 +22,10 @@ A emissão com pesos AHP tem 14 páginas, 2.328.323 bytes. Foram renderizadas e 
 
 Numa instância isolada (porta 8031, cópia do banco): mina selecionada, Sugerir uso calculou e pintou os setores, os pesos AHP apareceram nos controles, o popup de um setor mostrou ranking e explicação, e mudar o peso da vegetação nativa recalculou a lista (S2 passou a ecoturismo, marcado como sensível). Ver relatório pediu o PDF com os mesmos pesos (`?pesos=34,90,13,13,7,6,5`) e a ficha impressa "Pesos ajustados pelo engenheiro". O download byte a byte e a falha provocada de imagem foram conferidos na 4.2.0; esse mecanismo não mudou e não foi repetido.
 
+## Correção após o reinício
+
+Ao reiniciar o servidor com a 4.4.0, o tema Entorno não carregou no mapa. O GetMap de cada base mostrou a causa: o estilo oficial das linhas de transmissão gera erro no banco do GeoServer ("sintaxe de entrada é inválida para tipo double precision"), e um erro derruba a imagem do tema inteiro. A base passou a declarar `mapa=False`: sai da imagem WMS e da legenda, mas continua nos dados, na sugestão e no PDF. As demais 17 bases tiveram GetMap conferido com imagem PNG válida. O aviso de falha no mapa agora diz qual tema não carregou.
+
 ## IA e alcance
 
 O arquivo de chave permanece vazio: não houve chamada real à OpenAI. O contrato foi testado com respostas controladas. Não houve ML treinado, chamada paga, validação de especialista, ensaio real ou decisão de pós-mineração. Os limites das funções e os julgamentos AHP são valores de partida documentados, não calibrados com especialistas. [Multicritério e IA](MULTICRITERIO.md), [método](RELATORIO.md), [dados](DADOS_TERRITORIAIS.md).

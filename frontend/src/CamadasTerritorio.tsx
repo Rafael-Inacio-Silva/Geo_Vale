@@ -33,7 +33,7 @@ function LegendaTrilhas({trilhas, estado}: {trilhas: LegendaTrilha[]; estado?: E
 function LegendasTema({bases, trilhas, estado}: {bases: CamadaTerritorial['bases']; trilhas?: LegendaTrilha[]; estado?: EstadoCamada}) {
   const [aberta, setAberta] = useState(false);
   return <details className="legendas-tema" onToggle={evento => setAberta(evento.currentTarget.open)}><summary>Legenda</summary>
-    {aberta ? trilhas !== undefined ? <LegendaTrilhas trilhas={trilhas} estado={estado}/> : bases.map(base => <Legenda key={base.camada} nome={base.nome} url={base.legenda}/>) : null}
+    {aberta ? trilhas !== undefined ? <LegendaTrilhas trilhas={trilhas} estado={estado}/> : bases.filter(base => base.mapa !== false).map(base => <Legenda key={base.camada} nome={base.nome} url={base.legenda}/>) : null}
   </details>;
 }
 

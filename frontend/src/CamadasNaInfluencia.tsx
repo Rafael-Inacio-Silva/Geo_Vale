@@ -12,7 +12,7 @@ function TemaRecortado({mapa, tema, contorno, ativo, recarga, informar}: {
     if (!ativo) return;
     const area = contorno.features.find(f => f.properties.id === 'influencia');
     const opcoes: L.WMSOptions = {
-      layers: tema.bases.map(b => b.camada).join(','),
+      layers: tema.bases.filter(b => b.mapa !== false).map(b => b.camada).join(','),
       format: 'image/png', transparent: true, version: '1.1.1',
       attribution: tema.credito, opacity: tema.opacidade, zIndex: 200 + tema.ordem,
       bounds: L.geoJSON(area).getBounds(), noWrap: true, tileSize: 512, maxZoom: 19,
@@ -59,13 +59,14 @@ export default function CamadasNaInfluencia({mapa, minaId, contorno, temas, expa
     setEstados(atuais => atuais[id] === estado ? atuais : {...atuais, [id]: estado});
   }, []);
   const recortados = temas.filter(t => expandidas[t.id] === undefined);
-  const falhou = recortados.some(t => estados[t.id] === 'erro');
+  const falhas = recortados.filter(t => estados[t.id] === 'erro').map(t => t.nome);
+  const falhou = falhas.length > 0;
   const carregando = recortados.some(t => !estados[t.id] || estados[t.id] === 'carregando');
   return <>
     {temas.map(tema => tema.tipo === 'wms'
       ? <TemaRecortado key={tema.id} mapa={mapa} tema={tema} contorno={contorno} ativo={expandidas[tema.id] === undefined} recarga={recarga} informar={informar}/>
       : <TrilhasNoMapa key={tema.id} mapa={mapa} tema={tema} urlRecorte={`/api/minas/${encodeURIComponent(minaId)}/trilhas-influencia`} opacidade={expandidas[tema.id] === undefined ? tema.opacidade : undefined} recarga={recarga} informarEstado={informar} informarLegenda={informarLegenda}/>)}
-    {falhou ? <p className="erro-territorio" role="alert">Uma camada não carregou. <button type="button" className="tentar-novamente" onClick={() => setRecarga(v => v + 1)}>Recarregar</button></p>
+    {falhou ? <p className="erro-territorio" role="alert">Não carregou: {falhas.join(', ')}. <button type="button" className="tentar-novamente" onClick={() => setRecarga(v => v + 1)}>Recarregar</button></p>
       : carregando ? <p className="nota-territorio" role="status">Carregando camadas…</p> : null}
   </>;
 }

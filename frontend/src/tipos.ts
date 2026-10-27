@@ -35,7 +35,7 @@ export interface CamadaTerritorial {
   ordem: number;
   url: string;
   credito: string;
-  bases: {camada: string; nome: string; metadado: string; legenda: string}[];
+  bases: {camada: string; nome: string; metadado: string; legenda: string; mapa?: false}[];
 }
 
 export type CamadasAtivas = Record<string, number>;

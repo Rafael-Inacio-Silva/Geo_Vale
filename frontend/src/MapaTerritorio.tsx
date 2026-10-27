@@ -128,7 +128,7 @@ export default function MapaTerritorio({configuracao, limite, selecionada, selec
         continue;
       }
       const camada = L.tileLayer.wms(tema.url, {
-        layers: tema.bases.map(base => base.camada).join(','),
+        layers: tema.bases.filter(base => base.mapa !== false).map(base => base.camada).join(','),
         format: 'image/png', transparent: true, version: '1.1.1',
         attribution: tema.credito, opacity: opacidade, zIndex: 200 + tema.ordem,
         tileSize: 512, maxZoom: 19, bounds: cobertura, noWrap: true,
