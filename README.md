@@ -47,6 +47,7 @@ As tecnologias utilizadas e suas justificativas estão em [Ferramentas](docs/FER
 - `backend/geovale/anm.py`: consulta dos atributos cadastrais ANM, sem geometria.
 - `backend/geovale/municipio.py`: consulta do município selecionado na API IBGE.
 - `backend/geovale/area.py`: validação do polígono manual.
+- `backend/geovale/agua.py`: consulta WFS, interseção e resumo preliminar de água na AID fixa.
 - `frontend/src`: navegação, pesquisa, camadas, desenho e identidade visual.
 - `dados/minas.json`: cadastro da única mina e proveniência de sua localização.
 - `dados/referencias`: referência vetorial OSM, influências aproximadas do parecer e receita de preparo.
@@ -68,3 +69,7 @@ O contorno municipal vem da [API oficial de malhas simplificadas do IBGE](docs/L
 A referência da mina é o contorno vetorial do OpenStreetMap marcado com símbolos de mineração. Os quatro contornos de influência são aproximados, digitalizados da Figura 2.3 (p. PDF 18) do parecer FEAM. A influência inclui Tamanduá/Horizontes. O desenho manual é livre e pode ser sobreposto a esses recortes; não há comparação por cálculo. Os arquivos locais não exigem consulta externa; o restante das fontes continua dependendo de internet.
 
 Os três modos Manual, Referência e Influência são independentes da fase de edição: alternar não adiciona áreas, preserva filtros e permite retomar o rascunho. Usar como área é explícito e reutiliza a referência OSM intacta já existente. O último contexto pode apoiar o desenho em Manual e tem opção Ocultar. [Fluxo de interação](docs/AREA_ESTUDO.md).
+
+## Caracterização preliminar da água
+
+Em **Influência → Extrair dados de água**, o sistema consulta as duas bases vetoriais oficiais de água da IDE-Sisema, recorta pela **AID de águas e solos** do parecer e mostra trechos, massas d’água, registros, fontes e data, com sobreposição azul opcional. A consulta é sob demanda, sem desenho prévio e sem alterar as áreas pessoais. Os filtros de influência são visuais; não mudam o recorte fixo. Há cache de dez minutos, sem download estadual ou persistência. Não é diagnóstico da água nem delimitação de intervenção. [Método, evidência e justificativa para apresentação](docs/EXTRACAO_AGUA.md).

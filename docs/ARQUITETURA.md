@@ -6,6 +6,10 @@ flowchart LR
     F --> A[FastAPI local]
     A --> C[Cadastro da Mina Horizontes]
     A --> W[WFS da IDE-Sisema: limite de MG]
+    A --> H[WFS: duas bases de água na AID fixa]
+    H --> X[Shapely: interseção e contagens]
+    R --> X
+    X --> F
     W --> M[Validação e cache em memória]
     M --> F
     F --> T[Tiles OpenStreetMap ou Esri]
@@ -31,6 +35,7 @@ flowchart LR
 | `GET /api/mapa/trilhas?bbox=...` | Traçados municipais no enquadramento visível; 422 para bbox inválida e 503 na falha externa |
 | `GET /api/minas/{mina_id}/processo-anm` | Atributos cadastrais ANM sem geometria e fonte/data; 404 para mina desconhecida e 503 na falha externa |
 | `GET /api/minas/{mina_id}/limite-municipal` | FeatureCollection IBGE do município selecionado; 404 para mina desconhecida e 503 na falha externa |
+| `GET /api/minas/{mina_id}/agua-influencia` | Água recortada, resumo e fontes; recorte fixo AID águas/solos, 404/503, sem resultado parcial |
 | `GET /api/minas/{mina_id}/referencias` | Pacote documental local conferido; 404 para mina desconhecida, 503 para pacote ausente/incompatível |
 | `POST /api/area/validar` | Valida e devolve a Feature poligonal; 422 para desenho inválido e 413 acima de 128 KiB |
 | `GET /` | Interface compilada; 503 com orientação se o build estiver ausente |
@@ -72,7 +77,7 @@ O backend usa somente a URL ArcGIS REST fixa, recorta a bbox à extensão public
 
 `AreaEstudo` usa Leaflet.draw sem sua barra padrão. Os controles React seguem a identidade da interface. Estados: vazio, desenho, ajuste, validação, renomeação e confirmado. Um Map de áreas numeradas mantém as Features confirmadas na memória da página. Um FeatureGroup recebe o recorte ativo/rascunho; outro mantém as demais áreas, selecionáveis por clique. A lista React permite seleção por teclado. Adicionar preserva o conjunto; ajustar/redesenhar/remover afetam só o id selecionado. Cancelar retorna ao id anterior e restaura sua confirmação. A numeração não é reutilizada durante a sessão. Requests pendentes são cancelados na saída ou cancelamento. Desmontar remove handlers, eventos e grupo.
 
-A confirmação envia a Feature para `/api/area/validar`; Shapely rejeita autointerseção, anel aberto, degeneração, buracos, tipos diferentes de Polygon e coordenadas inválidas. Não aplica `make_valid` ao desenho. A API devolve a mesma geometria e propriedades controladas (`origem`, `finalidade`, `vertices`). Limites de latitude ±85°, longitude ±180°, sem segmentos cruzando o antimeridiano. Não calcula área/distância nem cruza com bases. A confirmação fica na memória da página; não há gravação ou retomada após reload. [Regras completas](AREA_ESTUDO.md).
+A confirmação envia a Feature para `/api/area/validar`; Shapely rejeita autointerseção, anel aberto, degeneração, buracos, tipos diferentes de Polygon e coordenadas inválidas. Não aplica `make_valid` ao desenho. A API devolve a mesma geometria e propriedades controladas (`origem`, `finalidade`, `vertices`). Limites de latitude ±85°, longitude ±180°, sem segmentos cruzando o antimeridiano. A validação do desenho não calcula área/distância nem cruza com bases; a extração de água é uma rota independente com AID fixa. A confirmação fica na memória da página; não há gravação ou retomada após reload. [Regras completas](AREA_ESTUDO.md).
 
 ### Cores e legenda municipais
 
@@ -103,3 +108,11 @@ A área tem um nome pessoal opcional, separado da Feature e indexado pelo id est
 Pontos do desenho aberto são capturados pelo evento DRAWVERTEX, usando `Marker.getLatLng`, e preservados ao suspender Leaflet.draw. Durante a consulta aparece um traço de rascunho sem interação. Retomar recria o desenho via `addVertex` com as mesmas coordenadas e restaura centro/zoom. Ajuste preserva o Polygon enquanto desabilita os marcadores; retomar reativa a edição. A suspensão não aciona a rotina de cancelamento. Texto de nome fica montado e oculto. A resposta de validação pode completar sem trocar o modo consultado; falha só reabre marcadores quando Manual estiver ativo.
 
 O último contexto pode permanecer sob o desenho em Manual, com um controle explícito para ocultar. A sobreposição de influência pode renderizar só a referência ou os quatro filtros mais a referência. O estado dos filtros não depende do modo. Mina desmarcada remove o contexto e retorna a Manual sem apagar rascunhos ou confirmações.
+
+## Extração preliminar de água
+
+`ExtracaoAgua.tsx`, montado dentro de `AreaEstudo`, consulta `/api/minas/{id}/agua-influencia` somente por ação explícita. A API confere o pacote local e chama `ExtracaoAgua` do backend. Duas consultas WFS paralelas, com campos fixos e BBOX da AID, são validadas e intersectadas em Shapely. Identidades únicas impedem contagem repetida; `numberMatched/numberReturned` conferem completude. Limites por base: 2.000 feições, 12 MiB e 15 s. Frontend mantém timeout de 25 s e cancela ao desmarcar/desmontar.
+
+Uma única resposta completa é guardada em memória por 600 s, com trava, cópia defensiva e hash do recorte e evidência do parecer como chave. Na expiração, falha retorna 503; não entrega cache vencido. Filtro visual, enquadramento e desenhos não são parâmetros do cálculo. Retorno tem geometrias cortadas, resumo, IDs/nome/tipo/versão, metadados, consulta UTC e evidência/hash do recorte.
+
+O componente conserva resultado ao alternar modos, limpa ao desmarcar e monta o resultado azul na pane 440 somente em Influência e com o checkbox ativo. Limpa grupos/créditos em cada efeito e não altera a câmera. Nome externo vira texto seguro no React/tooltip. Uma tentativa nova limpa dados anteriores; erro não mostra sucesso parcial. [Método, fontes e regras](EXTRACAO_AGUA.md).

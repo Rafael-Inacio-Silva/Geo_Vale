@@ -35,7 +35,7 @@ A interface abre com os cinco controles estaduais e a opção municipal de trilh
 
 ## Limites para a apresentação
 
-Os cinco temas têm cobertura de Minas Gerais; a sexta opção de trilhas tem cobertura municipal em Nova Lima. O fundo permite navegação mundial. Ausência de feição visível não comprova ausência de risco ou restrição. Não há cruzamento espacial, cálculo de distância, pesos, classificação de aptidão ou recomendação nesta etapa. As sobreposições não substituem estudos geotécnicos, hidrológicos, geoquímicos, licenciamento e escuta das comunidades.
+Os cinco temas têm cobertura de Minas Gerais; a sexta opção de trilhas tem cobertura municipal em Nova Lima. O fundo permite navegação mundial. Ausência de feição visível não comprova ausência de risco ou restrição. Há recorte e contagem das duas bases de água na AID águas/solos; não há cálculo de distância, pesos, classificação de aptidão ou recomendação nesta etapa. As sobreposições não substituem estudos geotécnicos, hidrológicos, geoquímicos, licenciamento e escuta das comunidades.
 
 O Topodata usa SRTM de fevereiro de 2000, refinado de cerca de 90 m para pixel de aproximadamente 30 m; não é topografia atual da cava. [Fonte INPE](https://data.inpe.br/dados/topodata/). O mapa pedológico não informa a qualidade atual de solo minerado. A disponibilidade estadual de dados não garante precisão adequada para projetar uma intervenção na mina. Proveniência das dez bases em [Dados geográficos](DADOS_GEOGRAFICOS.md).
 
@@ -45,7 +45,7 @@ A opção **Trilhas de Nova Lima** testa uma necessidade concreta: combinar a in
 
 A fonte escolhida foi a Prefeitura de Nova Lima porque o portal indicado pelo usuário publica uma camada vetorial consultável por ArcGIS REST. Não se copiou o aplicativo inteiro. No inventário WMS da IDE-Sisema consultado em 24/10/2026 não foram encontrados títulos contendo “trilh”; as dez bases integradas não contêm esse cadastro. Isso não prova inexistência em toda fonte estadual. [Proveniência e consulta](TRILHAS_NOVA_LIMA.md).
 
-O desenho manual permite ao engenheiro escolher o recorte que pretende estudar, incluindo uma parte da mina e/ou seu entorno. Essa delimitação não substitui limite oficial, validação técnica ou consulta cadastral. A etapa implementada termina na confirmação da geometria; não há análise de aptidão resultante do desenho.
+O desenho manual permite ao engenheiro escolher o recorte que pretende estudar, incluindo uma parte da mina e/ou seu entorno. Essa delimitação não substitui limite oficial, validação técnica ou consulta cadastral. O desenho é confirmado geometricamente, sem análise de aptidão. A extração de água usa a AID fixa, separadamente do desenho.
 
 ## Contexto municipal e recortes independentes
 
@@ -56,3 +56,7 @@ A consulta de 26/10/2026 sobre visualização 3D Google está registrada em [Con
 ## Delimitação documental
 
 O contorno da referência vem da feição de mineração do OpenStreetMap escolhida pelo usuário. Os recortes do meio físico do projeto conjunto vêm da Figura 2.3 do parecer FEAM. Por isso o MVP apresenta desenho manual, referência local da área de mineração OSM e influência com filtros. Não usa o processo ANM como perímetro da mina nem um raio genérico como limite de recuperação. As influências são digitalizadas aproximadamente; o contorno OSM é colaborativo. Nenhum substitui plano de fechamento. A comparação calculada não está implementada. [Evidência, datas e preparo](REFERENCIAS_TERRITORIAIS.md).
+
+## Da visualização à caracterização preliminar
+
+A primeira automação territorial consulta duas bases de água, recorta pela AID águas/solos do parecer e organiza registros/fontes/datas. Isso demonstra integração de dados e automação previstas na vaga. O plano de fechamento Minas-Rio da Anglo distingue ADA e AID: a influência pode exigir investigação, sem representar toda a superfície a recuperar. A operação GIS é uma adaptação de engenharia do nosso MVP, não método prescrito pelas empresas. O recorte da FEAM é aproximado e do projeto conjunto de ampliação, não plano de fechamento de Horizontes. [Evidências com páginas, método e fala para apresentação](EXTRACAO_AGUA.md).

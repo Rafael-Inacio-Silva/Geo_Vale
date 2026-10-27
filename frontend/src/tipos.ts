@@ -76,3 +76,13 @@ export type AreaConfirmada = AreaManual | AreaReferencia;
 export interface EstadoANM {dados: ProcessoANM | null; carregando: boolean; erro: string}
 
 export type LimiteMunicipal = FeatureCollection<Polygon | MultiPolygon, {codigo_ibge: string}> & {fonte: {nome: string; url: string; qualidade: string; ano_referencia: null; consultado_em: string}};
+
+
+export type AguaExtraida = FeatureCollection<LineString | MultiLineString | Polygon | MultiPolygon, {
+  id_fonte: string; base: 'trechos' | 'massas'; nome: string | null;
+  tipo_publicado: string | null; versao_base: string | null; revisao_base: string | null;
+}> & {
+  mina_id: string; consultado_em: string; resumo: {trechos: number; massas: number}; aviso: string;
+  recorte: {id: string; nome: string; fonte: string; data_mapa: string; pagina_pdf: number};
+  fontes: {id: string; nome: string; metadado: string; versoes_publicadas: string[]; revisoes_publicadas: string[]}[];
+};

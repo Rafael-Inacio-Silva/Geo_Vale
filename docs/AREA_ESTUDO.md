@@ -1,6 +1,6 @@
 # Áreas de estudo
 
-Versão 3.4.0. Há três modos na barra esquerda: **Manual**, **Referência** e **Influência**. Os dois últimos exigem a Mina Horizontes selecionada. A jornada termina na delimitação e visualização, sem cálculo ou avaliação.
+Versão 3.5.0. Há três modos na barra esquerda: **Manual**, **Referência** e **Influência**. Os dois últimos exigem a Mina Horizontes selecionada. Os desenhos permanecem delimitações pessoais; a caracterização de água usa separadamente a AID documental fixa, sem avaliar esses desenhos.
 
 ## Três modos, sem cópias por navegação
 
@@ -35,3 +35,7 @@ Renomear abre um campo de 1–80 caracteres após normalizar espaços. Salvar/En
 Resposta 200 preserva a geometria e entrega somente origem manual, finalidade e número de vértices. Retorna 422 para entrada inválida e 413 acima do limite; falha mantém o desenho editável. A referência OSM intacta já vem conferida pelo leitor local e sua confirmação não chama fornecedores. O desenho é enviado somente à API local para validação.
 
 Áreas e nomes existem na memória da página: fechar ou recarregar descarta todas. Não há salvamento, banco ou retomada. Navegar, alternar fundo/temas, ocultar barras ou voltar a MG preserva confirmações. Nenhuma área certifica limite fundiário, operacional, ambiental ou pós-mineração, segurança ou autorização de uso.
+
+## Caracterização de água independente das áreas
+
+Em Influência, Extrair dados de água funciona sem usar a referência ou desenhar. Recorta duas bases oficiais na AID águas/solos; marcar/desmarcar os quatro filtros não muda o cálculo. Resultado não altera a coleção de áreas nem define intervenção. Alternar modos conserva a consulta, ocultando o resultado no mapa fora de Influência; desmarcar a mina limpa-o. [Contrato e justificativa](EXTRACAO_AGUA.md).

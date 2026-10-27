@@ -61,3 +61,9 @@ Em 25/10/2026, a consulta pública contou 67 registros. O serviço informou últ
 Somente os atributos do processo 003.964/1950 são consultados no SIGMINE da ANM, com `returnGeometry=false`, fonte/data e campos controlados. Consulta de 26/10/2026: VALE S.A., CONCESSÃO DE LAVRA, FERRO e 471,39 ha. Não é perímetro físico nem declaração de operação ativa. [Contrato e proveniência](ANM.md).
 
 O contorno municipal vem da API de malhas simplificadas do IBGE, código Nova Lima 3144805, qualidade máxima disponível nessa API. Não se assume ano de levantamento a partir da consulta. Só o município da mina selecionada é acrescentado; não é camada temática nem área de estudo. [Precisão, fonte e operação](LIMITE_MUNICIPAL.md).
+
+## Água vetorial recortada
+
+As duas bases do tema Água também são consumidas em GeoJSON pelo WFS 2.0.0, sob demanda, para a AID águas/solos. Não há fonte temática nova nem mudança dos cinco temas. CRS solicitado e validado EPSG:4326; BBOX reduz a transferência e Shapely intersecta o vetor irregular local. Nenhuma métrica física é calculada em graus. A resposta conserva IDs, nome/tipo/versão quando publicados, data de consulta e fonte do recorte aproximado.
+
+Na consulta real de 26/10/2026, 72 trechos e 18 massas foram recebidos no envelope; **42 trechos e 10 massas** permaneceram no polígono. Trechos publicam BHO 2017/versão de 2018 e GEIRH de 2022; massas encontradas trazem FBDS 2017 e BHO 2019. Isso evidencia defasagem/heterogeneidade, não condição atual da água. [Fontes, campos e limites](EXTRACAO_AGUA.md).

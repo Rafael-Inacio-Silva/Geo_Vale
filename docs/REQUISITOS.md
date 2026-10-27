@@ -30,17 +30,19 @@
 | RF-26 | Adicionar várias áreas independentes; escolher uma pela lista ou contorno e editar, redesenhar, enquadrar ou remover só ela. Cancelar conserva as confirmações e demais áreas. |
 | RF-27 | Validar cada polígono individualmente e descartar todas as áreas ao recarregar. Sem unir automaticamente áreas separadas ou sobrepostas. |
 | RF-28 | Renomear individualmente a área selecionada com 1–80 caracteres; atualizar lista/identificação/tooltip sem alterar geometria ou origem. Salvar/Enter e Cancelar/Escape; preservar nome ao editar/redesenhar e descartar com a área ou reload. |
-
 | RF-29 | Modo Influência apresenta os quatro recortes documentais da Figura 2.3 por filtros independentes, mantendo a referência OSM da mina sombreada, sem criar área de estudo ou capturar cliques de desenho. |
 | RF-30 | Referências em pacote local versionado com origem, hash, figura, página e método; nenhuma consulta externa para entregar os contornos. Retirar a influência ao desmarcar a mina e preservar áreas confirmadas. |
 | RF-31 | ANM solicita apenas atributos, sem geometria; falha cadastral não interrompe referência ou desenho. |
-
 | RF-32 | Alternar Manual/Referência/Influência com modo ativo destacado, sem cópias ou confirmação obrigatória. Preservar filtros, áreas, rascunho e nome em andamento; retomar desenho/ajuste com o enquadramento anterior. |
 | RF-33 | Em Manual, manter o último contexto como apoio e oferecer Ocultar; não permitir Usar como área sobre um rascunho pendente. |
+| RF-34 | No modo Influência, Extrair dados de água consulta as duas bases fixas por WFS e recorta pela AID águas/solos local. Não exige desenho prévio; filtros, mapa visível e áreas pessoais não alteram esse recorte. |
+| RF-35 | Mostrar contagens de registros por base, fonte, ID, nome quando publicado, versões e data de consulta; preservar todas as partes de cada registro recortado sem contá-lo novamente. Sem métricas em graus ou diagnóstico. |
+| RF-36 | Controlar somente a sobreposição azul recortada por checkbox; conservar resultado ao alternar modos/barras e limpar/cancelar ao desmarcar mina. Exibir carregamento, falha e nova tentativa. |
+| RF-37 | Conferir CRS, identidade, validade e completude WFS; limitar consultas e cache. Falha de uma das bases retorna 503 sem resumo parcial. Base vazia completa não prova ausência de água ou risco. |
 
 ## Regras de interpretação
 
-Os cinco temas são adaptação para MVP, apoiada em referências, sem validação de especialista da Vale. Não equivalem a cinco critérios obrigatórios ou diagnóstico completo. Marcador aproximado e contorno estadual simplificado são apenas localização/navegação. Cada área manual é um recorte de estudo escolhido pelo usuário. As influências são digitalizações aproximadas do projeto de ampliação e a referência da mina é colaborativa do OpenStreetMap, não perímetro atual certificado ou limite de fechamento. Fase cadastral não informa operação ativa/encerrada. O limite IBGE é contexto municipal simplificado, sem certificação cadastral. Trilhas são cadastro municipal; não comprovam segurança ou permissão de acesso. Mapa de solos não comprova condição ambiental; Topodata não representa a cava atual. Há validação geométrica do desenho, mas não cruzamento espacial, pesos, ranking, ML ou relatório nesta etapa. Justificativas e limites em [Escolhas territoriais](ESCOLHAS_TERRITORIAIS.md).
+Os cinco temas são adaptação para MVP, apoiada em referências, sem validação de especialista da Vale. Não equivalem a cinco critérios obrigatórios ou diagnóstico completo. Marcador aproximado e contorno estadual simplificado são apenas localização/navegação. Cada área manual é um recorte de estudo escolhido pelo usuário. As influências são digitalizações aproximadas do projeto de ampliação e a referência da mina é colaborativa do OpenStreetMap, não perímetro atual certificado ou limite de fechamento. Fase cadastral não informa operação ativa/encerrada. O limite IBGE é contexto municipal simplificado, sem certificação cadastral. Trilhas são cadastro municipal; não comprovam segurança ou permissão de acesso. Mapa de solos não comprova condição ambiental; Topodata não representa a cava atual. Há validação geométrica do desenho e interseção/contagem de água somente na AID fixa. Não há avaliação dos polígonos pessoais, pesos, ranking, ML ou relatório nesta etapa. Justificativas e limites em [Escolhas territoriais](ESCOLHAS_TERRITORIAIS.md).
 
 ## Qualidade
 

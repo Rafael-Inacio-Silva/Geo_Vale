@@ -8,6 +8,7 @@ from shapely.errors import ShapelyError
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 
+from geovale.agua import ExtracaoAgua
 from geovale.camadas import CAMADAS
 from geovale.referencias import ler_referencias
 from geovale.anm import ProcessosANM
@@ -19,19 +20,20 @@ from geovale.mapa import FonteIndisponivel, LimiteEstadual
 RAIZ = Path(__file__).resolve().parents[3]
 
 
-def criar_app(limite=None, raiz=RAIZ, trilhas=None, anm=None, municipios=None):
-    """Expõe mapa, temas, trilhas, município, cadastro ANM e validação individual de áreas."""
-    app = FastAPI(title='GeoVale — mapa territorial', version='3.4.0', docs_url=None, redoc_url=None, openapi_url=None)
+def criar_app(limite=None, raiz=RAIZ, trilhas=None, anm=None, municipios=None, agua=None):
+    """Expõe navegação, fontes territoriais, áreas e extração preliminar de água."""
+    app = FastAPI(title='GeoVale — mapa territorial', version='3.5.0', docs_url=None, redoc_url=None, openapi_url=None)
     fonte = limite if limite is not None else LimiteEstadual()
     fonte_trilhas = trilhas if trilhas is not None else TrilhasMunicipais()
     fonte_anm = anm if anm is not None else ProcessosANM()
     fonte_municipios = municipios if municipios is not None else LimitesMunicipais()
+    fonte_agua = agua if agua is not None else ExtracaoAgua()
     minas = json.loads((raiz / 'dados/minas.json').read_text(encoding='utf-8'))
 
     @app.get('/api/saude')
     def saude():
         """Indica disponibilidade do aplicativo, independentemente da fonte externa."""
-        return {'status': 'ok', 'versao': '3.4.0'}
+        return {'status': 'ok', 'versao': '3.5.0'}
 
     @app.get('/api/mapa')
     def configuracao():
@@ -95,6 +97,17 @@ def criar_app(limite=None, raiz=RAIZ, trilhas=None, anm=None, municipios=None):
             return JSONResponse(ler_referencias(raiz / 'dados/referencias/horizontes.geojson'), headers={'Cache-Control': 'no-store'})
         except (OSError, ValueError, KeyError, TypeError, ShapelyError):
             return JSONResponse(status_code=503, content={'mensagem': 'As referências estão indisponíveis. Tente novamente.'})
+
+    @app.get('/api/minas/{mina_id}/agua-influencia')
+    def agua_influencia(mina_id: str):
+        """Extrai duas bases fixas de água na AID documental, sem consultas arbitrárias."""
+        if mina_id != 'horizontes' or not any(item['id'] == mina_id for item in minas):
+            return JSONResponse(status_code=404, content={'mensagem': 'Mina não encontrada.'})
+        try:
+            referencias = ler_referencias(raiz / 'dados/referencias/horizontes.geojson')
+            return JSONResponse(fonte_agua.obter(referencias), headers={'Cache-Control': 'no-store'})
+        except (OSError, ValueError, KeyError, TypeError, ShapelyError, FonteIndisponivel):
+            return JSONResponse(status_code=503, content={'mensagem': 'Não foi possível concluir a extração das duas bases de água. Tente novamente.'}, headers={'Cache-Control': 'no-store'})
 
     @app.get('/api/minas/{mina_id}/limite-municipal')
     def limite_municipal(mina_id: str):

@@ -1,43 +1,41 @@
-# Validação da etapa territorial
+# Validação da etapa territorial e extração de água
 
-Revisão de 26/10/2026, versão **3.4.0**, em macOS, Python 3.12 e Node 24. Servidor em `127.0.0.1:8000`, sem implantação pública.
+Revisão de 26/10/2026, versão **3.5.0**, em macOS, Python 3.12 e Node 24. Servidor em `127.0.0.1:8000`, sem implantação pública.
 
 ## Verificações automatizadas executadas
 
-- **79 testes Python aprovados**: mapa, desenho manual, trilhas, atributos ANM, município e referências locais. Os testes específicos do antigo importador geométrico ANM foram retirados; permanecem os de identidade, atributos, cache, falha e recuperação cadastral.
-- **2 testes Node aprovados**, cobrindo pesquisa do catálogo único e ausência de resultados inventados.
+- **92 testes Python aprovados**: mapa, desenho manual, trilhas, atributos ANM, município, referências locais e água. A suíte permanece sem importador de geometria ANM.
+- **2 testes Node aprovados**: pesquisa do catálogo único e ausência de resultados inventados.
 - **TypeScript e build Vite aprovados**.
-- O pacote local foi reproduzido pelo script de preparo. A referência entregue conserva exatamente as coordenadas do snapshot OpenStreetMap. Todos os cinco recortes têm geometria válida; a referência é Polygon editável com 65 vértices.
 
-Os testes de referência verificam fonte/CRS/hash, os cinco identificadores, página/figura dos quatro recortes de influência, identidade OSM, igualdade com snapshot, marcador dentro da referência, conversão para origem manual ao validar edição e 404/503/recuperação de pacote inválido. A rota não consulta fontes externas.
+Os 13 testes/casos novos de água cobrem interseção no polígono irregular (excluindo registros presentes apenas no bbox), contatos sem a dimensão esperada, linhas multipartes contadas uma vez, geometria cortada e IDs preservados, nome ausente sem preenchimento inventado, resultado vazio completo, truncamento/excesso, CRS inesperado, ID incompatível/duplicado, geometria nula/inválida, campo ausente, cache defensivo/expiração/falha/recuperação/invalidação pela evidência, parâmetros WFS fixos/timeout/bytes e API 404/503/recuperação. Desenhos e filtros não entram no contrato da extração.
 
-## Fontes reais conferidas
+Permanece um aviso de depreciação Starlette/TestClient sobre HTTPX, sem falha da suíte. Não houve mudança de dependências por esse aviso.
 
-- PDF público do parecer: HTTP 200, `application/pdf`, SHA-256 igual ao arquivo fornecido pelo usuário. Figura 2.3/p. PDF 18 conferida visualmente com o traçado digitalizado.
-- OpenStreetMap: API oficial `/api/0.6/way/315221699/full.json` retornou Mina Capitão do Mato, `landuse=quarry`, 66 posições incluindo fechamento, way versão 5, timestamp 31/01/2019. Snapshot salvo sem simplificar/reparar sua geometria. A data do way não foi apresentada como data do terreno ou imagem.
-- API local de referências: HTTP 200, uma referência OSM e quatro recortes do parecer, sem chamada externa na entrega.
-- ANM: consulta real retornou processo 003.964/1950, VALE S.A., CONCESSÃO DE LAVRA, FERRO e 471,39 ha. Resposta local contém apenas propriedades e fonte, sem geometria. Teste confere `returnGeometry=false` e `f=json`.
-- IBGE e limite estadual: retornos HTTP 200 observados no navegador/servidor. Houve uma falha inicial 503 do limite estadual; os controles locais e o restante do mapa permaneceram utilizáveis e a consulta seguinte recuperou o contorno. Não houve interrupção física de rede nem simulação visual de todos os timeouts.
+## Fonte oficial e fluxo real
 
-## Jornada conferida no navegador
+As duas consultas WFS reais da IDE-Sisema retornaram HTTP 200 e GeoJSON EPSG:4326 com contagem completa. O envelope da AID águas/solos recebeu 72 trechos e 18 massas; a interseção com o polígono aproximado resultou em **42 trechos e 10 massas d’água**. Todos os registros recebidos nessa verificação tinham geometrias válidas. O extrator com os campos selecionados produziu os mesmos totais.
 
-- Abertura com botões documentais desabilitados; selecionar Horizontes habilitou os dois controles locais e acrescentou Nova Lima.
-- Modo Referência mostrou a área cinza com símbolos de mineração, contorno vetorial OSM e atribuição. Usar como área acrescentou uma entrada independente; visitar Referência novamente ofereceu Selecionar esta área e manteve apenas uma referência.
-- Desenho manual de segunda área com três vértices, fechamento, ajuste e confirmação pela API manteve a referência anterior.
-- Ajustar a referência apresentou os pontos editáveis; Cancelar restaurou a confirmação sem perder a segunda área. Outro ajuste confirmado resultou em recorte manual com 66 pontos e retirou a atribuição de referência daquela área.
-- Renomear por Enter atualizou a identificação e a lista para “Referência ajustada”, mantendo a outra área.
-- Área de influência mostrou cinco feições: quatro filtros e referência OSM sombreada. Desmarcar os quatro filtros deixou uma feição de contexto (a mina sombreada), preservando duas áreas de estudo. Os créditos acompanharam as fontes visíveis.
-- Ocultar/reabrir a barra preservou filtros e áreas. Desmarcar a mina retornou a MG, retirou influência e município e manteve as duas áreas confirmadas.
-- Layout desktop 1440 × 900 e celular 390 × 844 conferidos; largura de conteúdo igual à largura do viewport, sem rolagem horizontal. Os controles continuam fora do mapa. Redimensionar conservou as áreas.
+Trechos encontrados publicam BHO 2017, versão de 22/06/2018, revisão GEIRH de 07/11/2022; massas encontradas publicam FBDS (2017) e `bho_massa_dagua_2019`. Não são datas atuais de levantamento nem medições de qualidade. Nomes originais e registros sem nome foram conservados.
 
-## Alcance
+Fluxo conferido: botão no navegador → API local → duas bases WFS → interseção Shapely → resumo/52 geometrias no navegador. A API foi acionada pela interface, sem resultado de demonstração ou arquivo de água pré-preenchido.
 
-Não houve nova conferência visual individual das dez bases WMS e todas as legendas nesta mudança; os testes de seus contratos e trilhas continuam aprovados. Não foram adicionados cálculos de comparação, área, distância, interseção, ranking, diagnóstico ou persistência.
+## Navegação e apresentação verificadas
 
-A referência OSM não é perímetro certificado ou levantamento atual. As influências são digitalizações aproximadas do meio físico de Tamanduá/Horizontes, sem acurácia cadastral e sem representar fechamento. A validade geométrica não certifica a precisão territorial. ANM informa cadastro; IBGE, contexto administrativo; trilhas, cadastro municipal. Ausência de feição não comprova ausência de risco.
+- Abertura sem mina selecionada mantém os modos documentais desabilitados. Selecionar Horizontes habilita Influência; a extração funciona sem desenhar ou usar a referência.
+- Clique mostrou Extraindo e depois **42 trechos hidrográficos / 10 massas d’água**, data da consulta, opção do mapa e fontes.
+- Registros e fontes abriu nomes, IDs, versões, figura/página do parecer e limitações; exemplo de nome ausente apareceu Sem nome publicado.
+- Checkbox do resultado reduziu os paths da pane de água de 52 para 0; religar restaurou os 52. O resumo permaneceu.
+- Referência ocultou o resultado cartográfico; voltar a Influência restaurou 52 paths e a mesma data sem nova extração.
+- Desmarcar o filtro visual Águas e solos · AID não mudou as contagens nem as 52 geometrias extraídas. O filtro foi restaurado após conferir.
+- Ocultar/reabrir a barra preservou a água recortada no mapa, consulta e resumo.
+- Desmarcar a mina retornou à visão estadual e removeu os paths, crédito de água e resumo. Os modos documentais ficaram desabilitados.
+- Desktop 1440 × 900 e celular 390 × 844 conferidos. Largura de conteúdo igual ao viewport, sem rolagem horizontal; o resumo de duas colunas permaneceu legível no celular.
 
-## Alternância de modos conferida
+## Alcance da verificação
 
-Referência → Influência → Referência conservou zero áreas até a ação explícita Usar como área. Repetir a consulta e selecionar a referência manteve uma única entrada. Um desenho aberto de três pontos foi pausado pelos modos Referência/Influência e retomado em Manual: contagem e estilos/posições dos três marcadores no DOM foram exatamente iguais, com retorno ao enquadramento anterior. O ajuste fechado também foi suspenso e retomado com seus seis marcadores; confirmou como segunda área manual de três pontos. O contexto de influência permaneceu como apoio sob o desenho.
+Nesta revisão não foram repetidos os testes manuais completos de desenho/renomeação nem a conferência individual das dez imagens WMS e suas legendas. Seus contratos automatizados continuam aprovados. Falhas/truncamentos/recuperação da nova extração foram simulados nos testes; não se provocou indisponibilidade física do fornecedor no navegador.
 
-Na versão final, a alternância rápida Referência → Influência → Referência terminou imediatamente na referência, com uma feição de contexto e zero áreas criadas, escala de 500 m no desktop testado. Depois de usar a referência e consultar influência, desmarcar a mina retornou a escala estadual (200 km), modo Manual, zero feições de contexto e uma área conservada. No celular 390 px, os três seletores ocuparam cerca de 109 px cada, sem rolagem horizontal. Desmarcar AII, visitar Referência e voltar a Influência manteve os estados `[false, true, true, true]`; o filtro foi restaurado ao terminar. O tamanho normal do navegador foi restaurado.
+O resultado é caracterização preliminar na **AID águas/solos do projeto conjunto Tamanduá/Horizontes**, digitalizada aproximadamente da figura. Não há análise de polígonos pessoais, distância, área, qualidade da água, impacto, aptidão, ranking, beneficiários ou persistência. A interseção computacional não torna preciso o contorno de entrada nem transforma influência em intervenção ou limite de fechamento.
+
+[Justificativa e fontes para apresentação](EXTRACAO_AGUA.md).

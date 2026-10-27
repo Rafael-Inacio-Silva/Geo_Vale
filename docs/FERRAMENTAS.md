@@ -1,6 +1,6 @@
 # Ferramentas utilizadas e justificativas
 
-Registro de 26/10/2026, correspondente à versão 3.4.0. Escopo demonstrado: abrir o mapa em Minas Gerais, localizar a Mina Horizontes e explorar cinco temas estaduais, consultar trilhas municipais e delimitar várias áreas de estudo, consultar o cadastro ANM e mostrar o município selecionado pelo IBGE. As escolhas abaixo se referem ao que está implementado no projeto.
+Registro de 26/10/2026, correspondente à versão 3.5.0. Escopo demonstrado: abrir o mapa em Minas Gerais, localizar a Mina Horizontes e explorar cinco temas estaduais, consultar trilhas municipais e delimitar várias áreas de estudo, consultar o cadastro ANM e mostrar o município selecionado pelo IBGE, além de extrair dados de água na AID fixa. As escolhas abaixo se referem ao que está implementado no projeto.
 
 ## Aplicação
 
@@ -14,7 +14,7 @@ Registro de 26/10/2026, correspondente à versão 3.4.0. Escopo demonstrado: abr
 | Organizar a lógica do servidor | Python | Implementa o cadastro territorial, a consulta externa e a preparação da geometria no mesmo ambiente do backend. | Disponibilização da configuração e do contorno para a interface. |
 | Disponibilizar dados por HTTP | FastAPI | Expõe configuração, contorno, trilhas, saúde e validação geométrica local, servindo a interface na mesma origem. | O navegador consulta `/api/mapa` e `/api/mapa/limite-mg`. |
 | Executar o serviço local | Uvicorn | É o servidor usado por `executar.py` para iniciar a aplicação FastAPI. | Aplicação acessível em `http://127.0.0.1:8000`. |
-| Preparar a geometria oficial para exibição | Shapely | Prepara o contorno estadual para exibição, confere linhas municipais e valida o desenho manual. Para o desenho, rejeita erros sem reparo automático. | Contorno estadual válido e mais leve para a navegação. O tratamento não certifica limites nem precisão cadastral. |
+| Preparar a geometria oficial para exibição | Shapely | Prepara o contorno estadual para exibição, confere linhas municipais, valida o desenho manual e intersecta água com a AID fixa. Para o desenho, rejeita erros sem reparo automático. | Contorno estadual válido e mais leve para a navegação. O tratamento não certifica limites nem precisão cadastral. |
 
 Evidências no código: [App](../frontend/src/App.tsx), [controles de camadas](../frontend/src/CamadasTerritorio.tsx), [mapa Leaflet](../frontend/src/MapaTerritorio.tsx), [API](../backend/geovale/api/main.py), [preparação do contorno](../backend/geovale/mapa.py) e [execução](../executar.py).
 
@@ -41,14 +41,14 @@ WMS e WFS são padrões de serviço geográfico, não programas que substituem o
 
 | Padrão ou formato | Como é usado | Por que foi escolhido nesta etapa |
 |---|---|---|
-| WFS 2.0.0 | O backend consulta uma feição oficial: o limite de Minas Gerais. | Permite obter a geometria e conferir sua identificação, referência espacial e extensão antes de exibi-la. |
+| WFS 2.0.0 | O backend consulta o limite de MG e, sob demanda, duas bases vetoriais de água na extensão da AID. | Permite obter a geometria e conferir sua identificação, referência espacial e extensão antes de exibi-la. |
 | ArcGIS REST Query | Consulta trilhas pelo backend com bbox e `outSR=4326`, e o processo associado na ANM; a configuração do item municipal fornece o renderer por nome. | Integra dados de outra infraestrutura sem Selenium ou cópia integral do portal. |
 | GeoJSON | Formato do contorno, linhas municipais e polígono manual entre a API e o mapa. | Mantém geometrias consumidas pelo Leaflet e validadas no servidor. Nesta etapa o engenheiro escolhe a mina no catálogo, sem envio de arquivo. |
 | WMS 1.1.1 | O navegador solicita imagens transparentes dos temas e suas legendas oficiais. | Permite combinar as bases na região visível, carregando cada tema somente quando marcado. |
 | Tiles de fundo | Blocos de imagem de OpenStreetMap ou Esri solicitados conforme região e zoom. | Permitem navegação mundial sem baixar previamente um mapa mundial completo. |
 | HTTPS e JSON | Comunicação com fontes e entrega da configuração territorial. | Contratos explícitos para configuração, identificação das bases e tratamento de falhas. |
 
-O WMS entrega a representação visual, enquanto o WFS fornece a geometria do contorno. As sobreposições atuais apoiam exploração regional; as fontes, suas datas e suas escalas precisam ser consideradas na interpretação.
+O WMS entrega a representação visual, enquanto o WFS fornece a geometria do contorno e os registros vetoriais para extração de água. As sobreposições atuais apoiam exploração regional; as fontes, suas datas e suas escalas precisam ser consideradas na interpretação.
 
 ## Preparação, verificação e versionamento
 
@@ -68,7 +68,7 @@ Versões e instalação em [Dependências](DEPENDENCIAS.md). Resultados executad
 
 ## Explicação curta para apresentação
 
-> “Construí a interface com React e TypeScript e usei Leaflet para navegar no mapa e sobrepor informações. O backend Python com FastAPI organiza o acesso aos dados, e o Shapely prepara o contorno estadual para visualização. Integrei bases públicas da IDE-Sisema por serviços geográficos padronizados, mantendo a origem dos dados identificada. Assim, o protótipo permite explorar o território da Mina Horizontes e combinar cinco temas relevantes ao contexto pós-mineração, incorporar trilhas de outra fonte oficial e delimitar várias áreas de estudo. O IBGE fornece o município selecionado e a ANM fornece os atributos cadastrais. A referência vetorial da mina vem do OpenStreetMap e a influência aproximada vem do parecer FEAM; ambas são servidas localmente, com fonte identificada. A confirmação valida a geometria sem produzir um diagnóstico.”
+> “Construí a interface com React e TypeScript e usei Leaflet para navegar no mapa e sobrepor informações. O backend Python com FastAPI organiza o acesso aos dados, e o Shapely prepara o contorno estadual para visualização. Integrei bases públicas da IDE-Sisema por serviços geográficos padronizados, mantendo a origem dos dados identificada. Assim, o protótipo permite explorar o território da Mina Horizontes e combinar cinco temas relevantes ao contexto pós-mineração, incorporar trilhas de outra fonte oficial e delimitar várias áreas de estudo. O IBGE fornece o município selecionado e a ANM fornece os atributos cadastrais. A referência vetorial da mina vem do OpenStreetMap e a influência aproximada vem do parecer FEAM; ambas são servidas localmente, com fonte identificada. A confirmação valida a geometria; uma extração independente consulta e recorta dados de água na AID, apresentando contagens e fontes sem produzir diagnóstico.”
 
 A justificativa temática vem dos estudos e referências corporativas reunidos em [Escolhas territoriais](ESCOLHAS_TERRITORIAIS.md). As cinco escolhas são um recorte documental de MVP, ainda sem validação de especialista da Vale. A apresentação deve distinguir a exploração visual implementada da avaliação técnica de usos futuros.
 
@@ -81,3 +81,7 @@ As ferramentas de áreas ficam na barra esquerda; pesquisa, detalhes e camadas n
 GeoJSON versionado guarda a área de mineração OpenStreetMap e quatro recortes aproximados do meio físico do parecer. A receita registra pixels e grade UTM; Python/Shapely reproduz o preparo sem nova dependência. A API local entrega os arquivos, sem download externo ao clicar. Essa escolha permite demonstrar integração de evidência documental com bases públicas, mantendo a diferença entre digitalização aproximada, cadastro e desenho pessoal. [Método e limites](REFERENCIAS_TERRITORIAIS.md).
 
 Os modos Manual/Referência/Influência preservam rascunhos e filtros ao alternar. Usar como área adiciona a referência explicitamente ou seleciona a já existente; o último contexto pode permanecer sob o desenho, com opção Ocultar. [Fluxo](AREA_ESTUDO.md).
+
+## Ferramentas da caracterização de água
+
+WFS entrega registros e geometrias; `urllib` e `ThreadPoolExecutor` consultam as duas bases fixas em paralelo; Shapely faz a interseção com a AID documental. React apresenta a contagem por fonte e Leaflet mostra os trechos recortados. Reutilizam-se bibliotecas instaladas, sem Selenium, QGIS obrigatório, banco ou nova contratação. A escolha demonstra integração/automação da vaga. [Evidência e fala da apresentação](EXTRACAO_AGUA.md).

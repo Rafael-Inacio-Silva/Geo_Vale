@@ -9,7 +9,7 @@
 7. Usar **Adicionar área** para demarcar outros recortes (cava, morro, barragem). Escolher uma área na lista ou mapa para enquadrar, ajustar, redesenhar, renomear ou remover apenas ela. Renomear abre um campo curto na lateral, com Salvar nome e Cancelar; a identificação pessoal acompanha o mesmo recorte. Cancelar preserva as confirmações e demais áreas.
 8. Usar “Ver Minas Gerais” para retornar ao estado, desfazendo a seleção da mina e mantendo temas e áreas e retirando o contorno municipal.
 
-A jornada termina na exploração visual e delimitação confirmada da área. A confirmação não persiste após recarregar a página. Sem avaliação de aptidão ou recomendação de uso futuro. A pesquisa aceita nome atual/anterior, caixa, acentos, Vale e Nova Lima; continua contendo uma única mina.
+A jornada inclui exploração visual, delimitação e caracterização preliminar de água sob demanda na AID fixa. A confirmação não persiste após recarregar a página. Sem avaliação de aptidão ou recomendação de uso futuro. A pesquisa aceita nome atual/anterior, caixa, acentos, Vale e Nova Lima; continua contendo uma única mina.
 
 Cabeçalho com logo estática. Painel principal sem título visual acima: áreas à esquerda, mapa ao centro e pesquisa/cartão/camadas à direita, com setas para ocultar e reabrir cada barra sem descartar estado. Margens externas pequenas e iguais nos quatro lados, mantidas quando a janela aumenta. No desktop, o painel ocupa o espaço entre cabeçalho e rodapé, com rolagem independente da lateral. Em telas estreitas, atalhos das barras no topo, ferramentas antes do mapa e consulta depois, com rolagem normal da página e mapa com altura utilizável. Textura apenas no fundo e superfícies de leitura lisas; verde petróleo e amarelo preservados.
 
@@ -18,3 +18,5 @@ Checkboxes com rótulos, foco e teclado; as cores auxiliares não substituem os 
 Em Trilhas de Nova Lima, os traçados e a legenda usam os nomes e cores publicados pela Prefeitura. A legenda lista somente categorias do enquadramento atual, na ordem da fonte, com rolagem quando necessário. Ao navegar, a lista acompanha a nova consulta.
 
 Detalhes técnicos, datas, fontes e justificativas ficam na documentação. Atribuições continuam visíveis no mapa. “Localização de referência” é preservado para não apresentar o marcador aproximado como localização certificada.
+
+Em Influência, **Conhecer a água** informa o recorte fixo antes do botão de extração. Carregamento antecede resumo, checkbox da água recortada, consulta e detalhe expansível de fontes/registros. Os filtros superiores são visuais, sem cálculos implícitos a cada clique ou zoom. Alternar modos conserva o resultado, mas mostra a sobreposição azul somente em Influência; ocultar barras conserva o mapa. Falha oferece tentativa, sem contagem parcial; desmarcar a mina cancela e limpa o resultado. [Limites](EXTRACAO_AGUA.md).

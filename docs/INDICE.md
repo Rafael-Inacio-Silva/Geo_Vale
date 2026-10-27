@@ -1,6 +1,6 @@
 # Documentação atual
 
-Escopo implementado: mapa, seleção da Mina Horizontes, cinco temas estaduais, trilhas municipais e contorno municipal sob seleção, cadastro ANM e várias áreas de estudo independentes.
+Escopo implementado: mapa, seleção da Mina Horizontes, cinco temas estaduais, trilhas municipais e contorno municipal sob seleção, cadastro ANM e várias áreas de estudo independentes, com caracterização preliminar de água na AID fixa.
 
 - [Status](STATUS.md): estado da entrega.
 - [Cadastro ANM](ANM.md): titular, fase e processo, sem geometria.
@@ -20,3 +20,5 @@ Escopo implementado: mapa, seleção da Mina Horizontes, cinco temas estaduais, 
 - [Consulta 3D Google](CONSULTA_3D_GOOGLE.md): viabilidade e preços consultados; integração não implementada.
 
 - [Referências territoriais](REFERENCIAS_TERRITORIAIS.md): referência OSM, quatro recortes de influência, evidência, digitalização e limites de interpretação.
+
+- [Extração de água](EXTRACAO_AGUA.md): recorte fixo, método, bases oficiais, evidências Anglo/FEAM e justificativa para apresentação.

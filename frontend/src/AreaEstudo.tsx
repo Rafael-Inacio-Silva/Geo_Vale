@@ -5,6 +5,7 @@ import 'leaflet-draw/dist/leaflet.draw.css';
 import type {AreaConfirmada, AreaManual, AreaReferencia, ReferenciasTerritoriais} from './tipos.ts';
 import {requisitar} from './api.ts';
 import InfluenciasNoMapa from './InfluenciasNoMapa.tsx';
+import ExtracaoAgua from './ExtracaoAgua.tsx';
 
 type Fase = 'vazia' | 'desenhando' | 'ajustando' | 'validando' | 'confirmada' | 'renomeando';
 type Modo = 'manual' | 'referencia' | 'influencia';
@@ -415,6 +416,7 @@ export default function AreaEstudo({mapa, minaId, aoInteragir}: {aoInteragir: ()
       <p className="mina-sombreada"><i aria-hidden="true"/> Mina sombreada · OpenStreetMap</p>
       <details className="fonte-referencias"><summary>Fonte e significado</summary><p>ADA: área diretamente afetada. AID: influência direta. AII: influência indireta.</p><p>Meio físico do projeto Tamanduá e Horizontes. Contornos aproximados, sem limite de fechamento.</p><a href={referencias.fonte.url} target="_blank" rel="noopener noreferrer">Parecer FEAM · Fig. 2.3 · p. 18</a></details>
     </fieldset> : null}
+    <ExtracaoAgua mapa={mapa} minaId={minaId} visivel={modo === 'influencia' && !!referencias && !!minaId}/>
     {modo !== 'manual' && fase !== 'vazia' && fase !== 'confirmada' ? <p className="nota-area pausa-area" role="status">{fase === 'validando' ? 'Confirmando sua área…' : 'Seu trabalho está guardado. Volte a Manual para continuar.'}</p> : null}
     <div hidden={modo !== 'manual'}>
     {contexto ? <p className="contexto-area">Contexto: {contexto === 'referencia' ? 'referência' : 'influência'} <button type="button" className="tentar-novamente" onClick={() => setContexto(null)}>Ocultar</button></p> : null}

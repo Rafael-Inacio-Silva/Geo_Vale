@@ -251,3 +251,13 @@ button:focus-visible, input:focus-visible, a:focus-visible, [tabindex="-1"]:focu
 .contexto-area {display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: .3rem; font-size: .7rem; color: #4f6b61; margin: 0 0 .8rem;}
 .pausa-area {padding: .65rem; background: #fff7dd; border-radius: .3rem;}
 .area-estudo > div[hidden] {display: none;}
+
+.extracao-agua {border-top: 1px solid #cadbd1; padding-top: .8rem; margin-bottom: 1rem;}
+.extracao-agua h3 {font-size: .95rem; margin: 0 0 .5rem;}
+.extracao-agua > .acao-area {width: 100%;}
+.resumo-agua {display: grid; grid-template-columns: 1fr 1fr; gap: .5rem; margin-top: .8rem;}
+.resumo-agua p {margin: 0; padding: .6rem; background: #e4f0e8; border-radius: .35rem; font-size: .72rem;}
+.resumo-agua strong {display: block; color: var(--escuro); font-size: 1.4rem;}
+.extracao-agua .seletor-tema {font-size: .72rem; gap: .45rem;}
+.registros-agua {padding-left: 1.1rem;}
+.registros-agua li {margin-bottom: .75rem; overflow-wrap: anywhere;}

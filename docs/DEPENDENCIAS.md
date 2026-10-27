@@ -20,6 +20,8 @@ WFS oficial da IDE-Sisema via HTTPS no backend. Tiles OpenStreetMap/Esri e image
 
 O papel e a justificativa de cada ferramenta estão em [Ferramentas e justificativas](FERRAMENTAS.md). Este documento reúne as versões e os procedimentos de instalação.
 
-Na versão 3.4.0, a ANM é consultada por HTTPS/ArcGIS REST e o IBGE por sua API de malhas. `urllib`, gzip, threading e cópias defensivas são da biblioteca padrão; não houve nova dependência. Cache ANM de dez minutos, municipal de uma hora. As barras laterais e a coleção de polígonos usam React/Leaflet já instalados.
+Na versão 3.5.0, a ANM é consultada por HTTPS/ArcGIS REST e o IBGE por sua API de malhas. `urllib`, gzip, threading e cópias defensivas são da biblioteca padrão; não houve nova dependência. Cache ANM de dez minutos, municipal de uma hora. As barras laterais e a coleção de polígonos usam React/Leaflet já instalados.
 
 O preparo documental usa `json`, `math`, `pathlib` e Shapely existentes. Nenhum novo pacote GIS ou serviço foi adicionado. Não há dependência de QGIS instalado no computador do usuário.
+
+A extração de água reutiliza Shapely/GEOS para interseção, `urllib` para duas consultas WFS e `ThreadPoolExecutor`, hashlib, threading e datetime da biblioteca padrão. Não adiciona pacotes. Cache único de dez minutos em memória; resultado na memória da página. [Contrato e limites de rede](EXTRACAO_AGUA.md).

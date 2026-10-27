@@ -1,6 +1,6 @@
 # Área de referência e áreas de influência
 
-Versão 3.4.0, preparada em 26/10/2026. Os modos são **Manual**, **Referência** e **Influência**. Os dois últimos exigem mina selecionada e pacote local disponível. As duas fontes têm significados separados.
+Versão 3.5.0, preparada em 26/10/2026. Os modos são **Manual**, **Referência** e **Influência**. Os dois últimos exigem mina selecionada e pacote local disponível. As duas fontes têm significados separados.
 
 ## Área de referência: marca de mineração do OpenStreetMap
 
@@ -47,4 +47,6 @@ Para reproduzir, na raiz: `.venv-geovale/bin/python ferramentas/preparar_referen
 
 Os contornos locais funcionam independentemente de ANM, WMS ou IBGE. Fundo e outras fontes continuam dependendo de internet. Os filtros são visuais e não capturam cliques de desenho. Ocultar a barra conserva estados; desmarcar a mina retira a influência e desabilita os modos documentais, preservando as áreas confirmadas. Usar a referência preserva `origem=referencia_osm`; ajustá-la e confirmar produz recorte manual, sem alterar o snapshot.
 
-O engenheiro pode sobrepor uma ou várias áreas pessoais ao contexto. **Não há cálculo de área, interseção, comparação automática, beneficiários, aptidão ou recomendação de uso futuro.** Esta etapa não define um buffer genérico ou a cidade toda como limite de recuperação.
+O engenheiro pode sobrepor uma ou várias áreas pessoais ao contexto. **A interseção automática implementada limita-se às duas bases de água na AID águas/solos. Não calcula área/distância, compara alternativas ou define beneficiários, aptidão ou uso futuro.** Esta etapa não define um buffer genérico ou a cidade toda como limite de recuperação.
+
+A AID águas/solos é o recorte fixo da [extração preliminar de água](EXTRACAO_AGUA.md). Os quatro filtros continuam somente visuais. A resposta conserva a evidência do parecer e o hash do vetor aproximado usado; não apresenta a interseção como precisão de levantamento ou limite de fechamento.

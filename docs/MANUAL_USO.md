@@ -39,3 +39,9 @@ As sobreposições servem à exploração regional, sem determinar segurança ou
 ## Mostrar ou ocultar barras
 
 Use as setas nas bordas do mapa para recolher **Áreas** à esquerda ou **Mina e camadas** à direita. Clique novamente para reabrir; o desenho em andamento, as áreas e as escolhas são preservados. Em telas estreitas, os dois atalhos ficam no topo; ferramentas aparecem antes do mapa e consulta depois.
+
+## Extrair dados de água
+
+Selecione Horizontes, abra **Influência** e clique **Extrair dados de água**. O recorte é sempre **Águas e solos · AID**, inclusive se seu filtro visual estiver desmarcado. Não precisa desenhar ou clicar em Referência. Aguarde a consulta; veja contagens e data, ligue/desligue Mostrar água recortada no mapa e abra Registros e fontes para nomes, IDs e versões. Passe o cursor sobre os registros azuis no mapa para identificá-los.
+
+Consultar novamente pode reutilizar o cache de dez minutos, mantendo a data original. Falha permite Tentar extração novamente; não há resultado parcial. Alternar modos conserva o resumo e oculta a água extraída fora de Influência. Desmarcar a mina ou recarregar limpa o resultado. Água e drenagem na barra direita continua sendo a camada visual WMS independente. A extração não mede qualidade ou segurança nem analisa os desenhos pessoais. [Justificativa e abrangência](EXTRACAO_AGUA.md).
