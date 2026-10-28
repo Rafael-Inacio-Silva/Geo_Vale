@@ -64,7 +64,7 @@ export default function PainelSugestao({sugestao, erro, carregando, recarregar, 
           <span>{c.nome}<output>{Math.round(valores[i] / soma * 100)}%</output></span>
           <input type="range" min="0" max="100" step="1" value={valores[i]} aria-label={`Peso de ${c.nome}`} onChange={evento => mudarPeso(i, Number(evento.target.value))}/>
         </label>)}
-        <p className="nota-territorio">{pesos ? 'Pesos ajustados; Ver relatório usa estes pesos.' : `Pesos calculados por AHP (consistência ${numero(sugestao.razao_consistencia, 3)}).`}</p>
+        {pesos ? null : <p className="nota-territorio">Pesos calculados por AHP (consistência {numero(sugestao.razao_consistencia, 3)}).</p>}
         <button type="button" className="tentar-novamente" disabled={!pesos} onClick={() => alterarPesos(null)}>Restaurar AHP</button>
       </fieldset>
     </> : null}
