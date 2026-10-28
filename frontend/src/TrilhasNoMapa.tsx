@@ -27,13 +27,9 @@ export default function TrilhasNoMapa({mapa, tema, opacidade, recarga, informarE
     if (!mapa || !ativa) return;
     if (!mapa.getPane('trilhas')) mapa.createPane('trilhas').style.zIndex = '390';
     const linhas = L.geoJSON(undefined, {
-      pane: 'trilhas', attribution: tema.credito,
+      // Sem nome no mouse: o único rótulo do mapa é o da mina, como nas camadas WMS.
+      pane: 'trilhas', attribution: tema.credito, interactive: false,
       style: feicao => ({color: feicao?.properties.cor, weight: feicao?.properties.largura, opacity: intensidade.current * (feicao?.properties.opacidade ?? 1)}),
-      onEachFeature: (feicao, linha) => {
-        const rotulo = document.createElement('span');
-        rotulo.textContent = feicao.properties?.nome || 'Trilha cadastrada';
-        linha.bindTooltip(rotulo, {sticky: true});
-      },
     }).addTo(mapa);
     camada.current = linhas;
     let abortar: AbortController | null = null;
