@@ -122,7 +122,7 @@ def test_api_sugere_por_setor_aplica_restricoes_e_leva_pesos_ao_pdf(tmp_path):
     pdf = cliente.get('/api/minas/horizontes/relatorio?pesos=' + pesos)
     assert padrao.status_code == pdf.status_code == 200 and padrao.content != pdf.content
     texto = ' '.join(' '.join(p.extract_text() for p in PdfReader(BytesIO(pdf.content)).pages).split())
-    assert 'Sugestão multicritério' in texto and 'ajustados pelo engenheiro' in texto and 'Por que' in texto and 'Como a nota é calculada' in texto and 'Saaty' in texto and 'Régua do relevo' in texto and 'Pesos dos critérios' in texto and texto.count('Fonte dos parâmetros') == 3 and '• Por que' in texto and 'Passo' not in texto and 'Restrições:' not in texto and '(IA)' not in texto and 'laudo' not in texto
+    assert 'Sugestão multicritério' in texto and 'ajustados pelo engenheiro' in texto and 'Por que' in texto and 'Como a nota é calculada' in texto and 'Saaty' in texto and 'Régua de cada critério' in texto and 'Muito perto' in texto and 'Pesos dos critérios' in texto and texto.count('Fonte dos parâmetros') == 2 and '• Por que' in texto and 'Passo' not in texto and 'Restrições:' not in texto and '(IA)' not in texto and 'laudo' not in texto
     assert cliente.get('/api/minas/horizontes/relatorio?pesos=x').status_code == 422
 
 
@@ -135,11 +135,13 @@ def test_explicacao_por_regras_fala_do_terreno_e_nao_de_pontos():
     assert setor['perfil']['declividade']['acima20'] == pytest.approx(60) and setor['perfil']['distancias']['rede'] is None
 
 
-def test_tabela_de_referencia_sai_da_mesma_regua_do_calculo():
-    from geovale.multicriterio import REGUAS, texto_regua
+def test_tabela_de_reguas_sai_das_mesmas_funcoes_do_calculo():
+    from geovale.multicriterio import REGUAS, tabela_reguas
     assert set(REGUAS) == set(RESPOSTAS) and all(set(REGUAS[u]) == set(RESPOSTAS[u]) for u in REGUAS)
-    assert texto_regua('solar', 'relevo') == '1 · 0,8 · 0,3 · 0 · 0 · 0'
-    assert texto_regua('conservacao', 'drenagem') == '1 até 100 m; 0,3 a partir de 600 m'
-    assert texto_regua('silvicultura', 'trilhas') == 'não conta'
-    assert float(RESPOSTAS['conservacao']['drenagem'](np.array([350.]))[0]) == pytest.approx(.65)
-
+    linhas = {(c, f): (v, n) for c, f, v, n in tabela_reguas()}
+    assert {c for c, _ in linhas} == {c['nome'] for c in CRITERIOS}
+    assert linhas[('Relevo (declividade)', 'Plano')] == ('< 3%', {'conservacao': .5, 'ecoturismo': .8, 'silvicultura': 1., 'solar': 1.})
+    valor, notas_drenagem = linhas[('Distância da drenagem', 'Perto')]
+    assert valor == '100 m' and notas_drenagem['silvicultura'] == pytest.approx(70 / 170) and notas_drenagem['solar'] == pytest.approx(.2)
+    assert linhas[('Vegetação nativa no entorno', 'Pouca')][0] == 'até 10%' and linhas[('Trilhas existentes', 'Longe')][0] == '3 km ou mais'
+    assert linhas[('Rede elétrica', 'Perto')][1]['silvicultura'] is None

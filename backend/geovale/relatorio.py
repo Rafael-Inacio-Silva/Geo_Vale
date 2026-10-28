@@ -12,8 +12,8 @@ import pypdfium2 as pdfium
 from geovale.mapa_relatorio import MapaTerritorial
 from geovale.fichas import PARAMETROS_AGUA, formato, ha, montar_fichas, preparar, projetar
 from geovale.comentarios import Comentarista
-from geovale.multicriterio import (CLASSES_RELEVO, REGUAS, SugestoesUso, USOS, demais_por_setor, entrada_ia, frase_principal, motivos,
-                                   nome_setor, texto_regua, texto_setor)
+from geovale.multicriterio import (SugestoesUso, USOS, demais_por_setor, entrada_ia, frase_principal, motivos, nome_setor, tabela_reguas,
+                                   texto_setor)
 from xml.sax.saxutils import escape
 from zoneinfo import ZoneInfo
 
@@ -23,7 +23,7 @@ from reportlab.lib.pagesizes import A4
 from reportlab.lib.styles import ParagraphStyle
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
-from reportlab.platypus import (Flowable, LongTable, PageBreak, Paragraph,
+from reportlab.platypus import (CondPageBreak, Flowable, LongTable, PageBreak, Paragraph,
                                SimpleDocTemplate, Spacer, TableStyle)
 
 VERDE = colors.HexColor('#00594f')
@@ -32,6 +32,7 @@ AMARELO = colors.HexColor('#ffc329')
 CINZA = colors.HexColor('#536d64')
 CLARO = colors.HexColor('#edf4ef')
 LARGURA = A4[0] - 84
+PAGINA_UTIL = A4[1] - 134
 FONTE = Path(reportlab.__file__).parent / 'fonts'
 for nome, arquivo in [('GeoRegular', 'Vera.ttf'), ('GeoNegrito', 'VeraBd.ttf'), ('GeoItalico', 'VeraIt.ttf')]:
     pdfmetrics.registerFont(TTFont(nome, str(FONTE / arquivo)))
@@ -216,7 +217,9 @@ def gerar_pdf(dados,cenario,fichas,comentarios,sugestao=None,explicacoes=None):
         tab.setStyle(TableStyle([('TOPPADDING',(0,1),(-1,-1),6),('BOTTOMPADDING',(0,1),(-1,-1),6)]))
         adicionar(tab)
         # Como a nota é calculada: três quadros, cada um com a origem dos seus parâmetros.
-        def n(v):return formato(v,1 if v%1 else 0)
+        def n(v):
+            v=round(v,2)
+            return formato(v,0 if v==round(v) else (1 if round(v,1)==v else 2))
         def fonte(t):return Paragraph(t,ESTILOS['pequeno'])
         estilo=TableStyle([('TOPPADDING',(0,0),(-1,-1),4),('BOTTOMPADDING',(0,0),(-1,-1),4),('LEFTPADDING',(0,0),(-1,-1),5),('RIGHTPADDING',(0,0),(-1,-1),5)])
         medidas={'relevo':'Declividade (Topodata/INPE)','vegetacao':'% de vegetação nativa num raio de ~1 km (MapBiomas)',
@@ -226,26 +229,27 @@ def gerar_pdf(dados,cenario,fichas,comentarios,sugestao=None,explicacoes=None):
         pesos=tabela(['Critério','O que mede (fonte do dado)','Peso'],
                      [[c['nome'],medidas[c['id']],f"{formato(c['peso']*100)}%"] for c in sugestao['criterios']],
                      [LARGURA*.28,LARGURA*.56,LARGURA*.16])
-        faixas_relevo=['< 3%','3% a 8%','8% a 20%','20% a 45%','45% a 75%','> 75%']
-        relevo=tabela(['Faixa','Declividade']+[u['nome'] for u in USOS],
-                      [[CLASSES_RELEVO[i].capitalize(),faixas_relevo[i]]+[n(REGUAS[u['id']]['relevo'][1][i+1]) for u in USOS] for i in range(6)],
-                      [LARGURA*.17,LARGURA*.14]+[LARGURA*.1725]*4)
-        outros=tabela(['Critério']+[u['nome'] for u in USOS],
-                      [[c['nome']]+[texto_regua(u['id'],c['id']) for u in USOS] for c in sugestao['criterios'] if c['id']!='relevo'],
-                      [LARGURA*.2]+[LARGURA*.2]*4)
-        for t in (pesos,relevo,outros):t.setStyle(estilo)
+        anterior=None;linhas_regua=[]
+        for criterio,faixa,valor,notas_uso in tabela_reguas():
+            # Nome do critério só na primeira faixa do grupo, para a tabela ler em blocos.
+            linhas_regua.append([criterio if criterio!=anterior else '',faixa,valor]+['-' if notas_uso[u['id']] is None else n(notas_uso[u['id']]) for u in USOS])
+            anterior=criterio
+        curtos={'conservacao':'Conservação','ecoturismo':'Ecoturismo','silvicultura':'Silvicultura','solar':'Energia solar'}
+        reguas=tabela(['Critério','Faixa','Valor da faixa']+[curtos[u['id']] for u in USOS],linhas_regua,
+                      [LARGURA*.18,LARGURA*.14,LARGURA*.14]+[LARGURA*.135]*4)
+        for t in (pesos,reguas):t.setStyle(estilo)
         origem_pesos=('Fonte dos parâmetros: pesos calculados pelo método AHP (Saaty, 1980) a partir das comparações par a par definidas pelo engenheiro '
                       f"responsável (premissa do GeoVale; razão de consistência {formato(sugestao['razao_consistencia'],3)}, limite 0,10)." if sugestao['origem_pesos']=='AHP'
                       else 'Fonte dos parâmetros: pesos ajustados pelo engenheiro na tela para esta emissão; o padrão vem do método AHP (Saaty, 1980).')
         adicionar(Spacer(1,10),paragrafo('Como a nota é calculada','texto'),
                   paragrafo('Pesos dos critérios','pequeno'),pesos,
                   fonte(origem_pesos+' Dados medidos: fontes indicadas em cada critério.'),Spacer(1,4),
-                  paragrafo('Régua do relevo: nota de 0 a 1 por faixa','pequeno'),relevo,
-                  fonte('Fonte dos parâmetros: faixas e declividade, classes da Embrapa (1979); notas de cada uso, definidas pelo engenheiro responsável '
-                        '(premissa do GeoVale, a calibrar com especialistas).'),Spacer(1,4),
-                  paragrafo('Régua dos demais critérios: nota nos pontos indicados; entre eles, linha reta','pequeno'),outros,
-                  fonte('Fonte dos parâmetros: pontos de cada régua, definidos pelo engenheiro responsável (premissa do GeoVale, a calibrar com especialistas); '
-                        'variação em linha reta entre os pontos, padronização linear de critérios (Eastman, 1999).'))
+                  # O quadro das réguas não se parte entre páginas: começa na seguinte se não couber inteiro.
+                  CondPageBreak(reguas.wrap(LARGURA,PAGINA_UTIL)[1]+30),
+                  paragrafo('Régua de cada critério: nota de 0 a 1 por faixa e uso (- o uso não considera o critério)','pequeno'),reguas,
+                  fonte('Fonte dos parâmetros: faixas e declividade do relevo, classes da Embrapa (1979); faixas dos demais critérios e notas de cada uso, '
+                        'definidas pelo engenheiro responsável (premissa do GeoVale, a calibrar com especialistas); entre o valor de uma faixa e o da '
+                        'seguinte, a nota varia em linha reta, padronização linear de critérios (Eastman, 1999).'))
     def pagina(tela,d):
         tela.saveState();tela.setFillColor(VERDE);tela.rect(0,A4[1]-70,A4[0],70,fill=1,stroke=0);logo(tela,40,A4[1]-57,.9)
         tela.setFillColor(AMARELO);tela.rect(0,A4[1]-73,A4[0],3,fill=1,stroke=0)
@@ -263,7 +267,7 @@ class RelatoriosPDF:
     def obter(self,mina_id,pesos=None):
         """Atualiza fatos por coleta/cenário/pesos e explicações por modelo, sem reextrair fontes."""
         dados=self.fonte.relatorio(mina_id);cenario=ler_cenario(self.raiz,mina_id)
-        chave=hashlib.sha256(json.dumps({'dados':{k:v for k,v in dados.items() if k!='gerado_em'},'cenario':cenario,'modelo':'4.6.3',
+        chave=hashlib.sha256(json.dumps({'dados':{k:v for k,v in dados.items() if k!='gerado_em'},'cenario':cenario,'modelo':'4.6.4',
                                          'pesos':None if pesos is None else [round(float(p),6) for p in pesos],'comentarios':self.comentarista.assinatura},sort_keys=True,ensure_ascii=False).encode()).hexdigest()
         with self.trava:
             anterior=self.cache.get(mina_id)

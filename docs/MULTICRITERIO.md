@@ -1,6 +1,6 @@
 # Sugestão multicritério e explicação por IA
 
-Versão 4.6.3, 28/10/2026. Esta etapa vem depois da caracterização: o relatório organiza o território e a sugestão ordena usos pós-mineração para cada setor da área minerada. Na referência da Vale, corresponde a apoiar a etapa **Conceber** depois de **Conhecer** ([Fechamento de mina e uso futuro](https://www.vale.com/pt/esg/fechamento-de-mina-e-uso-futuro)). O sistema não decide: o engenheiro ajusta os pesos e leva a sugestão para discussão.
+Versão 4.6.4, 28/10/2026. Esta etapa vem depois da caracterização: o relatório organiza o território e a sugestão ordena usos pós-mineração para cada setor da área minerada. Na referência da Vale, corresponde a apoiar a etapa **Conceber** depois de **Conhecer** ([Fechamento de mina e uso futuro](https://www.vale.com/pt/esg/fechamento-de-mina-e-uso-futuro)). O sistema não decide: o engenheiro ajusta os pesos e leva a sugestão para discussão.
 
 ## Fluxo
 
@@ -37,17 +37,51 @@ Versão 4.6.3, 28/10/2026. Esta etapa vem depois da caracterização: o relatór
 
 ### Pesos AHP e régua de cada uso
 
-Mesma tabela da ficha 09 do relatório, gerada da definição `REGUAS` em `multicriterio.py`, que o cálculo também usa. Nota de 0 a 1 por critério; entre os valores indicados, varia em linha reta. Relevo, na ordem: plano, suave ondulado, ondulado, forte ondulado, montanhoso, escarpado (Embrapa, 1979).
+Mesmos quadros da ficha 09 do relatório, gerados de `REGUAS` e `FAIXAS` em `multicriterio.py`, que o cálculo também usa.
 
-| Critério (peso AHP) | Conservação e restauração | Ecoturismo e lazer | Silvicultura | Energia solar e infraestrutura |
-|---|---|---|---|---|
-| Relevo (declividade) (33,8%) | 0,5 · 0,5 · 0,7 · 1 · 1 · 1 | 0,8 · 1 · 1 · 0,8 · 0,5 · 0,2 | 1 · 1 · 0,7 · 0,3 · 0 · 0 | 1 · 0,8 · 0,3 · 0 · 0 · 0 |
-| Vegetação nativa no entorno (22,0%) | 0 até 10% de nativa; 1 a partir de 60% | 0,3 até 10% de nativa; 1 a partir de 60% | não conta | não conta |
-| Distância da drenagem (13,5%) | 1 até 100 m; 0,3 a partir de 600 m | 1 até 200 m; 0,3 a partir de 1,5 km | 0 até 30 m; 1 a partir de 200 m | 0 até 50 m; 1 a partir de 300 m |
-| Acesso por rodovia (12,6%) | não conta | 1 até 1 km; 0 a partir de 8 km | 1 até 1 km; 0,2 a partir de 8 km | 1 até 1 km; 0 a partir de 8 km |
-| Proximidade urbana (7,3%) | 0,3 até 500 m; 1 a partir de 3 km | 1 até 2 km; 0,2 a partir de 10 km | não conta | 1 até 3 km; 0,3 a partir de 10 km |
-| Rede elétrica (5,8%) | não conta | não conta | não conta | 1 até 1 km; 0 a partir de 10 km |
-| Trilhas existentes (5,0%) | não conta | 1 até 300 m; 0 a partir de 3 km | não conta | não conta |
+| Critério | Peso AHP |
+|---|---|
+| Relevo (declividade) | 33,8% |
+| Vegetação nativa no entorno | 22,0% |
+| Distância da drenagem | 13,5% |
+| Acesso por rodovia | 12,6% |
+| Proximidade urbana | 7,3% |
+| Rede elétrica | 5,8% |
+| Trilhas existentes | 5,0% |
+
+Régua: nota de 0 a 1 por faixa e uso (- o uso não considera o critério). Entre o valor de uma faixa e o da seguinte, a nota varia em linha reta. Faixas do relevo: Embrapa (1979); demais faixas e notas: premissas do engenheiro responsável.
+
+| Critério | Faixa | Valor da faixa | Conservação e restauração | Ecoturismo e lazer | Silvicultura | Energia solar e infraestrutura |
+|---|---|---|---|---|---|---|
+| Relevo (declividade) | Plano | < 3% | 0,5 | 0,8 | 1 | 1 |
+|  | Suave ondulado | 3% a 8% | 0,5 | 1 | 1 | 0,8 |
+|  | Ondulado | 8% a 20% | 0,7 | 1 | 0,7 | 0,3 |
+|  | Forte ondulado | 20% a 45% | 1 | 0,8 | 0,3 | 0 |
+|  | Montanhoso | 45% a 75% | 1 | 0,5 | 0 | 0 |
+|  | Escarpado | > 75% | 1 | 0,2 | 0 | 0 |
+| Vegetação nativa no entorno | Pouca | até 10% | 0 | 0,3 | - | - |
+|  | Média | 30% | 0,4 | 0,58 | - | - |
+|  | Muita | 60% ou mais | 1 | 1 | - | - |
+| Distância da drenagem | Colado ao rio | até 30 m | 1 | 1 | 0 | 0 |
+|  | Muito perto | 50 m | 1 | 1 | 0,12 | 0 |
+|  | Perto | 100 m | 1 | 1 | 0,41 | 0,2 |
+|  | Médio | 200 m | 0,86 | 1 | 1 | 0,6 |
+|  | Médio-longe | 300 m | 0,72 | 0,95 | 1 | 1 |
+|  | Longe | 600 m | 0,3 | 0,78 | 1 | 1 |
+|  | Muito longe | 1,5 km ou mais | 0,3 | 0,3 | 1 | 1 |
+| Acesso por rodovia | Perto | até 1 km | - | 1 | 1 | 1 |
+|  | Médio | 4 km | - | 0,57 | 0,66 | 0,57 |
+|  | Longe | 8 km ou mais | - | 0 | 0,2 | 0 |
+| Proximidade urbana | Muito perto | até 500 m | 0,3 | 1 | - | 1 |
+|  | Perto | 2 km | 0,72 | 1 | - | 1 |
+|  | Médio | 3 km | 1 | 0,9 | - | 1 |
+|  | Longe | 10 km ou mais | 1 | 0,2 | - | 0,3 |
+| Rede elétrica | Perto | até 1 km | - | - | - | 1 |
+|  | Médio | 5 km | - | - | - | 0,56 |
+|  | Longe | 10 km ou mais | - | - | - | 0 |
+| Trilhas existentes | Perto | até 300 m | - | 1 | - | - |
+|  | Médio | 1,5 km | - | 0,56 | - | - |
+|  | Longe | 3 km ou mais | - | 0 | - | - |
 
 Nota do uso = soma de peso × nota dos critérios que o uso considera, dividida pela soma desses pesos, × 100; onde a lei não permite o uso, a célula vale 0; a nota do setor é a média das células pela área. Exemplo: se um setor tem 80% em APP, a solar só pontua nos 20% restantes, e nenhum peso a leva acima de 20.
 
@@ -90,6 +124,7 @@ Solar e silvicultura ficam atrás em todos os setores principalmente pelo relevo
 | Régua de cada uso no relatório (4.6.1) | Sem os números da régua, “solar tira 0 em encosta forte” não podia ser conferido por quem lê o PDF. A ficha 09 traz a tabela com peso de cada critério, a régua de cada uso, a fórmula e as fontes do método (Embrapa 1979, Eastman 1999, Saaty 1980). A tabela e o cálculo leem a mesma definição (`REGUAS`), então não podem divergir. A IA não explica a conta: a tabela é referência. Os valores são parâmetros de partida do GeoVale, declarados como tal. | Pedido do engenheiro em 28/10/2026. |
 | Ficha 09 em tópicos e passo a passo (4.6.2) | Lida no PDF, a ficha confundia: o porquê de cada setor era um parágrafo corrido e “Como a nota é calculada” resumia tudo numa frase com fórmula. O porquê virou tópicos (por que o 1º uso; um tópico para cada uso que ficou atrás). O cálculo virou cinco passos com exemplos numéricos (quadrado plano; quadrado a 100 m do rio; plano e a 100 m somados com os pesos; média do setor com o efeito da lei), o que a nota é, de onde vem cada número (Embrapa, MapBiomas, Eastman, Saaty, com as comparações do relevo) e o que é premissa. A régua do relevo virou tabela por faixa. Os exemplos são calculados pelas mesmas réguas e pesos do resultado (`exemplo_calculo`), então mudam junto se os pesos mudarem. | Pedido do engenheiro em 28/10/2026, depois de entender o cálculo passo a passo em conversa. |
 | Ficha 09 enxuta, três quadros com origem (4.6.3) | Lido no PDF, o passo a passo em texto ficou longo demais para um relatório; ele continua aqui nos docs e na apresentação. A ficha 09 ficou com o mapa, a tabela dos setores (porquê em tópicos) e “Como a nota é calculada” em três quadros: pesos (com o que cada critério mede e a fonte do dado), régua do relevo e régua dos demais critérios. Embaixo de cada quadro, “Fonte dos parâmetros” separa o que vem de estudo (Embrapa 1979, Saaty 1980, Eastman 1999) do que é definido pelo engenheiro responsável (notas das réguas e julgamentos do AHP, premissas do GeoVale). Saíram da ficha o parágrafo de abertura, a lista de restrições com base legal e a nota sobre a Topodata, que seguem nos docs. Na página 1, cada setor ficou numa linha. | Pedido do engenheiro em 28/10/2026. |
+| Quadro único de réguas com faixas (4.6.4) | A régua só do relevo deixava os outros critérios num formato diferente (“1 até 100 m; 0,3 a partir de 600 m”), difícil de ler. Agora um quadro só traz todos os critérios, cada um com faixas nomeadas (Plano… Escarpado; Colado ao rio… Muito longe; Pouca, Média, Muita), o valor de cada faixa e a nota de cada uso, como montado na conversa de explicação. As faixas ficam em `FAIXAS` e as notas são calculadas pelas mesmas funções do cálculo, então não podem divergir. O quadro não se parte entre páginas. | Pedido do engenheiro em 28/10/2026. |
 | Resultado à esquerda, pesos à direita | O resultado fica abaixo do botão que o gerou (Sugerir uso); a barra direita só com os pesos deixa os controles sem rolagem. | Pedido do engenheiro em 28/10/2026. |
 | IA escreve a leitura contextual das fichas (4.5.0) | Na 4.4.0 as fichas ficavam por regras: uma frase fixa por dado. A regra continua calculando (por exemplo, 76,2% do entorno acima de 20%), mas o texto passou ao modelo, que recebe um **guia por tema** com o que interpretar: classes de declividade, Q7,10 e outorga, classes de enquadramento, grupos de UC, APP, ZAS, montante, valores simulados. Assim a leitura cita o que domina em cada dado, sem perder o conhecimento das regras. | Decisão do engenheiro em 28/10/2026; `GUIA` em `comentarios.py`; Ji et al. (2023) justificam a conferência abaixo. |
 | Regras continuam calculando | O modelo não faz conta: recebe o valor, a origem e o texto por regras como “apoio” com os indicadores já calculados. Só pode usar números do dado, do apoio ou do guia. | Mesma conferência numérica da sugestão. |

@@ -94,21 +94,34 @@ def metros(valor):
     return f"{formato(valor)} m" if valor < 1000 else f"{formato(valor / 1000, 0 if valor % 1000 == 0 else 1)} km"
 
 
-def texto_regua(uso, criterio):
-    """A régua em palavras e números, para a tabela de referência do relatório."""
-    regua = REGUAS[uso].get(criterio)
-    if regua is None:
-        return 'não conta'
-    tipo, *parametros = regua
-    if tipo == 'classe':
-        return ' · '.join(formato(parametros[0][i], 1 if parametros[0][i] % 1 else 0) for i in range(1, 7))
-    a, b, piso = parametros
-    nota = lambda v: formato(v, 1 if v % 1 else 0)
-    if criterio == 'vegetacao':
-        return f"{nota(piso)} até {formato(a * 100)}% de nativa; 1 a partir de {formato(b * 100)}%"
-    if tipo == 'decresce':
-        return f"1 até {metros(a)}; {nota(piso)} a partir de {metros(b)}"
-    return f"{nota(piso)} até {metros(a)}; 1 a partir de {metros(b)}"
+# Faixas mostradas no relatório: nome e valor onde a nota é lida; entre um ponto e outro a nota varia em linha reta.
+FAIXAS = {
+    'vegetacao': [('Pouca', .1), ('Média', .3), ('Muita', .6)],
+    'drenagem': [('Colado ao rio', 30), ('Muito perto', 50), ('Perto', 100), ('Médio', 200), ('Médio-longe', 300), ('Longe', 600), ('Muito longe', 1500)],
+    'acesso': [('Perto', 1000), ('Médio', 4000), ('Longe', 8000)],
+    'urbano': [('Muito perto', 500), ('Perto', 2000), ('Médio', 3000), ('Longe', 10000)],
+    'rede': [('Perto', 1000), ('Médio', 5000), ('Longe', 10000)],
+    'trilhas': [('Perto', 300), ('Médio', 1500), ('Longe', 3000)],
+}
+INTERVALOS_RELEVO = ['< 3%', '3% a 8%', '8% a 20%', '20% a 45%', '45% a 75%', '> 75%']
+
+
+def tabela_reguas():
+    """Linhas (critério, faixa, valor da faixa, nota por uso) de todos os critérios, calculadas pelas mesmas funções do cálculo."""
+    linhas = []
+    for criterio in CRITERIOS:
+        c = criterio['id']
+        if c == 'relevo':
+            pontos = [(CLASSES_RELEVO[i].capitalize(), INTERVALOS_RELEVO[i], np.array([i + 1])) for i in range(6)]
+        else:
+            faixas = FAIXAS[c]
+            unidade = (lambda v: f"{formato(v * 100)}%") if c == 'vegetacao' else metros
+            pontos = [(nome, ('até ' if i == 0 else '') + unidade(valor) + (' ou mais' if i == len(faixas) - 1 else ''), np.array([float(valor)]))
+                      for i, (nome, valor) in enumerate(faixas)]
+        for nome, rotulo, valor in pontos:
+            linhas.append((criterio['nome'], nome, rotulo,
+                           {u: (float(RESPOSTAS[u][c](valor)[0]) if c in RESPOSTAS[u] else None) for u in RESPOSTAS}))
+    return linhas
 
 
 RESTRICOES = [

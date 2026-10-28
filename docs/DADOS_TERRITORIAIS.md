@@ -1,6 +1,6 @@
 # Dados do território — preparação automática
 
-Versão 4.6.3. O sistema associa os dados de **todas as bases do catálogo** a cada mina e ao seu único recorte de influência. O engenheiro consulta o resultado preparado. Seletores visuais, intensidade, fundo e enquadramento não são parâmetros de processamento.
+Versão 4.6.4. O sistema associa os dados de **todas as bases do catálogo** a cada mina e ao seu único recorte de influência. O engenheiro consulta o resultado preparado. Seletores visuais, intensidade, fundo e enquadramento não são parâmetros de processamento.
 
 ## Catálogo único e abrangência
 

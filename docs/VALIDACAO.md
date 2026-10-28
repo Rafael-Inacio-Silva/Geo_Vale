@@ -1,6 +1,6 @@
 # Validação das fichas, da sugestão e da prévia
 
-Versão 4.6.3, 28/10/2026, macOS/Python 3.12/Node 24.
+Versão 4.6.4, 28/10/2026, macOS/Python 3.12/Node 24.
 
 ## Automatização
 
@@ -73,3 +73,7 @@ Teste novo: os exemplos do passo a passo saem das mesmas réguas e pesos (quadra
 ## Ficha 09 enxuta (4.6.3)
 
 O teste do PDF passou a exigir os três quadros (“Pesos dos critérios”, “Régua do relevo”), três “Fonte dos parâmetros”, o porquê em tópicos e a ausência do passo a passo e da lista de restrições; o teste e a função do passo a passo saíram com ele. Emissão real: 16 páginas; página 1 com um setor por linha; ficha 09 nas páginas 14 a 16, lida renderizada.
+
+## Quadro único de réguas (4.6.4)
+
+Teste novo: o quadro cobre os 7 critérios, com valores que saem das mesmas funções do cálculo (relevo plano: 0,5 · 0,8 · 1 · 1; drenagem “Perto”, 100 m: silvicultura 70 ÷ 170 e solar 0,2; “até 10%”, “3 km ou mais”; uso que não considera o critério fica sem nota). O PDF tem dois “Fonte dos parâmetros”. Emissão real: 17 páginas; o quadro das réguas ficou inteiro na página 17, sem cortar o relevo.
