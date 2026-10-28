@@ -1,10 +1,10 @@
 # Validação das fichas, da sugestão e da prévia
 
-Versão 4.6.2, 28/10/2026, macOS/Python 3.12/Node 24.
+Versão 4.6.3, 28/10/2026, macOS/Python 3.12/Node 24.
 
 ## Automatização
 
-107 testes Python aprovados no conjunto completo. Dois testes Node aprovados. TypeScript (`tsc --noEmit`) e build aprovados. Avisos de depreciação Starlette/HTTPX e Rasterio/NumPy permanecem sem falhas.
+106 testes Python aprovados no conjunto completo. Dois testes Node aprovados. TypeScript (`tsc --noEmit`) e build aprovados. Avisos de depreciação Starlette/HTTPX e Rasterio/NumPy permanecem sem falhas.
 
 Testes da 4.3.0: campo extra e cota zero aceitos só quando declarados; área das células em UTM igual à extensão projetada; área minerada pela classe Mineração com divisão de linhas, polígonos e pontos; UCs por grupo publicado; pontos de água contra a classe do trecho e os limites da CONAMA 357/2005; cenário inválido recusado.
 
@@ -69,3 +69,7 @@ Setor que abre e fecha (28/10/2026, instância isolada): clicar em S3 na lista a
 ## Ficha 09 em tópicos e passo a passo (4.6.2)
 
 Teste novo: os exemplos do passo a passo saem das mesmas réguas e pesos (quadrado plano: conservação 0,5, ecoturismo 0,8, silvicultura e solar 1; silvicultura a 100 m do rio: 70 ÷ 170; comparações do relevo 2, 3, 3, 4, 5, 5). O PDF contém os tópicos “• Por que”, o “Passo 5” e a “Régua do relevo”. Emissão real: 15 páginas; ficha 09 nas páginas 13 a 15; exemplo do passo 5 no S1 (3% plano ou suave × 1 + 34% ondulado × 0,7 + 58% forte × 0,3 + 5% montanhoso ou escarpado × 0 ≈ 0,44; com 9% proibido, 0,40). Páginas renderizadas e lidas.
+
+## Ficha 09 enxuta (4.6.3)
+
+O teste do PDF passou a exigir os três quadros (“Pesos dos critérios”, “Régua do relevo”), três “Fonte dos parâmetros”, o porquê em tópicos e a ausência do passo a passo e da lista de restrições; o teste e a função do passo a passo saíram com ele. Emissão real: 16 páginas; página 1 com um setor por linha; ficha 09 nas páginas 14 a 16, lida renderizada.

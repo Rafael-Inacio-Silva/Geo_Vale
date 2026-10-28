@@ -40,7 +40,7 @@ def criar_app(limite=None, raiz=RAIZ, trilhas=None, anm=None, municipios=None, t
         finally:
             fonte_territorios.encerrar()
 
-    app = FastAPI(title='GeoVale — mapa territorial', version='4.6.2', docs_url=None, redoc_url=None, openapi_url=None, lifespan=ciclo_vida)
+    app = FastAPI(title='GeoVale — mapa territorial', version='4.6.3', docs_url=None, redoc_url=None, openapi_url=None, lifespan=ciclo_vida)
     fonte = limite if limite is not None else LimiteEstadual()
     fonte_trilhas = trilhas if trilhas is not None else TrilhasMunicipais()
     fonte_anm = anm if anm is not None else ProcessosANM()
@@ -50,7 +50,7 @@ def criar_app(limite=None, raiz=RAIZ, trilhas=None, anm=None, municipios=None, t
     @app.get('/api/saude')
     def saude():
         """Indica disponibilidade do aplicativo, independentemente da fonte externa."""
-        return {'status': 'ok', 'versao': '4.6.2'}
+        return {'status': 'ok', 'versao': '4.6.3'}
 
     @app.get('/api/mapa')
     def configuracao():

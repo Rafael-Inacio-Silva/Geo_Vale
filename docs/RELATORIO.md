@@ -1,6 +1,6 @@
 # Relatório GeoVale: dado e contexto
 
-Versão 4.6.2, 28/10/2026. Selecionar a mina oferece **Ver relatório**, sem exigir Influência. A marca e autoria são GeoVale.
+Versão 4.6.3, 28/10/2026. Selecionar a mina oferece **Ver relatório**, sem exigir Influência. A marca e autoria são GeoVale.
 
 ## Estrutura
 
@@ -32,7 +32,7 @@ O Plano Minas-Rio, Anglo American, revisão junho/2021, fundamenta a estrutura d
 
 Cada leitura contextual das fichas indica a implicação do dado para o planejamento pós-mineração (o que favorece, limita ou exige estudo) e um limite do dado. As regras calculam os indicadores, por exemplo a parcela do entorno acima de 20% de declividade ou os quilômetros de drenagem que cruzam a área minerada, e escrevem um texto de reserva.
 
-A IA escreve a leitura de cada ficha e explica, pelo terreno, por que cada setor recebeu o uso sugerido; a frase sobre os demais usos fica por regras. Na ficha 09 o porquê aparece em tópicos, e “Como a nota é calculada” traz cinco passos com exemplos, as fontes e as réguas. Para as fichas, recebe um guia por tema que ensina a interpretar cada subtema (classes de declividade, Q7,10, enquadramento, grupos de UC, APP, barragens a montante, ZAS, valores simulados). O porquê está em [Multicritério e IA](MULTICRITERIO.md). `comentarios.py` separa leituras e explicações dos fatos por ID. A integração usa a **OpenAI Responses API** e o modelo **gpt-4.1-mini**, trocado do gpt-5-nano a pedido do engenheiro (motivo em [Multicritério e IA](MULTICRITERIO.md)). O modelo está na [documentação do modelo](https://platform.openai.com/docs/models/gpt-4.1-mini), com [Structured Outputs](https://developers.openai.com/api/docs/guides/structured-outputs).
+A IA escreve a leitura de cada ficha e explica, pelo terreno, por que cada setor recebeu o uso sugerido; a frase sobre os demais usos fica por regras. Na ficha 09 o porquê aparece em tópicos, e “Como a nota é calculada” traz três quadros (pesos, régua do relevo, régua dos demais critérios), cada um com a fonte dos parâmetros: estudo ou engenheiro responsável. O passo a passo com exemplos fica em [Multicritério e IA](MULTICRITERIO.md). Para as fichas, recebe um guia por tema que ensina a interpretar cada subtema (classes de declividade, Q7,10, enquadramento, grupos de UC, APP, barragens a montante, ZAS, valores simulados). O porquê está em [Multicritério e IA](MULTICRITERIO.md). `comentarios.py` separa leituras e explicações dos fatos por ID. A integração usa a **OpenAI Responses API** e o modelo **gpt-4.1-mini**, trocado do gpt-5-nano a pedido do engenheiro (motivo em [Multicritério e IA](MULTICRITERIO.md)). O modelo está na [documentação do modelo](https://platform.openai.com/docs/models/gpt-4.1-mini), com [Structured Outputs](https://developers.openai.com/api/docs/guides/structured-outputs).
 
 A chave é colocada somente em `.local/ia.env`, na linha `OPENAI_API_KEY=`. O arquivo tem permissão 600, é ignorado por `.gitignore` e não é enviado ao frontend, PDF, logs ou GitHub. O leitor usa esse arquivo local, não credenciais globais do computador. É relido ao abrir uma emissão; preencher/alterar a chave invalida o cache sem exigir reiniciar o servidor. Uma sessão já aberta deve ser fechada e reaberta.
 
