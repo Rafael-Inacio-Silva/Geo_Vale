@@ -12,7 +12,7 @@ import pypdfium2 as pdfium
 from geovale.mapa_relatorio import MapaTerritorial
 from geovale.fichas import PARAMETROS_AGUA, formato, ha, montar_fichas, preparar, projetar
 from geovale.comentarios import Comentarista
-from geovale.multicriterio import SugestoesUso, USOS, demais_por_setor, entrada_ia, nome_setor, resumo_pesos, texto_setor
+from geovale.multicriterio import CLASSES_RELEVO, SugestoesUso, USOS, demais_por_setor, entrada_ia, nome_setor, resumo_pesos, texto_regua, texto_setor
 from xml.sax.saxutils import escape
 from zoneinfo import ZoneInfo
 
@@ -210,6 +210,21 @@ def gerar_pdf(dados,cenario,fichas,comentarios,sugestao=None,explicacoes=None):
         adicionar(tab,Spacer(1,8),
                   paragrafo('Restrições: '+'; '.join(f"{r['nome']} admite {', '.join(n['nome'].lower() for n in USOS if n['id'] in r['permite'])} ({r['base']})" for r in sugestao['restricoes'])+'.','pequeno'),
                   paragrafo('Relevo da Topodata (SRTM, 2000): dentro da área minerada não representa a cava atual; substituir por levantamento topográfico atual. Métodos e evidências em docs/MULTICRITERIO.md.','pequeno'))
+        # Tabela de referência: a régua de cada uso sai da mesma definição usada no cálculo.
+        regua=tabela(['Critério (peso)']+[u['nome'] for u in USOS],
+                     [[f"{c['nome']} ({formato(c['peso']*100)}%)"]+[texto_regua(u['id'],c['id']) for u in USOS] for c in sugestao['criterios']],
+                     [LARGURA*.2]+[LARGURA*.2]*4)
+        regua.setStyle(TableStyle([('TOPPADDING',(0,0),(-1,-1),4),('BOTTOMPADDING',(0,0),(-1,-1),4),('LEFTPADDING',(0,0),(-1,-1),5),('RIGHTPADDING',(0,0),(-1,-1),5)]))
+        adicionar(Spacer(1,6),paragrafo('Como a nota é calculada','texto'),
+                  paragrafo('Cada célula de 30 m da área minerada recebe, em cada critério, uma nota de 0 a 1 pela régua do uso (tabela). '
+                            'Nota do uso = soma de peso × nota dos critérios que o uso considera, dividida pela soma desses pesos, × 100. '
+                            'Onde a lei não permite o uso, a célula vale 0. A nota do setor é a média das células, pela área. '
+                            'Entre os valores indicados, a nota varia em linha reta. Relevo, na ordem: '+', '.join(CLASSES_RELEVO)+'.','pequeno'),
+                  regua,Spacer(1,6),
+                  paragrafo('Fontes: classes de declividade da Embrapa (1979), usadas pela Topodata/INPE; padronização de critérios por funções lineares '
+                            '(Eastman, 1999, Multi-criteria evaluation and GIS); pesos pelo método AHP (Saaty, 1980, The Analytic Hierarchy Process), '
+                            'com razão de consistência abaixo de 0,10. Os valores de cada régua e os julgamentos AHP são parâmetros de partida do '
+                            'GeoVale, a calibrar com especialistas e partes interessadas.','pequeno'))
     def pagina(tela,d):
         tela.saveState();tela.setFillColor(VERDE);tela.rect(0,A4[1]-70,A4[0],70,fill=1,stroke=0);logo(tela,40,A4[1]-57,.9)
         tela.setFillColor(AMARELO);tela.rect(0,A4[1]-73,A4[0],3,fill=1,stroke=0)
@@ -227,7 +242,7 @@ class RelatoriosPDF:
     def obter(self,mina_id,pesos=None):
         """Atualiza fatos por coleta/cenário/pesos e explicações por modelo, sem reextrair fontes."""
         dados=self.fonte.relatorio(mina_id);cenario=ler_cenario(self.raiz,mina_id)
-        chave=hashlib.sha256(json.dumps({'dados':{k:v for k,v in dados.items() if k!='gerado_em'},'cenario':cenario,'modelo':'4.6.0',
+        chave=hashlib.sha256(json.dumps({'dados':{k:v for k,v in dados.items() if k!='gerado_em'},'cenario':cenario,'modelo':'4.6.1',
                                          'pesos':None if pesos is None else [round(float(p),6) for p in pesos],'comentarios':self.comentarista.assinatura},sort_keys=True,ensure_ascii=False).encode()).hexdigest()
         with self.trava:
             anterior=self.cache.get(mina_id)

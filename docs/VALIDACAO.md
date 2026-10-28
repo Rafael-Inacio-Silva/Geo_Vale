@@ -1,10 +1,10 @@
 # Validação das fichas, da sugestão e da prévia
 
-Versão 4.6.0, 28/10/2026, macOS/Python 3.12/Node 24.
+Versão 4.6.1, 28/10/2026, macOS/Python 3.12/Node 24.
 
 ## Automatização
 
-105 testes Python aprovados no conjunto completo. Dois testes Node aprovados. TypeScript (`tsc --noEmit`) e build aprovados. Avisos de depreciação Starlette/HTTPX e Rasterio/NumPy permanecem sem falhas.
+106 testes Python aprovados no conjunto completo. Dois testes Node aprovados. TypeScript (`tsc --noEmit`) e build aprovados. Avisos de depreciação Starlette/HTTPX e Rasterio/NumPy permanecem sem falhas.
 
 Testes da 4.3.0: campo extra e cota zero aceitos só quando declarados; área das células em UTM igual à extensão projetada; área minerada pela classe Mineração com divisão de linhas, polígonos e pontos; UCs por grupo publicado; pontos de água contra a classe do trecho e os limites da CONAMA 357/2005; cenário inválido recusado.
 
@@ -59,3 +59,7 @@ Comparação de modelos com a mesma entrada real (Horizontes, pesos AHP), em 28/
 PDF padrão com gpt-4.1-mini: 14 páginas, 20 s; ficha 09 com “Por que (IA)”; 7 de 8 fichas com IA (Entorno caiu para regras naquela emissão, como previsto).
 
 Tela, numa instância isolada (porta 8031, cópia do banco e da chave): o resultado aparece à esquerda abaixo de Sugerir uso e os pesos à direita; S2 mostrou “Por que (IA)” com a explicação do terreno; mudar o peso de trilhas para 40 fez aparecer Emitir relatório com estes pesos, que abriu “Relatório com pesos ajustados” (`?pesos=34,22,13,13,7,6,40`, 15 páginas); fechar e clicar Ver relatório pediu o PDF sem pesos (“Relatório da mina”).
+
+## Tabela de referência na ficha 09 (4.6.1)
+
+Teste novo: a tabela e o cálculo usam a mesma régua (mesmos usos e critérios), o texto da régua confere com os parâmetros (solar no relevo: “1 · 0,8 · 0,3 · 0 · 0 · 0”) e a função continua igual (conservação a 350 m da drenagem: 0,65). O PDF com pesos ajustados contém “Como a nota é calculada” e a citação de Saaty. Na emissão real, a tabela ficou na página 14, depois das restrições, sem criar página nova (14 páginas).

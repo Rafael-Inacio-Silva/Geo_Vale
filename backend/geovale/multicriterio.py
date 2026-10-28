@@ -63,18 +63,54 @@ def por_classe(tabela):
     return lambda x: tabela_completa[x.astype(int)]
 
 
-# Como cada uso responde a cada critério; critério ausente não participa do uso.
-RESPOSTAS = {
-    'conservacao': {'relevo': por_classe({1: .5, 2: .5, 3: .7, 4: 1, 5: 1, 6: 1}), 'vegetacao': cresce(.1, .6),
-                    'drenagem': decresce(100, 600, .3), 'urbano': cresce(500, 3000, .3)},
-    'ecoturismo': {'relevo': por_classe({1: .8, 2: 1, 3: 1, 4: .8, 5: .5, 6: .2}), 'vegetacao': cresce(.1, .6, .3),
-                   'drenagem': decresce(200, 1500, .3), 'acesso': decresce(1000, 8000), 'urbano': decresce(2000, 10000, .2),
-                   'trilhas': decresce(300, 3000)},
-    'silvicultura': {'relevo': por_classe({1: 1, 2: 1, 3: .7, 4: .3, 5: 0, 6: 0}), 'drenagem': cresce(30, 200),
-                     'acesso': decresce(1000, 8000, .2)},
-    'solar': {'relevo': por_classe({1: 1, 2: .8, 3: .3, 4: 0, 5: 0, 6: 0}), 'drenagem': cresce(50, 300),
-              'acesso': decresce(1000, 8000), 'urbano': decresce(3000, 10000, .3), 'rede': decresce(1000, 10000)},
+# Régua de cada uso em cada critério (nota de 0 a 1); critério ausente não participa do uso.
+# Uma fonte só: o cálculo e a tabela de referência do relatório saem daqui.
+CLASSES_RELEVO = ['plano', 'suave ondulado', 'ondulado', 'forte ondulado', 'montanhoso', 'escarpado']
+REGUAS = {
+    'conservacao': {'relevo': ('classe', {1: .5, 2: .5, 3: .7, 4: 1, 5: 1, 6: 1}), 'vegetacao': ('cresce', .1, .6, 0.),
+                    'drenagem': ('decresce', 100, 600, .3), 'urbano': ('cresce', 500, 3000, .3)},
+    'ecoturismo': {'relevo': ('classe', {1: .8, 2: 1, 3: 1, 4: .8, 5: .5, 6: .2}), 'vegetacao': ('cresce', .1, .6, .3),
+                   'drenagem': ('decresce', 200, 1500, .3), 'acesso': ('decresce', 1000, 8000, 0.), 'urbano': ('decresce', 2000, 10000, .2),
+                   'trilhas': ('decresce', 300, 3000, 0.)},
+    'silvicultura': {'relevo': ('classe', {1: 1, 2: 1, 3: .7, 4: .3, 5: 0, 6: 0}), 'drenagem': ('cresce', 30, 200, 0.),
+                     'acesso': ('decresce', 1000, 8000, .2)},
+    'solar': {'relevo': ('classe', {1: 1, 2: .8, 3: .3, 4: 0, 5: 0, 6: 0}), 'drenagem': ('cresce', 50, 300, 0.),
+              'acesso': ('decresce', 1000, 8000, 0.), 'urbano': ('decresce', 3000, 10000, .3), 'rede': ('decresce', 1000, 10000, 0.)},
 }
+
+
+def construir(regua):
+    tipo, *parametros = regua
+    if tipo == 'classe':
+        return por_classe(parametros[0])
+    a, b, piso = parametros
+    return (cresce if tipo == 'cresce' else decresce)(a, b, piso)
+
+
+RESPOSTAS = {u: {c: construir(r) for c, r in criterios.items()} for u, criterios in REGUAS.items()}
+
+
+def metros(valor):
+    return f"{formato(valor)} m" if valor < 1000 else f"{formato(valor / 1000, 0 if valor % 1000 == 0 else 1)} km"
+
+
+def texto_regua(uso, criterio):
+    """A régua em palavras e números, para a tabela de referência do relatório."""
+    regua = REGUAS[uso].get(criterio)
+    if regua is None:
+        return 'não conta'
+    tipo, *parametros = regua
+    if tipo == 'classe':
+        return ' · '.join(formato(parametros[0][i], 1 if parametros[0][i] % 1 else 0) for i in range(1, 7))
+    a, b, piso = parametros
+    nota = lambda v: formato(v, 1 if v % 1 else 0)
+    if criterio == 'vegetacao':
+        return f"{nota(piso)} até {formato(a * 100)}% de nativa; 1 a partir de {formato(b * 100)}%"
+    if tipo == 'decresce':
+        return f"1 até {metros(a)}; {nota(piso)} a partir de {metros(b)}"
+    return f"{nota(piso)} até {metros(a)}; 1 a partir de {metros(b)}"
+
+
 RESTRICOES = [
     {'id': 'pi_restrita', 'nome': 'UC de proteção integral sem visitação', 'curto': 'UC de proteção integral', 'permite': ['conservacao'], 'base': 'Lei 9.985/2000, arts. 7º e 9º'},
     {'id': 'pi_visitacao', 'nome': 'Parque ou monumento natural', 'curto': 'parque ou monumento natural', 'permite': ['conservacao', 'ecoturismo'], 'base': 'Lei 9.985/2000, arts. 7º, 11 e 12'},

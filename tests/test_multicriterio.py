@@ -122,7 +122,7 @@ def test_api_sugere_por_setor_aplica_restricoes_e_leva_pesos_ao_pdf(tmp_path):
     pdf = cliente.get('/api/minas/horizontes/relatorio?pesos=' + pesos)
     assert padrao.status_code == pdf.status_code == 200 and padrao.content != pdf.content
     texto = ' '.join(' '.join(p.extract_text() for p in PdfReader(BytesIO(pdf.content)).pages).split())
-    assert 'Sugestão multicritério' in texto and 'ajustados pelo engenheiro' in texto and 'Por que' in texto and '(IA)' not in texto and 'laudo' not in texto
+    assert 'Sugestão multicritério' in texto and 'ajustados pelo engenheiro' in texto and 'Por que' in texto and 'Como a nota é calculada' in texto and 'Saaty' in texto and '(IA)' not in texto and 'laudo' not in texto
     assert cliente.get('/api/minas/horizontes/relatorio?pesos=x').status_code == 422
 
 
@@ -133,3 +133,12 @@ def test_explicacao_por_regras_fala_do_terreno_e_nao_de_pontos():
     assert texto.startswith(setor['ranking'][0]['nome'] + ': ') and 'ponto' not in texto and 'peso' not in texto
     assert '% do setor tem declividade' in texto or 'fica a' in texto or 'vegetação nativa cobre' in texto
     assert setor['perfil']['declividade']['acima20'] == pytest.approx(60) and setor['perfil']['distancias']['rede'] is None
+
+
+def test_tabela_de_referencia_sai_da_mesma_regua_do_calculo():
+    from geovale.multicriterio import REGUAS, texto_regua
+    assert set(REGUAS) == set(RESPOSTAS) and all(set(REGUAS[u]) == set(RESPOSTAS[u]) for u in REGUAS)
+    assert texto_regua('solar', 'relevo') == '1 · 0,8 · 0,3 · 0 · 0 · 0'
+    assert texto_regua('conservacao', 'drenagem') == '1 até 100 m; 0,3 a partir de 600 m'
+    assert texto_regua('silvicultura', 'trilhas') == 'não conta'
+    assert float(RESPOSTAS['conservacao']['drenagem'](np.array([350.]))[0]) == pytest.approx(.65)
