@@ -118,5 +118,5 @@ def test_api_sugere_por_setor_aplica_restricoes_e_leva_pesos_ao_pdf(tmp_path):
     pdf = cliente.get('/api/minas/horizontes/relatorio?pesos=' + pesos)
     assert padrao.status_code == pdf.status_code == 200 and padrao.content != pdf.content
     texto = ' '.join(' '.join(p.extract_text() for p in PdfReader(BytesIO(pdf.content)).pages).split())
-    assert 'Sugestão multicritério' in texto and 'ajustados pelo engenheiro' in texto and 'Explicação automática por regras' in texto
+    assert 'Sugestão multicritério' in texto and 'ajustados pelo engenheiro' in texto and 'Por que' in texto and '(IA)' not in texto and 'laudo' not in texto
     assert cliente.get('/api/minas/horizontes/relatorio?pesos=x').status_code == 422

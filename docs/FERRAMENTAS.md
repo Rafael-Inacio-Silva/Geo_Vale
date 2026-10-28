@@ -1,6 +1,6 @@
 # Ferramentas e justificativas
 
-Versão 4.4.0. As ferramentas abaixo correspondem ao mapa e à caracterização territorial automática implementados.
+Versão 4.5.0. As ferramentas abaixo correspondem ao mapa e à caracterização territorial automática implementados.
 
 | Necessidade | Ferramenta | Motivo e resultado |
 |---|---|---|
@@ -17,7 +17,7 @@ Versão 4.4.0. As ferramentas abaixo correspondem ao mapa e à caracterização 
 | Limitar concorrência/rede | urllib, threading e ThreadPoolExecutor | Consultas HTTP limitadas e até três bases em paralelo, com repetição automática e estados. |
 | Relatório PDF | ReportLab | Marca, mapas em vetor, tabelas e paginação; geração local a partir dos dados guardados. |
 | Visualização do documento | pypdfium2 / PDFium | Renderiza PNGs por página no servidor, sem depender de canvas ou worker do navegador. |
-| Comentários por dado | Regras explícitas; conector LLM opcional | Mantém fatos imutáveis e identifica se a leitura foi por regras ou IA. Nenhum ML foi treinado. |
+| Leitura contextual por dado | GPT-5 nano com guia por tema; regras de reserva | Mantém fatos imutáveis e marca “(IA)” quando o texto veio do modelo. Nenhum ML foi treinado. |
 | Build e dependências | Node/npm/Vite e ambiente virtual/pip | Interface compilada e ambientes reproduzíveis com locks/hashes, preservando ambiente pessoal. |
 | Verificação/versionamento | pytest/TestClient, Node tests, navegador, Git/GitHub | Conferem contratos, falhas, persistência e fluxo real; compartilham o código autorizado. |
 

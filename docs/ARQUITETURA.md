@@ -30,7 +30,7 @@ flowchart LR
 
 | Método e rota | Resposta |
 |---|---|
-| GET /api/saude | Saúde e versão 4.4.0 |
+| GET /api/saude | Saúde e versão 4.5.0 |
 | GET /api/mapa | Uma mina, fundos e catálogo de sete temas/dezoito bases |
 | GET /api/mapa/limite-mg | Contorno estadual, fonte/data e aviso de cache quando aplicável |
 | GET /api/mapa/trilhas?bbox=... | Trilhas visuais e legenda do enquadramento; 422/503 |
@@ -73,6 +73,6 @@ As barras ocultam sem desmontar o painel; ResizeObserver atualiza o tamanho Leaf
 
 `multicriterio.py` mede uma vez por coleta, para cada célula de 30 m da área minerada, as sete variáveis, as restrições legais e o setor; guarda em cache e, quando os pesos mudam, refaz só a soma ponderada (cerca de 0,4 s contra 11 s do preparo inicial). Pesos padrão vêm do autovetor da matriz AHP, com razão de consistência calculada. A sensibilidade varia cada peso em ±20%. [Método e porquês](MULTICRITERIO.md).
 
-`comentarios.py` mantém comentários das fichas por regras, separados por ID do dado. A IA opcional só explica a sugestão: recebe números já formatados por setor, pede JSON com a lista exata de setores, rejeita números não fornecidos e volta às regras com rótulo explícito em qualquer falha. Não escolhe uso nem pesos. A configuração de IA é somente de servidor.
+`comentarios.py` produz a leitura contextual das fichas e a explicação da sugestão, separadas por ID do dado ou do setor. Com chave local, chama o modelo uma vez por ficha (em paralelo, com guia do tema) e uma vez para a sugestão; pede JSON com a lista exata de itens, rejeita números não fornecidos e textos fora do padrão e volta às regras na ficha que falhar. O PDF marca “(IA)” no cabeçalho só quando o texto veio do modelo. Não escolhe uso nem pesos. A configuração de IA é somente de servidor.
 
-O cache do PDF usa dados, cenário, pesos, modelo do documento e configuração do comentarista. O coletor conserva assinatura 4.0.0; API/interface são 4.4.0. `X-Relatorio-Versao` vincula o manifesto/PNGs ao PDF baixável. Versão não guardada: 409 para reabertura; página inexistente: 404. A versão já aberta não mistura páginas de outra emissão.
+O cache do PDF usa dados, cenário, pesos, modelo do documento e configuração do comentarista. O coletor conserva assinatura 4.0.0; API/interface são 4.5.0. `X-Relatorio-Versao` vincula o manifesto/PNGs ao PDF baixável. Versão não guardada: 409 para reabertura; página inexistente: 404. A versão já aberta não mistura páginas de outra emissão.

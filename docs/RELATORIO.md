@@ -1,6 +1,6 @@
 # Relatório GeoVale: dado e contexto
 
-Versão 4.4.0, 27/10/2026. Selecionar a mina oferece **Ver relatório**, sem exigir Influência. A marca e autoria são GeoVale.
+Versão 4.5.0, 28/10/2026. Selecionar a mina oferece **Ver relatório**, sem exigir Influência. A marca e autoria são GeoVale.
 
 ## Estrutura
 
@@ -30,15 +30,15 @@ O Plano Minas-Rio, Anglo American, revisão junho/2021, fundamenta a estrutura d
 
 ## Comentários e IA
 
-Cada comentário das fichas indica a implicação do dado para o planejamento pós-mineração (o que favorece, limita ou exige estudo) e um limite do dado. São sempre por regras, porque usam os valores calculados de forma determinística, por exemplo a parcela do entorno acima de 20% de declividade ou os quilômetros de drenagem que cruzam a área minerada.
+Cada leitura contextual das fichas indica a implicação do dado para o planejamento pós-mineração (o que favorece, limita ou exige estudo) e um limite do dado. As regras calculam os indicadores, por exemplo a parcela do entorno acima de 20% de declividade ou os quilômetros de drenagem que cruzam a área minerada, e escrevem um texto de reserva.
 
-A IA só explica a sugestão multicritério, setor por setor. O porquê dessa divisão está em [Multicritério e IA](MULTICRITERIO.md). `comentarios.py` separa comentários e explicações dos fatos por ID. A integração usa a **OpenAI Responses API** e o modelo **gpt-5-nano**, exatamente o solicitado. O modelo está confirmado na [documentação oficial](https://developers.openai.com/api/docs/models/gpt-5-nano), com [Structured Outputs](https://developers.openai.com/api/docs/guides/structured-outputs).
+A IA escreve a leitura de cada ficha e explica a sugestão multicritério, setor por setor. Para as fichas, recebe um guia por tema que ensina a interpretar cada subtema (classes de declividade, Q7,10, enquadramento, grupos de UC, APP, barragens a montante, ZAS, valores simulados). O porquê está em [Multicritério e IA](MULTICRITERIO.md). `comentarios.py` separa leituras e explicações dos fatos por ID. A integração usa a **OpenAI Responses API** e o modelo **gpt-5-nano**, exatamente o solicitado. O modelo está confirmado na [documentação oficial](https://developers.openai.com/api/docs/models/gpt-5-nano), com [Structured Outputs](https://developers.openai.com/api/docs/guides/structured-outputs).
 
 A chave é colocada somente em `.local/ia.env`, na linha `OPENAI_API_KEY=`. O arquivo tem permissão 600, é ignorado por `.gitignore` e não é enviado ao frontend, PDF, logs ou GitHub. O leitor usa esse arquivo local, não credenciais globais do computador. É relido ao abrir uma emissão; preencher/alterar a chave invalida o cache sem exigir reiniciar o servidor. Uma sessão já aberta deve ser fechada e reaberta.
 
-A aplicação envia somente os números da sugestão, já formatados como devem aparecer no texto (pesos, notas, porcentagem permitida, pontos por critério, restrições, robustez), para `https://api.openai.com/v1/responses`, sem matrizes/geometrias, com `store=false`, raciocínio baixo, limite de 9.000 tokens de saída e timeout de 45 s. Não envia temperature, incompatível com a configuração escolhida do GPT-5 nano. O JSON Schema é estrito e limita os setores aos enviados. A resposta precisa estar completa; recusa, erro ou truncamento retornam às regras. Cada texto tem até 420 caracteres, todos os setores precisam estar presentes e números não fornecidos são recusados.
+A aplicação envia para `https://api.openai.com/v1/responses` só texto já calculado: na sugestão, pesos, notas, porcentagem permitida, pontos por critério, condicionantes e robustez, em frases; em cada ficha, nome, valor, origem e texto por regras de cada dado, mais o guia do tema. Sem matrizes/geometrias, com `store=false`, raciocínio baixo, limite de 9.000 tokens de saída e timeout de 60 s. Não envia temperature, incompatível com a configuração escolhida do GPT-5 nano. O JSON Schema é estrito e limita os itens aos enviados. A resposta precisa estar completa; recusa, erro ou truncamento retornam às regras (cada ficha tem uma nova tentativa). Cada texto tem até 420 caracteres, todos os itens precisam estar presentes, números não fornecidos são recusados, assim como interrogação, nomes de campo e letras fora do alfabeto latino.
 
-Sem chave ou com serviço indisponível, a explicação por regras aparece com procedência explícita. Não houve chamada real porque o arquivo de chave está vazio; o contrato foi testado com respostas controladas. Verificações de formato não garantem correção semântica de um LLM; revisão técnica continua necessária. Valores de fontes, cálculos e exemplos fictícios não são alterados pelo modelo.
+Quando o texto veio do modelo, o cabeçalho da coluna mostra “Leitura contextual (IA)” ou “Por que (IA)”; texto por regras aparece sem “(IA)”. Verificações de formato não garantem correção semântica de um LLM; revisão técnica continua necessária. Valores de fontes, cálculos e exemplos fictícios não são alterados pelo modelo.
 
 ## PDF e prévia
 

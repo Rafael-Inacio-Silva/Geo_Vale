@@ -6,6 +6,7 @@ from io import BytesIO
 from pathlib import Path
 from threading import Lock
 from collections import OrderedDict
+from concurrent.futures import ThreadPoolExecutor
 import math
 import pypdfium2 as pdfium
 from geovale.mapa_relatorio import MapaTerritorial
@@ -145,7 +146,8 @@ def gerar_pdf(dados,cenario,fichas,comentarios,sugestao=None,explicacoes=None):
         for d in ficha['dados']:
             bruto=Paragraph('<b>'+texto(d['nome'])+'</b><br/>'+texto(d['valor']).replace('\n','<br/>')+'<br/><font size="6.7" color="#536d64">'+texto(d['origem'])+'</font>',ESTILOS['celula'])
             linhas.append([bruto,paragrafo(comentarios['comentarios'][d['id']],'celula')])
-        tab=tabela(['Dado / valor / origem','Leitura contextual (separada do dado)'],linhas,[LARGURA*.48,LARGURA*.52])
+        leitura='Leitura contextual (IA)' if ficha['id'] in comentarios['ia'] else 'Leitura contextual'
+        tab=tabela(['Dado / valor / origem',leitura],linhas,[LARGURA*.48,LARGURA*.52])
         tab.setStyle(TableStyle([('TOPPADDING',(0,1),(-1,-1),6),('BOTTOMPADDING',(0,1),(-1,-1),6)]))
         adicionar(tab)
     minerada=dados.get('area_minerada')
@@ -167,7 +169,7 @@ def gerar_pdf(dados,cenario,fichas,comentarios,sugestao=None,explicacoes=None):
     resumo.setStyle(TableStyle([('TOPPADDING',(0,1),(-1,-1),5),('BOTTOMPADDING',(0,1),(-1,-1),5)]))
     adicionar(resumo,Spacer(1,6),
               paragrafo(cenario['descricao'],'pequeno'),
-              paragrafo('Recorte comum aproximado da AII águas/solos (FEAM, Figura 2.3), usado como contexto; não define área de intervenção ou fechamento. Os comentários indicam implicações para o planejamento sem alterar valores; a sugestão multicritério ordena usos para discussão, sem decidir.','pequeno'))
+              paragrafo('Recorte comum aproximado da AII águas/solos (FEAM, Figura 2.3), usado como contexto; não define área de intervenção ou fechamento. A leitura contextual indica implicações para o planejamento sem alterar valores; a sugestão multicritério ordena usos para discussão, sem decidir.','pequeno'))
     alturas={'vegetacao':190,'agua':180,'barragens':180}
     for i,ficha in enumerate(fichas,1):
         adicionar(PageBreak(),paragrafo(f'{i:02d} | '+ficha['nome'],'secao'))
@@ -177,7 +179,7 @@ def gerar_pdf(dados,cenario,fichas,comentarios,sugestao=None,explicacoes=None):
             adicionar(MapaTerritorial(dados,tema='tecnicos',altura=230,pontos=[(d['rotulo'],*d['ponto']) for d in ficha['dados'] if d.get('ponto')]),
                       Spacer(1,8),paragrafo(cenario['descricao'],'pequeno'))
         fatos(ficha)
-        adicionar(Spacer(1,8),paragrafo(comentarios['rotulo']+'. Comentários não constituem laudo ou decisão de uso.','pequeno'))
+        adicionar(Spacer(1,8))
         if ficha['bases']:
             fontes=[]
             for b in ficha['bases']:
@@ -202,9 +204,9 @@ def gerar_pdf(dados,cenario,fichas,comentarios,sugestao=None,explicacoes=None):
             if s['montante']:condicoes.append('barragem a montante')
             bruto=Paragraph('<b>'+texto(nome_setor(s))+'</b><br/>'+texto(texto_setor(s)).replace('\n','<br/>')+'<br/><font size="6.7" color="#536d64">'+texto('; '.join(condicoes))+'</font>',ESTILOS['celula'])
             linhas.append([bruto,paragrafo(explicacoes['textos'][s['id']],'celula')])
-        tab=tabela(['Setor e notas (0 a 100)','Por que (explicação separada das notas)'],linhas,[LARGURA*.46,LARGURA*.54])
+        tab=tabela(['Setor e notas (0 a 100)','Por que (IA)' if explicacoes['metodo']=='ia' else 'Por que'],linhas,[LARGURA*.46,LARGURA*.54])
         tab.setStyle(TableStyle([('TOPPADDING',(0,1),(-1,-1),6),('BOTTOMPADDING',(0,1),(-1,-1),6)]))
-        adicionar(tab,Spacer(1,8),paragrafo(explicacoes['rotulo']+'. A decisão de uso é do engenheiro e das partes interessadas.','pequeno'),
+        adicionar(tab,Spacer(1,8),
                   paragrafo('Restrições: '+'; '.join(f"{r['nome']} admite {', '.join(n['nome'].lower() for n in USOS if n['id'] in r['permite'])} ({r['base']})" for r in sugestao['restricoes'])+'.','pequeno'),
                   paragrafo('Relevo da Topodata (SRTM, 2000): dentro da área minerada não representa a cava atual; substituir por levantamento topográfico atual. Métodos e evidências em docs/MULTICRITERIO.md.','pequeno'))
     def pagina(tela,d):
@@ -224,15 +226,19 @@ class RelatoriosPDF:
     def obter(self,mina_id,pesos=None):
         """Atualiza fatos por coleta/cenário/pesos e explicações por modelo, sem reextrair fontes."""
         dados=self.fonte.relatorio(mina_id);cenario=ler_cenario(self.raiz,mina_id)
-        chave=hashlib.sha256(json.dumps({'dados':{k:v for k,v in dados.items() if k!='gerado_em'},'cenario':cenario,'modelo':'4.4.0',
+        chave=hashlib.sha256(json.dumps({'dados':{k:v for k,v in dados.items() if k!='gerado_em'},'cenario':cenario,'modelo':'4.5.0',
                                          'pesos':None if pesos is None else [round(float(p),6) for p in pesos],'comentarios':self.comentarista.assinatura},sort_keys=True,ensure_ascii=False).encode()).hexdigest()
         with self.trava:
             anterior=self.cache.get(mina_id)
             if anterior and anterior[0]==chave:return anterior[1]
             dados['rasters']={b['base']['id']:self.fonte.arquivo(mina_id,b['base']['id']) for b in dados['bases'] if b['tipo']=='raster'}
-            fichas=montar_fichas(preparar(dados),cenario);comentarios=self.comentarista.gerar(fichas)
+            fichas=montar_fichas(preparar(dados),cenario)
             sugestao=self.sugestoes.obter(mina_id,pesos,dados) if dados.get('area_minerada') else None
-            explicacoes=self.comentarista.explicar(entrada_ia(sugestao),{s['id']:s['explicacao'] for s in sugestao['setores']}) if sugestao else None
+            # Fichas e sugestão vão ao modelo ao mesmo tempo: a espera é a da chamada mais lenta.
+            with ThreadPoolExecutor(max_workers=2) as execucao:
+                lendo=execucao.submit(self.comentarista.gerar,fichas)
+                explicando=execucao.submit(self.comentarista.explicar,entrada_ia(sugestao),{s['id']:s['explicacao'] for s in sugestao['setores']}) if sugestao else None
+                comentarios=lendo.result();explicacoes=explicando.result() if explicando else None
             pdf=gerar_pdf(dados,cenario,fichas,comentarios,sugestao,explicacoes);versao=hashlib.sha256(pdf).hexdigest()
             self.cache[mina_id]=(chave,pdf);self.documentos[(mina_id,versao)]=pdf
             while len(self.documentos)>4:

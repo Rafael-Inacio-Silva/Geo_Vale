@@ -1,10 +1,10 @@
 # Validação das fichas, da sugestão e da prévia
 
-Versão 4.4.0, 27/10/2026, macOS/Python 3.12/Node 24.
+Versão 4.5.0, 28/10/2026, macOS/Python 3.12/Node 24.
 
 ## Automatização
 
-101 testes Python aprovados no conjunto completo. Dois testes Node aprovados. TypeScript (`tsc --noEmit`) e build aprovados. Avisos de depreciação Starlette/HTTPX e Rasterio/NumPy permanecem sem falhas.
+102 testes Python aprovados no conjunto completo. Dois testes Node aprovados. TypeScript (`tsc --noEmit`) e build aprovados. Avisos de depreciação Starlette/HTTPX e Rasterio/NumPy permanecem sem falhas.
 
 Testes da 4.3.0: campo extra e cota zero aceitos só quando declarados; área das células em UTM igual à extensão projetada; área minerada pela classe Mineração com divisão de linhas, polígonos e pontos; UCs por grupo publicado; pontos de água contra a classe do trecho e os limites da CONAMA 357/2005; cenário inválido recusado.
 
@@ -35,3 +35,9 @@ No servidor da porta 8024, com Influência ativa e Barragens expandida (6 camada
 ## IA e alcance
 
 O arquivo de chave permanece vazio: não houve chamada real à OpenAI. O contrato foi testado com respostas controladas. Não houve ML treinado, chamada paga, validação de especialista, ensaio real ou decisão de pós-mineração. Os limites das funções e os julgamentos AHP são valores de partida documentados, não calibrados com especialistas. [Multicritério e IA](MULTICRITERIO.md), [método](RELATORIO.md), [dados](DADOS_TERRITORIAIS.md).
+
+## Leitura contextual por IA (4.5.0)
+
+Testes: sem chave, nenhuma chamada e textos por regras; com chave, cada ficha recebe o guia do próprio tema, e a ficha cuja resposta traz número não fornecido, interrogação, nome de campo ou letra fora do alfabeto latino volta às regras sem afetar as outras; a ficha 09 mostra “Por que” sem “(IA)” quando não há chave.
+
+Emissão real com a chave local, em 28/10/2026, pelo mesmo código do servidor. Primeira emissão: 7 de 8 fichas com IA, mas a leitura revelou rascunho (“fique objetivo”), uma palavra em hindi e, na sugestão, nomes de campo (“alto_pct”, “true”). Daí vieram a conferência de texto, a nova tentativa por ficha e a entrada da sugestão em frases. Emissão final: 8 de 8 fichas e a sugestão com “(IA)”, 14 páginas, 25,7 s; nenhum dos avisos removidos aparece no PDF. Textos lidos um a um: números iguais aos dos dados, leis citadas só as do guia. Pequenas imprecisões de redação continuam possíveis com o gpt-5-nano; por isso o texto por regras segue como reserva e a revisão técnica continua necessária.

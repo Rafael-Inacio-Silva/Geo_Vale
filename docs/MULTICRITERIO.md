@@ -1,6 +1,6 @@
 # Sugestão multicritério e explicação por IA
 
-Versão 4.4.0, 27/10/2026. Esta etapa vem depois da caracterização: o relatório organiza o território e a sugestão ordena usos pós-mineração para cada setor da área minerada. Na referência da Vale, corresponde a apoiar a etapa **Conceber** depois de **Conhecer** ([Fechamento de mina e uso futuro](https://www.vale.com/pt/esg/fechamento-de-mina-e-uso-futuro)). O sistema não decide: o engenheiro ajusta os pesos e leva a sugestão para discussão.
+Versão 4.5.0, 28/10/2026. Esta etapa vem depois da caracterização: o relatório organiza o território e a sugestão ordena usos pós-mineração para cada setor da área minerada. Na referência da Vale, corresponde a apoiar a etapa **Conceber** depois de **Conhecer** ([Fechamento de mina e uso futuro](https://www.vale.com/pt/esg/fechamento-de-mina-e-uso-futuro)). O sistema não decide: o engenheiro ajusta os pesos e leva a sugestão para discussão.
 
 ## Fluxo
 
@@ -11,7 +11,7 @@ Versão 4.4.0, 27/10/2026. Esta etapa vem depois da caracterização: o relatór
 5. O mapa entra no modo sugestão: camadas temáticas saem, os setores aparecem coloridos pelo 1º uso e a barra direita mostra a sugestão; escolher um setor (no mapa ou na lista) abre o ranking e a explicação.
 6. Testa se o 1º lugar muda com ±20% em cada peso e marca os setores sensíveis.
 7. O engenheiro move os pesos; o mapa recalcula. **Ver relatório** leva os mesmos pesos para a ficha "Sugestão multicritério".
-8. No PDF, a IA explica cada setor quando há chave configurada; sem chave, a explicação por regras aparece identificada.
+8. No PDF, a IA explica cada setor e escreve a leitura contextual de cada ficha. Quando o texto veio do modelo, o cabeçalho da coluna mostra “(IA)”; sem chave ou com resposta recusada na conferência, entra o texto por regras, sem “(IA)”.
 
 ## Decisões e porquês — fase 3
 
@@ -65,12 +65,14 @@ Solar e silvicultura ficam atrás em todos os setores principalmente pelo relevo
 
 | Decisão | Por quê | Evidência |
 |---|---|---|
-| IA só explica a sugestão | Na sugestão há muitos números por setor (quatro usos, sete critérios, restrições, sensibilidade). Transformá-los em texto curto é onde um modelo de linguagem acrescenta valor. | Pedido do projeto: usar IA onde faz sentido. |
-| Fichas descritivas ficam por regras | A implicação de cada dado já é calculada de forma determinística a partir do número medido. Um modelo ali só repetiria a regra com risco de inventar. | Ji et al. (2023): alucinação em geração de texto. |
+| IA explica a sugestão | Na sugestão há muitos números por setor (quatro usos, sete critérios, restrições, sensibilidade). Transformá-los em texto curto é onde um modelo de linguagem acrescenta valor. | Pedido do projeto: usar IA onde faz sentido. |
+| IA escreve a leitura contextual das fichas (4.5.0) | Na 4.4.0 as fichas ficavam por regras: uma frase fixa por dado. A regra continua calculando (por exemplo, 76,2% do entorno acima de 20%), mas o texto passou ao modelo, que recebe um **guia por tema** com o que interpretar: classes de declividade, Q7,10 e outorga, classes de enquadramento, grupos de UC, APP, ZAS, montante, valores simulados. Assim a leitura cita o que domina em cada dado, sem perder o conhecimento das regras. | Decisão do engenheiro em 28/10/2026; `GUIA` em `comentarios.py`; Ji et al. (2023) justificam a conferência abaixo. |
+| Regras continuam calculando | O modelo não faz conta: recebe o valor, a origem e o texto por regras como “apoio” com os indicadores já calculados. Só pode usar números do dado, do apoio ou do guia. | Mesma conferência numérica da sugestão. |
+| Uma chamada por ficha, em paralelo, com nova tentativa | Uma ficha recusada volta às regras sozinha, sem derrubar as outras; as oito fichas e a sugestão saem ao mesmo tempo. | Emissão real: 26 a 31 s, 14 páginas ([Validação](VALIDACAO.md)). |
 | A IA não escolhe uso nem pesos | A decisão é do engenheiro e das partes interessadas; o modelo não tem informação além dos números enviados. | Servou et al. (2023); Vale, participação social no uso futuro. |
-| Saída estruturada e conferida | JSON Schema estrito com a lista exata de setores; todos presentes; até 420 caracteres; qualquer número fora dos dados enviados derruba a resposta e volta às regras. | [OpenAI Structured Outputs](https://developers.openai.com/api/docs/guides/structured-outputs). |
-| Envio mínimo | Só números já calculados e formatados como devem aparecer, sem geometria, `store=false`, chave apenas em `.local/ia.env`. | Configuração da integração em [Relatório](RELATORIO.md). |
-| Explicação por regras sempre disponível | A interface mostra a explicação por regras, instantânea; o PDF identifica se o texto veio da IA ou das regras. | Rótulo impresso abaixo da tabela. |
+| Saída estruturada e conferida | JSON Schema estrito com a lista exata de setores (ou de dados da ficha); todos presentes; até 420 caracteres; qualquer número fora dos dados enviados derruba a resposta e volta às regras. Também derrubam: interrogação, nome de campo (`_`, true/false) e letras fora do alfabeto latino, porque apareceram na primeira emissão real (rascunho “fique objetivo”, uma palavra em hindi, “alto_pct”). A entrada da sugestão passou a ir em frases, não em campos técnicos. | [OpenAI Structured Outputs](https://developers.openai.com/api/docs/guides/structured-outputs). |
+| Envio mínimo | Só números já calculados e formatados como devem aparecer (nas fichas, os fatos do tema e o guia), sem geometria, `store=false`, chave apenas em `.local/ia.env`. | Configuração da integração em [Relatório](RELATORIO.md). |
+| Regras sempre disponíveis; procedência no cabeçalho | A interface mostra a explicação por regras, instantânea. No PDF, os avisos longos (“Comentários automáticos por regras… não constituem laudo”, “IA não configurada… a decisão é do engenheiro”) saíram: repetidos em toda ficha, poluíam a leitura. A procedência ficou no cabeçalho da coluna, “Leitura contextual (IA)” e “Por que (IA)”, e o aviso de que a sugestão não decide continua no parágrafo da ficha 09. | Pedido do engenheiro em 28/10/2026. |
 | Sem ML treinado | Não há histórico rotulado de usos pós-mineração bem-sucedidos para treinar ou validar um modelo. | — |
 | Modelo gpt-5-nano | Escolha do projeto: tarefa curta de redação sobre números dados; custo e latência baixos. | [Documentação do modelo](https://developers.openai.com/api/docs/models/gpt-5-nano). |
 

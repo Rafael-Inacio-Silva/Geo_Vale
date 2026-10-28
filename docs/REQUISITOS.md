@@ -26,7 +26,7 @@
 | RF-21 | Desmarcar mina cancela leituras da página e remove influência/município; não apaga dados guardados por mina. |
 | RF-23 | **Sugerir uso** divide a área minerada em setores contínuos de pelo menos 20 ha, exclui usos por restrição legal (proteção integral, APP, ZAS, água), soma sete critérios padronizados com pesos AHP (consistência até 0,10) ou do engenheiro, ordena quatro usos por setor e testa ±20% em cada peso. Abre um modo próprio no mesmo mapa: camadas temáticas e Influência saem e voltam como estavam ao sair; setores coloridos pelo 1º uso; barra direita troca Camadas por Sugestão de uso com setores, ranking, porquê e pesos. |
 | RF-24 | Relatório leva os pesos escolhidos à ficha Sugestão multicritério, com mapa, notas, robustez, condicionantes e restrições com base legal. Pesos inválidos retornam 422. |
-| RF-25 | IA explica a sugestão somente com chave local: JSON estrito com todos os setores, sem número fora dos dados enviados; falha volta à explicação por regras com rótulo. Fichas descritivas ficam por regras. A IA não escolhe uso nem pesos. |
+| RF-25 | Com chave local, a IA escreve a leitura contextual de cada ficha (com guia por tema) e explica a sugestão: JSON estrito com todos os itens, sem número fora dos dados enviados nem texto fora do padrão; falha volta às regras naquela ficha. O cabeçalho da coluna marca “(IA)” só quando o texto veio do modelo. A IA não calcula, não escolhe uso nem pesos. |
 
 ## Interpretação e qualidade
 

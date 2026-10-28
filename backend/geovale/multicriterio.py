@@ -309,19 +309,33 @@ class SugestoesUso:
 
 
 def entrada_ia(resultado):
-    """Resumo compacto para o modelo, com números já formatados como devem aparecer no texto."""
+    """Resumo para o modelo em frases curtas, com números já formatados; valores em texto evitam que nomes de campo vazem."""
     nomes = {c['id']: c['curto'] for c in resultado['criterios']}
     restricoes = {r['id']: r['curto'] for r in resultado['restricoes']}
-    return {'escala': 100, 'variacao_pesos_pct': round(resultado['variacao'] * 100),
-            'pesos_pct': {nomes[c['id']]: formato(100 * c['peso']) for c in resultado['criterios']},
-            'setores': [{'id': s['id'], 'area_ha': formato(s['ha'], 1), 'estruturas': s['descricao'],
-                         'ranking': [{'uso': u['nome'], 'nota': formato(u['nota']), 'permitido_pct': formato(u['permitido'])} for u in s['ranking']],
-                         'pontos_por_criterio_do_1o': {nomes[c]: formato(v) for c, v in s['contribuicoes'][s['ranking'][0]['uso']].items()},
-                         'diferenca_para_2o': formato(s['margem'], 1),
-                         'restricoes_pct': {restricoes[r]: formato(v) for r, v in s['restricoes'].items() if v >= .5},
-                         'barragem_a_montante': bool(s['montante']), 'cavidades_alto_pct': formato(s['cavidades']),
-                         'estavel_com_variacao': s['robustez']['estavel'],
-                         'criterios_que_mudam_o_1o': sorted({m.rsplit(' ', 1)[0] for m in s['robustez']['muda_com']})}
+    variacao = round(resultado['variacao'] * 100)
+
+    def condicionantes(s):
+        lista = [f"{restricoes[r]} em {formato(v)}% do setor" for r, v in s['restricoes'].items() if v >= .5]
+        if s['cavidades'] >= 1:
+            lista.append(f"potencial alto de cavidades em {formato(s['cavidades'])}% do setor")
+        if s['montante']:
+            lista.append('barragem alteada a montante: usos dependem da descaracterização')
+        return lista
+
+    def robustez(s):
+        if s['robustez']['estavel']:
+            return f"estável: o 1º uso se mantém com ±{variacao}% nos pesos"
+        muda = sorted({m.rsplit(' ', 1)[0] for m in s['robustez']['muda_com']})
+        return f"sensível: o 1º uso muda com ±{variacao}% no peso de " + ', '.join(muda)
+
+    return {'escala das notas': 'de 0 a 100',
+            'pesos dos critérios': {nomes[c['id']]: formato(100 * c['peso']) + '%' for c in resultado['criterios']},
+            'setores': [{'id': s['id'], 'área': ha(s['ha']), 'estruturas': s['descricao'],
+                         'ranking': [f"{i}º {u['nome']}: nota {formato(u['nota'])}" + ('' if u['permitido'] >= 99.5 else f" (permitido em {formato(u['permitido'])}% do setor)")
+                                     for i, u in enumerate(s['ranking'], 1)],
+                         'pontos de cada critério na nota do 1º uso': {nomes[c]: formato(v) for c, v in s['contribuicoes'][s['ranking'][0]['uso']].items()},
+                         'vantagem do 1º sobre o 2º': formato(s['margem'], 1) + ' pontos',
+                         'condicionantes': condicionantes(s), 'robustez': robustez(s)}
                         for s in resultado['setores']]}
 
 

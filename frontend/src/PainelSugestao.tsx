@@ -42,9 +42,9 @@ export default function PainelSugestao({sugestao, erro, carregando, recarregar, 
   }
 
   return <section className="painel-sugestao" aria-labelledby="titulo-sugestao">
-    <div className="cabecalho-camadas"><h2 id="titulo-sugestao">Sugestão de uso</h2><span>Para discussão</span></div>
+    <div className="cabecalho-camadas"><h2 id="titulo-sugestao">Sugestão de uso</h2></div>
     {erro ? <p className="erro-territorio" role="alert">{erro} <button className="tentar-novamente" type="button" onClick={recarregar}>Tentar novamente</button></p> : null}
-    {carregando ? <p className="nota-territorio" role="status">{sugestao ? 'Recalculando…' : 'Calculando sugestão…'}</p> : null}
+    {carregando && !sugestao ? <p className="nota-territorio" role="status">Calculando sugestão…</p> : null}
     {sugestao ? <>
       <ul className="legenda-usos" aria-label="Cor do 1º uso em cada setor">
         {sugestao.usos.map(u => <li key={u.id}><i style={{background: u.cor}} aria-hidden="true"/>{u.nome}</li>)}

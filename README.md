@@ -43,7 +43,7 @@ npm run build
 - `backend/geovale/relatorio.py`: PDF e prévia versionada em PNG.
 - `backend/geovale/mapa_relatorio.py` e `fichas.py`: mapas temáticos, área minerada, medidas em UTM 23S e checagem dos pontos de água simulados.
 - `backend/geovale/multicriterio.py`: setores da área minerada, restrições legais, AHP, soma ponderada e sensibilidade.
-- `backend/geovale/comentarios.py`: comentários das fichas por regras e explicação da sugestão por OpenAI Responses / GPT-5 nano, com regras de reserva.
+- `backend/geovale/comentarios.py`: leitura contextual das fichas (com guia por tema) e explicação da sugestão por OpenAI Responses / GPT-5 nano, com regras de reserva.
 - `dados/cenarios/horizontes.json`: pontos e valores técnicos fictícios, métodos hipotéticos e referências.
 - `backend/geovale/influencia.py`: conferência do recorte local e evidências.
 - `backend/geovale/mapa.py`, `municipio.py`, `anm.py`, `trilhas.py`: navegação, município, cadastro e trilhas visuais.
@@ -65,4 +65,4 @@ A sugestão multicritério ordena usos por setor para discussão: restrições l
 
 [Justificativa e roteiro para apresentação](docs/ESCOLHAS_TERRITORIAIS.md), [multicritério e IA](docs/MULTICRITERIO.md), [recorte e evidência](docs/INFLUENCIA.md), [dados automáticos](docs/DADOS_TERRITORIAIS.md), [uso](docs/MANUAL_USO.md), [relatório e cenário](docs/RELATORIO.md).
 
-Os fatos são separados dos comentários por dado. A IA generativa só explica a sugestão, com números conferidos; sem chave configurada, a explicação por regras aparece identificada. Não há ML treinado. [Configuração e método](docs/RELATORIO.md).
+Os fatos são separados da leitura contextual por dado. A IA generativa escreve essa leitura e explica a sugestão, com números conferidos; sem chave ou com resposta recusada, entra o texto por regras, sem a marca “(IA)”. Não há ML treinado. [Configuração e método](docs/RELATORIO.md).

@@ -22,15 +22,36 @@ def test_medidas_usam_metros_e_dissolvem_area_sobreposta():
     assert .9<medidas([{'geometry':linha}])['km']<1.1
 
 
-def test_comentarios_das_fichas_sao_regras_mesmo_com_chave_e_nao_alteram_fatos():
-    fatos=[{'dados':[{'id':'a','nome':'Rios','valor':'2','origem':'Cadastro','comentario':'São registros, não rios distintos.'}]}]
+def resposta_api(nome,itens):
+    """Imita o Responses devolvendo `itens` como saída estruturada."""
+    return BytesIO(json.dumps({'status':'completed','output':[{'type':'reasoning'},{'type':'message','content':[{'type':'output_text','text':json.dumps({nome:itens})}]}]}).encode())
+
+
+def test_sem_chave_leitura_e_explicacao_ficam_por_regras_sem_alterar_fatos():
+    fatos=[{'id':'agua','nome':'Água','dados':[{'id':'a','nome':'Rios','valor':'2','origem':'Cadastro','comentario':'São registros, não rios distintos.'}]}]
     antes=json.dumps(fatos)
-    c=Comentarista(ambiente={'OPENAI_API_KEY':'credencial-ficticia'},abrir=lambda *a,**k:pytest.fail('Fichas não chamam IA'))
+    c=Comentarista(ambiente={},abrir=lambda *a,**k:pytest.fail('Não há IA configurada'))
     saida=c.gerar(fatos)
-    assert saida['metodo']=='regras' and saida['comentarios']=={'a':'São registros, não rios distintos.'}
+    assert saida['metodo']=='regras' and saida['ia']==[] and saida['comentarios']=={'a':'São registros, não rios distintos.'}
     assert json.dumps(fatos)==antes
-    sem_chave=Comentarista(ambiente={},abrir=lambda *a,**k:pytest.fail('Não há IA configurada')).explicar({'setores':[]},{'S1':'Regra.'})
-    assert sem_chave['metodo']=='regras' and 'não configurada' in sem_chave['rotulo'] and sem_chave['textos']=={'S1':'Regra.'}
+    assert c.explicar({'setores':[]},{'S1':'Regra.'})=={'metodo':'regras','textos':{'S1':'Regra.'}}
+
+
+def test_ia_le_cada_ficha_com_guia_e_so_numeros_fornecidos():
+    fatos=[{'id':'relevo','nome':'Relevo','dados':[{'id':'d','nome':'Declividade','valor':'Forte ondulado (20% - 45%): 66,9%','origem':'Topodata','comentario':'76,2% acima de 20%.'}]},
+           {'id':'agua','nome':'Água','dados':[{'id':'q','nome':'Q7,10','valor':'1,311 m³/s','origem':'Igam','comentario':'Referência de outorga.'}]}]
+    textos={'d':'O entorno tem 76,2% acima de 20% de declividade: favorece conservação e limita solar.','q':'A Q7,10 de 1,311 m³/s indica o volume de 9 piscinas.'}
+    def abrir(req,timeout):
+        payload=json.loads(req.data)
+        assert payload['model']=='gpt-5-nano' and payload['store'] is False and payload['text']['format']['strict'] is True
+        entrada=json.loads(payload['input']);dado=entrada['dados'][0]['id']
+        assert entrada['guia'] in payload['instructions'] and ('Topodata' in entrada['guia'] if dado=='d' else 'Igam 48/2019' in entrada['guia'])
+        return resposta_api('leituras',[{'dado':dado,'texto':textos[dado]}])
+    saida=Comentarista({'OPENAI_API_KEY':'credencial-ficticia'},abrir).gerar(fatos)
+    assert saida['ia']==['relevo'] and saida['comentarios']=={'d':textos['d'],'q':'Referência de outorga.'}
+    for ruim in ['O entorno tem 76,2% acima de 20%? (fique objetivo) favorece conservação.','O entorno tem 76,2% acima de 20%: esses प्रकार favorecem conservação.','O entorno tem 76,2% acima de 20%; estavel: true.','O entorno tem 76,2% acima de 20%; alto_pct.']:
+        textos['d']=ruim
+        assert Comentarista({'OPENAI_API_KEY':'credencial-ficticia'},abrir).gerar(fatos)['ia']==[]
 
 
 def test_ia_explica_sugestao_so_com_setores_completos_e_numeros_fornecidos():
@@ -41,7 +62,7 @@ def test_ia_explica_sugestao_so_com_setores_completos_e_numeros_fornecidos():
             assert payload['model']=='gpt-5-nano' and req.full_url=='https://api.openai.com/v1/responses'
             assert payload['store'] is False and payload['text']['format']['strict'] is True and 'temperature' not in payload
             assert payload['text']['format']['schema']['properties']['explicacoes']['items']['properties']['setor']['enum']==['S1']
-            return BytesIO(json.dumps({'status':'completed','output':[{'type':'reasoning'},{'type':'message','content':[{'type':'output_text','text':json.dumps({'explicacoes':[{'setor':setor,'texto':texto}]})}]}]}).encode())
+            return resposta_api('explicacoes',[{'setor':setor,'texto':texto}])
         return resposta
     env={'OPENAI_API_KEY':'credencial-ficticia-do-teste'}
     padrao={'S1':'Conservação lidera pela regra.'}
