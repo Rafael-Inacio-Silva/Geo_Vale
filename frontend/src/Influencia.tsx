@@ -76,10 +76,10 @@ export default function Influencia({mapa, minaId, temas, expandidas, aoConsultar
     {aberta && !modoSugestao && mapa && contorno && minaId ? <>
       <CamadasNaInfluencia mapa={mapa} minaId={minaId} contorno={contorno} temas={temas} expandidas={expandidas} informarLegenda={informarLegenda}/>
     </> : null}
-    {minaId ? <RelatorioDaMina key={minaId} minaId={minaId} pronto={territorio?.completo ?? false} pedido={pedidoRelatorio}/> : null}
+    {minaId ? <RelatorioDaMina key={`relatorio-${minaId}`} minaId={minaId} pronto={territorio?.completo ?? false} pedido={pedidoRelatorio}/> : null}
     {minaId ? <button type="button" className="abrir-influencia sugerir-uso" aria-pressed={modoSugestao} disabled={!territorio?.completo || !mapa} onClick={alternarSugestao}>
       Sugerir uso <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>
     </button> : null}
-    {minaId ? <VideoPosMineracao key={minaId} minaId={minaId} pronto={(territorio?.completo ?? false) && !!mapa}/> : null}
+    {minaId ? <VideoPosMineracao key={`video-${minaId}`} minaId={minaId} pronto={(territorio?.completo ?? false) && !!mapa}/> : null}
   </section>;
 }

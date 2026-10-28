@@ -81,3 +81,5 @@ Teste novo: o quadro cobre os 7 critérios, com valores que saem das mesmas fun�
 ## Vídeo pós-mineração (4.7.0)
 
 Teste novo: a rota do vídeo devolve 404 sem arquivo e para mina desconhecida, o arquivo inteiro com `video/mp4` e um trecho com 206 quando o navegador pede `Range`. No navegador (instância isolada, porta 8031): com a mina selecionada, Ver pós-mineração aparece abaixo de Sugerir uso, abre o diálogo e o vídeo carrega (9,2 s, 1072×1220, sem erro), com a legenda embaixo. Geração e conferência do vídeo em [Vídeo pós-mineração](VIDEO_POS_MINERACAO.md).
+
+Correção: o botão do relatório e o do vídeo usavam a mesma chave React (o id da mina) no mesmo bloco, e cada atualização deixava cópias de “Preparando relatório…”. Com chaves distintas, selecionar e desmarcar a mina três vezes deixou um botão de cada (relatório, Sugerir uso, vídeo) e nenhum aviso de chave repetida no console.
