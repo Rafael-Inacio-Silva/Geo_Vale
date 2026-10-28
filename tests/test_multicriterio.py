@@ -122,7 +122,7 @@ def test_api_sugere_por_setor_aplica_restricoes_e_leva_pesos_ao_pdf(tmp_path):
     pdf = cliente.get('/api/minas/horizontes/relatorio?pesos=' + pesos)
     assert padrao.status_code == pdf.status_code == 200 and padrao.content != pdf.content
     texto = ' '.join(' '.join(p.extract_text() for p in PdfReader(BytesIO(pdf.content)).pages).split())
-    assert 'Sugestão multicritério' in texto and 'ajustados pelo engenheiro' in texto and 'Por que' in texto and 'Como a nota é calculada' in texto and 'Saaty' in texto and '(IA)' not in texto and 'laudo' not in texto
+    assert 'Sugestão multicritério' in texto and 'ajustados pelo engenheiro' in texto and 'Por que' in texto and 'Como a nota é calculada' in texto and 'Saaty' in texto and 'Passo 5' in texto and 'Régua do relevo' in texto and '• Por que' in texto and '(IA)' not in texto and 'laudo' not in texto
     assert cliente.get('/api/minas/horizontes/relatorio?pesos=x').status_code == 422
 
 
@@ -142,3 +142,13 @@ def test_tabela_de_referencia_sai_da_mesma_regua_do_calculo():
     assert texto_regua('conservacao', 'drenagem') == '1 até 100 m; 0,3 a partir de 600 m'
     assert texto_regua('silvicultura', 'trilhas') == 'não conta'
     assert float(RESPOSTAS['conservacao']['drenagem'](np.array([350.]))[0]) == pytest.approx(.65)
+
+
+def test_passo_a_passo_usa_as_mesmas_reguas_e_pesos():
+    from geovale.multicriterio import exemplo_calculo
+    resultado = calcular({'setores': [setor_sintetico()], 'area_minerada_ha': 30., 'fora_ha': 0.})
+    e = exemplo_calculo(resultado)
+    assert e['plano'] == {'conservacao': .5, 'ecoturismo': .8, 'silvicultura': 1., 'solar': 1.}
+    assert e['rio']['silvicultura'] == pytest.approx(70 / 170) and e['rio']['conservacao'] == 1
+    assert e['dois']['silvicultura'] == pytest.approx(100 * (e['pesos']['relevo'] + 70 / 170 * e['pesos']['drenagem']) / e['soma'])
+    assert [v for _, v in e['comparacoes']] == [2, 3, 3, 4, 5, 5]

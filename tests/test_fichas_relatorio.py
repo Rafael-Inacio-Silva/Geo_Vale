@@ -112,7 +112,8 @@ def test_explicacao_da_tela_usa_a_mesma_ia_e_reaproveita_a_resposta():
     c=Comentarista({'OPENAI_API_KEY':'credencial-ficticia'},abrir)
     entrada={'setores':[{'id':'S1','uso sugerido':'Conservação e restauração','a favor':['60% do setor tem declividade acima de 20%']}]}
     primeira=c.explicar(entrada,{'S1':'Regra.'},{'S1':'Os demais ficam atrás: solar.'})
-    assert primeira=={'metodo':'ia','textos':{'S1':'Conservação e restauração: encosta forte favorece deixar a mata voltar. Os demais ficam atrás: solar.'}}
+    assert primeira=={'metodo':'ia','principal':{'S1':'Conservação e restauração: encosta forte favorece deixar a mata voltar.'},
+                      'textos':{'S1':'Conservação e restauração: encosta forte favorece deixar a mata voltar. Os demais ficam atrás: solar.'}}
     assert c.explicar(entrada,{'S1':'Regra.'},{'S1':'Os demais ficam atrás: solar.'})==primeira and len(chamadas)==1
 
 

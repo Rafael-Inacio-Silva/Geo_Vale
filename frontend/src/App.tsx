@@ -55,6 +55,8 @@ export default function App() {
   const [modoSugestao, setModoSugestao] = useState(false);
   const [pesos, setPesos] = useState<number[] | null>(null);
   const [setor, setSetor] = useState<string | null>(null);
+  // Clicar no setor já aberto, na lista ou no mapa, fecha o detalhe.
+  const alternarSetor = (id: string) => setSetor(atual => atual === id ? null : id);
   const [pedidoRelatorio, setPedidoRelatorio] = useState<{pesos: number[]; vez: number} | null>(null);
   const sugestao = useSugestao(selecionada?.id, modoSugestao, pesos);
 
@@ -125,7 +127,7 @@ export default function App() {
         <aside id="barra-territorio" className="painel-territorio" aria-label="Território da mina" hidden={!barraTerritorio}>
           <h2>Território da mina</h2>
           <Influencia mapa={mapa} minaId={selecionada?.id} temas={configuracao?.camadas ?? []} expandidas={ativas} aoConsultar={priorizarTerritorio} informarLegenda={setLegendaTrilhas} modoSugestao={modoSugestao} alternarSugestao={alternarSugestao} pedidoRelatorio={pedidoRelatorio}/>
-          {modoSugestao ? <ResultadoSugestao {...sugestao} selecionado={setor} selecionar={setSetor}/> : null}
+          {modoSugestao ? <ResultadoSugestao {...sugestao} selecionado={setor} selecionar={alternarSetor}/> : null}
         </aside>
         <button type="button" className="alternar-painel alternar-territorio" aria-controls="barra-territorio" aria-expanded={barraTerritorio} aria-label={barraTerritorio ? 'Ocultar território' : 'Mostrar território'} title={barraTerritorio ? 'Ocultar território' : 'Mostrar território'} onClick={() => setBarraTerritorio(valor => !valor)}><svg viewBox="0 0 24 24" aria-hidden="true"><path d={barraTerritorio ? 'm14 7-5 5 5 5' : 'm10 7 5 5-5 5'}/></svg><span>Território</span></button>
         <button type="button" className="alternar-painel alternar-consulta" aria-controls="barra-consulta" aria-expanded={barraConsulta} aria-label={barraConsulta ? 'Ocultar mina e camadas' : 'Mostrar mina e camadas'} title={barraConsulta ? 'Ocultar mina e camadas' : 'Mostrar mina e camadas'} onClick={() => setBarraConsulta(valor => !valor)}><svg viewBox="0 0 24 24" aria-hidden="true"><path d={barraConsulta ? 'm10 7 5 5-5 5' : 'm14 7-5 5 5 5'}/></svg><span>Mina e camadas</span></button>
@@ -144,7 +146,7 @@ export default function App() {
         </aside>
         <section id="territorio" className="painel-mapa" aria-label="Mapa territorial" tabIndex={-1}>
           {configuracao ? <MapaTerritorio enquadrarMunicipio={enquadrarMunicipio} configuracao={configuracao} limite={limite} selecionada={selecionada} selecionar={selecionarMina} ativas={modoSugestao ? {} : ativas} recargas={recargasCamadas} informarEstado={informarEstado} informarLegendaTrilhas={setLegendaTrilhas} informarMapa={setMapa} prioridadeTerritorio={prioridadeTerritorio} voltar={() => setSelecionada(null)}/> : <div className="mapa-carregando" role="status">{erroConfiguracao ? 'Mapa indisponível.' : 'Abrindo mapa…'}</div>}
-          {modoSugestao ? <SugestaoNoMapa mapa={mapa} sugestao={sugestao.sugestao} selecionado={setor} selecionar={setSetor} sair={alternarSugestao}/> : null}
+          {modoSugestao ? <SugestaoNoMapa mapa={mapa} sugestao={sugestao.sugestao} selecionado={setor} selecionar={alternarSetor} sair={alternarSugestao}/> : null}
           {limite?.aviso ? <p className="aviso-fonte" role="status">{limite.aviso}</p> : null}
         </section>
       </div>

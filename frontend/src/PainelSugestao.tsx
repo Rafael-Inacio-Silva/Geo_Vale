@@ -1,14 +1,14 @@
+import {useEffect} from 'react';
 import type {ExplicacaoSugestao, SetorSugerido, SugestaoUso} from './tipos.ts';
 
 const numero = (valor: number, casas = 0) => valor.toLocaleString('pt-BR', {minimumFractionDigits: casas, maximumFractionDigits: casas});
 
-/** Ranking, robustez, condicionantes e porquê do setor escolhido, separados das notas. */
+/** Ranking, robustez, condicionantes e porquê do setor aberto, logo abaixo dele na lista. */
 function DetalheSetor({setor, variacao, explicacao, explicando}: {
   setor: SetorSugerido; variacao: number; explicacao: ExplicacaoSugestao | null; explicando: boolean;
 }) {
   const daIa = explicacao?.metodo === 'ia' && explicacao.textos[setor.id];
-  return <article className="detalhe-setor" aria-labelledby={`titulo-${setor.id}`}>
-    <h3 id={`titulo-${setor.id}`}>{setor.id} · {numero(setor.ha, 1)} ha</h3>
+  return <article id={`detalhe-${setor.id}`} className="detalhe-setor" aria-label={`Detalhe de ${setor.id}`}>
     {setor.descricao ? <p className="estruturas-setor">{setor.descricao}</p> : null}
     <ol className="ranking-setor">
       {setor.ranking.map(uso => <li key={uso.uso}>
@@ -29,13 +29,17 @@ function DetalheSetor({setor, variacao, explicacao, explicando}: {
   </article>;
 }
 
-/** Barra esquerda no modo sugestão, abaixo de Sugerir uso: legenda, setores e detalhe do escolhido. */
+/** Barra esquerda no modo sugestão, abaixo de Sugerir uso: legenda e setores; o setor aberto mostra o detalhe logo abaixo. */
 export function ResultadoSugestao({sugestao, erro, carregando, recarregar, selecionado, selecionar, explicacao, explicando}: {
   sugestao: SugestaoUso | null; erro: string; carregando: boolean; recarregar: () => void;
   selecionado: string | null; selecionar: (id: string) => void;
   explicacao: ExplicacaoSugestao | null; explicando: boolean;
 }) {
-  const setor = sugestao?.setores.find(s => s.id === selecionado);
+  // Setor aberto pelo mapa entra na área visível da lista.
+  useEffect(() => {
+    if (selecionado) document.getElementById(`setor-${selecionado}`)?.scrollIntoView({block: 'nearest'});
+  }, [selecionado]);
+
   return <section className="painel-sugestao resultado-sugestao" aria-labelledby="titulo-sugestao">
     <div className="cabecalho-camadas"><h2 id="titulo-sugestao">Sugestão de uso</h2></div>
     {erro ? <p className="erro-territorio" role="alert">{erro} <button className="tentar-novamente" type="button" onClick={recarregar}>Tentar novamente</button></p> : null}
@@ -46,15 +50,15 @@ export function ResultadoSugestao({sugestao, erro, carregando, recarregar, selec
       </ul>
       <p className="nota-territorio">Nota de 0 a 100: quanto o setor combina com o uso. Não é área nem probabilidade.</p>
       <ul className="setores-sugeridos" aria-label="Setores da área minerada">
-        {sugestao.setores.map(s => <li key={s.id}>
-          <button type="button" aria-pressed={s.id === selecionado} onClick={() => selecionar(s.id)}>
+        {sugestao.setores.map(s => <li key={s.id} id={`setor-${s.id}`}>
+          <button type="button" aria-expanded={s.id === selecionado} aria-controls={`detalhe-${s.id}`} onClick={() => selecionar(s.id)}>
             <i style={{background: s.ranking[0].cor}} aria-hidden="true"/>
             <span><b>{s.id}</b> · {numero(s.ha)} ha<br/>{s.ranking[0].nome} · {numero(s.ranking[0].nota)}{s.robustez.estavel ? '' : ' · sensível'}</span>
           </button>
+          {s.id === selecionado ? <DetalheSetor setor={s} variacao={sugestao.variacao} explicacao={explicacao} explicando={explicando}/> : null}
         </li>)}
       </ul>
-      {setor ? <DetalheSetor setor={setor} variacao={sugestao.variacao} explicacao={explicacao} explicando={explicando}/>
-        : <p className="nota-territorio">Clique em um setor no mapa ou na lista para ver o ranking e o porquê.</p>}
+      {selecionado ? null : <p className="nota-territorio">Clique em um setor no mapa ou na lista para ver o ranking e o porquê; clique de novo para fechar.</p>}
     </> : null}
   </section>;
 }

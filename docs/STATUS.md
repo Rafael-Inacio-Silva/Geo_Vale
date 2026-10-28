@@ -1,6 +1,6 @@
 # Estado atual
 
-Versão **4.6.1**, atualizada em 28/10/2026. Mapa mundial aberto em Minas Gerais, contorno estadual oficial, uma Mina Horizontes e Nova Lima sob seleção. Fundos OpenStreetMap/Esri, seis temas estaduais e trilhas municipais, com intensidade e legendas. ANM fornece atributos cadastrais; IBGE fornece o município.
+Versão **4.6.2**, atualizada em 28/10/2026. Mapa mundial aberto em Minas Gerais, contorno estadual oficial, uma Mina Horizontes e Nova Lima sob seleção. Fundos OpenStreetMap/Esri, seis temas estaduais e trilhas municipais, com intensidade e legendas. ANM fornece atributos cadastrais; IBGE fornece o município.
 
 A barra esquerda apresenta **Influência**, **Ver relatório** e **Sugerir uso**. Selecionar pelo cartão ou pela bolinha já mostra o contorno da mina. Influência acrescenta o contorno externo e as dezoito bases visualmente recortadas; os checkboxes da direita ampliam cada tema além dele. O PDF GeoVale reúne visão geral, sete fichas temáticas, dados técnicos simulados com mapa de pontos e a sugestão multicritério. O visualizador próprio permite navegar e baixar o PDF.
 

@@ -182,7 +182,7 @@ class Comentarista:
                 gerado=self.responder(chave_api,sistema,texto_entrada,'explicacoes',itens)
                 textos=self.conferir(gerado,list(padrao),'setor',set(re.findall(NUMERO,texto_entrada)),
                                      proibido=r'\b(pontos?|vantagem|pesos?|notas?|segur[ao]s?|segurança)\b|a favor:',maximo=320)
-                saida={'metodo':'ia','textos':{k:(v+' '+(complementos or {}).get(k,'')).strip() for k,v in textos.items()}}
+                saida={'metodo':'ia','principal':textos,'textos':{k:(v+' '+(complementos or {}).get(k,'')).strip() for k,v in textos.items()}}
                 with self.trava:
                     self.explicadas[assinatura]=saida
                     while len(self.explicadas)>16:self.explicadas.popitem(last=False)

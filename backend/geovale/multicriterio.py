@@ -405,10 +405,36 @@ def frase_demais(m):
     return f"Os demais ficam atrás: {'; '.join(partes)}." if partes else ''
 
 
+def frase_principal(setor, m):
+    """Por que o 1º uso combina com o setor, por regras; a IA reescreve esta frase quando há chave."""
+    return f"{setor['ranking'][0]['nome']}: {' e '.join(m['favor'])}."
+
+
 def explicar_por_regras(setor, resultado):
     """Explicação determinística pelo território, montada com os mesmos motivos enviados à IA."""
     m = motivos(setor, resultado)
-    return f"{setor['ranking'][0]['nome']}: {' e '.join(m['favor'])}. {frase_demais(m)}".strip()
+    return f"{frase_principal(setor, m)} {frase_demais(m)}".strip()
+
+
+def exemplo_calculo(resultado):
+    """Números do passo a passo da ficha 09, calculados com as mesmas réguas e os pesos do resultado."""
+    pesos = {c['id']: round(c['peso'] * 100, 1) for c in resultado['criterios']}
+    plano = {u: float(RESPOSTAS[u]['relevo'](np.array([1]))[0]) for u in RESPOSTAS}
+    rio = {u: float(RESPOSTAS[u]['drenagem'](np.array([100.]))[0]) for u in RESPOSTAS}
+    soma = pesos['relevo'] + pesos['drenagem']
+    dois = {u: 100 * (plano[u] * pesos['relevo'] + rio[u] * pesos['drenagem']) / soma if soma else 0 for u in RESPOSTAS}
+    # Setor de exemplo: o maior em que a lei tira parte da silvicultura, para mostrar o efeito da restrição.
+    setor = max((s for s in resultado['setores'] if next(u for u in s['ranking'] if u['uso'] == 'silvicultura')['permitido'] < 99.5),
+                key=lambda s: s['ha'], default=resultado['setores'][0])
+    d = setor['perfil']['declividade']
+    regua = REGUAS['silvicultura']['relevo'][1]
+    faixas = [(d['ate8'], regua[1], 'plano ou suave'), (d['de8a20'], regua[3], 'ondulado'),
+              (d['acima20'] - d['acima45'], regua[4], 'forte'), (d['acima45'], regua[5], 'montanhoso ou escarpado')]
+    permitido = next(u for u in setor['ranking'] if u['uso'] == 'silvicultura')['permitido']
+    return {'pesos': pesos, 'plano': plano, 'rio': rio, 'soma': soma, 'dois': dois, 'setor': setor['id'],
+            'faixas': faixas, 'aproximado': sum(p / 100 * n for p, n, _ in faixas),
+            'final': setor['fatores']['silvicultura']['relevo'] * permitido / 100, 'proibido': 100 - permitido,
+            'comparacoes': [(c['nome'][0].lower() + c['nome'][1:], JULGAMENTOS[('relevo', c['id'])]) for c in CRITERIOS[1:]]}
 
 
 class SugestoesUso:

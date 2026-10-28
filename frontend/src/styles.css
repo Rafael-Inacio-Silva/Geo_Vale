@@ -218,7 +218,8 @@ button:focus-visible, input:focus-visible, a:focus-visible, [tabindex="-1"]:focu
 .setores-sugeridos {list-style: none; margin: 0; padding: 0; display: grid; gap: .35rem;}
 .setores-sugeridos button {inline-size: 100%; display: flex; align-items: flex-start; gap: .5rem; padding: .45rem .55rem; border: 1px solid #d5e0d8; border-radius: .35rem; background: #fff; color: var(--escuro); font: inherit; font-size: .7rem; line-height: 1.4; text-align: left; cursor: pointer;}
 .setores-sugeridos button > i {margin-top: .2rem;}
-.setores-sugeridos button[aria-pressed="true"] {border-color: var(--verde); background: #e3f0e7; box-shadow: inset 3px 0 var(--verde);}
+.setores-sugeridos button[aria-expanded="true"] {border-color: var(--verde); background: #e3f0e7; box-shadow: inset 3px 0 var(--verde);}
+.setores-sugeridos .detalhe-setor {margin-top: .3rem;}
 .detalhe-setor {display: grid; gap: .45rem; padding: .65rem; border: 1px solid #c9d8ce; border-radius: .4rem; background: #fff;}
 .detalhe-setor h3 {margin: 0; font-size: .85rem; color: var(--escuro);}
 .estruturas-setor, .robustez-setor, .porque-setor {margin: 0; font-size: .68rem; line-height: 1.5; color: #4a6e60;}

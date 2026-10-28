@@ -12,7 +12,8 @@ import pypdfium2 as pdfium
 from geovale.mapa_relatorio import MapaTerritorial
 from geovale.fichas import PARAMETROS_AGUA, formato, ha, montar_fichas, preparar, projetar
 from geovale.comentarios import Comentarista
-from geovale.multicriterio import CLASSES_RELEVO, SugestoesUso, USOS, demais_por_setor, entrada_ia, nome_setor, resumo_pesos, texto_regua, texto_setor
+from geovale.multicriterio import (CLASSES_RELEVO, REGUAS, SugestoesUso, USOS, demais_por_setor, entrada_ia, exemplo_calculo, frase_principal,
+                                   motivos, nome_setor, resumo_pesos, texto_regua, texto_setor)
 from xml.sax.saxutils import escape
 from zoneinfo import ZoneInfo
 
@@ -199,32 +200,75 @@ def gerar_pdf(dados,cenario,fichas,comentarios,sugestao=None,explicacoes=None):
                             f"100 seria todas as condições ideais; não é área nem probabilidade. Restrições legais excluem usos onde a lei não permite. Pesos {'calculados por AHP' if sugestao['origem_pesos']=='AHP' else 'ajustados pelo engenheiro'} "
                             f"(razão de consistência da matriz padrão: {formato(sugestao['razao_consistencia'],3)}): {resumo_pesos(sugestao)}.",'pequeno'))
         linhas=[]
+        nomes={u['id']:u['nome'] for u in USOS}
         for s in sugestao['setores']:
             condicoes=[f"Robustez: {'estável' if s['robustez']['estavel'] else 'sensível'} com ±{round(sugestao['variacao']*100)}% nos pesos"]
             if s['cavidades']>=1:condicoes.append(f"cavidades com potencial alto: {formato(s['cavidades'])}%")
             if s['montante']:condicoes.append('barragem a montante')
             bruto=Paragraph('<b>'+texto(nome_setor(s))+'</b><br/>'+texto(texto_setor(s)).replace('\n','<br/>')+'<br/><font size="6.7" color="#536d64">'+texto('; '.join(condicoes))+'</font>',ESTILOS['celula'])
-            linhas.append([bruto,paragrafo(explicacoes['textos'][s['id']],'celula')])
+            # Por que em tópicos: a frase do 1º uso (IA ou regras) e um tópico para cada uso que ficou atrás.
+            m=motivos(s,sugestao);primeiro=s['ranking'][0]['nome']
+            principal=(explicacoes.get('principal') or {}).get(s['id']) or frase_principal(s,m)
+            if principal.startswith(primeiro+':'):principal=principal[len(primeiro)+1:].strip()
+            topicos=[f"<b>Por que {texto(primeiro.lower())}:</b> {texto(principal)}"]
+            for nome,contra in m['outros']:
+                topicos.append(f"<b>{texto(nome)}</b> quase empata: a escolha entre os dois depende da prioridade dada aos critérios." if contra is None
+                               else f"<b>{texto(nome)}</b> fica atrás: {texto(' e '.join(contra))}.")
+            linhas.append([bruto,Paragraph('<br/>'.join('• '+t for t in topicos),ESTILOS['celula'])])
         tab=tabela(['Setor e nota de cada uso (0 a 100)','Por que (IA)' if explicacoes['metodo']=='ia' else 'Por que'],linhas,[LARGURA*.46,LARGURA*.54])
         tab.setStyle(TableStyle([('TOPPADDING',(0,1),(-1,-1),6),('BOTTOMPADDING',(0,1),(-1,-1),6)]))
         adicionar(tab,Spacer(1,8),
                   paragrafo('Restrições: '+'; '.join(f"{r['nome']} admite {', '.join(n['nome'].lower() for n in USOS if n['id'] in r['permite'])} ({r['base']})" for r in sugestao['restricoes'])+'.','pequeno'),
                   paragrafo('Relevo da Topodata (SRTM, 2000): dentro da área minerada não representa a cava atual; substituir por levantamento topográfico atual. Métodos e evidências em docs/MULTICRITERIO.md.','pequeno'))
-        # Tabela de referência: a régua de cada uso sai da mesma definição usada no cálculo.
-        regua=tabela(['Critério (peso)']+[u['nome'] for u in USOS],
-                     [[f"{c['nome']} ({formato(c['peso']*100)}%)"]+[texto_regua(u['id'],c['id']) for u in USOS] for c in sugestao['criterios']],
-                     [LARGURA*.2]+[LARGURA*.2]*4)
-        regua.setStyle(TableStyle([('TOPPADDING',(0,0),(-1,-1),4),('BOTTOMPADDING',(0,0),(-1,-1),4),('LEFTPADDING',(0,0),(-1,-1),5),('RIGHTPADDING',(0,0),(-1,-1),5)]))
+        # Passo a passo com números calculados pelas mesmas réguas e pesos do resultado.
+        e=exemplo_calculo(sugestao);w=e['pesos']
+        def n(v):return formato(v,2 if round(v,1)!=round(v,2) else (1 if v%1 else 0))
+        def topico(titulo,corpo):return Paragraph(f'<b>{titulo}</b> {corpo}',ESTILOS['pequeno'])
+        faixas=' + '.join(f"{formato(p)}% {nome} × {n(v)}" for p,v,nome in e['faixas'])
         adicionar(Spacer(1,6),paragrafo('Como a nota é calculada','texto'),
-                  paragrafo('Cada célula de 30 m da área minerada recebe, em cada critério, uma nota de 0 a 1 pela régua do uso (tabela). '
-                            'Nota do uso = soma de peso × nota dos critérios que o uso considera, dividida pela soma desses pesos, × 100. '
-                            'Onde a lei não permite o uso, a célula vale 0. A nota do setor é a média das células, pela área. '
-                            'Entre os valores indicados, a nota varia em linha reta. Relevo, na ordem: '+', '.join(CLASSES_RELEVO)+'.','pequeno'),
-                  regua,Spacer(1,6),
-                  paragrafo('Fontes: classes de declividade da Embrapa (1979), usadas pela Topodata/INPE; padronização de critérios por funções lineares '
-                            '(Eastman, 1999, Multi-criteria evaluation and GIS); pesos pelo método AHP (Saaty, 1980, The Analytic Hierarchy Process), '
-                            'com razão de consistência abaixo de 0,10. Os valores de cada régua e os julgamentos AHP são parâmetros de partida do '
-                            'GeoVale, a calibrar com especialistas e partes interessadas.','pequeno'))
+            topico('Passo 1. Cada quadrado de 30 m recebe uma nota de 0 a 1 em cada critério.',
+                   'A área minerada é dividida em quadrados de 30 m, o tamanho do pixel do MapBiomas (satélite Landsat). Em cada critério, a régua do uso '
+                   '(tabelas abaixo) transforma a medida do terreno em nota: 1 é ideal e 0 é inadequado. Num quadrado plano, o relevo vale '
+                   f"{n(e['plano']['silvicultura'])} para silvicultura e solar, {n(e['plano']['ecoturismo'])} para ecoturismo e {n(e['plano']['conservacao'])} para conservação. "
+                   f"Num quadrado a 100 m do rio, a drenagem vale {n(e['rio']['conservacao'])} para conservação e {n(e['rio']['silvicultura'])} para silvicultura, "
+                   'porque a régua da silvicultura sobe em linha reta de 0, a 30 m do rio, até 1, a 200 m.'),
+            topico('Passo 2. Cada nota é multiplicada pelo peso do critério.',
+                   f"O peso diz quanto o critério conta. Pesos {'padrão (AHP)' if sugestao['origem_pesos']=='AHP' else 'ajustados pelo engenheiro'}: {texto(resumo_pesos(sugestao))}."),
+            topico('Passo 3. A soma é dividida pela soma dos pesos que o uso considera e multiplicada por 100.',
+                   'Assim a nota volta à escala de 0 a 100; 100 seria um quadrado ideal em todos os critérios do uso. Cada uso só olha os critérios que '
+                   'fazem diferença para ele: silvicultura considera relevo, drenagem e rodovia. Exemplo com só relevo e drenagem, no quadrado plano a 100 m do rio: '
+                   f"silvicultura ({n(e['plano']['silvicultura'])} × {formato(w['relevo'],1)} + {n(e['rio']['silvicultura'])} × {formato(w['drenagem'],1)}) ÷ {formato(e['soma'],1)} = {formato(e['dois']['silvicultura'])}; "
+                   f"conservação ({n(e['plano']['conservacao'])} × {formato(w['relevo'],1)} + {n(e['rio']['conservacao'])} × {formato(w['drenagem'],1)}) ÷ {formato(e['soma'],1)} = {formato(e['dois']['conservacao'])}. "
+                   'O relevo pesa mais que o rio, por isso o terreno plano decide.'),
+            topico('Passo 4. A lei zera o uso onde ele não é permitido.',
+                   'Em APP, UC de proteção integral, ZAS ou superfície d’água, o quadrado vale 0 para os usos que a lei não admite ali, qualquer que seja o peso. '
+                   'É o “lei permite em X% da área” da tabela dos setores.'),
+            topico('Passo 5. A nota do setor é a média dos seus quadrados.',
+                   f"Exemplo, relevo da silvicultura no {e['setor']}: {faixas} ≈ {formato(e['aproximado'],2)}. Como a lei não permite silvicultura em "
+                   f"{formato(e['proibido'])}% do {e['setor']}, onde o quadrado vale 0, a média fica em {formato(e['final'],2)}. Isso se repete em cada critério e cada uso."),
+            topico('O que a nota é.','Quanto as condições do setor combinam com o uso. Não é área nem probabilidade: 67 quer dizer 67 de 100 possíveis.'),
+            topico('De onde vêm os números.',
+                   'Faixas de declividade: classes da Embrapa (1979), usadas pela Topodata/INPE. Quadrados de 30 m: pixel do MapBiomas, que delimita a área minerada. '
+                   'Variação em linha reta entre os pontos da régua: padronização linear de critérios (Eastman, 1999, Multi-criteria evaluation and GIS). '
+                   'Pesos: método AHP (Saaty, 1980, The Analytic Hierarchy Process). Cada critério foi comparado com os outros numa escala de 1 a 9 '
+                   '(1 igual, 3 um pouco mais importante, 5 bem mais importante); o relevo foi julgado '
+                   +', '.join(f"{v}× {'mais importante que ' if i==0 else 'que '}{texto(c)}" for i,(c,v) in enumerate(e['comparacoes']))+'. '
+                   f"O AHP transforma as comparações em porcentagens e confere se são coerentes: razão de consistência {formato(sugestao['razao_consistencia'],3)}, abaixo do limite de 0,10."),
+            topico('O que é premissa.',
+                   'As notas das réguas e os julgamentos do AHP são parâmetros de partida do GeoVale. Num projeto real, viriam de especialistas '
+                   '(geotecnia, florestal, meio ambiente) e das partes interessadas; na tela, o engenheiro testa outros pesos e vê se o resultado muda.'))
+        classes=REGUAS['conservacao']['relevo'][1]
+        faixas_relevo=['< 3%','3% a 8%','8% a 20%','20% a 45%','45% a 75%','> 75%']
+        relevo=tabela(['Faixa (Embrapa)','Declividade']+[u['nome'] for u in USOS],
+                      [[CLASSES_RELEVO[i].capitalize(),faixas_relevo[i]]+[n(REGUAS[u['id']]['relevo'][1][i+1]) for u in USOS] for i in range(6)],
+                      [LARGURA*.17,LARGURA*.14]+[LARGURA*.1725]*4)
+        outros=tabela(['Critério (peso)']+[u['nome'] for u in USOS],
+                      [[f"{c['nome']} ({formato(c['peso']*100)}%)"]+[texto_regua(u['id'],c['id']) for u in USOS] for c in sugestao['criterios'] if c['id']!='relevo'],
+                      [LARGURA*.2]+[LARGURA*.2]*4)
+        for t in (relevo,outros):
+            t.setStyle(TableStyle([('TOPPADDING',(0,0),(-1,-1),4),('BOTTOMPADDING',(0,0),(-1,-1),4),('LEFTPADDING',(0,0),(-1,-1),5),('RIGHTPADDING',(0,0),(-1,-1),5)]))
+        adicionar(Spacer(1,4),paragrafo(f"Régua do relevo (peso {formato(w['relevo'],1)}%): nota de 0 a 1 por faixa",'pequeno'),relevo,Spacer(1,8),
+                  paragrafo('Régua dos demais critérios: nota nos pontos indicados; entre eles, linha reta','pequeno'),outros)
     def pagina(tela,d):
         tela.saveState();tela.setFillColor(VERDE);tela.rect(0,A4[1]-70,A4[0],70,fill=1,stroke=0);logo(tela,40,A4[1]-57,.9)
         tela.setFillColor(AMARELO);tela.rect(0,A4[1]-73,A4[0],3,fill=1,stroke=0)
@@ -242,7 +286,7 @@ class RelatoriosPDF:
     def obter(self,mina_id,pesos=None):
         """Atualiza fatos por coleta/cenário/pesos e explicações por modelo, sem reextrair fontes."""
         dados=self.fonte.relatorio(mina_id);cenario=ler_cenario(self.raiz,mina_id)
-        chave=hashlib.sha256(json.dumps({'dados':{k:v for k,v in dados.items() if k!='gerado_em'},'cenario':cenario,'modelo':'4.6.1',
+        chave=hashlib.sha256(json.dumps({'dados':{k:v for k,v in dados.items() if k!='gerado_em'},'cenario':cenario,'modelo':'4.6.2',
                                          'pesos':None if pesos is None else [round(float(p),6) for p in pesos],'comentarios':self.comentarista.assinatura},sort_keys=True,ensure_ascii=False).encode()).hexdigest()
         with self.trava:
             anterior=self.cache.get(mina_id)
