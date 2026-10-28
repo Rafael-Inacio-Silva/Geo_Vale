@@ -122,3 +122,15 @@ def test_rota_de_explicacao_sem_chave_devolve_regras(tmp_path):
     cliente=TestClient(criar_app(raiz=raiz,territorios=fonte))
     assert cliente.get('/api/minas/outra/sugestao/explicacao').status_code==404
     assert cliente.get('/api/minas/horizontes/sugestao/explicacao?pesos=1').status_code==422
+
+
+def test_video_pos_mineracao_vem_do_arquivo_da_mina_com_suporte_a_trecho(tmp_path):
+    raiz=preparar_raiz(tmp_path);fonte=DadosTerritoriais(raiz,coletar=coleta_simulada)
+    cliente=TestClient(criar_app(raiz=raiz,territorios=fonte))
+    assert cliente.get('/api/minas/horizontes/video').status_code==404
+    (raiz/'dados/videos').mkdir(parents=True);(raiz/'dados/videos/horizontes.mp4').write_bytes(b'0123456789')
+    inteiro=cliente.get('/api/minas/horizontes/video')
+    assert inteiro.status_code==200 and inteiro.headers['content-type']=='video/mp4' and inteiro.content==b'0123456789'
+    trecho=cliente.get('/api/minas/horizontes/video',headers={'Range':'bytes=2-5'})
+    assert trecho.status_code==206 and trecho.content==b'2345'
+    assert cliente.get('/api/minas/outra/video').status_code==404

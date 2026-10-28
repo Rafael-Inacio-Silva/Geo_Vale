@@ -209,7 +209,11 @@ button:focus-visible, input:focus-visible, a:focus-visible, [tabindex="-1"]:focu
 .abrir-influencia:disabled, .relatorio-territorio:disabled {opacity: .5; cursor: default;}
 .abrir-influencia svg, .relatorio-territorio svg {width: 1.15rem; height: 1.15rem; fill: none; stroke: currentColor; stroke-width: 1.8; flex-shrink: 0;}
 .relatorio-territorio {justify-content: center; margin-top: .75rem; font-size: .75rem; background: transparent;}
-.sugerir-uso {margin-top: .75rem;}
+.sugerir-uso, .video-pos-mineracao {margin-top: .75rem;}
+.dialogo-video {width: min(60rem, calc(100vw - 2rem)); height: auto; max-height: calc(100dvh - 2rem);}
+.figura-video {flex: 1; display: flex; flex-direction: column; gap: .6rem; min-height: 0; margin: 0; padding: 1rem;}
+.figura-video video {width: 100%; min-height: 0; max-height: calc(100dvh - 11rem); object-fit: contain; background: #000; border-radius: .35rem;}
+.figura-video figcaption {font-size: .72rem; line-height: 1.5; color: #4a6e60;}
 .painel-sugestao {display: grid; gap: .75rem; margin-top: 1.4rem; padding-top: 1.1rem; border-top: 1px solid #d8e1d8;}
 .painel-sugestao .cabecalho-camadas {margin-bottom: 0;}
 .legenda-usos {list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .3rem .5rem; font-size: .66rem;}

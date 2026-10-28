@@ -1,10 +1,10 @@
 # Validação das fichas, da sugestão e da prévia
 
-Versão 4.6.4, 28/10/2026, macOS/Python 3.12/Node 24.
+Versão 4.7.0, 28/10/2026, macOS/Python 3.12/Node 24.
 
 ## Automatização
 
-106 testes Python aprovados no conjunto completo. Dois testes Node aprovados. TypeScript (`tsc --noEmit`) e build aprovados. Avisos de depreciação Starlette/HTTPX e Rasterio/NumPy permanecem sem falhas.
+107 testes Python aprovados no conjunto completo. Dois testes Node aprovados. TypeScript (`tsc --noEmit`) e build aprovados. Avisos de depreciação Starlette/HTTPX e Rasterio/NumPy permanecem sem falhas.
 
 Testes da 4.3.0: campo extra e cota zero aceitos só quando declarados; área das células em UTM igual à extensão projetada; área minerada pela classe Mineração com divisão de linhas, polígonos e pontos; UCs por grupo publicado; pontos de água contra a classe do trecho e os limites da CONAMA 357/2005; cenário inválido recusado.
 
@@ -77,3 +77,7 @@ O teste do PDF passou a exigir os três quadros (“Pesos dos critérios”, “
 ## Quadro único de réguas (4.6.4)
 
 Teste novo: o quadro cobre os 7 critérios, com valores que saem das mesmas funções do cálculo (relevo plano: 0,5 · 0,8 · 1 · 1; drenagem “Perto”, 100 m: silvicultura 70 ÷ 170 e solar 0,2; “até 10%”, “3 km ou mais”; uso que não considera o critério fica sem nota). O PDF tem dois “Fonte dos parâmetros”. Emissão real: 17 páginas; o quadro das réguas ficou inteiro na página 17, sem cortar o relevo.
+
+## Vídeo pós-mineração (4.7.0)
+
+Teste novo: a rota do vídeo devolve 404 sem arquivo e para mina desconhecida, o arquivo inteiro com `video/mp4` e um trecho com 206 quando o navegador pede `Range`. No navegador (instância isolada, porta 8031): com a mina selecionada, Ver pós-mineração aparece abaixo de Sugerir uso, abre o diálogo e o vídeo carrega (9,2 s, 1072×1220, sem erro), com a legenda embaixo. Geração e conferência do vídeo em [Vídeo pós-mineração](VIDEO_POS_MINERACAO.md).

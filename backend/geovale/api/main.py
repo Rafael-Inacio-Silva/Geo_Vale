@@ -40,7 +40,7 @@ def criar_app(limite=None, raiz=RAIZ, trilhas=None, anm=None, municipios=None, t
         finally:
             fonte_territorios.encerrar()
 
-    app = FastAPI(title='GeoVale — mapa territorial', version='4.6.4', docs_url=None, redoc_url=None, openapi_url=None, lifespan=ciclo_vida)
+    app = FastAPI(title='GeoVale — mapa territorial', version='4.7.0', docs_url=None, redoc_url=None, openapi_url=None, lifespan=ciclo_vida)
     fonte = limite if limite is not None else LimiteEstadual()
     fonte_trilhas = trilhas if trilhas is not None else TrilhasMunicipais()
     fonte_anm = anm if anm is not None else ProcessosANM()
@@ -50,7 +50,7 @@ def criar_app(limite=None, raiz=RAIZ, trilhas=None, anm=None, municipios=None, t
     @app.get('/api/saude')
     def saude():
         """Indica disponibilidade do aplicativo, independentemente da fonte externa."""
-        return {'status': 'ok', 'versao': '4.6.4'}
+        return {'status': 'ok', 'versao': '4.7.0'}
 
     @app.get('/api/mapa')
     def configuracao():
@@ -142,6 +142,14 @@ def criar_app(limite=None, raiz=RAIZ, trilhas=None, anm=None, municipios=None, t
             return JSONResponse(sugestoes.obter(mina_id, valores), headers={'Cache-Control': 'no-store'})
         except (OSError, ValueError, KeyError, TypeError, StopIteration, ShapelyError, sqlite3.Error, zlib.error):
             return JSONResponse(status_code=503, content={'mensagem': 'A sugestão depende do território completo. Tente novamente.'}, headers={'Cache-Control': 'no-store'})
+
+    @app.get('/api/minas/{mina_id}/video')
+    def video_pos_mineracao(mina_id: str):
+        """Ilustração pós-mineração gerada previamente (dados/videos/{mina}.mp4); não é gerada a cada pedido."""
+        arquivo = raiz / 'dados/videos' / f'{mina_id}.mp4'
+        if not any(item['id'] == mina_id for item in minas) or not arquivo.is_file():
+            return JSONResponse(status_code=404, content={'mensagem': 'Vídeo indisponível para esta mina.'})
+        return FileResponse(arquivo, media_type='video/mp4', headers={'Cache-Control': 'private, max-age=3600'})
 
     @app.get('/api/minas/{mina_id}/sugestao/explicacao')
     def explicacao_sugestao(mina_id: str, pesos: str | None = None):

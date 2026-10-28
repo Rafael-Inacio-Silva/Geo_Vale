@@ -1,6 +1,6 @@
 # Escolhas territoriais e justificativas para apresentação
 
-Versão 4.6.4. O MVP permite conhecer o território e consultar automaticamente os dados de todas as bases em um recorte comum, separando área minerada e entorno, e ordena usos por setor da área minerada para discussão. As escolhas da sugestão e da IA estão em [Multicritério e IA](MULTICRITERIO.md).
+Versão 4.7.0. O MVP permite conhecer o território e consultar automaticamente os dados de todas as bases em um recorte comum, separando área minerada e entorno, e ordena usos por setor da área minerada para discussão. As escolhas da sugestão e da IA estão em [Multicritério e IA](MULTICRITERIO.md).
 
 ## Mapa e imagens de contexto
 

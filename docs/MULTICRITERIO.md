@@ -1,6 +1,6 @@
 # Sugestão multicritério e explicação por IA
 
-Versão 4.6.4, 28/10/2026. Esta etapa vem depois da caracterização: o relatório organiza o território e a sugestão ordena usos pós-mineração para cada setor da área minerada. Na referência da Vale, corresponde a apoiar a etapa **Conceber** depois de **Conhecer** ([Fechamento de mina e uso futuro](https://www.vale.com/pt/esg/fechamento-de-mina-e-uso-futuro)). O sistema não decide: o engenheiro ajusta os pesos e leva a sugestão para discussão.
+Versão 4.7.0, 28/10/2026. Esta etapa vem depois da caracterização: o relatório organiza o território e a sugestão ordena usos pós-mineração para cada setor da área minerada. Na referência da Vale, corresponde a apoiar a etapa **Conceber** depois de **Conhecer** ([Fechamento de mina e uso futuro](https://www.vale.com/pt/esg/fechamento-de-mina-e-uso-futuro)). O sistema não decide: o engenheiro ajusta os pesos e leva a sugestão para discussão.
 
 ## Fluxo
 

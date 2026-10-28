@@ -3,6 +3,7 @@ import L from 'leaflet';
 import {requisitar} from './api.ts';
 import CamadasNaInfluencia from './CamadasNaInfluencia.tsx';
 import RelatorioDaMina from './RelatorioDaMina.tsx';
+import VideoPosMineracao from './VideoPosMineracao.tsx';
 import type {CamadaTerritorial, CamadasAtivas, InfluenciaTerritorial, LegendaTrilha, TerritorioPreparado} from './tipos.ts';
 
 /** Alterna o território no mapa, entra no modo sugestão e oferece o relatório PDF da mina selecionada. */
@@ -79,5 +80,6 @@ export default function Influencia({mapa, minaId, temas, expandidas, aoConsultar
     {minaId ? <button type="button" className="abrir-influencia sugerir-uso" aria-pressed={modoSugestao} disabled={!territorio?.completo || !mapa} onClick={alternarSugestao}>
       Sugerir uso <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>
     </button> : null}
+    {minaId ? <VideoPosMineracao key={minaId} minaId={minaId} pronto={(territorio?.completo ?? false) && !!mapa}/> : null}
   </section>;
 }

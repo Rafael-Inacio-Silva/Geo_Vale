@@ -1,6 +1,6 @@
 # Relatório GeoVale: dado e contexto
 
-Versão 4.6.4, 28/10/2026. Selecionar a mina oferece **Ver relatório**, sem exigir Influência. A marca e autoria são GeoVale.
+Versão 4.7.0, 28/10/2026. Selecionar a mina oferece **Ver relatório**, sem exigir Influência. A marca e autoria são GeoVale.
 
 ## Estrutura
 

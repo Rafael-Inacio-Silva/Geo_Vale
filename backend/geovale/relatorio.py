@@ -267,7 +267,7 @@ class RelatoriosPDF:
     def obter(self,mina_id,pesos=None):
         """Atualiza fatos por coleta/cenário/pesos e explicações por modelo, sem reextrair fontes."""
         dados=self.fonte.relatorio(mina_id);cenario=ler_cenario(self.raiz,mina_id)
-        chave=hashlib.sha256(json.dumps({'dados':{k:v for k,v in dados.items() if k!='gerado_em'},'cenario':cenario,'modelo':'4.6.4',
+        chave=hashlib.sha256(json.dumps({'dados':{k:v for k,v in dados.items() if k!='gerado_em'},'cenario':cenario,'modelo':'4.7.0',
                                          'pesos':None if pesos is None else [round(float(p),6) for p in pesos],'comentarios':self.comentarista.assinatura},sort_keys=True,ensure_ascii=False).encode()).hexdigest()
         with self.trava:
             anterior=self.cache.get(mina_id)

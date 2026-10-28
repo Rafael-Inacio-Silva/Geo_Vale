@@ -1,6 +1,6 @@
 # Ferramentas e justificativas
 
-Versão 4.6.4. As ferramentas abaixo correspondem ao mapa e à caracterização territorial automática implementados.
+Versão 4.7.0. As ferramentas abaixo correspondem ao mapa e à caracterização territorial automática implementados.
 
 | Necessidade | Ferramenta | Motivo e resultado |
 |---|---|---|
