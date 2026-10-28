@@ -28,6 +28,10 @@ Ao reiniciar o servidor com a 4.4.0, o tema Entorno não carregou no mapa. O Get
 
 Na prévia do relatório, o texto oculto para leitores de tela ficava posicionado em relação ao diálogo e criava rolagem extra abaixo da página. A folha passou a ser o contêiner desse texto e o diálogo não rola mais: conferido no navegador, diálogo com 734 px de altura e rolagem igual; a folha rola 1.388 px (página de 1.356 px mais margens) e termina no fim da página.
 
+## Modo sugestão
+
+No servidor da porta 8024, com Influência ativa e Barragens expandida (6 camadas WMS na tela), Sugerir uso deixou 0 camadas WMS, desabilitou Influência, trocou Camadas pelo painel Sugestão de uso e mostrou os 5 setores na lista e no mapa. Escolher S2 na lista abriu ranking, robustez (sensível) e porquê, com o setor contornado no mapa. Mudar o peso da vegetação nativa recalculou a lista e marcou os pesos como ajustados. Voltar ao território devolveu as 6 camadas, Influência ativa e Barragens marcada.
+
 ## IA e alcance
 
 O arquivo de chave permanece vazio: não houve chamada real à OpenAI. O contrato foi testado com respostas controladas. Não houve ML treinado, chamada paga, validação de especialista, ensaio real ou decisão de pós-mineração. Os limites das funções e os julgamentos AHP são valores de partida documentados, não calibrados com especialistas. [Multicritério e IA](MULTICRITERIO.md), [método](RELATORIO.md), [dados](DADOS_TERRITORIAIS.md).

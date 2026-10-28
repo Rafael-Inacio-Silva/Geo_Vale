@@ -2,7 +2,7 @@
 
 MVP de caracterização territorial e sugestão multicritério para apoiar a ressignificação de áreas pós-mineração. Abre um mapa mundial em **Minas Gerais**, com contorno oficial estadual e uma mina no catálogo: **Horizontes — Vale — Nova Lima/MG**.
 
-Selecionar a mina pelo cartão ou pela bolinha mostra automaticamente seu contorno. O engenheiro ativa **Influência** para conhecer o território maior. O mapa mostra o contorno, a mina sombreada e os sete temas/dezoito bases somente dentro desse território. Marcar uma camada à direita amplia sua visualização para além da influência; desmarcar volta ao recorte. **Ver relatório**, disponível ao selecionar a mina mesmo sem ativar Influência, abre um PDF GeoVale com visão geral, sete mapas temáticos, dados objetivos separados entre área minerada e entorno, comentários com a implicação de cada dado e uma ficha de dados técnicos simulados com pontos no mapa e asterisco. É possível navegar pelas páginas e baixar o mesmo documento. **Sugerir uso** pinta os setores da área minerada pelo uso que ficou em 1º, com ranking e porquê ao clicar; o engenheiro ajusta os pesos dos critérios e o relatório ganha a ficha Sugestão multicritério com esses pesos. A tela permanece centrada no mapa, sem tabelas de atributos ou instruções de procedimento.
+Selecionar a mina pelo cartão ou pela bolinha mostra automaticamente seu contorno. O engenheiro ativa **Influência** para conhecer o território maior. O mapa mostra o contorno, a mina sombreada e os sete temas/dezoito bases somente dentro desse território. Marcar uma camada à direita amplia sua visualização para além da influência; desmarcar volta ao recorte. **Ver relatório**, disponível ao selecionar a mina mesmo sem ativar Influência, abre um PDF GeoVale com visão geral, sete mapas temáticos, dados objetivos separados entre área minerada e entorno, comentários com a implicação de cada dado e uma ficha de dados técnicos simulados com pontos no mapa e asterisco. É possível navegar pelas páginas e baixar o mesmo documento. **Sugerir uso** abre um modo próprio no mesmo mapa: as camadas saem, os setores da área minerada aparecem pelo uso que ficou em 1º e a barra direita mostra ranking e porquê; o engenheiro ajusta os pesos dos critérios e o relatório ganha a ficha Sugestão multicritério com esses pesos. A tela permanece centrada no mapa, sem tabelas de atributos ou instruções de procedimento.
 
 Os dados são consultados automaticamente e guardados por mina em SQLite local. A aplicação conserva todos os atributos dos registros vetoriais recortados e as células dos dois rasters, com fontes, datas e metadados. Novas bases integradas ao catálogo entram no mesmo processamento. Fundos OpenStreetMap/Esri, WMS e trilhas continuam oferecendo exploração visual independente.
 
@@ -47,7 +47,8 @@ npm run build
 - `dados/cenarios/horizontes.json`: pontos e valores técnicos fictícios, métodos hipotéticos e referências.
 - `backend/geovale/influencia.py`: conferência do recorte local e evidências.
 - `backend/geovale/mapa.py`, `municipio.py`, `anm.py`, `trilhas.py`: navegação, município, cadastro e trilhas visuais.
-- `frontend/src/Influencia.tsx`, `CamadasNaInfluencia.tsx` e `SugestaoUso.tsx`: botões, camadas recortadas, sugestão com pesos e relatório PDF da mina.
+- `frontend/src/Influencia.tsx` e `CamadasNaInfluencia.tsx`: botões, camadas recortadas e relatório PDF da mina.
+- `frontend/src/SugestaoNoMapa.tsx`, `PainelSugestao.tsx` e `useSugestao.ts`: modo sugestão, setores no mapa, painel e pesos.
 - `dados/minas.json`: catálogo da mina e identificação.
 - `dados/influencias`: influência aproximada, snapshot OSM e receita de preparo.
 - `ferramentas/preparar_influencia.py`: reprodução local do contorno e sombreado.

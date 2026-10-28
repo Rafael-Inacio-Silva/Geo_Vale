@@ -7,6 +7,9 @@ import MapaTerritorio from './MapaTerritorio.tsx';
 import CamadasTerritorio from './CamadasTerritorio.tsx';
 import CartaoMina from './CartaoMina.tsx';
 import {useProcessoANM} from './useProcessoANM.ts';
+import {useSugestao} from './useSugestao.ts';
+import PainelSugestao from './PainelSugestao.tsx';
+import SugestaoNoMapa from './SugestaoNoMapa.tsx';
 import type {CamadasAtivas, ConfiguracaoMapa, EstadoCamada, LegendaTrilha, LimiteMG, Mina} from './tipos.ts';
 
 let configuracaoPendente: Promise<ConfiguracaoMapa> | null = null;
@@ -49,6 +52,17 @@ export default function App() {
   const [erroConfiguracao, setErroConfiguracao] = useState('');
   const [erroLimite, setErroLimite] = useState('');
   const [tentativa, setTentativa] = useState(0);
+  const [modoSugestao, setModoSugestao] = useState(false);
+  const [pesos, setPesos] = useState<number[] | null>(null);
+  const [setor, setSetor] = useState<string | null>(null);
+  const sugestao = useSugestao(selecionada?.id, modoSugestao, pesos);
+
+  // Trocar ou desmarcar a mina encerra o modo sugestão e volta aos pesos AHP.
+  useEffect(() => {
+    setModoSugestao(false);
+    setPesos(null);
+    setSetor(null);
+  }, [selecionada?.id]);
 
   useEffect(() => {
     let ativo = true;
@@ -84,6 +98,13 @@ export default function App() {
     });
   }
 
+  /** O modo sugestão troca o painel de camadas e esconde os temas sem perder o que estava ligado. */
+  function alternarSugestao() {
+    setModoSugestao(ativo => !ativo);
+    setSetor(null);
+    setBarraConsulta(true);
+  }
+
   function informarEstado(id: string, estado: EstadoCamada) {
     setEstadosCamadas(atuais => atuais[id] === estado ? atuais : {...atuais, [id]: estado});
   }
@@ -101,7 +122,7 @@ export default function App() {
       <div className={`territorio${barraTerritorio ? '' : ' territorio-oculto'}${barraConsulta ? '' : ' consulta-oculta'}`}>
         <aside id="barra-territorio" className="painel-territorio" aria-label="Território da mina" hidden={!barraTerritorio}>
           <h2>Território da mina</h2>
-          <Influencia mapa={mapa} minaId={selecionada?.id} temas={configuracao?.camadas ?? []} expandidas={ativas} aoConsultar={priorizarTerritorio} informarLegenda={setLegendaTrilhas}/>
+          <Influencia mapa={mapa} minaId={selecionada?.id} temas={configuracao?.camadas ?? []} expandidas={ativas} aoConsultar={priorizarTerritorio} informarLegenda={setLegendaTrilhas} modoSugestao={modoSugestao} alternarSugestao={alternarSugestao} pesos={pesos}/>
         </aside>
         <button type="button" className="alternar-painel alternar-territorio" aria-controls="barra-territorio" aria-expanded={barraTerritorio} aria-label={barraTerritorio ? 'Ocultar território' : 'Mostrar território'} title={barraTerritorio ? 'Ocultar território' : 'Mostrar território'} onClick={() => setBarraTerritorio(valor => !valor)}><svg viewBox="0 0 24 24" aria-hidden="true"><path d={barraTerritorio ? 'm14 7-5 5 5 5' : 'm10 7 5 5-5 5'}/></svg><span>Território</span></button>
         <button type="button" className="alternar-painel alternar-consulta" aria-controls="barra-consulta" aria-expanded={barraConsulta} aria-label={barraConsulta ? 'Ocultar mina e camadas' : 'Mostrar mina e camadas'} title={barraConsulta ? 'Ocultar mina e camadas' : 'Mostrar mina e camadas'} onClick={() => setBarraConsulta(valor => !valor)}><svg viewBox="0 0 24 24" aria-hidden="true"><path d={barraConsulta ? 'm10 7 5 5-5 5' : 'm14 7-5 5 5 5'}/></svg><span>Mina e camadas</span></button>
@@ -114,11 +135,13 @@ export default function App() {
           <div className="lista-minas" aria-live="polite">
             {configuracao ? (minas.length ? minas.map(mina => <CartaoMina key={mina.id} mina={mina} selecionada={selecionada?.id === mina.id} selecionar={selecionarMina} anm={anm.estado} recarregar={anm.recarregar}/>) : <p className="vazio">Nenhuma mina encontrada.</p>) : <p role="status" className="vazio">{erroConfiguracao ? 'Pesquisa indisponível.' : 'Carregando minas…'}</p>}
           </div>
-          {configuracao ? <CamadasTerritorio camadas={configuracao.camadas} ativas={ativas} estados={estadosCamadas} legendaTrilhas={legendaTrilhas} alterar={alterarCamada} recarregar={id => setRecargasCamadas(atuais => ({...atuais, [id]: (atuais[id] ?? 0) + 1}))}/> : null}
+          {modoSugestao ? <PainelSugestao {...sugestao} selecionado={setor} selecionar={setSetor} pesos={pesos} alterarPesos={setPesos}/>
+            : configuracao ? <CamadasTerritorio camadas={configuracao.camadas} ativas={ativas} estados={estadosCamadas} legendaTrilhas={legendaTrilhas} alterar={alterarCamada} recarregar={id => setRecargasCamadas(atuais => ({...atuais, [id]: (atuais[id] ?? 0) + 1}))}/> : null}
           {erro ? <div className="erro" role="alert"><p>{erro}</p><button type="button" className="tentar-novamente" onClick={() => setTentativa(atual => atual + 1)}>Tentar novamente</button></div> : null}
         </aside>
         <section id="territorio" className="painel-mapa" aria-label="Mapa territorial" tabIndex={-1}>
-          {configuracao ? <MapaTerritorio enquadrarMunicipio={enquadrarMunicipio} configuracao={configuracao} limite={limite} selecionada={selecionada} selecionar={selecionarMina} ativas={ativas} recargas={recargasCamadas} informarEstado={informarEstado} informarLegendaTrilhas={setLegendaTrilhas} informarMapa={setMapa} prioridadeTerritorio={prioridadeTerritorio} voltar={() => setSelecionada(null)}/> : <div className="mapa-carregando" role="status">{erroConfiguracao ? 'Mapa indisponível.' : 'Abrindo mapa…'}</div>}
+          {configuracao ? <MapaTerritorio enquadrarMunicipio={enquadrarMunicipio} configuracao={configuracao} limite={limite} selecionada={selecionada} selecionar={selecionarMina} ativas={modoSugestao ? {} : ativas} recargas={recargasCamadas} informarEstado={informarEstado} informarLegendaTrilhas={setLegendaTrilhas} informarMapa={setMapa} prioridadeTerritorio={prioridadeTerritorio} voltar={() => setSelecionada(null)}/> : <div className="mapa-carregando" role="status">{erroConfiguracao ? 'Mapa indisponível.' : 'Abrindo mapa…'}</div>}
+          {modoSugestao ? <SugestaoNoMapa mapa={mapa} sugestao={sugestao.sugestao} selecionado={setor} selecionar={setSetor} sair={alternarSugestao}/> : null}
           {limite?.aviso ? <p className="aviso-fonte" role="status">{limite.aviso}</p> : null}
         </section>
       </div>

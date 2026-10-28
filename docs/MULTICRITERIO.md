@@ -8,7 +8,7 @@ Versão 4.4.0, 27/10/2026. Esta etapa vem depois da caracterização: o relatór
 2. O sistema divide a área minerada em setores contínuos de pelo menos 20 ha.
 3. Exclui de cada célula de 30 m os usos que a lei não admite ali: UC de proteção integral, APP, ZAS e superfície d’água.
 4. Converte sete critérios em notas de 0 a 1 para cada uso e soma com os pesos. O padrão vem do AHP.
-5. Mostra no mapa o 1º uso de cada setor; o clique abre o ranking e a explicação.
+5. O mapa entra no modo sugestão: camadas temáticas saem, os setores aparecem coloridos pelo 1º uso e a barra direita mostra a sugestão; escolher um setor (no mapa ou na lista) abre o ranking e a explicação.
 6. Testa se o 1º lugar muda com ±20% em cada peso e marca os setores sensíveis.
 7. O engenheiro move os pesos; o mapa recalcula. **Ver relatório** leva os mesmos pesos para a ficha "Sugestão multicritério".
 8. No PDF, a IA explica cada setor quando há chave configurada; sem chave, a explicação por regras aparece identificada.
@@ -32,6 +32,7 @@ Versão 4.4.0, 27/10/2026. Esta etapa vem depois da caracterização: o relatór
 | Pesos padrão por AHP | Os pesos vêm de comparações par a par documentadas, com consistência medida. Relevo pesa mais porque define que usos são fisicamente possíveis; vegetação nativa em seguida porque a matriz natural do recorte (71%) favorece restauração; acesso, cidade, rede e trilhas pesam menos porque afetam um ou dois usos. | Saaty (1980): razão de consistência até 0,10. Matriz atual: 0,012. Soltanmohammadi et al. (2010) aplicam AHP ao uso pós-mineração. |
 | Engenheiro ajusta os pesos | O estudo de Ptolemais conclui que o modelo matemático sozinho não basta e precisa de informação qualitativa da mineração. O controle deixa essa informação entrar. Simplificação: um peso por critério, aplicado aos usos em que ele participa; pesos por uso ficam como evolução. | Servou et al. (2023). |
 | Sensibilidade ±20% em cada peso | Mostra se a ordem depende de um julgamento frágil. Setor sensível pede discussão antes de qualquer conclusão. | Chen, Yu e Khan (2013); Ligmann-Zielinska e Jankowski (2014): variação de um peso por vez. |
+| Modo sugestão separado no mesmo mapa | Os setores coloridos competiam com as cores das camadas temáticas, os pesos ficavam espremidos e o porquê aparecia num balão sobre o mapa. O modo esconde as camadas (e as devolve ao sair), usa a barra mais larga e marca a passagem de Conhecer para Conceber. | Vale, etapas Conhecer e Conceber do uso futuro; teste da primeira versão. |
 | Relevo de 2000 mantido, com aviso | É o único relevo público integrado; dentro da área minerada não representa a cava atual. O PDF diz isso e a função aceita trocar a fonte por levantamento atual. | Topodata (SRTM, 2000). |
 
 ### Pesos AHP e respostas por uso
