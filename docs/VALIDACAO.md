@@ -1,10 +1,10 @@
 # Validação das fichas, da sugestão e da prévia
 
-Versão 4.5.0, 28/10/2026, macOS/Python 3.12/Node 24.
+Versão 4.6.0, 28/10/2026, macOS/Python 3.12/Node 24.
 
 ## Automatização
 
-102 testes Python aprovados no conjunto completo. Dois testes Node aprovados. TypeScript (`tsc --noEmit`) e build aprovados. Avisos de depreciação Starlette/HTTPX e Rasterio/NumPy permanecem sem falhas.
+105 testes Python aprovados no conjunto completo. Dois testes Node aprovados. TypeScript (`tsc --noEmit`) e build aprovados. Avisos de depreciação Starlette/HTTPX e Rasterio/NumPy permanecem sem falhas.
 
 Testes da 4.3.0: campo extra e cota zero aceitos só quando declarados; área das células em UTM igual à extensão projetada; área minerada pela classe Mineração com divisão de linhas, polígonos e pontos; UCs por grupo publicado; pontos de água contra a classe do trecho e os limites da CONAMA 357/2005; cenário inválido recusado.
 
@@ -41,3 +41,21 @@ O arquivo de chave permanece vazio: não houve chamada real à OpenAI. O contrat
 Testes: sem chave, nenhuma chamada e textos por regras; com chave, cada ficha recebe o guia do próprio tema, e a ficha cuja resposta traz número não fornecido, interrogação, nome de campo ou letra fora do alfabeto latino volta às regras sem afetar as outras; a ficha 09 mostra “Por que” sem “(IA)” quando não há chave.
 
 Emissão real com a chave local, em 28/10/2026, pelo mesmo código do servidor. Primeira emissão: 7 de 8 fichas com IA, mas a leitura revelou rascunho (“fique objetivo”), uma palavra em hindi e, na sugestão, nomes de campo (“alto_pct”, “true”). Daí vieram a conferência de texto, a nova tentativa por ficha e a entrada da sugestão em frases. Emissão final: 8 de 8 fichas e a sugestão com “(IA)”, 14 páginas, 25,7 s; nenhum dos avisos removidos aparece no PDF. Textos lidos um a um: números iguais aos dos dados, leis citadas só as do guia. Pequenas imprecisões de redação continuam possíveis com o gpt-5-nano; por isso o texto por regras segue como reserva e a revisão técnica continua necessária.
+
+## Explicação pelo terreno, modelo e tela (4.6.0)
+
+Testes novos: a explicação por regras começa pelo uso sugerido e não fala em pontos nem pesos; o perfil do setor guarda declividade por faixa e distâncias (sem linha de transmissão, a distância é nula); a explicação da IA com “vantagem de 34 pontos” é recusada; a mesma explicação pedida duas vezes chama o modelo uma vez; a rota `/sugestao/explicacao` devolve 404, 422 e, sem chave, o texto por regras.
+
+Comparação de modelos com a mesma entrada real (Horizontes, pesos AHP), em 28/10/2026:
+
+| Modelo e ajuste | Resultado |
+|---|---|
+| gpt-5-nano, raciocínio baixo, todos os fatos | Recusado: passou de 420 caracteres e usou interrogação. |
+| gpt-5-nano, raciocínio médio | 87 s e recusado: copiou rótulos (“Por que combina:”) e passou do tamanho. |
+| gpt-5-nano, duas frases com fatos escolhidos | Aceito, mas a 2ª frase trocou número (S5: “10% acima de 20%”, quando 10% era APP). Daí a frase sobre os demais usos ficar por regras. |
+| gpt-5-nano, só a 1ª frase | Aceito, mas só repetia os fatos, sem dizer o que significam. |
+| gpt-4.1-mini, só a 1ª frase, `temperature` 0,2 | Aceito nos 5 setores e interpretando: “57% do setor com declividade acima de 20% dificulta o uso de máquinas, favorecendo o retorno natural da vegetação”. Uma resposta trouxe “visitação segura”; “seguro” passou a ser recusado. |
+
+PDF padrão com gpt-4.1-mini: 14 páginas, 20 s; ficha 09 com “Por que (IA)”; 7 de 8 fichas com IA (Entorno caiu para regras naquela emissão, como previsto).
+
+Tela, numa instância isolada (porta 8031, cópia do banco e da chave): o resultado aparece à esquerda abaixo de Sugerir uso e os pesos à direita; S2 mostrou “Por que (IA)” com a explicação do terreno; mudar o peso de trilhas para 40 fez aparecer Emitir relatório com estes pesos, que abriu “Relatório com pesos ajustados” (`?pesos=34,22,13,13,7,6,40`, 15 páginas); fechar e clicar Ver relatório pediu o PDF sem pesos (“Relatório da mina”).

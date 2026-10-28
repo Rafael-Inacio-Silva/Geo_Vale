@@ -15,7 +15,7 @@ from fastapi.staticfiles import StaticFiles
 
 from geovale.territorio import DadosTerritoriais
 from geovale.relatorio import RelatoriosPDF
-from geovale.multicriterio import SugestoesUso, ler_pesos
+from geovale.multicriterio import SugestoesUso, demais_por_setor, entrada_ia, ler_pesos
 from geovale.camadas import CAMADAS
 from geovale.influencia import ler_influencia
 from geovale.anm import ProcessosANM
@@ -40,7 +40,7 @@ def criar_app(limite=None, raiz=RAIZ, trilhas=None, anm=None, municipios=None, t
         finally:
             fonte_territorios.encerrar()
 
-    app = FastAPI(title='GeoVale — mapa territorial', version='4.5.0', docs_url=None, redoc_url=None, openapi_url=None, lifespan=ciclo_vida)
+    app = FastAPI(title='GeoVale — mapa territorial', version='4.6.0', docs_url=None, redoc_url=None, openapi_url=None, lifespan=ciclo_vida)
     fonte = limite if limite is not None else LimiteEstadual()
     fonte_trilhas = trilhas if trilhas is not None else TrilhasMunicipais()
     fonte_anm = anm if anm is not None else ProcessosANM()
@@ -50,7 +50,7 @@ def criar_app(limite=None, raiz=RAIZ, trilhas=None, anm=None, municipios=None, t
     @app.get('/api/saude')
     def saude():
         """Indica disponibilidade do aplicativo, independentemente da fonte externa."""
-        return {'status': 'ok', 'versao': '4.5.0'}
+        return {'status': 'ok', 'versao': '4.6.0'}
 
     @app.get('/api/mapa')
     def configuracao():
@@ -142,6 +142,22 @@ def criar_app(limite=None, raiz=RAIZ, trilhas=None, anm=None, municipios=None, t
             return JSONResponse(sugestoes.obter(mina_id, valores), headers={'Cache-Control': 'no-store'})
         except (OSError, ValueError, KeyError, TypeError, StopIteration, ShapelyError, sqlite3.Error, zlib.error):
             return JSONResponse(status_code=503, content={'mensagem': 'A sugestão depende do território completo. Tente novamente.'}, headers={'Cache-Control': 'no-store'})
+
+    @app.get('/api/minas/{mina_id}/sugestao/explicacao')
+    def explicacao_sugestao(mina_id: str, pesos: str | None = None):
+        """Explicação por IA dos setores para os mesmos pesos; sem chave ou com falha, devolve as regras."""
+        if not any(item['id'] == mina_id for item in minas):
+            return JSONResponse(status_code=404, content={'mensagem': 'Mina não encontrada.'})
+        try:
+            valores = ler_pesos(pesos)
+        except ValueError:
+            return JSONResponse(status_code=422, content={'mensagem': 'Informe um peso de 0 a 100 para cada critério, com soma maior que zero.'})
+        try:
+            resultado = sugestoes.obter(mina_id, valores)
+        except (OSError, ValueError, KeyError, TypeError, StopIteration, ShapelyError, sqlite3.Error, zlib.error):
+            return JSONResponse(status_code=503, content={'mensagem': 'A sugestão depende do território completo. Tente novamente.'}, headers={'Cache-Control': 'no-store'})
+        explicacao = relatorios.comentarista.explicar(entrada_ia(resultado), {s['id']: s['explicacao'] for s in resultado['setores']}, demais_por_setor(resultado))
+        return JSONResponse(explicacao, headers={'Cache-Control': 'no-store'})
 
     @app.get('/api/minas/{mina_id}/relatorio')
     def relatorio_territorio(mina_id: str, baixar: bool = False, pesos: str | None = None):

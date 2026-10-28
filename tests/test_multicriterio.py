@@ -11,7 +11,7 @@ from shapely.geometry import shape
 
 from geovale.api.main import criar_app
 from geovale.fontes_territorio import recortar_raster
-from geovale.multicriterio import CRITERIOS, IDS, RESPOSTAS, USOS, calcular, ler_pesos, notas, pesos_ahp
+from geovale.multicriterio import CRITERIOS, IDS, RESPOSTAS, USOS, calcular, explicar_por_regras, ler_pesos, notas, pesos_ahp
 from geovale.territorio import DadosTerritoriais
 from test_territorio import coleta_simulada, preparar_raiz
 
@@ -39,7 +39,9 @@ def setor_sintetico(permitido_solar=1.):
     """Setor com fatores médios conhecidos: plano favorece solar; nativo e drenagem favorecem conservação."""
     media = {u['id']: {c: 1. if u['id'] == 'conservacao' else .4 for c in RESPOSTAS[u['id']]} for u in USOS}
     media['solar'] = {c: permitido_solar * (1. if c == 'relevo' else .5) for c in RESPOSTAS['solar']}
-    return {'id': 'S1', 'ha': 30., 'media': media, 'bloqueio': {u['id']: {} for u in USOS},
+    perfil = {'ate8': .1, 'de8a20': .3, 'acima20': .6, 'acima45': .1, 'vegetacao': .4,
+              'distancias': {'drenagem': 120., 'acesso': 900., 'urbano': 4000., 'rede': None, 'trilhas': 300.}}
+    return {'id': 'S1', 'ha': 30., 'media': media, 'bloqueio': {u['id']: {} for u in USOS}, 'perfil': perfil,
             'permitido': {**{u['id']: 1. for u in USOS}, 'solar': permitido_solar}, 'restricoes': {}, 'cavidades': 0.,
             'cava_ha': 0., 'barragens': [], 'montante': [], 'geometria': {'type': 'Point', 'coordinates': [-43.9, -20.1]}}
 
@@ -110,7 +112,9 @@ def test_api_sugere_por_setor_aplica_restricoes_e_leva_pesos_ao_pdf(tmp_path):
     permitidos = {u['uso']: u['permitido'] for u in setor['ranking']}
     assert setor['ranking'][0]['uso'] == 'conservacao' and permitidos['conservacao'] == pytest.approx(100)
     assert permitidos['solar'] == permitidos['silvicultura'] == permitidos['ecoturismo'] == 0
-    assert setor['restricoes']['app'] == pytest.approx(100) and setor['explicacao'].startswith('Conservação e restauração lidera')
+    assert setor['restricoes']['app'] == pytest.approx(100) and setor['explicacao'].startswith('Conservação e restauração: ') and 'APP, onde só conservação e ecoturismo são permitidos' in setor['explicacao']
+    explicacao = cliente.get('/api/minas/horizontes/sugestao/explicacao').json()
+    assert explicacao == {'metodo': 'regras', 'textos': {s['id']: s['explicacao'] for s in r['setores']}}
     pesos = ','.join(['0'] * (len(IDS) - 1) + ['10'])
     ajustado = cliente.get('/api/minas/horizontes/sugestao?pesos=' + pesos).json()
     assert ajustado['origem_pesos'] == 'engenheiro' and ajustado['criterios'][-1]['peso'] == pytest.approx(1)
@@ -120,3 +124,12 @@ def test_api_sugere_por_setor_aplica_restricoes_e_leva_pesos_ao_pdf(tmp_path):
     texto = ' '.join(' '.join(p.extract_text() for p in PdfReader(BytesIO(pdf.content)).pages).split())
     assert 'Sugestão multicritério' in texto and 'ajustados pelo engenheiro' in texto and 'Por que' in texto and '(IA)' not in texto and 'laudo' not in texto
     assert cliente.get('/api/minas/horizontes/relatorio?pesos=x').status_code == 422
+
+
+def test_explicacao_por_regras_fala_do_terreno_e_nao_de_pontos():
+    resultado = calcular({'setores': [setor_sintetico()], 'area_minerada_ha': 30., 'fora_ha': 0.})
+    setor = resultado['setores'][0]
+    texto = explicar_por_regras(setor, resultado)
+    assert texto.startswith(setor['ranking'][0]['nome'] + ': ') and 'ponto' not in texto and 'peso' not in texto
+    assert '% do setor tem declividade' in texto or 'fica a' in texto or 'vegetação nativa cobre' in texto
+    assert setor['perfil']['declividade']['acima20'] == pytest.approx(60) and setor['perfil']['distancias']['rede'] is None

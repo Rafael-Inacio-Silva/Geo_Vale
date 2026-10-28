@@ -6,10 +6,10 @@ import RelatorioDaMina from './RelatorioDaMina.tsx';
 import type {CamadaTerritorial, CamadasAtivas, InfluenciaTerritorial, LegendaTrilha, TerritorioPreparado} from './tipos.ts';
 
 /** Alterna o território no mapa, entra no modo sugestão e oferece o relatório PDF da mina selecionada. */
-export default function Influencia({mapa, minaId, temas, expandidas, aoConsultar, informarLegenda, modoSugestao, alternarSugestao, pesos}: {
+export default function Influencia({mapa, minaId, temas, expandidas, aoConsultar, informarLegenda, modoSugestao, alternarSugestao, pedidoRelatorio}: {
   mapa: L.Map | null; minaId?: string; temas: CamadaTerritorial[]; expandidas: CamadasAtivas;
   aoConsultar: () => void; informarLegenda: (legenda: LegendaTrilha[]) => void;
-  modoSugestao: boolean; alternarSugestao: () => void; pesos: number[] | null;
+  modoSugestao: boolean; alternarSugestao: () => void; pedidoRelatorio: {pesos: number[]; vez: number} | null;
 }) {
   const [aberta, setAberta] = useState(false);
   const [contorno, setContorno] = useState<InfluenciaTerritorial | null>(null);
@@ -75,7 +75,7 @@ export default function Influencia({mapa, minaId, temas, expandidas, aoConsultar
     {aberta && !modoSugestao && mapa && contorno && minaId ? <>
       <CamadasNaInfluencia mapa={mapa} minaId={minaId} contorno={contorno} temas={temas} expandidas={expandidas} informarLegenda={informarLegenda}/>
     </> : null}
-    {minaId ? <RelatorioDaMina key={minaId} minaId={minaId} pronto={territorio?.completo ?? false} pesos={pesos}/> : null}
+    {minaId ? <RelatorioDaMina key={minaId} minaId={minaId} pronto={territorio?.completo ?? false} pedido={pedidoRelatorio}/> : null}
     {minaId ? <button type="button" className="abrir-influencia sugerir-uso" aria-pressed={modoSugestao} disabled={!territorio?.completo || !mapa} onClick={alternarSugestao}>
       Sugerir uso <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>
     </button> : null}

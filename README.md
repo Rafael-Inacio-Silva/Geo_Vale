@@ -43,7 +43,7 @@ npm run build
 - `backend/geovale/relatorio.py`: PDF e prévia versionada em PNG.
 - `backend/geovale/mapa_relatorio.py` e `fichas.py`: mapas temáticos, área minerada, medidas em UTM 23S e checagem dos pontos de água simulados.
 - `backend/geovale/multicriterio.py`: setores da área minerada, restrições legais, AHP, soma ponderada e sensibilidade.
-- `backend/geovale/comentarios.py`: leitura contextual das fichas (com guia por tema) e explicação da sugestão por OpenAI Responses / GPT-5 nano, com regras de reserva.
+- `backend/geovale/comentarios.py`: leitura contextual das fichas (com guia por tema) e explicação da sugestão por OpenAI Responses / GPT-4.1 mini, com regras de reserva.
 - `dados/cenarios/horizontes.json`: pontos e valores técnicos fictícios, métodos hipotéticos e referências.
 - `backend/geovale/influencia.py`: conferência do recorte local e evidências.
 - `backend/geovale/mapa.py`, `municipio.py`, `anm.py`, `trilhas.py`: navegação, município, cadastro e trilhas visuais.

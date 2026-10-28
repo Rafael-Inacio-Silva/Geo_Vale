@@ -8,7 +8,7 @@ import CamadasTerritorio from './CamadasTerritorio.tsx';
 import CartaoMina from './CartaoMina.tsx';
 import {useProcessoANM} from './useProcessoANM.ts';
 import {useSugestao} from './useSugestao.ts';
-import PainelSugestao from './PainelSugestao.tsx';
+import {PesosSugestao, ResultadoSugestao} from './PainelSugestao.tsx';
 import SugestaoNoMapa from './SugestaoNoMapa.tsx';
 import type {CamadasAtivas, ConfiguracaoMapa, EstadoCamada, LegendaTrilha, LimiteMG, Mina} from './tipos.ts';
 
@@ -55,6 +55,7 @@ export default function App() {
   const [modoSugestao, setModoSugestao] = useState(false);
   const [pesos, setPesos] = useState<number[] | null>(null);
   const [setor, setSetor] = useState<string | null>(null);
+  const [pedidoRelatorio, setPedidoRelatorio] = useState<{pesos: number[]; vez: number} | null>(null);
   const sugestao = useSugestao(selecionada?.id, modoSugestao, pesos);
 
   // Trocar ou desmarcar a mina encerra o modo sugestão e volta aos pesos AHP.
@@ -62,6 +63,7 @@ export default function App() {
     setModoSugestao(false);
     setPesos(null);
     setSetor(null);
+    setPedidoRelatorio(null);
   }, [selecionada?.id]);
 
   useEffect(() => {
@@ -122,7 +124,8 @@ export default function App() {
       <div className={`territorio${barraTerritorio ? '' : ' territorio-oculto'}${barraConsulta ? '' : ' consulta-oculta'}`}>
         <aside id="barra-territorio" className="painel-territorio" aria-label="Território da mina" hidden={!barraTerritorio}>
           <h2>Território da mina</h2>
-          <Influencia mapa={mapa} minaId={selecionada?.id} temas={configuracao?.camadas ?? []} expandidas={ativas} aoConsultar={priorizarTerritorio} informarLegenda={setLegendaTrilhas} modoSugestao={modoSugestao} alternarSugestao={alternarSugestao} pesos={pesos}/>
+          <Influencia mapa={mapa} minaId={selecionada?.id} temas={configuracao?.camadas ?? []} expandidas={ativas} aoConsultar={priorizarTerritorio} informarLegenda={setLegendaTrilhas} modoSugestao={modoSugestao} alternarSugestao={alternarSugestao} pedidoRelatorio={pedidoRelatorio}/>
+          {modoSugestao ? <ResultadoSugestao {...sugestao} selecionado={setor} selecionar={setSetor}/> : null}
         </aside>
         <button type="button" className="alternar-painel alternar-territorio" aria-controls="barra-territorio" aria-expanded={barraTerritorio} aria-label={barraTerritorio ? 'Ocultar território' : 'Mostrar território'} title={barraTerritorio ? 'Ocultar território' : 'Mostrar território'} onClick={() => setBarraTerritorio(valor => !valor)}><svg viewBox="0 0 24 24" aria-hidden="true"><path d={barraTerritorio ? 'm14 7-5 5 5 5' : 'm10 7 5 5-5 5'}/></svg><span>Território</span></button>
         <button type="button" className="alternar-painel alternar-consulta" aria-controls="barra-consulta" aria-expanded={barraConsulta} aria-label={barraConsulta ? 'Ocultar mina e camadas' : 'Mostrar mina e camadas'} title={barraConsulta ? 'Ocultar mina e camadas' : 'Mostrar mina e camadas'} onClick={() => setBarraConsulta(valor => !valor)}><svg viewBox="0 0 24 24" aria-hidden="true"><path d={barraConsulta ? 'm10 7 5 5-5 5' : 'm14 7-5 5 5 5'}/></svg><span>Mina e camadas</span></button>
@@ -135,7 +138,7 @@ export default function App() {
           <div className="lista-minas" aria-live="polite">
             {configuracao ? (minas.length ? minas.map(mina => <CartaoMina key={mina.id} mina={mina} selecionada={selecionada?.id === mina.id} selecionar={selecionarMina} anm={anm.estado} recarregar={anm.recarregar}/>) : <p className="vazio">Nenhuma mina encontrada.</p>) : <p role="status" className="vazio">{erroConfiguracao ? 'Pesquisa indisponível.' : 'Carregando minas…'}</p>}
           </div>
-          {modoSugestao ? <PainelSugestao {...sugestao} selecionado={setor} selecionar={setSetor} pesos={pesos} alterarPesos={setPesos}/>
+          {modoSugestao ? <PesosSugestao sugestao={sugestao.sugestao} pesos={pesos} alterarPesos={setPesos} emitirRelatorio={() => {if (pesos) setPedidoRelatorio({pesos, vez: Date.now()});}}/>
             : configuracao ? <CamadasTerritorio camadas={configuracao.camadas} ativas={ativas} estados={estadosCamadas} legendaTrilhas={legendaTrilhas} alterar={alterarCamada} recarregar={id => setRecargasCamadas(atuais => ({...atuais, [id]: (atuais[id] ?? 0) + 1}))}/> : null}
           {erro ? <div className="erro" role="alert"><p>{erro}</p><button type="button" className="tentar-novamente" onClick={() => setTentativa(atual => atual + 1)}>Tentar novamente</button></div> : null}
         </aside>

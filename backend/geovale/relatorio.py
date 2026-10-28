@@ -12,7 +12,7 @@ import pypdfium2 as pdfium
 from geovale.mapa_relatorio import MapaTerritorial
 from geovale.fichas import PARAMETROS_AGUA, formato, ha, montar_fichas, preparar, projetar
 from geovale.comentarios import Comentarista
-from geovale.multicriterio import SugestoesUso, USOS, entrada_ia, nome_setor, resumo_pesos, texto_setor
+from geovale.multicriterio import SugestoesUso, USOS, demais_por_setor, entrada_ia, nome_setor, resumo_pesos, texto_setor
 from xml.sax.saxutils import escape
 from zoneinfo import ZoneInfo
 
@@ -164,7 +164,8 @@ def gerar_pdf(dados,cenario,fichas,comentarios,sugestao=None,explicacoes=None):
     resumos=[[ficha['nome'],' | '.join(d['resumo'] for d in ficha['dados'] if d.get('resumo'))] for ficha in fichas[:-1]]
     resumos.append(['Dados simulados *','; '.join(d['resumo'] for d in fichas[-1]['dados'] if d.get('resumo'))])
     if sugestao:
-        resumos.append(['Sugestão multicritério','; '.join(f"{s['id']} ({ha(s['ha'])}): {s['ranking'][0]['nome']} {formato(s['ranking'][0]['nota'])}" for s in sugestao['setores'])])
+        resumos.append(['Sugestão multicritério','; '.join(f"{s['id']} ({ha(s['ha'])}): {s['ranking'][0]['nome']}, nota {formato(s['ranking'][0]['nota'])}" for s in sugestao['setores'])
+                        +'. Nota de 0 a 100: quanto o setor combina com o uso; não é área nem probabilidade.'])
     resumo=tabela(['Tema','Dados objetivos do território'],resumos,[LARGURA*.24,LARGURA*.76])
     resumo.setStyle(TableStyle([('TOPPADDING',(0,1),(-1,-1),5),('BOTTOMPADDING',(0,1),(-1,-1),5)]))
     adicionar(resumo,Spacer(1,6),
@@ -194,8 +195,8 @@ def gerar_pdf(dados,cenario,fichas,comentarios,sugestao=None,explicacoes=None):
         adicionar(PageBreak(),paragrafo(f'{len(fichas)+1:02d} | Sugestão multicritério','secao'),
                   MapaTerritorial(dados,tema='sugestao',altura=220,setores=[(s['id'],s['geometria'],cores[s['ranking'][0]['uso']]) for s in sugestao['setores']]),Spacer(1,8),
                   paragrafo(f"Sugestão para discussão, não decisão. Setores são partes contínuas da área minerada com pelo menos {sugestao['minimo_ha']} ha "
-                            f"({ha(sugestao['fora_ha'])} em fragmentos menores ficaram fora). Restrições legais excluem usos; cada critério vira nota de 0 a 1 e "
-                            f"entra na soma com o peso abaixo. Pesos {'calculados por AHP' if sugestao['origem_pesos']=='AHP' else 'ajustados pelo engenheiro'} "
+                            f"({ha(sugestao['fora_ha'])} em fragmentos menores ficaram fora). A nota de 0 a 100 mede quanto as condições do setor combinam com cada uso: "
+                            f"100 seria todas as condições ideais; não é área nem probabilidade. Restrições legais excluem usos onde a lei não permite. Pesos {'calculados por AHP' if sugestao['origem_pesos']=='AHP' else 'ajustados pelo engenheiro'} "
                             f"(razão de consistência da matriz padrão: {formato(sugestao['razao_consistencia'],3)}): {resumo_pesos(sugestao)}.",'pequeno'))
         linhas=[]
         for s in sugestao['setores']:
@@ -204,7 +205,7 @@ def gerar_pdf(dados,cenario,fichas,comentarios,sugestao=None,explicacoes=None):
             if s['montante']:condicoes.append('barragem a montante')
             bruto=Paragraph('<b>'+texto(nome_setor(s))+'</b><br/>'+texto(texto_setor(s)).replace('\n','<br/>')+'<br/><font size="6.7" color="#536d64">'+texto('; '.join(condicoes))+'</font>',ESTILOS['celula'])
             linhas.append([bruto,paragrafo(explicacoes['textos'][s['id']],'celula')])
-        tab=tabela(['Setor e notas (0 a 100)','Por que (IA)' if explicacoes['metodo']=='ia' else 'Por que'],linhas,[LARGURA*.46,LARGURA*.54])
+        tab=tabela(['Setor e nota de cada uso (0 a 100)','Por que (IA)' if explicacoes['metodo']=='ia' else 'Por que'],linhas,[LARGURA*.46,LARGURA*.54])
         tab.setStyle(TableStyle([('TOPPADDING',(0,1),(-1,-1),6),('BOTTOMPADDING',(0,1),(-1,-1),6)]))
         adicionar(tab,Spacer(1,8),
                   paragrafo('Restrições: '+'; '.join(f"{r['nome']} admite {', '.join(n['nome'].lower() for n in USOS if n['id'] in r['permite'])} ({r['base']})" for r in sugestao['restricoes'])+'.','pequeno'),
@@ -226,7 +227,7 @@ class RelatoriosPDF:
     def obter(self,mina_id,pesos=None):
         """Atualiza fatos por coleta/cenário/pesos e explicações por modelo, sem reextrair fontes."""
         dados=self.fonte.relatorio(mina_id);cenario=ler_cenario(self.raiz,mina_id)
-        chave=hashlib.sha256(json.dumps({'dados':{k:v for k,v in dados.items() if k!='gerado_em'},'cenario':cenario,'modelo':'4.5.0',
+        chave=hashlib.sha256(json.dumps({'dados':{k:v for k,v in dados.items() if k!='gerado_em'},'cenario':cenario,'modelo':'4.6.0',
                                          'pesos':None if pesos is None else [round(float(p),6) for p in pesos],'comentarios':self.comentarista.assinatura},sort_keys=True,ensure_ascii=False).encode()).hexdigest()
         with self.trava:
             anterior=self.cache.get(mina_id)
@@ -237,7 +238,7 @@ class RelatoriosPDF:
             # Fichas e sugestão vão ao modelo ao mesmo tempo: a espera é a da chamada mais lenta.
             with ThreadPoolExecutor(max_workers=2) as execucao:
                 lendo=execucao.submit(self.comentarista.gerar,fichas)
-                explicando=execucao.submit(self.comentarista.explicar,entrada_ia(sugestao),{s['id']:s['explicacao'] for s in sugestao['setores']}) if sugestao else None
+                explicando=execucao.submit(self.comentarista.explicar,entrada_ia(sugestao),{s['id']:s['explicacao'] for s in sugestao['setores']},demais_por_setor(sugestao)) if sugestao else None
                 comentarios=lendo.result();explicacoes=explicando.result() if explicando else None
             pdf=gerar_pdf(dados,cenario,fichas,comentarios,sugestao,explicacoes);versao=hashlib.sha256(pdf).hexdigest()
             self.cache[mina_id]=(chave,pdf);self.documentos[(mina_id,versao)]=pdf

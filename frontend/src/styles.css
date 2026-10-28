@@ -223,6 +223,9 @@ button:focus-visible, input:focus-visible, a:focus-visible, [tabindex="-1"]:focu
 .detalhe-setor h3 {margin: 0; font-size: .85rem; color: var(--escuro);}
 .estruturas-setor, .robustez-setor, .porque-setor {margin: 0; font-size: .68rem; line-height: 1.5; color: #4a6e60;}
 .porque-setor {color: var(--escuro);}
+.titulo-porque {margin: .2rem 0 0; font-size: .7rem; font-weight: 700; color: var(--escuro);}
+.titulo-porque span {font-weight: 400; color: #4a6e60;}
+.resultado-sugestao {margin-top: 1rem; padding-top: .9rem; border-top: 1px solid #d5e0d9;}
 .robustez-setor.sensivel {color: #7b3d22; font-weight: 650;}
 .ranking-setor {display: grid; gap: .4rem; margin: 0; padding: 0; list-style: none;}
 .ranking-setor span {display: flex; justify-content: space-between; gap: .4rem; font-size: .68rem;}
@@ -233,6 +236,9 @@ button:focus-visible, input:focus-visible, a:focus-visible, [tabindex="-1"]:focu
 .pesos-criterios {display: grid; gap: .35rem; margin: 0; padding: .5rem .6rem; border: 1px solid #d5e0d9; border-radius: .35rem; min-inline-size: 0;}
 .pesos-criterios legend {padding: 0 .25rem; font-size: .72rem; font-weight: 650;}
 .peso-criterio {display: grid; gap: .1rem; font-size: .66rem; color: #4a6e60;}
+.emitir-com-pesos {display: block; inline-size: 100%; margin: .3rem 0 0; padding: .55rem .8rem; border: 0; border-radius: .35rem; background: var(--verde); color: #fff; font-size: .72rem; font-weight: 700; cursor: pointer;}
+.emitir-com-pesos:hover {filter: brightness(1.08);}
+.emitir-com-pesos:focus-visible {outline: 2px solid var(--amarelo); outline-offset: 2px;}
 .peso-criterio span {display: flex; justify-content: space-between; gap: .4rem;}
 .peso-criterio input[type="range"] {inline-size: 100%; margin: 0; accent-color: var(--verde); cursor: pointer;}
 .modo-sugestao {position: absolute; top: 4.2rem; left: 50%; transform: translateX(-50%); z-index: 510; display: flex; align-items: center; gap: .75rem; padding: .4rem .45rem .4rem .9rem; border-radius: 2rem; background: var(--escuro); color: #fff; font-size: .75rem; font-weight: 650; white-space: nowrap; box-shadow: 0 4px 14px #00302b40;}

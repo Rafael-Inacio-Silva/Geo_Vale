@@ -77,6 +77,7 @@ export interface SetorSugerido {
   id: string; ha: number; descricao: string; ranking: UsoSugerido[]; margem: number; cavidades: number; montante: string[];
   robustez: {estavel: boolean; muda_com: string[]}; explicacao: string; geometria: Polygon | MultiPolygon;
 }
+export interface ExplicacaoSugestao {metodo: 'ia' | 'regras'; textos: Record<string, string>}
 export interface SugestaoUso {
   criterios: {id: string; nome: string; curto: string; peso: number; peso_ahp: number}[];
   origem_pesos: 'AHP' | 'engenheiro'; razao_consistencia: number; minimo_ha: number; fora_ha: number; variacao: number;

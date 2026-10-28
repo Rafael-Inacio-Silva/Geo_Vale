@@ -2,9 +2,10 @@ import {lazy, Suspense, useEffect, useRef, useState} from 'react';
 
 const PreviaPDF = lazy(() => import('./PreviaPDF.tsx'));
 
-/** Abre o PDF da mina selecionada, com os pesos da sugestão, e permite baixar exatamente o documento visualizado. */
-export default function RelatorioDaMina({minaId, pronto, pesos}: {minaId: string; pronto: boolean; pesos: number[] | null}) {
+/** Abre o PDF padrão da mina (pesos AHP) ou, por pedido do modo sugestão, o PDF com pesos ajustados; baixa exatamente o documento visualizado. */
+export default function RelatorioDaMina({minaId, pronto, pedido}: {minaId: string; pronto: boolean; pedido: {pesos: number[]; vez: number} | null}) {
   const [aberto, setAberto] = useState(false);
+  const [pesos, setPesos] = useState<number[] | null>(null);
   const [url, setUrl] = useState('');
   const [versao, setVersao] = useState('');
   const [erro, setErro] = useState(false);
@@ -12,6 +13,12 @@ export default function RelatorioDaMina({minaId, pronto, pesos}: {minaId: string
   const dialogo = useRef<HTMLDialogElement>(null);
   const gatilho = useRef<HTMLButtonElement>(null);
   const consulta = pesos ? `?pesos=${pesos.join(',')}` : '';
+
+  useEffect(() => {
+    if (!pedido) return;
+    setPesos(pedido.pesos);
+    setAberto(true);
+  }, [pedido]);
 
   useEffect(() => {
     if (aberto) dialogo.current?.showModal();
@@ -45,10 +52,10 @@ export default function RelatorioDaMina({minaId, pronto, pesos}: {minaId: string
   }, [aberto, minaId, tentativa, consulta]);
 
   return <>
-    <button ref={gatilho} type="button" className="relatorio-territorio" disabled={!pronto} onClick={() => setAberto(true)}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h8l4 4v14H6zM14 3v5h4M9 12h6M9 16h6"/></svg>{pronto ? 'Ver relatório' : 'Preparando relatório…'}</button>
+    <button ref={gatilho} type="button" className="relatorio-territorio" disabled={!pronto} onClick={() => {setPesos(null); setAberto(true);}}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h8l4 4v14H6zM14 3v5h4M9 12h6M9 16h6"/></svg>{pronto ? 'Ver relatório' : 'Preparando relatório…'}</button>
     <dialog ref={dialogo} className="dialogo-relatorio" aria-labelledby="titulo-relatorio" onClose={() => {setAberto(false); gatilho.current?.focus();}}>
       <header className="cabecalho-relatorio">
-        <h2 id="titulo-relatorio">Relatório da mina</h2>
+        <h2 id="titulo-relatorio">{pesos ? 'Relatório com pesos ajustados' : 'Relatório da mina'}</h2>
         <div className="acoes-relatorio">
           {url ? <a href={url} download={`geovale-${minaId}.pdf`}>Baixar PDF</a> : null}
           <button type="button" aria-label="Fechar relatório" onClick={() => dialogo.current?.close()}>Fechar <span aria-hidden="true">×</span></button>

@@ -1,8 +1,8 @@
 /** Consulta os contratos territoriais, com mensagem pública e tempo limitado. */
-export async function requisitar<T>(url: string, sinal?: AbortSignal): Promise<T> {
+export async function requisitar<T>(url: string, sinal?: AbortSignal, limite = 25000): Promise<T> {
   let resposta: Response;
   try {
-    resposta = await fetch(url, {signal: sinal ? AbortSignal.any([sinal, AbortSignal.timeout(25000)]) : AbortSignal.timeout(25000)});
+    resposta = await fetch(url, {signal: sinal ? AbortSignal.any([sinal, AbortSignal.timeout(limite)]) : AbortSignal.timeout(limite)});
   } catch {
     throw new Error('Não foi possível conectar. Confira sua conexão e tente novamente.');
   }

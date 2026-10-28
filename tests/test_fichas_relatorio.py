@@ -43,7 +43,7 @@ def test_ia_le_cada_ficha_com_guia_e_so_numeros_fornecidos():
     textos={'d':'O entorno tem 76,2% acima de 20% de declividade: favorece conservação e limita solar.','q':'A Q7,10 de 1,311 m³/s indica o volume de 9 piscinas.'}
     def abrir(req,timeout):
         payload=json.loads(req.data)
-        assert payload['model']=='gpt-5-nano' and payload['store'] is False and payload['text']['format']['strict'] is True
+        assert payload['model']=='gpt-4.1-mini' and payload['store'] is False and payload['text']['format']['strict'] is True
         entrada=json.loads(payload['input']);dado=entrada['dados'][0]['id']
         assert entrada['guia'] in payload['instructions'] and ('Topodata' in entrada['guia'] if dado=='d' else 'Igam 48/2019' in entrada['guia'])
         return resposta_api('leituras',[{'dado':dado,'texto':textos[dado]}])
@@ -59,8 +59,8 @@ def test_ia_explica_sugestao_so_com_setores_completos_e_numeros_fornecidos():
     def abrir(texto,setor='S1'):
         def resposta(req,timeout):
             payload=json.loads(req.data)
-            assert payload['model']=='gpt-5-nano' and req.full_url=='https://api.openai.com/v1/responses'
-            assert payload['store'] is False and payload['text']['format']['strict'] is True and 'temperature' not in payload
+            assert payload['model']=='gpt-4.1-mini' and req.full_url=='https://api.openai.com/v1/responses'
+            assert payload['store'] is False and payload['text']['format']['strict'] is True and payload['temperature']==.2 and 'reasoning' not in payload
             assert payload['text']['format']['schema']['properties']['explicacoes']['items']['properties']['setor']['enum']==['S1']
             return resposta_api('explicacoes',[{'setor':setor,'texto':texto}])
         return resposta
@@ -69,6 +69,7 @@ def test_ia_explica_sugestao_so_com_setores_completos_e_numeros_fornecidos():
     assert Comentarista(env,abrir('No S1, conservação lidera com 78 porque o relevo pesa 34%.')).explicar(entrada,padrao)['metodo']=='ia'
     assert Comentarista(env,abrir('No S1, conservação lidera com 91 e custa pouco.')).explicar(entrada,padrao)['textos']==padrao
     assert Comentarista(env,abrir('No S2, conservação lidera com 78 pelo relevo.',setor='S2')).explicar(entrada,padrao)['metodo']=='regras'
+    assert Comentarista(env,abrir('No S1, conservação lidera com 78, vantagem de 34 pontos.')).explicar(entrada,padrao)['metodo']=='regras'
 
 
 def test_previa_renderiza_png_da_mesma_versao_e_preserva_documento_aberto(tmp_path):
@@ -101,3 +102,22 @@ def test_chave_local_e_lida_sem_reinicio_e_nao_entra_na_assinatura(tmp_path):
     arquivo.write_text('OPENAI_API_KEY=credencial-ficticia\n')
     assert c.chave=='credencial-ficticia' and c.assinatura!=antes
     assert 'credencial-ficticia' not in json.dumps(c.assinatura)
+
+
+def test_explicacao_da_tela_usa_a_mesma_ia_e_reaproveita_a_resposta():
+    chamadas=[]
+    def abrir(req,timeout):
+        chamadas.append(1)
+        return resposta_api('explicacoes',[{'setor':'S1','texto':'Conservação e restauração: encosta forte favorece deixar a mata voltar.'}])
+    c=Comentarista({'OPENAI_API_KEY':'credencial-ficticia'},abrir)
+    entrada={'setores':[{'id':'S1','uso sugerido':'Conservação e restauração','a favor':['60% do setor tem declividade acima de 20%']}]}
+    primeira=c.explicar(entrada,{'S1':'Regra.'},{'S1':'Os demais ficam atrás: solar.'})
+    assert primeira=={'metodo':'ia','textos':{'S1':'Conservação e restauração: encosta forte favorece deixar a mata voltar. Os demais ficam atrás: solar.'}}
+    assert c.explicar(entrada,{'S1':'Regra.'},{'S1':'Os demais ficam atrás: solar.'})==primeira and len(chamadas)==1
+
+
+def test_rota_de_explicacao_sem_chave_devolve_regras(tmp_path):
+    raiz=preparar_raiz(tmp_path);fonte=DadosTerritoriais(raiz,coletar=coleta_simulada)
+    cliente=TestClient(criar_app(raiz=raiz,territorios=fonte))
+    assert cliente.get('/api/minas/outra/sugestao/explicacao').status_code==404
+    assert cliente.get('/api/minas/horizontes/sugestao/explicacao?pesos=1').status_code==422
