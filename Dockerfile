@@ -10,6 +10,8 @@ COPY frontend/ ./
 RUN npm run build
 
 FROM python:3.12-slim
+# O GDAL embutido no rasterio usa libexpat (ausente na imagem slim: ImportError no primeiro deploy) e libstdc++ do sistema.
+RUN apt-get update && apt-get install -y --no-install-recommends libexpat1 libstdc++6 && rm -rf /var/lib/apt/lists/*
 WORKDIR /app
 COPY requirements/compatibilidade-linux-x86_64.txt requirements.txt
 RUN pip install --no-cache-dir --require-hashes -r requirements.txt

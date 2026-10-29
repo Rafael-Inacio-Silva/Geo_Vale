@@ -21,6 +21,7 @@ Versão 4.7.0, 29/10/2026. A interface fica na Vercel e o backend no Render, os 
 | Dados fixos (`GEOVALE_DADOS_FIXOS=1`) | Na demonstração, uma nova coleta dependeria dos servidores do Estado, que ficaram fora do ar em 28/10. O banco coletado (`deploy/territorios.sqlite3`, 3,9 MB, 18 de 18 bases) vai na imagem como retrato datado: nada vence nem é recoletado, e o relatório mantém as datas de consulta. | Teste com o banco de 27/10: 18 de 18 bases prontas, nenhuma coleta, PDF e vídeo servidos. |
 | Interface compilada dentro da imagem | O Render monta a imagem a partir do GitHub, onde `dist/` não é versionado. | `Dockerfile`, etapa `interface`. |
 | Chave da OpenAI como variável secreta do Render | O backend lê `OPENAI_API_KEY` do ambiente quando não há `.local/ia.env`; a chave não entra em arquivos, imagem nem Git. Nunca como variável pública: no Hugging Face ela chegou a ser salva como variável pública, foi apagada e revogada. | `comentarios.py`; `render.yaml` com `sync: false`. |
+| `libexpat1` e `libstdc++6` na imagem | O rasterio traz o GDAL embutido, mas ele usa essas bibliotecas do sistema; a imagem Python slim não traz a libexpat, e o primeiro deploy caiu com `ImportError: libexpat.so.1`. | Log do Render, 29/10/2026; varredura das bibliotecas exigidas pela wheel do rasterio. |
 | Dependências travadas para Linux | O servidor é Linux; o lock do macOS não serve. | `requirements/compatibilidade-linux-x86_64.txt`, com hashes. |
 
 ## Limites
