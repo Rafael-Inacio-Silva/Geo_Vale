@@ -1,5 +1,7 @@
 """Sugestão multicritério: pesos AHP, restrições legais, sensibilidade e contratos da API e do PDF."""
+import json
 from io import BytesIO
+from pathlib import Path
 
 import numpy as np
 import pytest
@@ -145,3 +147,23 @@ def test_tabela_de_reguas_sai_das_mesmas_funcoes_do_calculo():
     assert valor == '100 m' and notas_drenagem['silvicultura'] == pytest.approx(70 / 170) and notas_drenagem['solar'] == pytest.approx(.2)
     assert linhas[('Vegetação nativa no entorno', 'Pouca')][0] == 'até 10%' and linhas[('Trilhas existentes', 'Longe')][0] == '3 km ou mais'
     assert linhas[('Rede elétrica', 'Perto')][1]['silvicultura'] is None
+
+
+class SemCalculo:
+    """Falha se a publicação recalcular o que já está pronto."""
+    def iniciar(self): pass
+    def encerrar(self): pass
+    def relatorio(self, mina_id): raise AssertionError('recalculou')
+
+
+def test_publicacao_entrega_resultado_padrao_pronto_e_recalcula_com_pesos(monkeypatch):
+    monkeypatch.setenv('GEOVALE_DADOS_FIXOS', '1')
+    cliente = TestClient(criar_app(territorios=SemCalculo()))
+    pronto = Path(__file__).resolve().parents[1] / 'dados/prontos'
+    assert cliente.get('/api/minas/horizontes/sugestao').json() == json.loads((pronto / 'horizontes-sugestao.json').read_text(encoding='utf-8'))
+    assert cliente.get('/api/minas/horizontes/sugestao/explicacao').json()['metodo'] == 'ia'
+    pdf = cliente.get('/api/minas/horizontes/relatorio')
+    assert pdf.status_code == 200 and pdf.content == (pronto / 'horizontes-relatorio.pdf').read_bytes()
+    assert cliente.get(f"/api/minas/horizontes/relatorio/paginas/1?versao={pdf.headers['x-relatorio-versao']}").status_code == 200
+    with pytest.raises(AssertionError, match='recalculou'):
+        cliente.get('/api/minas/horizontes/sugestao?pesos=' + ','.join('1' for _ in IDS))

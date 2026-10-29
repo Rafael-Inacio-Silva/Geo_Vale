@@ -59,7 +59,7 @@ class Comentarista:
     """Fichas e sugestão usam OpenAI Responses e GPT-4.1 mini quando há chave local; sem chave ou com falha, regras."""
 
     def __init__(self, ambiente=None, abrir=urlopen, raiz=None):
-        # No servidor publicado a chave vem do ambiente (segredo do Space); localmente, de .local/ia.env.
+        # No servidor publicado a chave vem do ambiente (segredo do Render); localmente, de .local/ia.env.
         self.ambiente = os.environ if ambiente is None else ambiente
         self.modelo = 'gpt-4.1-mini'
         self.arquivo = Path(raiz)/'.local/ia.env' if raiz is not None else None

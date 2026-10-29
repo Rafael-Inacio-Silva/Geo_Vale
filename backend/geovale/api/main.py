@@ -31,7 +31,13 @@ def criar_app(limite=None, raiz=RAIZ, trilhas=None, anm=None, municipios=None, t
     """Expõe navegação, fontes territoriais e caracterização automática por mina."""
     fonte_territorios = territorios if territorios is not None else DadosTerritoriais(raiz)
     sugestoes = SugestoesUso(fonte_territorios)
-    relatorios = RelatoriosPDF(fonte_territorios, raiz, sugestoes=sugestoes)
+    # Publicação (dados fixos): sugestão, explicação e relatório com pesos AHP gerados antes por ferramentas/gerar_prontos.py.
+    prontos = raiz / 'dados/prontos' if os.environ.get('GEOVALE_DADOS_FIXOS') == '1' else None
+    relatorios = RelatoriosPDF(fonte_territorios, raiz, sugestoes=sugestoes, prontos=prontos)
+
+    def pronto(mina_id, nome):
+        arquivo = prontos / f'{mina_id}-{nome}.json' if prontos else None
+        return json.loads(arquivo.read_text(encoding='utf-8')) if arquivo and arquivo.is_file() else None
 
     @asynccontextmanager
     async def ciclo_vida(app):
@@ -46,8 +52,7 @@ def criar_app(limite=None, raiz=RAIZ, trilhas=None, anm=None, municipios=None, t
     fonte_trilhas = trilhas if trilhas is not None else TrilhasMunicipais()
     fonte_anm = anm if anm is not None else ProcessosANM()
     # Com dados fixos, o contorno municipal também vem do retrato salvo (o IBGE recusa o servidor fora do Brasil).
-    fixos = os.environ.get('GEOVALE_DADOS_FIXOS') == '1'
-    fonte_municipios = municipios if municipios is not None else LimitesMunicipais(ler_retrato(raiz / 'dados/municipios') if fixos else consultar_municipio)
+    fonte_municipios = municipios if municipios is not None else LimitesMunicipais(ler_retrato(raiz / 'dados/municipios') if prontos else consultar_municipio)
     minas = json.loads((raiz / 'dados/minas.json').read_text(encoding='utf-8'))
 
     @app.get('/api/saude')
@@ -141,6 +146,8 @@ def criar_app(limite=None, raiz=RAIZ, trilhas=None, anm=None, municipios=None, t
             valores = ler_pesos(pesos)
         except ValueError:
             return JSONResponse(status_code=422, content={'mensagem': 'Informe um peso de 0 a 100 para cada critério, com soma maior que zero.'})
+        if valores is None and (salvo := pronto(mina_id, 'sugestao')):
+            return JSONResponse(salvo, headers={'Cache-Control': 'no-store'})
         try:
             return JSONResponse(sugestoes.obter(mina_id, valores), headers={'Cache-Control': 'no-store'})
         except (OSError, ValueError, KeyError, TypeError, StopIteration, ShapelyError, sqlite3.Error, zlib.error):
@@ -163,6 +170,8 @@ def criar_app(limite=None, raiz=RAIZ, trilhas=None, anm=None, municipios=None, t
             valores = ler_pesos(pesos)
         except ValueError:
             return JSONResponse(status_code=422, content={'mensagem': 'Informe um peso de 0 a 100 para cada critério, com soma maior que zero.'})
+        if valores is None and (salvo := pronto(mina_id, 'explicacao')):
+            return JSONResponse(salvo, headers={'Cache-Control': 'no-store'})
         try:
             resultado = sugestoes.obter(mina_id, valores)
         except (OSError, ValueError, KeyError, TypeError, StopIteration, ShapelyError, sqlite3.Error, zlib.error):

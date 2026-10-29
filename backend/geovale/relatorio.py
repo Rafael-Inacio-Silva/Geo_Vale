@@ -260,12 +260,18 @@ def gerar_pdf(dados,cenario,fichas,comentarios,sugestao=None,explicacoes=None):
 
 class RelatoriosPDF:
     """PDF e prévia por versão: o navegador exibe páginas prontas do mesmo documento baixável."""
-    def __init__(self,fonte,raiz,comentarista=None,sugestoes=None):
-        self.fonte,self.raiz=fonte,raiz;self.cache={};self.documentos=OrderedDict();self.imagens=OrderedDict();self.manifestos={}
+    def __init__(self,fonte,raiz,comentarista=None,sugestoes=None,prontos=None):
+        self.fonte,self.raiz,self.prontos=fonte,raiz,prontos;self.cache={};self.documentos=OrderedDict();self.imagens=OrderedDict();self.manifestos={}
         self.trava=Lock();self.comentarista=comentarista or Comentarista(raiz=raiz);self.sugestoes=sugestoes or SugestoesUso(fonte)
 
     def obter(self,mina_id,pesos=None):
         """Atualiza fatos por coleta/cenário/pesos e explicações por modelo, sem reextrair fontes."""
+        pronto=self.prontos/f'{mina_id}-relatorio.pdf' if self.prontos and pesos is None else None
+        if pronto and pronto.is_file():
+            # Publicação: o relatório padrão (pesos AHP, dados fixos) foi gerado antes e sai na hora.
+            pdf=pronto.read_bytes()
+            with self.trava:self.documentos[(mina_id,hashlib.sha256(pdf).hexdigest())]=pdf
+            return pdf
         dados=self.fonte.relatorio(mina_id);cenario=ler_cenario(self.raiz,mina_id)
         chave=hashlib.sha256(json.dumps({'dados':{k:v for k,v in dados.items() if k!='gerado_em'},'cenario':cenario,'modelo':'4.7.0',
                                          'pesos':None if pesos is None else [round(float(p),6) for p in pesos],'comentarios':self.comentarista.assinatura},sort_keys=True,ensure_ascii=False).encode()).hexdigest()
