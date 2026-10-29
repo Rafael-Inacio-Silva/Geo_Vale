@@ -1,0 +1,11 @@
+mina_id,mina,setor,mina_setor,area_ha,uso_1,nota_1,uso_2,nota_2,margem,estavel_20pct,app_pct,zas_pct,uc_protecao_integral_pct,cavidades_alto_pct,declividade_acima_20_pct,declividade_ate_8_pct,vegetacao_entorno_pct,dist_drenagem_m,dist_rodovia_m,dist_urbano_m,barragens
+horizontes,Mina Horizontes,S1,Mina Horizontes · S1,1431.9,Ecoturismo e lazer,74.4,Conservação e restauração,68.1,6.2,sim,8.3,0.6,0.3,98.4,62.9,3.4,25.3,190.0,5360.0,943.0,2
+horizontes,Mina Horizontes,S2,Mina Horizontes · S2,925.8,Conservação e restauração,66.6,Ecoturismo e lazer,66.5,0.1,nao,7.0,4.9,0.0,100.0,56.8,7.6,16.3,235.0,1818.0,8796.0,2
+horizontes,Mina Horizontes,S3,Mina Horizontes · S3,434.6,Ecoturismo e lazer,80.2,Silvicultura,61.6,18.6,sim,8.1,0.0,0.6,96.2,48.5,9.3,17.6,203.0,741.0,376.0,3
+horizontes,Mina Horizontes,S4,Mina Horizontes · S4,202.2,Conservação e restauração,84.0,Ecoturismo e lazer,77.3,6.7,sim,7.3,0.0,0.0,1.0,43.0,0.0,51.0,151.0,7914.0,4975.0,0
+horizontes,Mina Horizontes,S5,Mina Horizontes · S5,58.3,Conservação e restauração,87.9,Ecoturismo e lazer,81.4,6.6,sim,10.4,0.0,0.0,0.0,55.3,0.3,54.1,128.0,6585.0,3448.0,0
+aboboras,Mina Abóboras,S1,Mina Abóboras · S1,821.1,Conservação e restauração,68.1,Ecoturismo e lazer,65.5,2.6,sim,6.7,3.6,0.0,100.0,63.5,7.2,17.9,236.0,2532.0,,2
+aboboras,Mina Abóboras,S2,Mina Abóboras · S2,82.4,Conservação e restauração,80.5,Silvicultura,20.2,60.4,sim,26.0,70.5,0.0,16.2,54.7,3.6,38.0,60.0,4581.0,,3
+aboboras,Mina Abóboras,S3,Mina Abóboras · S3,77.8,Conservação e restauração,84.0,Ecoturismo e lazer,69.2,14.8,sim,2.3,0.0,0.0,100.0,92.5,0.0,47.9,408.0,6267.0,,0
+trindade,Mina Trindade,S1,Mina Trindade · S1,143.3,Ecoturismo e lazer,85.7,Conservação e restauração,84.7,1.1,nao,12.0,0.0,0.0,48.7,92.7,0.0,48.2,132.0,1429.0,1150.0,0
+trindade,Mina Trindade,S2,Mina Trindade · S2,28.1,Conservação e restauração,70.2,Silvicultura,59.4,10.8,sim,4.2,38.3,0.3,0.0,50.9,25.7,38.4,143.0,129.0,0.0,0

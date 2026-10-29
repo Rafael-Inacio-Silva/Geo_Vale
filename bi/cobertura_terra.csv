@@ -1,0 +1,32 @@
+mina_id,mina,classe,area_ha,percentual,nativa
+horizontes,Mina Horizontes,3 - Formação Florestal,4915.7,32.11,sim
+horizontes,Mina Horizontes,4 - Formação Savânica,643.9,4.21,sim
+horizontes,Mina Horizontes,9 - Silvicultura,4.2,0.03,nao
+horizontes,Mina Horizontes,12 - Formação Campestre,5326.5,34.79,sim
+horizontes,Mina Horizontes,15 - Pastagem,300.7,1.96,nao
+horizontes,Mina Horizontes,21 - Mosaico de Usos,139.0,0.91,nao
+horizontes,Mina Horizontes,24 - Área Urbanizada,606.3,3.96,nao
+horizontes,Mina Horizontes,25 - Outras Áreas não Vegetadas,34.2,0.22,nao
+horizontes,Mina Horizontes,30 - Mineração,3173.3,20.73,nao
+horizontes,Mina Horizontes,"33 - Rio, Lago e Oceano",165.1,1.08,nao
+aboboras,Mina Abóboras,3 - Formação Florestal,1335.9,31.31,sim
+aboboras,Mina Abóboras,4 - Formação Savânica,208.5,4.89,sim
+aboboras,Mina Abóboras,9 - Silvicultura,1.2,0.03,nao
+aboboras,Mina Abóboras,12 - Formação Campestre,1581.7,37.07,sim
+aboboras,Mina Abóboras,15 - Pastagem,12.9,0.3,nao
+aboboras,Mina Abóboras,21 - Mosaico de Usos,11.8,0.28,nao
+aboboras,Mina Abóboras,24 - Área Urbanizada,10.8,0.25,nao
+aboboras,Mina Abóboras,25 - Outras Áreas não Vegetadas,14.7,0.34,nao
+aboboras,Mina Abóboras,30 - Mineração,1001.9,23.48,nao
+aboboras,Mina Abóboras,"33 - Rio, Lago e Oceano",87.7,2.06,nao
+trindade,Mina Trindade,3 - Formação Florestal,2298.4,50.73,sim
+trindade,Mina Trindade,4 - Formação Savânica,356.2,7.86,sim
+trindade,Mina Trindade,9 - Silvicultura,16.5,0.36,nao
+trindade,Mina Trindade,12 - Formação Campestre,687.7,15.18,sim
+trindade,Mina Trindade,15 - Pastagem,476.1,10.51,nao
+trindade,Mina Trindade,21 - Mosaico de Usos,193.9,4.28,nao
+trindade,Mina Trindade,24 - Área Urbanizada,301.7,6.66,nao
+trindade,Mina Trindade,25 - Outras Áreas não Vegetadas,1.0,0.02,nao
+trindade,Mina Trindade,30 - Mineração,194.5,4.29,nao
+trindade,Mina Trindade,"33 - Rio, Lago e Oceano",3.0,0.07,nao
+trindade,Mina Trindade,46 - Café,1.1,0.02,nao

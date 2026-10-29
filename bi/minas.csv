@@ -1,0 +1,4 @@
+mina_id,mina,empresa,municipio,uf,latitude,longitude,lat_long,processo_anm,tipo_recorte,recorte_ha,area_minerada_ha,area_minerada_pct,cava_osm_ha,vegetacao_nativa_pct,app_ha,app_na_minerada_ha,zas_ha,zas_na_minerada_ha,barragens,setores,uso_predominante,trilhas_com_dado
+horizontes,Mina Horizontes,Vale,Nova Lima,MG,-20.11834631,-43.92145769,"-20.11834631,-43.92145769",3964/1950,AII de estudo (FEAM),15308.5,3173.3,20.7,512.2,71.1,2055.3,255.5,729.0,57.8,10,5,Ecoturismo e lazer,sim
+aboboras,Mina Abóboras,Vale,Nova Lima,MG,-20.15282174,-43.87844204,"-20.15282174,-43.87844204",4811/1958,Faixa de 3 km da cava,4266.4,1001.9,23.5,119.2,73.3,695.0,80.8,495.3,88.0,6,3,Conservação e restauração,sim
+trindade,Mina Trindade,Vale,Sabará,MG,-19.86102842,-43.79246491,"-19.86102842,-43.79246491",1868/1940,Faixa de 3 km da cava,4530.0,194.5,4.3,133.4,73.8,653.5,26.1,199.2,14.6,1,2,Ecoturismo e lazer,nao
