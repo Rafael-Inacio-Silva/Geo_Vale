@@ -48,7 +48,7 @@ CAMADAS = [
         'opacidade': 0.85, 'ordem': 4, 'url': SERVICO_WMS,
         'credito': 'Água: ANA / Igam / IDE-Sisema',
         'bases': [
-            base('ide_0103_mg_massa_dagua_bho_pol', "Massas d’água", '537a07b7-4a29-422d-bdde-43ae8af87b61'),
+            base('ide_0103_mg_massa_dagua_bho_pol', "Massas d’água", '537a07b7-4a29-422d-bdde-43ae8af87b61', reparar=True),
             base('ide_0104_mg_hidrografia_principal_lin', 'Principais trechos hidrográficos', 'ebb215b7-10a5-481b-8cb2-823b4cf3d5e4'),
             base('ide_240502_sf_igam_reg_vazao_lin', 'Vazões regionalizadas por trecho — Igam', '72318b9b-5d11-47f6-848b-8f66c124972d'),
             base('ide_2019_sf_enq_corpos_dagua_sf5_lin', 'Enquadramento dos cursos d’água — Rio das Velhas', '4a831429-170f-4856-b3e5-7fdb77709d02'),

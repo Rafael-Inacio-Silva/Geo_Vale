@@ -12,6 +12,7 @@ import pypdfium2 as pdfium
 from geovale.mapa_relatorio import MapaTerritorial
 from geovale.fichas import PARAMETROS_AGUA, formato, ha, montar_fichas, preparar, projetar
 from geovale.comentarios import Comentarista
+from geovale.influencia import textos_recorte
 from geovale.multicriterio import (SugestoesUso, USOS, demais_por_setor, entrada_ia, frase_principal, motivos, nome_setor, tabela_reguas,
                                    texto_setor)
 from xml.sax.saxutils import escape
@@ -153,11 +154,13 @@ def gerar_pdf(dados,cenario,fichas,comentarios,sugestao=None,explicacoes=None):
         tab.setStyle(TableStyle([('TOPPADDING',(0,1),(-1,-1),6),('BOTTOMPADDING',(0,1),(-1,-1),6)]))
         adicionar(tab)
     minerada=dados.get('area_minerada')
+    # O recorte vem de estudo (Horizontes: AII da FEAM) ou de faixa declarada em volta da cava; os textos saem do pacote.
+    recorte=textos_recorte(dados['influencia']);documental='sha256_pdf' in dados['influencia']['fonte']
     cava=projetar(next(f['geometry'] for f in dados['influencia']['features'] if f['properties']['id']=='mina')).area/1e4
     if minerada:
         alvo=(f"<b>Área minerada no recorte: {texto(ha(minerada['ha']))} ({texto(formato(minerada['ha']*100/dados['recorte_ha'],1))}%)</b>, "
               f"delimitada pela classe Mineração de {texto(minerada['fonte'])}. A mina OSM ({texto(ha(cava))}) representa só a cava. "
-              'As fichas separam área minerada e entorno; o recorte AII é contexto.')
+              'As fichas separam área minerada e entorno; o recorte '+('AII ' if documental else '')+'é contexto.')
     else:
         alvo='Área minerada não identificada na cobertura; as fichas descrevem o recorte inteiro.'
     adicionar(paragrafo('Visão geral | '+mina['nome'],'secao'),
@@ -173,7 +176,7 @@ def gerar_pdf(dados,cenario,fichas,comentarios,sugestao=None,explicacoes=None):
     resumo.setStyle(TableStyle([('TOPPADDING',(0,1),(-1,-1),5),('BOTTOMPADDING',(0,1),(-1,-1),5)]))
     adicionar(resumo,Spacer(1,6),
               paragrafo(cenario['descricao'],'pequeno'),
-              paragrafo('Recorte comum aproximado da AII águas/solos (FEAM, Figura 2.3), usado como contexto; não define área de intervenção ou fechamento. A leitura contextual indica implicações para o planejamento sem alterar valores; a sugestão multicritério ordena usos para discussão, sem decidir.','pequeno'))
+              paragrafo(f'Recorte comum aproximado da {recorte["recorte_curto"]}, usado como contexto; não define área de intervenção ou fechamento. A leitura contextual indica implicações para o planejamento sem alterar valores; a sugestão multicritério ordena usos para discussão, sem decidir.','pequeno'))
     alturas={'vegetacao':190,'agua':180,'barragens':180}
     for i,ficha in enumerate(fichas,1):
         adicionar(PageBreak(),paragrafo(f'{i:02d} | '+ficha['nome'],'secao'))
@@ -189,7 +192,7 @@ def gerar_pdf(dados,cenario,fichas,comentarios,sugestao=None,explicacoes=None):
             for b in ficha['bases']:
                 fontes.append('<link href="'+texto(b['base']['metadado'])+'" color="#008477">'+texto(b['base']['nome'])+'</link> ('+texto(data_local(b['consultado_em']))+')')
             adicionar(Paragraph('Fontes: '+'; '.join(fontes)+'.',ESTILOS['pequeno']))
-            adicionar(paragrafo('Mapa: cores oficiais dos rasters; geometrias recortadas. Área minerada: classe Mineração do MapBiomas. Mina: © OpenStreetMap contributors, ODbL; influência: FEAM / Amplo.','pequeno'))
+            adicionar(paragrafo('Mapa: cores oficiais dos rasters; geometrias recortadas. Área minerada: classe Mineração do MapBiomas. Mina: © OpenStreetMap contributors, ODbL; influência: '+recorte['credito']+'.','pequeno'))
         else:
             ref=cenario['referencia']
             adicionar(Paragraph('Referência de estrutura: <link href="'+texto(ref['url'])+'" color="#008477">'+texto(ref['instituicao']+' - '+ref['titulo'])+'</link>, '+texto(ref['revisao'])+'. Seções '+texto(ref['secoes'])+'. Os valores com * foram criados no GeoVale. Limites de água: Resolução CONAMA 357/2005; classe do trecho: enquadramento publicado pelo Igam (dado real).',ESTILOS['pequeno']))
@@ -273,7 +276,7 @@ class RelatoriosPDF:
             with self.trava:self.documentos[(mina_id,hashlib.sha256(pdf).hexdigest())]=pdf
             return pdf
         dados=self.fonte.relatorio(mina_id);cenario=ler_cenario(self.raiz,mina_id)
-        chave=hashlib.sha256(json.dumps({'dados':{k:v for k,v in dados.items() if k!='gerado_em'},'cenario':cenario,'modelo':'4.7.0',
+        chave=hashlib.sha256(json.dumps({'dados':{k:v for k,v in dados.items() if k!='gerado_em'},'cenario':cenario,'modelo':'4.8.0',
                                          'pesos':None if pesos is None else [round(float(p),6) for p in pesos],'comentarios':self.comentarista.assinatura},sort_keys=True,ensure_ascii=False).encode()).hexdigest()
         with self.trava:
             anterior=self.cache.get(mina_id)

@@ -15,7 +15,7 @@ from pathlib import Path
 from shapely.geometry import shape
 from geovale.camadas import CAMADAS
 from geovale.fontes_territorio import coletar_base
-from geovale.influencia import ler_influencia
+from geovale.influencia import ler_influencia, textos_recorte
 
 VERSAO_METODO = '4.0.0'
 PRAZO_ATUALIZACAO = 24 * 3600
@@ -188,7 +188,7 @@ class DadosTerritoriais:
             saida.append(resumo)
         prontas = sum(b['estado'] == 'pronto' and not b['desatualizado'] for b in saida)
         return {'mina_id': mina_id, 'recorte': {'nome': 'Área de influência · recorte comum do MVP',
-                'origem': 'AII de águas e solos — meio físico do projeto Tamanduá/Horizontes',
+                'origem': textos_recorte(influencia)['origem_texto'],
                 'fonte': influencia['fonte'], 'aproximado': True},
                 'bases': saida, 'total_bases': len(saida), 'bases_prontas': prontas,
                 'completo': prontas == len(saida), 'prazo_atualizacao_horas': 24,

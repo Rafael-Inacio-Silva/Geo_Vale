@@ -2,6 +2,8 @@
 
 Selecionar a Mina Horizontes consulta somente os atributos do processo **003.964/1950** no SIGMINE da Agência Nacional de Mineração. O vínculo é curado em `dados/minas.json` e apoiado no [documento público da FEAM](https://sistemas.meioambiente.mg.gov.br/licenciamento/uploads/-r1U-OgCZO3dEqex9HShmdqbrC5mgstw.pdf). Não se procura a mina por nome ou proximidade.
 
+A Mina Abóboras usa o processo **004.811/1958** (Vale S.A., concessão de lavra, ferro): sem documento público que faça o vínculo, ele foi escolhido por ser o único processo do SIGMINE que contém o centro da cava, e ficou fixo no catálogo ([Catálogo de minas](MINAS.md)).
+
 ## Consulta e contrato
 
 [Camada oficial ANM](https://geo.anm.gov.br/arcgis/rest/services/SIGMINE/dados_anm/MapServer/0?f=pjson), ArcGIS REST `query`, filtro `NUMERO = 3964 AND ANO = 1950`, campos PROCESSO, NUMERO, ANO, NOME, FASE, AREA_HA, SUBS, UF e DSProcesso, **returnGeometry=false**, `f=json`. Até dois registros permitem detectar ambiguidade. Nenhuma geometria cadastral é solicitada ou exibida como recorte de caracterização.

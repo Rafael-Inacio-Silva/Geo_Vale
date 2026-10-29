@@ -18,7 +18,7 @@ from geovale.territorio import DadosTerritoriais
 from geovale.relatorio import RelatoriosPDF
 from geovale.multicriterio import SugestoesUso, demais_por_setor, entrada_ia, ler_pesos
 from geovale.camadas import CAMADAS
-from geovale.influencia import ler_influencia
+from geovale.influencia import ler_influencia, textos_recorte
 from geovale.anm import ProcessosANM
 from geovale.municipio import LimitesMunicipais, consultar_municipio, ler_retrato
 from geovale.trilhas import TrilhasMunicipais, recortar_trilhas
@@ -47,7 +47,7 @@ def criar_app(limite=None, raiz=RAIZ, trilhas=None, anm=None, municipios=None, t
         finally:
             fonte_territorios.encerrar()
 
-    app = FastAPI(title='GeoVale — mapa territorial', version='4.7.0', docs_url=None, redoc_url=None, openapi_url=None, lifespan=ciclo_vida)
+    app = FastAPI(title='GeoVale — mapa territorial', version='4.8.0', docs_url=None, redoc_url=None, openapi_url=None, lifespan=ciclo_vida)
     fonte = limite if limite is not None else LimiteEstadual()
     fonte_trilhas = trilhas if trilhas is not None else TrilhasMunicipais()
     fonte_anm = anm if anm is not None else ProcessosANM()
@@ -58,7 +58,7 @@ def criar_app(limite=None, raiz=RAIZ, trilhas=None, anm=None, municipios=None, t
     @app.get('/api/saude')
     def saude():
         """Indica disponibilidade do aplicativo, independentemente da fonte externa."""
-        return {'status': 'ok', 'versao': '4.7.0'}
+        return {'status': 'ok', 'versao': '4.8.0'}
 
     @app.get('/api/mapa')
     def configuracao():
@@ -120,6 +120,7 @@ def criar_app(limite=None, raiz=RAIZ, trilhas=None, anm=None, municipios=None, t
             return JSONResponse(status_code=404, content={'mensagem': 'Mina não encontrada.'})
         try:
             dados = ler_influencia(raiz / 'dados/influencias' / f'{mina_id}.geojson', mina_id)
+            dados['fonte'].update(textos_recorte(dados))
             return JSONResponse(dados, headers={'Cache-Control': 'no-store'})
         except (OSError, ValueError, KeyError, TypeError, ShapelyError, sqlite3.Error, zlib.error):
             return JSONResponse(status_code=503, content={'mensagem': 'O contorno de influência está indisponível. Tente novamente.'})

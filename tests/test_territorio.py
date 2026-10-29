@@ -404,3 +404,25 @@ def test_dados_fixos_nao_coletam_nem_vencem(tmp_path):
     fixa = DadosTerritoriais(raiz, coletar=lambda *a: pytest.fail('dados fixos não coletam'), relogio=lambda: agora[0], fixos=True)
     fixa.iniciar()
     assert fixa._thread is None and fixa.obter('horizontes')['completo'] and fixa.relatorio('horizontes')['completo']
+
+
+def test_faixa_declarada_exige_distancia_e_referencia():
+    """Mina sem estudo público: a faixa em volta da cava só vale com distância e norma de referência declaradas."""
+    caminho = RAIZ / 'dados/influencias/aboboras.geojson'
+    dados = ler_influencia(caminho, 'aboboras')
+    assert dados['fonte']['distancia_m'] == 3000 and {f['properties']['origem'] for f in dados['features']} == {'referencia_osm', 'faixa_declarada'}
+    for falta in ('distancia_m', 'referencia'):
+        copia = json.loads(caminho.read_text(encoding='utf-8'))
+        del copia['fonte'][falta]
+        temporario = Path(pytest.importorskip('tempfile').mkdtemp()) / 'aboboras.geojson'
+        temporario.write_text(json.dumps(copia), encoding='utf-8')
+        with pytest.raises(ValueError, match='Evidência'):
+            ler_influencia(temporario, 'aboboras')
+
+
+def test_colecao_vazia_aceita_crs_nulo():
+    """Sem registros no recorte o GeoServer publica crs nulo; com registros, o CRS continua obrigatório."""
+    from geovale.fontes_territorio import conferir_colecao
+    assert conferir_colecao({'numberMatched': 0, 'numberReturned': 0, 'features': [], 'crs': None}) == 0
+    with pytest.raises(Exception, match='CRS'):
+        conferir_colecao({'numberMatched': 1, 'numberReturned': 1, 'features': [{}], 'crs': None})

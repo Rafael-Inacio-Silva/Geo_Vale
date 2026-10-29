@@ -1,8 +1,8 @@
 """Gera em dados/prontos a sugestão, a explicação e o relatório padrão (pesos AHP) servidos na publicação.
 
 Usa o banco local, que precisa ser igual ao da imagem (deploy/territorios.sqlite3), e a chave de .local/ia.env.
-Rodar de novo sempre que trocar o banco, as réguas, os pesos ou o relatório:
-    PYTHONPATH=backend .venv-geovale/bin/python ferramentas/gerar_prontos.py
+Rodar de novo sempre que trocar o banco, as réguas, os pesos ou o relatório (sem argumentos, todas as minas):
+    PYTHONPATH=backend .venv-geovale/bin/python ferramentas/gerar_prontos.py [mina_id ...]
 """
 import filecmp
 import json
@@ -43,7 +43,8 @@ def main():
     # Com o ciclo de vida iniciado, como no servidor; dados fixos, sem coletar.
     with TestClient(criar_app(territorios=DadosTerritoriais(RAIZ, fixos=True))) as cliente:
         for mina in minas:
-            gerar(cliente, mina['id'], destino)
+            if len(sys.argv) == 1 or mina['id'] in sys.argv[1:]:
+                gerar(cliente, mina['id'], destino)
 
 
 if __name__ == '__main__':

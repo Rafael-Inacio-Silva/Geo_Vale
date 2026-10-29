@@ -10,7 +10,7 @@ Versão 4.7.0, 29/10/2026. A interface fica na Vercel e o backend no Render, os 
 1. **Render (uma vez):** conta com "Sign in with GitHub" → New → Blueprint → repositório Geo_Vale. O `render.yaml` cria o serviço `geovale` (Docker, plano Free) e pede o valor de `OPENAI_API_KEY`, que fica só no Render.
 2. **Atualizações:** cada push na `main` gera nova imagem no Render (`autoDeploy`).
 3. **Vercel (uma vez):** Add New → Project → repositório Geo_Vale → Root Directory `frontend`. O `frontend/vercel.json` repassa `/api/*` ao Render e devolve `index.html` nas demais rotas.
-4. **Resultado padrão pronto:** ao trocar o banco, as réguas, os pesos AHP ou o relatório, rodar `PYTHONPATH=backend .venv-geovale/bin/python ferramentas/gerar_prontos.py` e versionar `dados/prontos/`.
+4. **Resultado padrão pronto:** ao trocar o banco, as réguas, os pesos AHP ou o relatório, rodar `PYTHONPATH=backend .venv-geovale/bin/python ferramentas/gerar_prontos.py [mina ...]` (sem argumento, todas as minas) e versionar `dados/prontos/`.
 5. **Antes de apresentar:** abrir o endereço do Render um ou dois minutos antes; no plano Free ele dorme após 15 minutos sem uso e leva cerca de um minuto para acordar.
 
 ## Decisões e porquês

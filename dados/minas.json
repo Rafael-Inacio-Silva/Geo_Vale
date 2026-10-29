@@ -21,5 +21,27 @@
       "ano": 1950
     },
     "codigo_municipio_ibge": "3144805"
+  },
+  {
+    "id": "aboboras",
+    "nome": "Mina Abóboras",
+    "empresa": "Vale",
+    "municipio": "Nova Lima",
+    "uf": "MG",
+    "complexo": "Vargem Grande",
+    "latitude": -20.15282174,
+    "longitude": -43.87844204,
+    "referencia_localizacao": "Ponto aproximado para navegação, no centro do contorno landuse=quarry Cava da Mina Abóboras, OpenStreetMap way 315221702. Referência cartográfica colaborativa, sem certificação de perímetro ou condição atual.",
+    "fontes": {
+      "identificacao": "https://sistemas.meioambiente.mg.gov.br/licenciamento/uploads/mev_ITRe4yRcj-BmX_GH79GCBrOd43S4.pdf",
+      "vinculo_processo": "https://geo.anm.gov.br/arcgis/rest/services/SIGMINE/dados_anm/MapServer/0",
+      "localizacao": "https://www.openstreetmap.org/way/315221702",
+      "consulta_em": "2026-10-29"
+    },
+    "processo_anm": {
+      "numero": 4811,
+      "ano": 1958
+    },
+    "codigo_municipio_ibge": "3144805"
   }
 ]

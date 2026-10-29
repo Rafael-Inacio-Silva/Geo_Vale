@@ -4,7 +4,7 @@ Versão 4.7.0, 28/10/2026, macOS/Python 3.12/Node 24.
 
 ## Automatização
 
-110 testes Python aprovados no conjunto completo. Dois testes Node aprovados. TypeScript (`tsc --noEmit`) e build aprovados. Avisos de depreciação Starlette/HTTPX e Rasterio/NumPy permanecem sem falhas.
+112 testes Python aprovados no conjunto completo. Dois testes Node aprovados. TypeScript (`tsc --noEmit`) e build aprovados. Avisos de depreciação Starlette/HTTPX e Rasterio/NumPy permanecem sem falhas.
 
 Testes da 4.3.0: campo extra e cota zero aceitos só quando declarados; área das células em UTM igual à extensão projetada; área minerada pela classe Mineração com divisão de linhas, polígonos e pontos; UCs por grupo publicado; pontos de água contra a classe do trecho e os limites da CONAMA 357/2005; cenário inválido recusado.
 
@@ -93,3 +93,7 @@ No ar em 29/10/2026, pela Vercel (https://geo-vale.vercel.app, repasse ao Render
 No ar, o contorno de Nova Lima falhava: o IBGE não responde ao Render (EUA). Teste novo: com dados fixos, o contorno vem de `dados/municipios/3144805.geojson` sem consultar o IBGE. 109 testes passando.
 
 Resultado padrão pronto: `ferramentas/gerar_prontos.py` gerou `dados/prontos/` (sugestão, explicação com método `ia`, relatório de 16 páginas, 2.333.924 bytes) em 39 s. Teste novo: com dados fixos, a API entrega os três sem tocar no território e a prévia da página 1 abre; com pesos, recalcula. 110 testes passando.
+
+## Mina Abóboras (29/10/2026, 4.8.0)
+
+Faixa de 3 km em volta da cava OSM (way 315221702): 4.266 ha. Coleta local só da Abóboras, numa cópia do banco: 18 de 18 bases, depois de aceitar coleção WFS vazia com `crs` nulo (UCs federais e municipais) e declarar `reparar` em massas d’água (1 de 10 geometrias). Na Horizontes, massas d’água recoletada com reparo teve os mesmos 16 registros e geometrias; só a assinatura foi atualizada, e a sugestão da Horizontes calculada ao vivo continuou igual à salva em `dados/prontos`. Relatório da Abóboras: 14 páginas, área minerada de 1.001,9 ha em 3 setores, conservação e restauração em primeiro nos três; página 1 renderizada e lida. No site local em modo publicado: lista com as duas minas, contorno de Nova Lima, influência, sugestão e relatório imediatos, vídeo 404 com aviso. Testes novos: faixa declarada sem distância ou referência é recusada; coleção vazia aceita `crs` nulo e, com registros, continua exigindo o CRS. 112 testes passando.

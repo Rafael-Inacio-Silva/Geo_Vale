@@ -63,7 +63,7 @@ export interface ProcessoANM {
 export type InfluenciaTerritorial = FeatureCollection<Polygon | MultiPolygon, {
   id: 'mina' | 'influencia'; nome: string; cor: string; origem: string;
   aproximada: true; fonte?: {url: string};
-}> & {mina_id: string; fonte: {titulo: string; url: string; aviso: string; preparado_em: string; metodo: string}};
+}> & {mina_id: string; fonte: {titulo: string; url: string; aviso: string; preparado_em: string; metodo: string; credito: string}};
 
 export interface EstadoANM {dados: ProcessoANM | null; carregando: boolean; erro: string}
 

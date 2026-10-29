@@ -14,7 +14,7 @@ A geometria é consultada pela API e guardada temporariamente em memória. O bac
 
 ## Mina Horizontes
 
-O catálogo contém uma única mina: Horizontes, anteriormente Capitão do Mato, Vale, Nova Lima/MG, Complexo Vargem Grande. A identificação se apoia na [notícia oficial da Vale](https://www.vale.com/ar/w/vale-altera-nome-de-mina-e-barragem-em-nova-lima-e-reforca-posicionamento-antirracista).
+O catálogo contém a Mina Abóboras ([Catálogo de minas](MINAS.md)) e a Horizontes, anteriormente Capitão do Mato, Vale, Nova Lima/MG, Complexo Vargem Grande. A identificação se apoia na [notícia oficial da Vale](https://www.vale.com/ar/w/vale-altera-nome-de-mina-e-barragem-em-nova-lima-e-reforca-posicionamento-antirracista).
 
 O ponto de navegação é aproximado, longitude -43.92145769 e latitude -20.11834631, derivado do centro visual do contorno de mineração OpenStreetMap, way 315221699. Não é um centro certificado. O catálogo e sua fonte estão em `dados/minas.json`; o nome anterior pesquisa a mesma entrada.
 
@@ -37,7 +37,7 @@ As referências de catálogo das dez primeiras bases foram consultadas em 24/10/
 |---|---|---|
 | Relevo | [`ide_0201_mg_decliv_topodata`](https://idesisema.meioambiente.mg.gov.br/geonetwork/srv/por/catalog.search#/metadata/46b18109-06ab-4529-9401-5a662f1e39b2) | INPE/Topodata; declividade em seis classes, baseada em SRTM de fevereiro de 2000, pixel refinado de cerca de 30 m. Não descreve a cava atual. |
 | Relevo | [`ide_2002_mg_potencialidade_cavidades_pol`](https://idesisema.meioambiente.mg.gov.br/geonetwork/srv/por/catalog.search#/metadata/15d09272-da9f-4ea1-8995-b496da17a3aa) | CECAV (Jansen, Cavalcanti e Lamblém, 2012); potencial de ocorrência de cavernas na escala 1:2.500.000. Não localiza cavidades. |
-| Água | [`ide_0103_mg_massa_dagua_bho_pol`](https://idesisema.meioambiente.mg.gov.br/geonetwork/srv/por/catalog.search#/metadata/537a07b7-4a29-422d-bdde-43ae8af87b61) | ANA/Igam; massas d’água da base hidrográfica. Publicação registrada em 2021; não informa nível ou qualidade atual da água. |
+| Água | [`ide_0103_mg_massa_dagua_bho_pol`](https://idesisema.meioambiente.mg.gov.br/geonetwork/srv/por/catalog.search#/metadata/537a07b7-4a29-422d-bdde-43ae8af87b61) | ANA/Igam; massas d’água da base hidrográfica. Publicação registrada em 2021; não informa nível ou qualidade atual da água. Uma geometria inválida na faixa da Abóboras é corrigida com make_valid, declarado e contado. |
 | Água | [`ide_0104_mg_hidrografia_principal_lin`](https://idesisema.meioambiente.mg.gov.br/geonetwork/srv/por/catalog.search#/metadata/ebb215b7-10a5-481b-8cb2-823b4cf3d5e4) | Igam; principais ottotrechos. Publicação registrada em 2022; não representa toda drenagem local. |
 | Água | [`ide_240502_sf_igam_reg_vazao_lin`](https://idesisema.meioambiente.mg.gov.br/geonetwork/srv/por/catalog.search#/metadata/72318b9b-5d11-47f6-848b-8f66c124972d) | Igam; vazões regionalizadas por ottotrecho (BHO 2017), incluindo Q7,10, Q90, Q95 e média de longo termo em m³/s. Estimativa regional, não medição. |
 | Água | [`ide_2019_sf_enq_corpos_dagua_sf5_lin`](https://idesisema.meioambiente.mg.gov.br/geonetwork/srv/por/catalog.search#/metadata/4a831429-170f-4856-b3e5-7fdb77709d02) | Igam; classe de enquadramento dos trechos do Rio das Velhas (SF5) e ato vigente. Classe não é medição de qualidade. |

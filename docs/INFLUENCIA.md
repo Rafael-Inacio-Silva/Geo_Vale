@@ -1,8 +1,12 @@
 # Área de influência — recorte comum do MVP
 
-O GeoVale utiliza **um único recorte de caracterização** para todos os temas. É o contorno externo da **AII de águas e solos** do [Parecer nº 64/FEAM/GST/2024](https://sistemas.meioambiente.mg.gov.br/consulta-intervencao/uploads/122024/24642_gvwxhTH__066nrKD6s2u.pdf), de 13/12/2024: Figura 2.3, PDF p. 18 / impressa 15, mapa de 02/11/2023. O estudo trata da ampliação conjunta das cavas Tamanduá e Horizontes.
+O GeoVale utiliza **um único recorte de caracterização por mina** para todos os temas. Na Horizontes, é o contorno externo da **AII de águas e solos** do [Parecer nº 64/FEAM/GST/2024](https://sistemas.meioambiente.mg.gov.br/consulta-intervencao/uploads/122024/24642_gvwxhTH__066nrKD6s2u.pdf), de 13/12/2024: Figura 2.3, PDF p. 18 / impressa 15, mapa de 02/11/2023. O estudo trata da ampliação conjunta das cavas Tamanduá e Horizontes.
 
 A legenda da AII trata de qualidade das águas, dinâmica hídrica/erosiva e alteração dos solos. **Usar esse contorno como recorte comum de todos os temas é uma simplificação explícita do MVP**, para oferecer um território consistente e comparar informações na mesma extensão. Isso não converte a AII em influência oficial de vegetação/população, área degradada inteira ou limite de recuperação/fechamento. Não foi obtido plano de fechamento específico de Horizontes.
+
+## Minas sem estudo público
+
+A Mina Abóboras não tem estudo público com mapa de área de influência e fica dentro da AII da Horizontes. Seu recorte é uma **faixa declarada de 3 km** em volta do contorno OSM da cava (`origem: faixa_declarada`), gerada por `ferramentas/preparar_faixa.py` e medida em UTM 23S. A API exige distância e norma de referência no pacote. Porquês em [Catálogo de minas](MINAS.md).
 
 ## Mina sombreada
 

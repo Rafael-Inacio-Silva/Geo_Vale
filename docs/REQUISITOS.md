@@ -2,7 +2,7 @@
 
 | ID | Comportamento e aceitação |
 |---|---|
-| RF-01 | Abrir em Minas Gerais com navegação mundial, contorno oficial e uma Mina Horizontes. |
+| RF-01 | Abrir em Minas Gerais com navegação mundial, contorno oficial e as minas do catálogo (Horizontes e Abóboras). |
 | RF-02 | Cartão seleciona/enquadra município; repetir desmarca e retorna a MG. Selecionar por cartão ou bolinha já mostra o contorno da mina; bolinha sempre aproxima em zoom 14, sem resposta municipal posterior desfazer. |
 | RF-03 | Cartão com detalhes sob seta, identificação e atributos ANM sem geometria, fonte/data e recuperação. |
 | RF-04 | Seleção mostra somente Nova Lima via IBGE; desfazer retira município/crédito. |

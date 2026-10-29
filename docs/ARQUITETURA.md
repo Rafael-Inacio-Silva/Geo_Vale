@@ -31,7 +31,7 @@ flowchart LR
 | Método e rota | Resposta |
 |---|---|
 | GET /api/saude | Saúde e versão 4.7.0 |
-| GET /api/mapa | Uma mina, fundos e catálogo de sete temas/dezoito bases |
+| GET /api/mapa | Minas do catálogo, fundos e catálogo de sete temas/dezoito bases |
 | GET /api/mapa/limite-mg | Contorno estadual, fonte/data e aviso de cache quando aplicável |
 | GET /api/mapa/trilhas?bbox=... | Trilhas visuais e legenda do enquadramento; 422/503 |
 | GET /api/minas/{id}/processo-anm | Atributos cadastrais e fonte, sem geometria; 404/503 |

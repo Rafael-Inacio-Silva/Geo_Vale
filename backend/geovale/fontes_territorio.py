@@ -108,7 +108,9 @@ def conferir_colecao(dados, limite=MAX_REGISTROS, crs=True):
     if (type(n) is not int or type(devolvidos) is not int or not 0 <= n <= limite
             or n != devolvidos or n != len(dados.get('features', []))):
         raise FonteIndisponivel('Resposta vetorial incompleta ou excede o limite de registros.')
-    if crs and dados.get('crs', {}).get('properties', {}).get('name') not in ('urn:ogc:def:crs:EPSG::4326', 'EPSG:4326', 'urn:ogc:def:crs:OGC:1.3:CRS84'):
+    # Sem registros no recorte o GeoServer publica "crs": null; não há geometria a conferir.
+    vazia_sem_crs = n == 0 and dados.get('crs') is None
+    if crs and not vazia_sem_crs and (dados.get('crs') or {}).get('properties', {}).get('name') not in ('urn:ogc:def:crs:EPSG::4326', 'EPSG:4326', 'urn:ogc:def:crs:OGC:1.3:CRS84'):
         raise FonteIndisponivel('CRS vetorial incompatível.')
     return n
 

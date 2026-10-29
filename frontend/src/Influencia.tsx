@@ -53,7 +53,8 @@ export default function Influencia({mapa, minaId, temas, expandidas, aoConsultar
       const mina = f.properties.id === 'mina';
       L.geoJSON(f, {
         pane: 'influencia', interactive: false,
-        attribution: mina ? 'Mina: &copy; <a href="https://www.openstreetmap.org/way/315221699">OpenStreetMap</a> contributors (ODbL)' : 'Influência: <a href="https://sistemas.meioambiente.mg.gov.br/consulta-intervencao/uploads/122024/24642_gvwxhTH__066nrKD6s2u.pdf" target="_blank" rel="noopener noreferrer">FEAM / Vale / Amplo</a>',
+        // Créditos do pacote de cada mina: way OSM da cava e estudo ou faixa declarada do recorte.
+        attribution: mina ? `Mina: &copy; <a href="${f.properties.fonte?.url}">OpenStreetMap</a> contributors (ODbL)` : `Influência: <a href="${contorno.fonte.url}" target="_blank" rel="noopener noreferrer">${contorno.fonte.credito}</a>`,
         style: {color: mina ? '#00594f' : '#efa900', weight: 3, fillColor: mina ? '#00594f' : '#ffc329', fillOpacity: mina ? .3 : .025},
       }).addTo(grupo);
     }
