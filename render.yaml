@@ -1,0 +1,14 @@
+# Serviço do GeoVale no Render (New → Blueprint). Plano Free: dorme após 15 min sem uso.
+services:
+  - type: web
+    name: geovale
+    runtime: docker
+    plan: free
+    region: virginia
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /api/saude
+    autoDeploy: true
+    envVars:
+      # Pedida na criação; fica só no Render, nunca no código.
+      - key: OPENAI_API_KEY
+        sync: false

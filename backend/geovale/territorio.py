@@ -2,6 +2,7 @@
 import hashlib
 import json
 import logging
+import os
 import sqlite3
 import threading
 import time
@@ -48,8 +49,10 @@ def agora_iso():
 class DadosTerritoriais:
     """Processa o catálogo automaticamente e persiste resultados completos por base e por mina."""
 
-    def __init__(self, raiz, catalogo=CAMADAS, coletar=coletar_base, relogio=time.time):
+    def __init__(self, raiz, catalogo=CAMADAS, coletar=coletar_base, relogio=time.time, fixos=None):
         self.raiz = Path(raiz)
+        # Publicação de demonstração: usa o banco coletado como retrato datado, sem coletar nem vencer.
+        self.fixos = os.environ.get('GEOVALE_DADOS_FIXOS') == '1' if fixos is None else fixos
         self.catalogo = catalogo
         self.coletar = coletar
         self.relogio = relogio
@@ -85,7 +88,7 @@ class DadosTerritoriais:
 
     def iniciar(self):
         """Prepara as minas na abertura do servidor e reavalia pendências a cada minuto."""
-        if self._thread is not None and self._thread.is_alive():
+        if self.fixos or (self._thread is not None and self._thread.is_alive()):
             return
         self._parar.clear()
         self._thread = threading.Thread(target=self._executar, daemon=True, name='geovale-territorios')
@@ -153,6 +156,10 @@ class DadosTerritoriais:
                                 db.execute('UPDATE bases SET estado=?, erro=? WHERE mina=? AND camada=? AND assinatura=?',
                                            ('erro', 'A fonte não forneceu um recorte completo e válido. Nova tentativa automática em até cinco minutos.', mina['id'], base['camada'], chave))
 
+    def vencido(self, linha):
+        """Dado com mais de 24 h pede nova coleta; com dados fixos, a data de consulta continua no relatório e nada vence."""
+        return not self.fixos and self.relogio() - linha['tentado'] >= PRAZO_ATUALIZACAO
+
     def _ler(self, mina_id, base, influencia):
         """Rejeita dados guardados para outro recorte ou configuração da base."""
         with self.conectar() as db:
@@ -171,7 +178,7 @@ class DadosTerritoriais:
             resumo = {k: v for k, v in base.items() if k != 'legenda'}
             resumo.update(estado=linha['estado'] if linha else 'pendente', erro=linha['erro'] if linha else None,
                           consultado_em=linha['consultado'] if linha else None,
-                          desatualizado=bool(linha and self.relogio() - linha['tentado'] >= PRAZO_ATUALIZACAO))
+                          desatualizado=bool(linha and self.vencido(linha)))
             if dados:
                 resumo.update({k: v for k, v in dados.items() if k not in ('dados', 'recorte', 'descricao_cobertura_xml', 'estilo_padrao_xml')})
                 resumo['total_campos'] = len(dados.get('campos', []))
@@ -196,7 +203,7 @@ class DadosTerritoriais:
         linha, dados = self._ler(mina_id, base, influencia)
         if dados is None:
             return None
-        return {'base': base, 'estado': linha['estado'], 'desatualizado': self.relogio() - linha['tentado'] >= PRAZO_ATUALIZACAO, **dados}
+        return {'base': base, 'estado': linha['estado'], 'desatualizado': self.vencido(linha), **dados}
 
     def arquivo(self, mina_id, base_id):
         """Entrega somente o GeoTIFF já guardado para uma base matricial do catálogo atual."""
@@ -217,7 +224,7 @@ class DadosTerritoriais:
         for base in catalogar_bases(self.catalogo):
             linha = linhas.get(base['camada'])
             if (not linha or linha['assinatura'] != assinatura_base(base, influencia)
-                    or linha['estado'] != 'pronto' or self.relogio() - linha['tentado'] >= PRAZO_ATUALIZACAO):
+                    or linha['estado'] != 'pronto' or self.vencido(linha)):
                 raise ValueError('Relatório completo ainda indisponível')
             dados = json.loads(zlib.decompress(linha['documento']))
             bases.append({'base': base, 'estado': linha['estado'], **dados})

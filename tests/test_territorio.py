@@ -391,3 +391,16 @@ def test_pdf_invalida_cache_se_cenario_muda_e_recusa_cenario_sem_rotulo_simulado
     with pytest.raises(ValueError): relatorios.obter('horizontes')
     cliente = TestClient(criar_app(raiz=raiz, territorios=fonte))
     assert cliente.get('/api/minas/horizontes/relatorio').status_code == 503
+
+
+def test_dados_fixos_nao_coletam_nem_vencem(tmp_path):
+    raiz = preparar_raiz(tmp_path)
+    agora = [1000.]
+    fonte = DadosTerritoriais(raiz, coletar=coleta_simulada, relogio=lambda: agora[0])
+    fonte.atualizar()
+    assert fonte.obter('horizontes')['completo']
+    agora[0] += 2 * 24 * 3600
+    assert not fonte.obter('horizontes')['completo']
+    fixa = DadosTerritoriais(raiz, coletar=lambda *a: pytest.fail('dados fixos não coletam'), relogio=lambda: agora[0], fixos=True)
+    fixa.iniciar()
+    assert fixa._thread is None and fixa.obter('horizontes')['completo'] and fixa.relatorio('horizontes')['completo']

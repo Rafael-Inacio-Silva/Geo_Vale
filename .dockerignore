@@ -1,0 +1,9 @@
+.git
+.venv*
+.local
+**/node_modules
+frontend/dist
+**/__pycache__
+tests
+docs
+ferramentas
