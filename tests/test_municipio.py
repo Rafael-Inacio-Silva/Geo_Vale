@@ -66,3 +66,13 @@ def test_falha_nao_expoe_detalhes_e_permite_recuperar_sem_interromper_mapa():
     assert cliente.get('/api/mapa').status_code==200
     falha[0]=False
     assert cliente.get('/api/minas/horizontes/limite-municipal').status_code==200
+
+
+def test_dados_fixos_leem_malha_salva_sem_consultar_o_ibge(monkeypatch):
+    monkeypatch.setenv('GEOVALE_DADOS_FIXOS', '1')
+    monkeypatch.setattr('geovale.municipio.urlopen', lambda *a, **k: pytest.fail('consultou o IBGE'))
+    resposta = TestClient(criar_app()).get('/api/minas/horizontes/limite-municipal')
+    assert resposta.status_code == 200
+    dados = resposta.json()
+    assert dados['features'][0]['properties']['codigo_ibge'] == '3144805'
+    assert dados['fonte']['consultado_em'].startswith('2026-10-29')

@@ -2,6 +2,7 @@
 
 import hashlib
 import json
+import os
 import sqlite3
 import zlib
 from contextlib import asynccontextmanager
@@ -19,7 +20,7 @@ from geovale.multicriterio import SugestoesUso, demais_por_setor, entrada_ia, le
 from geovale.camadas import CAMADAS
 from geovale.influencia import ler_influencia
 from geovale.anm import ProcessosANM
-from geovale.municipio import LimitesMunicipais
+from geovale.municipio import LimitesMunicipais, consultar_municipio, ler_retrato
 from geovale.trilhas import TrilhasMunicipais, recortar_trilhas
 from geovale.mapa import FonteIndisponivel, LimiteEstadual
 
@@ -44,7 +45,9 @@ def criar_app(limite=None, raiz=RAIZ, trilhas=None, anm=None, municipios=None, t
     fonte = limite if limite is not None else LimiteEstadual()
     fonte_trilhas = trilhas if trilhas is not None else TrilhasMunicipais()
     fonte_anm = anm if anm is not None else ProcessosANM()
-    fonte_municipios = municipios if municipios is not None else LimitesMunicipais()
+    # Com dados fixos, o contorno municipal também vem do retrato salvo (o IBGE recusa o servidor fora do Brasil).
+    fixos = os.environ.get('GEOVALE_DADOS_FIXOS') == '1'
+    fonte_municipios = municipios if municipios is not None else LimitesMunicipais(ler_retrato(raiz / 'dados/municipios') if fixos else consultar_municipio)
     minas = json.loads((raiz / 'dados/minas.json').read_text(encoding='utf-8'))
 
     @app.get('/api/saude')

@@ -6,6 +6,7 @@ import threading
 import time
 from copy import deepcopy
 from datetime import datetime, timezone
+from pathlib import Path
 from urllib.parse import urlencode
 from urllib.request import Request, urlopen
 
@@ -33,6 +34,13 @@ def consultar_municipio(codigo):
     return json.loads(bruto)
 
 
+def ler_retrato(pasta):
+    """Publicação: lê a malha salva do IBGE, cujo serviço não responde a acessos de fora do Brasil (servidor nos EUA)."""
+    def consultar(codigo):
+        return json.loads((Path(pasta) / f'{codigo}.geojson').read_text(encoding='utf-8'))
+    return consultar
+
+
 def preparar_municipio(documento, codigo):
     """Confere identidade, topologia e posição sem corrigir ou inventar o limite."""
     if documento.get('type') != 'FeatureCollection' or len(documento.get('features', [])) != 1:
@@ -54,7 +62,7 @@ def preparar_municipio(documento, codigo):
         'features': [{'type': 'Feature', 'geometry': deepcopy(feicao['geometry']), 'properties': {'codigo_ibge': codigo}}],
         'fonte': {'nome': 'IBGE — API de malhas simplificadas', 'url': SERVICO + codigo,
                   'qualidade': 'maxima', 'ano_referencia': None,
-                  'consultado_em': datetime.now(timezone.utc).isoformat()},
+                  'consultado_em': documento.get('consultado_em') or datetime.now(timezone.utc).isoformat()},
     }
 
 

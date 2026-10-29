@@ -4,7 +4,7 @@ Versão 4.7.0, 28/10/2026, macOS/Python 3.12/Node 24.
 
 ## Automatização
 
-108 testes Python aprovados no conjunto completo. Dois testes Node aprovados. TypeScript (`tsc --noEmit`) e build aprovados. Avisos de depreciação Starlette/HTTPX e Rasterio/NumPy permanecem sem falhas.
+109 testes Python aprovados no conjunto completo. Dois testes Node aprovados. TypeScript (`tsc --noEmit`) e build aprovados. Avisos de depreciação Starlette/HTTPX e Rasterio/NumPy permanecem sem falhas.
 
 Testes da 4.3.0: campo extra e cota zero aceitos só quando declarados; área das células em UTM igual à extensão projetada; área minerada pela classe Mineração com divisão de linhas, polígonos e pontos; UCs por grupo publicado; pontos de água contra a classe do trecho e os limites da CONAMA 357/2005; cenário inválido recusado.
 
@@ -89,3 +89,5 @@ Correção: o botão do relatório e o do vídeo usavam a mesma chave React (o i
 Teste novo: com dados fixos, nada é coletado (a coleta falharia o teste), o território continua completo dois dias depois e o relatório é gerado. Com o banco real de 27/10, servidor em modo de publicação (`GEOVALE_DADOS_FIXOS=1`, `GEOVALE_HOST=0.0.0.0`): 18 de 18 bases prontas, nenhuma coleta no registro, PDF com IA em 30,4 s, vídeo servido e pico de 220,8 MB de memória. O Hugging Face recusou ligar o Space de conta nova (403, cota zero de CPU gratuita); a publicação passou ao Render. O build Docker não foi feito localmente (não há Docker neste computador); ele acontece no Render.
 
 No ar em 29/10/2026, pela Vercel (https://geo-vale.vercel.app, repasse ao Render): página e rotas da interface 200; `/api/saude` 4.7.0; sugestão 200 em 45,5 s com o Render acordando; explicação 200 com método `ia`; relatório PDF 200 em 69,2 s (2.334.174 bytes, abaixo do limite de 120 s da Vercel); página 1 da prévia 200 em 1,9 s; vídeo 206 com leitura por trechos. Direto no Render: 18 de 18 bases prontas.
+
+No ar, o contorno de Nova Lima falhava: o IBGE não responde ao Render (EUA). Teste novo: com dados fixos, o contorno vem de `dados/municipios/3144805.geojson` sem consultar o IBGE. 109 testes passando.
