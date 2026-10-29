@@ -1,6 +1,6 @@
 # Trilhas de Nova Lima — integração municipal
 
-Opção de sobreposição municipal, disponível desde a versão 4.2.0. Os seis temas estaduais/dezessete bases da IDE-Sisema continuam disponíveis. Esta camada acrescenta uma **segunda infraestrutura pública**, com informação municipal específica para conhecer o entorno da Mina Horizontes.
+Opção de sobreposição municipal, disponível desde a versão 4.2.0. Os seis temas estaduais/dezessete bases da IDE-Sisema continuam disponíveis. Esta camada acrescenta uma **segunda infraestrutura pública**, com informação municipal específica para conhecer o entorno da Mina Horizontes. Fora de Nova Lima (Mina Trindade, Sabará) a camada não tem cobertura: o relatório mostra “sem dado” e o critério trilhas sai da sugestão ([Catálogo de minas](MINAS.md)).
 
 ## Fonte verificada em 25/10/2026
 

@@ -43,5 +43,28 @@
       "ano": 1958
     },
     "codigo_municipio_ibge": "3144805"
+  },
+  {
+    "id": "trindade",
+    "nome": "Mina Trindade",
+    "nome_anterior": "Mineração Trindade",
+    "empresa": "Vale",
+    "municipio": "Sabará",
+    "uf": "MG",
+    "complexo": "Não identificado",
+    "latitude": -19.86102842,
+    "longitude": -43.79246491,
+    "referencia_localizacao": "Ponto aproximado para navegação, no centro do contorno landuse=quarry Mineração Trindade, OpenStreetMap way 391438666, distrito de Mestre Caetano. Referência cartográfica colaborativa, sem certificação de perímetro ou condição atual.",
+    "fontes": {
+      "identificacao": "https://web.bndes.gov.br/bib/jspui/bitstream/1408/19840/1/PR_Inform%20Set%20%20AOI2%20Geset%20Min%20e%20Metal_213893_%20n%2037_BD.pdf",
+      "vinculo_processo": "https://geo.anm.gov.br/arcgis/rest/services/SIGMINE/dados_anm/MapServer/0",
+      "localizacao": "https://www.openstreetmap.org/way/391438666",
+      "consulta_em": "2026-10-29"
+    },
+    "processo_anm": {
+      "numero": 1868,
+      "ano": 1940
+    },
+    "codigo_municipio_ibge": "3156700"
   }
 ]

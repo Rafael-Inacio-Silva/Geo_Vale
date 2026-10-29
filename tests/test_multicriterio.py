@@ -9,7 +9,7 @@ from fastapi.testclient import TestClient
 from pypdf import PdfReader
 from rasterio.io import MemoryFile
 from rasterio.transform import from_origin
-from shapely.geometry import shape
+from shapely.geometry import Point, mapping, shape
 
 from geovale.api.main import criar_app
 from geovale.fontes_territorio import recortar_raster
@@ -167,3 +167,20 @@ def test_publicacao_entrega_resultado_padrao_pronto_e_recalcula_com_pesos(monkey
     assert cliente.get(f"/api/minas/horizontes/relatorio/paginas/1?versao={pdf.headers['x-relatorio-versao']}").status_code == 200
     with pytest.raises(AssertionError, match='recalculou'):
         cliente.get('/api/minas/horizontes/sugestao?pesos=' + ','.join('1' for _ in IDS))
+
+
+def test_criterio_sem_cobertura_sai_da_conta_em_vez_de_valer_longe():
+    """Trilhas são só de Nova Lima: fora da cobertura o critério não entra na soma nem no denominador."""
+    from geovale.fichas import criterios_sem_dado
+    from geovale.multicriterio import notas
+    def recorte(x, y):
+        return {'influencia': {'features': [{'properties': {'id': 'influencia'}, 'geometry': mapping(Point(x, y).buffer(.01))}]}}
+    assert criterios_sem_dado(recorte(-43.92, -20.11)) == []          # Horizontes, Nova Lima
+    assert criterios_sem_dado(recorte(-43.79, -19.86)) == ['trilhas']  # Trindade, Sabará
+    media = {'ecoturismo': {c: .5 for c in RESPOSTAS['ecoturismo']}}
+    setor = {'media': {**{u['id']: {} for u in USOS}, **media}, 'permitido': {u['id']: 1. for u in USOS}}
+    sem = {'media': {**setor['media'], 'ecoturismo': {c: v for c, v in media['ecoturismo'].items() if c != 'trilhas'}}, 'permitido': setor['permitido']}
+    pesos = np.full(len(IDS), 1 / len(IDS))
+    mais_trilhas = pesos.copy(); mais_trilhas[IDS.index('trilhas')] *= 10
+    assert notas(setor, pesos)['ecoturismo'] == pytest.approx(50)
+    assert notas(sem, pesos)['ecoturismo'] == pytest.approx(50) == pytest.approx(notas(sem, mais_trilhas / mais_trilhas.sum())['ecoturismo'])

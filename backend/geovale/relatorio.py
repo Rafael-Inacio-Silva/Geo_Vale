@@ -230,7 +230,7 @@ def gerar_pdf(dados,cenario,fichas,comentarios,sugestao=None,explicacoes=None):
                  'urbano':'Distância até área urbanizada (IBGE 2022)','rede':'Distância até linha de transmissão (ONS)',
                  'trilhas':'Distância até trilha cadastrada (Prefeitura de Nova Lima)'}
         pesos=tabela(['Critério','O que mede (fonte do dado)','Peso'],
-                     [[c['nome'],medidas[c['id']],f"{formato(c['peso']*100)}%"] for c in sugestao['criterios']],
+                     [[c['nome'],medidas[c['id']]+(' — sem dado nesta mina: fora da conta' if c.get('sem_dado') else ''),f"{formato(c['peso']*100)}%"] for c in sugestao['criterios']],
                      [LARGURA*.28,LARGURA*.56,LARGURA*.16])
         anterior=None;linhas_regua=[]
         for criterio,faixa,valor,notas_uso in tabela_reguas():
@@ -276,7 +276,7 @@ class RelatoriosPDF:
             with self.trava:self.documentos[(mina_id,hashlib.sha256(pdf).hexdigest())]=pdf
             return pdf
         dados=self.fonte.relatorio(mina_id);cenario=ler_cenario(self.raiz,mina_id)
-        chave=hashlib.sha256(json.dumps({'dados':{k:v for k,v in dados.items() if k!='gerado_em'},'cenario':cenario,'modelo':'4.8.0',
+        chave=hashlib.sha256(json.dumps({'dados':{k:v for k,v in dados.items() if k!='gerado_em'},'cenario':cenario,'modelo':'4.9.0',
                                          'pesos':None if pesos is None else [round(float(p),6) for p in pesos],'comentarios':self.comentarista.assinatura},sort_keys=True,ensure_ascii=False).encode()).hexdigest()
         with self.trava:
             anterior=self.cache.get(mina_id)

@@ -6,7 +6,7 @@ A legenda da AII trata de qualidade das águas, dinâmica hídrica/erosiva e alt
 
 ## Minas sem estudo público
 
-A Mina Abóboras não tem estudo público com mapa de área de influência e fica dentro da AII da Horizontes. Seu recorte é uma **faixa declarada de 3 km** em volta do contorno OSM da cava (`origem: faixa_declarada`), gerada por `ferramentas/preparar_faixa.py` e medida em UTM 23S. A API exige distância e norma de referência no pacote. Porquês em [Catálogo de minas](MINAS.md).
+A Mina Abóboras não tem estudo público com mapa de área de influência e fica dentro da AII da Horizontes; a Mina Trindade também não tem. O recorte de cada uma é uma **faixa declarada de 3 km** em volta do contorno OSM da cava (`origem: faixa_declarada`), gerada por `ferramentas/preparar_faixa.py` e medida em UTM 23S. A API exige distância e norma de referência no pacote. Porquês em [Catálogo de minas](MINAS.md).
 
 ## Mina sombreada
 

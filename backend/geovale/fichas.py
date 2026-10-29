@@ -7,7 +7,7 @@ from rasterio.features import geometry_mask, shapes
 from rasterio.io import MemoryFile
 from rasterio.warp import transform, transform_geom
 from shapely import make_valid
-from shapely.geometry import Point, mapping, shape
+from shapely.geometry import Point, box, mapping, shape
 from shapely.ops import unary_union
 
 from geovale.camadas import CAMADAS
@@ -407,7 +407,7 @@ def fatos_barragens(f, b, ctx):
         linhas.append(f"- {nome}: {finalidade}; {metodo}; PDA {p.get('pda') or 'n/i'}; classe {p.get('classe') or 'n/i'}" + (' · na área minerada' if na_area else ''))
         if normalizar(p.get('metodo_con')) == 'montante':
             montante.append(nome)
-    cabecalho = f'{formato(len(fs))} barragens no recorte' + (f', {formato(dentro)} na área minerada' if m else '')
+    cabecalho = f'{formato(len(fs))} barragem' + ('' if len(fs) == 1 else 'ns') + ' no recorte' + (f', {formato(dentro)} na área minerada' if m else '')
     f.fato(b['base']['id'] + '.lista', 'Barragens cadastradas', '\n'.join([cabecalho] + linhas), b['base']['nome'] + ' · atributos publicados',
            'Barragens e diques definem passivos do fechamento: descaracterização ou manutenção, monitoramento e restrição de uso a jusante. '
            'Nível de emergência atual deve ser conferido no SIGBM/ANM.',
@@ -429,8 +429,28 @@ def fatos_zas(f, b, ctx):
            resumo=f"ZAS: {ha(d['total'])}" + (f", {ha(d['dentro'])} na área minerada" if d['dentro'] else ''))
 
 
+# Critérios cuja fonte não cobre o estado inteiro: tema do catálogo com a cobertura publicada.
+COBERTURA_PARCIAL = {'trilhas': 'trilhas'}
+
+
+def criterios_sem_dado(dados):
+    """Critérios cuja fonte não cobre o recorte (trilhas são só de Nova Lima): saem da conta em vez de valerem "longe"."""
+    recorte = shape(next(f['geometry'] for f in dados['influencia']['features'] if f['properties']['id'] == 'influencia'))
+    saida = []
+    for criterio, tema_id in COBERTURA_PARCIAL.items():
+        (sul, oeste), (norte, leste) = next(t for t in CAMADAS if t['id'] == tema_id)['cobertura']
+        if not box(oeste, sul, leste, norte).intersects(recorte):
+            saida.append(criterio)
+    return saida
+
+
 def fatos_trilhas(f, b, ctx):
     fs = b['dados']['features']
+    if 'trilhas' in ctx['sem_dado']:
+        f.fato(b['base']['id'] + '.km', b['base']['nome'], 'Fora da cobertura', 'Cadastro municipal de Nova Lima',
+               'A camada de trilhas é da Prefeitura de Nova Lima e não cobre este recorte: falta de registro aqui não indica ausência de trilhas, '
+               'e o critério trilhas fica fora da sugestão desta mina.', resumo='Sem dado: a camada cobre só Nova Lima', fixo=True)
+        return
     d = dividir(fs, ctx['mineracao'])
     f.fato(b['base']['id'] + '.km', b['base']['nome'], f'{formato(len(fs))} registros\n' + texto_divisao(d), 'Cadastro municipal · comprimento em UTM 23S',
            f"{km(d['entorno'] if d['entorno'] is not None else d['total'])} de trilhas cadastradas no entorno formam uma rede existente para "
@@ -523,6 +543,7 @@ def montar_fichas(dados, cenario):
     Espera `preparar(dados)` já aplicado: grades medidas e área minerada delimitada.
     """
     ctx = {'grades': dados.get('grades', {}), 'mineracao': dados.get('area_minerada'), 'recorte_ha': dados.get('recorte_ha') or 1,
+           'sem_dado': criterios_sem_dado(dados),
            'enquadramento': [x for b in dados['bases'] if chave_base(b) == 'enq_corpos' for x in b['dados']['features']]}
     fichas = []
     for tema, nome in TEMAS:

@@ -4,7 +4,7 @@ Implementado em 26/10/2026, versão 4.2.0. O mapa abre com o contorno de Minas G
 
 ## Fonte oficial
 
-[API de malhas geográficas do IBGE, versão 3](https://servicodados.ibge.gov.br/api/docs/malhas?versao=3). O [código de Nova Lima é 3144805](https://www.ibge.gov.br/cidades-e-estados/mg/nova-lima.html), associado à mina no catálogo local.
+[API de malhas geográficas do IBGE, versão 3](https://servicodados.ibge.gov.br/api/docs/malhas?versao=3). O [código de Nova Lima é 3144805](https://www.ibge.gov.br/cidades-e-estados/mg/nova-lima.html), associado à mina no catálogo local. A Mina Trindade usa Sabará, [código 3156700](https://www.ibge.gov.br/cidades-e-estados/mg/sabara.html).
 
 Consulta: `https://servicodados.ibge.gov.br/api/v3/malhas/municipios/3144805?formato=application%2Fvnd.geo%2Bjson&qualidade=maxima`.
 

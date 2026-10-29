@@ -4,7 +4,7 @@ Versão 4.7.0, 28/10/2026, macOS/Python 3.12/Node 24.
 
 ## Automatização
 
-112 testes Python aprovados no conjunto completo. Dois testes Node aprovados. TypeScript (`tsc --noEmit`) e build aprovados. Avisos de depreciação Starlette/HTTPX e Rasterio/NumPy permanecem sem falhas.
+113 testes Python aprovados no conjunto completo. Dois testes Node aprovados. TypeScript (`tsc --noEmit`) e build aprovados. Avisos de depreciação Starlette/HTTPX e Rasterio/NumPy permanecem sem falhas.
 
 Testes da 4.3.0: campo extra e cota zero aceitos só quando declarados; área das células em UTM igual à extensão projetada; área minerada pela classe Mineração com divisão de linhas, polígonos e pontos; UCs por grupo publicado; pontos de água contra a classe do trecho e os limites da CONAMA 357/2005; cenário inválido recusado.
 
@@ -97,3 +97,7 @@ Resultado padrão pronto: `ferramentas/gerar_prontos.py` gerou `dados/prontos/` 
 ## Mina Abóboras (29/10/2026, 4.8.0)
 
 Faixa de 3 km em volta da cava OSM (way 315221702): 4.266 ha. Coleta local só da Abóboras, numa cópia do banco: 18 de 18 bases, depois de aceitar coleção WFS vazia com `crs` nulo (UCs federais e municipais) e declarar `reparar` em massas d’água (1 de 10 geometrias). Na Horizontes, massas d’água recoletada com reparo teve os mesmos 16 registros e geometrias; só a assinatura foi atualizada, e a sugestão da Horizontes calculada ao vivo continuou igual à salva em `dados/prontos`. Relatório da Abóboras: 14 páginas, área minerada de 1.001,9 ha em 3 setores, conservação e restauração em primeiro nos três; página 1 renderizada e lida. No site local em modo publicado: lista com as duas minas, contorno de Nova Lima, influência, sugestão e relatório imediatos, vídeo 404 com aviso. Testes novos: faixa declarada sem distância ou referência é recusada; coleção vazia aceita `crs` nulo e, com registros, continua exigindo o CRS. 112 testes passando.
+
+## Mina Trindade (29/10/2026, 4.9.0)
+
+Cava OSM way 391438666 dentro de Sabará pela malha do IBGE (Barão de Cocais a 21 km). Faixa de 3 km: 4.530 ha. Coleta só da Trindade numa cópia do banco: 14 de 18 na primeira rodada (declividade, cavidades, massas d’água e enquadramento falharam por instabilidade da fonte e responderam na consulta seguinte), 18 de 18 na segunda; as três minas com 18 de 18 no banco final. Trilhas detectadas fora da cobertura. Sugestão: S1 (143,3 ha) ecoturismo 86 e conservação 85; S2 (28,1 ha) conservação 70. Com peso 50 em trilhas o resultado não muda. Sugestões da Horizontes e da Abóboras calculadas ao vivo iguais às salvas. Relatório da Trindade: 13 páginas; página 1 renderizada e lida, com “Sem dado: a camada cobre só Nova Lima” e “1 barragem” (concordância corrigida); a linha de trilhas fica com o texto por regras, depois de a IA ter escrito “rede de trilhas existente no entorno” numa primeira geração. Na tela local: Trindade na lista com Sabará, peso de trilhas cinza com “sem dado nesta mina”. Teste novo: fora da cobertura o critério sai da conta e o peso dele não muda a nota. 113 testes passando.

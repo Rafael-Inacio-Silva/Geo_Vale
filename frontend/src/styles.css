@@ -246,6 +246,8 @@ button:focus-visible, input:focus-visible, a:focus-visible, [tabindex="-1"]:focu
 .emitir-com-pesos:focus-visible {outline: 2px solid var(--amarelo); outline-offset: 2px;}
 .peso-criterio span {display: flex; justify-content: space-between; gap: .4rem;}
 .peso-criterio input[type="range"] {inline-size: 100%; margin: 0; accent-color: var(--verde); cursor: pointer;}
+.peso-criterio .sem-dado {color: #8a6d00; font-weight: 600; margin-inline-end: auto;}
+.peso-criterio input[type="range"]:disabled {cursor: not-allowed; opacity: .45;}
 .modo-sugestao {position: absolute; top: 4.2rem; left: 50%; transform: translateX(-50%); z-index: 510; display: flex; align-items: center; gap: .75rem; padding: .4rem .45rem .4rem .9rem; border-radius: 2rem; background: var(--escuro); color: #fff; font-size: .75rem; font-weight: 650; white-space: nowrap; box-shadow: 0 4px 14px #00302b40;}
 .modo-sugestao button {border: 0; border-radius: 1.5rem; padding: .4rem .75rem; background: var(--amarelo); color: var(--escuro); font: inherit; font-size: .72rem; cursor: pointer;}
 .nota-territorio, .erro-territorio {font-size: .72rem; line-height: 1.5; overflow-wrap: anywhere;}

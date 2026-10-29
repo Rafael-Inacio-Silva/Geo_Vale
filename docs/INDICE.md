@@ -1,7 +1,7 @@
 # Documentação atual
 
 - [Relatório e cenário](RELATORIO.md): área minerada × entorno, fichas com mapas, comentários e pontos técnicos simulados.
-- [Catálogo de minas](MINAS.md): Horizontes e Abóboras, como acrescentar uma mina e o porquê de cada escolha.
+- [Catálogo de minas](MINAS.md): Horizontes, Abóboras e Trindade, como acrescentar uma mina e o porquê de cada escolha.
 - [Publicação](PUBLICACAO.md): Vercel + Render, gratuitos, com o porquê.
 - [Vídeo pós-mineração](VIDEO_POS_MINERACAO.md): ilustração gerada por IA, método e porquês.
 - [Multicritério e IA](MULTICRITERIO.md): sugestão de uso por setor, restrições, AHP, sensibilidade e explicação por IA, com o porquê de cada escolha.

@@ -14,7 +14,7 @@ from rasterio.warp import transform, transform_geom
 from shapely.geometry import mapping
 from shapely.ops import unary_union
 
-from geovale.fichas import NATIVA, UTM, chave_base, formato, ha, normalizar, preparar, projetar
+from geovale.fichas import NATIVA, UTM, chave_base, criterios_sem_dado, formato, ha, normalizar, preparar, projetar
 
 CRITERIOS = [
     {'id': 'relevo', 'nome': 'Relevo (declividade)', 'curto': 'relevo'},
@@ -233,7 +233,8 @@ def preparar_calculo(dados):
     cava = projetar(next(f['geometry'] for f in dados['influencia']['features'] if f['properties']['id'] == 'mina'))
     barragens = [(projetar(x['geometry']), x['properties']) for x in feicoes('barragens')]
 
-    fatores = {u: {c: RESPOSTAS[u][c](variaveis[c]) for c in RESPOSTAS[u]} for u in RESPOSTAS}
+    sem_dado = criterios_sem_dado(dados)
+    fatores = {u: {c: RESPOSTAS[u][c](variaveis[c]) for c in RESPOSTAS[u] if c not in sem_dado} for u in RESPOSTAS}
     setores = []
     for i, parte in enumerate(partes):
         sel = setor == i
@@ -257,7 +258,7 @@ def preparar_calculo(dados):
             'montante': [str(p.get('name') or p.get('nome_estru')) for p in proprias if normalizar(p.get('metodo_con')) == 'montante'],
             'geometria': transform_geom(UTM, 'EPSG:4326', mapping(parte.simplify(15))),
         })
-    return {'setores': setores, 'area_minerada_ha': mineracao['ha'],
+    return {'setores': setores, 'area_minerada_ha': mineracao['ha'], 'sem_dado': sem_dado,
             'fora_ha': float(area[setor < 0].sum() / 1e4), 'celulas': int(len(ex))}
 
 
@@ -266,7 +267,7 @@ def notas(setor, pesos):
     saida = {}
     for uso in USOS:
         u = uso['id']
-        total = sum(pesos[IDS.index(c)] for c in RESPOSTAS[u])
+        total = sum(pesos[IDS.index(c)] for c in setor['media'][u])
         saida[u] = 100 * (sum(pesos[IDS.index(c)] * v for c, v in setor['media'][u].items()) / total if total else setor['permitido'][u])
     return saida
 
@@ -275,7 +276,9 @@ def calcular(base, pesos=None):
     """Ordena os usos de cada setor e testa se o primeiro lugar resiste a ±20% em cada peso."""
     ahp, consistencia = pesos_ahp()
     w = ahp if pesos is None else pesos
-    resultado = {'criterios': [{**c, 'peso': float(w[i]), 'peso_ahp': float(ahp[i])} for i, c in enumerate(CRITERIOS)],
+    sem_dado = base.get('sem_dado', [])
+    resultado = {'criterios': [{**c, 'peso': float(w[i]), 'peso_ahp': float(ahp[i]), **({'sem_dado': True} if c['id'] in sem_dado else {})}
+                               for i, c in enumerate(CRITERIOS)],
                  'origem_pesos': 'AHP' if pesos is None else 'engenheiro', 'razao_consistencia': float(consistencia),
                  'usos': USOS, 'restricoes': RESTRICOES, 'minimo_ha': MINIMO_HA, 'variacao': VARIACAO,
                  'area_minerada_ha': base['area_minerada_ha'], 'fora_ha': base['fora_ha'], 'setores': []}
@@ -290,7 +293,7 @@ def calcular(base, pesos=None):
                 outra = notas(s, teste / teste.sum())
                 if max(outra, key=outra.get) != ordem[0]['id']:
                     muda.append(f"{criterio['curto']} {'-' if fator < 1 else '+'}{round(VARIACAO * 100)}%")
-        total = {u: sum(w[IDS.index(c)] for c in RESPOSTAS[u]) for u in RESPOSTAS}
+        total = {u: sum(w[IDS.index(c)] for c in s['media'][u]) for u in RESPOSTAS}
         contribuicoes = {u['id']: {c: 100 * w[IDS.index(c)] * v / total[u['id']] for c, v in s['media'][u['id']].items()} if total[u['id']] else {}
                          for u in USOS}
         estruturas = (['inclui a cava (OSM)'] if s['cava_ha'] >= 1 else []) + \

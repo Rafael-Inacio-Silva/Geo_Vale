@@ -2,7 +2,7 @@
 
 Selecionar a Mina Horizontes consulta somente os atributos do processo **003.964/1950** no SIGMINE da Agência Nacional de Mineração. O vínculo é curado em `dados/minas.json` e apoiado no [documento público da FEAM](https://sistemas.meioambiente.mg.gov.br/licenciamento/uploads/-r1U-OgCZO3dEqex9HShmdqbrC5mgstw.pdf). Não se procura a mina por nome ou proximidade.
 
-A Mina Abóboras usa o processo **004.811/1958** (Vale S.A., concessão de lavra, ferro): sem documento público que faça o vínculo, ele foi escolhido por ser o único processo do SIGMINE que contém o centro da cava, e ficou fixo no catálogo ([Catálogo de minas](MINAS.md)).
+A Mina Abóboras usa o processo **004.811/1958** (Vale S.A., concessão de lavra, ferro): sem documento público que faça o vínculo, ele foi escolhido por ser o único processo do SIGMINE que contém o centro da cava, e ficou fixo no catálogo. A Mina Trindade usa **001.868/1940** (Vale S.A., concessão de lavra, ferro) pela mesma regra ([Catálogo de minas](MINAS.md)).
 
 ## Consulta e contrato
 

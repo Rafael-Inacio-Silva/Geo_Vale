@@ -14,7 +14,7 @@ A geometria é consultada pela API e guardada temporariamente em memória. O bac
 
 ## Mina Horizontes
 
-O catálogo contém a Mina Abóboras ([Catálogo de minas](MINAS.md)) e a Horizontes, anteriormente Capitão do Mato, Vale, Nova Lima/MG, Complexo Vargem Grande. A identificação se apoia na [notícia oficial da Vale](https://www.vale.com/ar/w/vale-altera-nome-de-mina-e-barragem-em-nova-lima-e-reforca-posicionamento-antirracista).
+O catálogo contém as Minas Abóboras e Trindade ([Catálogo de minas](MINAS.md)) e a Horizontes, anteriormente Capitão do Mato, Vale, Nova Lima/MG, Complexo Vargem Grande. A identificação se apoia na [notícia oficial da Vale](https://www.vale.com/ar/w/vale-altera-nome-de-mina-e-barragem-em-nova-lima-e-reforca-posicionamento-antirracista).
 
 O ponto de navegação é aproximado, longitude -43.92145769 e latitude -20.11834631, derivado do centro visual do contorno de mineração OpenStreetMap, way 315221699. Não é um centro certificado. O catálogo e sua fonte estão em `dados/minas.json`; o nome anterior pesquisa a mesma entrada.
 

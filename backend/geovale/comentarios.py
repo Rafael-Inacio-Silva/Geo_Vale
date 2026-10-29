@@ -119,12 +119,16 @@ class Comentarista:
         return saida
 
     def ler_ficha(self, ficha, chave_api):
-        """Leitura de uma ficha pelo modelo, com uma nova tentativa; None mantém as regras dessa ficha."""
-        ids=[d['id'] for d in ficha['dados']]
+        """Leitura de uma ficha pelo modelo, com uma nova tentativa; None mantém as regras dessa ficha.
+
+        Dados `fixo` (ex.: fonte que não cobre o recorte) não vão ao modelo e ficam com o texto por regras.
+        """
+        dados=[d for d in ficha['dados'] if not d.get('fixo')]
+        ids=[d['id'] for d in dados]
         if not ids:return None
         guia=GUIA.get(ficha.get('id'),'')
         entrada=json.dumps({'tema':ficha.get('nome',''),'guia':guia,
-                            'dados':[{'id':d['id'],'nome':d['nome'],'valor':d['valor'],'origem':d['origem'],'apoio':d['comentario']} for d in ficha['dados']]},ensure_ascii=False)
+                            'dados':[{'id':d['id'],'nome':d['nome'],'valor':d['valor'],'origem':d['origem'],'apoio':d['comentario']} for d in dados]},ensure_ascii=False)
         itens={'type':'object','properties':{'dado':{'type':'string','enum':ids},'texto':{'type':'string'}},'required':['dado','texto'],'additionalProperties':False}
         for _ in range(2):
             try:

@@ -79,7 +79,7 @@ export interface SetorSugerido {
 }
 export interface ExplicacaoSugestao {metodo: 'ia' | 'regras'; textos: Record<string, string>}
 export interface SugestaoUso {
-  criterios: {id: string; nome: string; curto: string; peso: number; peso_ahp: number}[];
+  criterios: {id: string; nome: string; curto: string; peso: number; peso_ahp: number; sem_dado?: boolean}[];
   origem_pesos: 'AHP' | 'engenheiro'; razao_consistencia: number; minimo_ha: number; fora_ha: number; variacao: number;
   usos: {id: string; nome: string; cor: string}[]; setores: SetorSugerido[];
 }

@@ -81,8 +81,8 @@ export function PesosSugestao({sugestao, pesos, alterarPesos, emitirRelatorio}: 
     {sugestao ? <fieldset className="pesos-criterios">
       <legend className="somente-leitor">Pesos dos critérios</legend>
       {sugestao.criterios.map((c, i) => <label key={c.id} className="peso-criterio">
-        <span>{c.nome}<output>{Math.round(valores[i] / soma * 100)}%</output></span>
-        <input type="range" min="0" max="100" step="1" value={valores[i]} aria-label={`Peso de ${c.nome}`} onChange={evento => mudarPeso(i, Number(evento.target.value))}/>
+        <span>{c.nome}{c.sem_dado ? <small className="sem-dado"> · sem dado nesta mina</small> : null}<output>{Math.round(valores[i] / soma * 100)}%</output></span>
+        <input type="range" min="0" max="100" step="1" value={valores[i]} disabled={c.sem_dado} aria-label={`Peso de ${c.nome}`} onChange={evento => mudarPeso(i, Number(evento.target.value))}/>
       </label>)}
       {pesos ? <button type="button" className="emitir-com-pesos" onClick={emitirRelatorio}>Emitir relatório com estes pesos</button> : null}
       <button type="button" className="tentar-novamente" disabled={!pesos} onClick={() => alterarPesos(null)}>Restaurar AHP</button>

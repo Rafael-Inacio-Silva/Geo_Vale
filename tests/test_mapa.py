@@ -25,7 +25,7 @@ def test_jornada_http_sem_acesso_externo():
     resposta = cliente.get('/api/mapa')
     assert resposta.status_code == 200
     dados = resposta.json()
-    assert [m['id'] for m in dados['minas']] == ['horizontes', 'aboboras']
+    assert [m['id'] for m in dados['minas']] == ['horizontes', 'aboboras', 'trindade']
     assert dados['minas'][0]['municipio'] == 'Nova Lima'
     assert -20.14 < dados['minas'][0]['latitude'] < -20.10
     assert {f['id'] for f in dados['fundos']} == {'mapa', 'satelite'}
