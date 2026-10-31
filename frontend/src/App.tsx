@@ -12,6 +12,8 @@ import {PesosSugestao, ResultadoSugestao} from './PainelSugestao.tsx';
 import SugestaoNoMapa from './SugestaoNoMapa.tsx';
 import type {CamadasAtivas, ConfiguracaoMapa, EstadoCamada, LegendaTrilha, LimiteMG, Mina} from './tipos.ts';
 
+const enderecoBI = import.meta.env.VITE_LOOKER_STUDIO_URL?.trim() || 'https://lookerstudio.google.com/reporting/3dca8a93-d660-4d28-9f93-e3a3e53ff813/page/BCbCG';
+
 let configuracaoPendente: Promise<ConfiguracaoMapa> | null = null;
 let limitePendente: Promise<LimiteMG> | null = null;
 
@@ -120,6 +122,11 @@ export default function App() {
         <svg viewBox="0 0 40 40" aria-hidden="true"><rect x="1" y="1" width="38" height="38" rx="10" fill="none" stroke="currentColor" opacity=".4"/><path d="M9 28L17 12L23 22L28 15L33 28H9" fill="none" stroke="#ffc329" strokeWidth="2"/></svg>
         <span>GeoVale</span>
       </div>
+      {enderecoBI ? <a className="link-bi" href={enderecoBI} target="_blank" rel="noopener noreferrer" aria-label="Abrir painel BI no Looker Studio em nova aba">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19V5m0 14h16M8 15v-4m5 4V7m5 8v-6"/></svg>
+        <span>Painel BI</span>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6m0-6-9 9M10 4H4v16h16v-6"/></svg>
+      </a> : null}
     </header>
     <main className="conteudo">
       <h1 className="somente-leitor">GeoVale — mapa territorial</h1>

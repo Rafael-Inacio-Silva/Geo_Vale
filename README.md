@@ -6,6 +6,8 @@ Selecionar a mina pelo cartão ou pela bolinha mostra automaticamente seu contor
 
 Os dados são consultados automaticamente e guardados por mina em SQLite local. A aplicação conserva todos os atributos dos registros vetoriais recortados e as células dos dois rasters, com fontes, datas e metadados. Novas bases integradas ao catálogo entram no mesmo processamento. Fundos OpenStreetMap/Esri, WMS e trilhas continuam oferecendo exploração visual independente.
 
+O link **Painel BI** no cabeçalho abre a primeira página de visão geral das três minas no Looker Studio, com o visual GeoVale. [Conteúdo e atualização dos dados](docs/BI.md).
+
 ## Executar
 
 Python **3.12**, Node **24**. Na raiz:

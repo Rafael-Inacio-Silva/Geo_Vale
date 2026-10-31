@@ -20,9 +20,12 @@ button, input, svg {max-inline-size: 100%;}
 button:focus-visible, input:focus-visible, a:focus-visible, [tabindex="-1"]:focus-visible {outline: 3px solid #e5a900; outline-offset: 4px;}
 .pular-conteudo {position: absolute; top: 0; left: 1rem; z-index: 2000; transform: translateY(-150%); padding: .75rem 1rem; background: var(--amarelo); color: var(--escuro);}
 .pular-conteudo:focus {transform: translateY(0);}
-.cabecalho {background: var(--verde); border-bottom: 1px solid #ffffff40; padding: 1rem clamp(1rem, 3vw, 3rem);}
+.cabecalho {display: flex; align-items: center; justify-content: space-between; gap: 1rem; background: var(--verde); border-bottom: 1px solid #ffffff40; padding: 1rem clamp(1rem, 3vw, 3rem);}
 .marca {display: flex; align-items: center; gap: .6rem; font-size: 1.8rem; font-weight: 750; letter-spacing: -.06em; color: white; inline-size: fit-content;}
 .marca svg {inline-size: 2.6rem; block-size: 2.6rem;}
+.link-bi {display: inline-flex; align-items: center; justify-content: center; gap: .55rem; flex-shrink: 0; min-block-size: 2.6rem; padding: .55rem .8rem; border: 1px solid #ffffff80; border-radius: .35rem; color: white; text-decoration: none; font-size: .8rem; font-weight: 650;}
+.link-bi:hover {background: #ffffff18; border-color: var(--amarelo);}
+.link-bi svg {inline-size: 1.1rem; block-size: 1.1rem; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round;}
 .conteudo {--margem: clamp(.65rem, 1.2vw, 1.25rem); inline-size: 100%; margin-inline: auto; padding: var(--margem); flex: 1; display: flex; flex-direction: column; min-inline-size: 0; min-block-size: 0;}
 .sobretitulo {font-size: .65rem; font-weight: 750; letter-spacing: .15em; margin: 0 0 .35rem; color: #38665b;}
 .territorio {flex: 1; min-block-size: 0; min-inline-size: 0; display: grid; grid-template-columns: 15rem 1.7rem minmax(0, 1fr) 1.7rem 18rem; border: 1px solid #9eb5a9; border-radius: .65rem; overflow: hidden; background: var(--papel); box-shadow: 0 10px 35px #163f3226;}
@@ -72,6 +75,8 @@ button:focus-visible, input:focus-visible, a:focus-visible, [tabindex="-1"]:focu
 @media (max-width: 48rem) {
   .cabecalho {padding-block: .8rem;}
   .marca {font-size: 1.55rem;}
+  .link-bi {gap: .4rem; font-size: .7rem; padding-inline: .6rem;}
+  .link-bi svg:first-child {display: none;}
   .marca svg {inline-size: 2.3rem; block-size: 2.3rem;}
   .territorio {grid-template-columns: minmax(0, 1fr);}
   .pesquisa {overflow: visible;}

@@ -13,3 +13,7 @@ Prepare ambiente/build conforme o [README](../README.md). Execute `.venv-geovale
 O relatório tem identidade GeoVale, mapa geral da influência, sete mapas temáticos, dados objetivos separados entre área minerada e entorno e comentários separados, com fontes/datas por ficha. A última ficha reúne dados técnicos simulados, com pontos no mapa e valores fictícios marcados por asterisco. A leitura contextual indica implicações para o planejamento, sem alterar os dados. A última ficha traz a sugestão multicritério: notas de 0 a 100 por uso, restrições, robustez e explicação por setor, para discussão. Os atributos e valores completos permanecem no armazenamento interno; o documento evita coordenadas e matrizes extensas.
 
 Internet é necessária para imagens e atualizações externas. Uma falha visual permite Recarregar sem apagar os dados guardados. Desmarcar a mina retira município/influência; não apaga o banco. [Método e atualização](DADOS_TERRITORIAIS.md), [recorte](INFLUENCIA.md).
+
+## Painel BI
+
+O link **Painel BI** no cabeçalho abre em nova aba a página 1 do Looker Studio. O filtro de mina altera os cartões e a comparação da página; o mapa do GeoVale permanece aberto na aba original.
