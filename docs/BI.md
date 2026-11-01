@@ -26,7 +26,7 @@ Para atualizar: `PYTHONPATH=backend .venv-geovale/bin/python ferramentas/exporta
 
 [GeoVale — Visão geral das minas](https://lookerstudio.google.com/reporting/3dca8a93-d660-4d28-9f93-e3a3e53ff813/page/BCbCG). Página única no Looker Studio (apresentado pelo Google como Data Studio), preenchida em 01/11/2026 dentro dos quadros e do desenho preparados pelo responsável pelo projeto. Os cartões apresentam somente os valores, sem subtítulos abaixo deles.
 
-Os cartões, as comparações por mina/cidade, a cobertura e os destaques usam a fonte CSV `GeoVale_Panorama`, com uma linha por mina. A rosca usa `GeoVale_Usos_por_Setor`: combinação externa à esquerda de `GeoVale_Panorama` com `GeoVale_Setores` (`setores.csv`), ligada somente por `mina_id`. A combinação inclui `mina_curta` (nome de exibição Mina), `mina_id` e `municipio` da fonte do panorama, além de `uso_1`, `Record Count` e soma de `area_ha` da fonte de setores. Isso mantém os filtros de mina e município sem multiplicar os totais dos cartões. A métrica da rosca é a soma das contagens de registros dos setores agrupados por `uso_1`. As métricas da tabela de minas não são somadas depois da ligação de um para muitos.
+Os cartões, a comparação por mina, o filtro de município, a cobertura e os destaques usam a fonte CSV `GeoVale_Panorama`, com uma linha por mina. A rosca usa `GeoVale_Usos_por_Setor`: combinação externa à esquerda de `GeoVale_Panorama` com `GeoVale_Setores` (`setores.csv`), ligada somente por `mina_id`. A combinação inclui `mina_curta` (nome de exibição Mina), `mina_id` e `municipio` da fonte do panorama, além de `uso_1`, `Record Count` e soma de `area_ha` da fonte de setores. Isso mantém os filtros de mina e município sem multiplicar os totais dos cartões. A métrica da rosca é a soma das contagens de registros dos setores agrupados por `uso_1`. As métricas da tabela de minas não são somadas depois da ligação de um para muitos.
 
 | Quadro | Dados e agregação |
 |---|---|
@@ -34,7 +34,8 @@ Os cartões, as comparações por mina/cidade, a cobertura e os destaques usam a
 | Setores avaliados | Soma de `setores` |
 | Barragens | Soma de `barragens` dos recortes selecionados |
 | Área dos recortes | Soma de `recorte_ha`, em hectares |
-| Área minerada por mina / cidade | Soma de `area_minerada_ha`, por mina / município; barras com valores |
+| Área minerada por mina | Soma de `area_minerada_ha`, por mina; barras com valores |
+| Filtrar por município | Lista suspensa nativa sobre `municipio` da fonte `GeoVale_Panorama`, com seleção única e sem métricas/contagens visíveis. Selecionar Nova Lima ou Sabará filtra a lista de minas acima e mantém os demais indicadores sincronizados. O botão Redefinir remove a seleção |
 | Uso futuro mais bem avaliado por setor | Rosca nativa: proporção das contagens de setores por `uso_1`. Total de setores no centro; legenda com contagem e hectares de cada alternativa, calculados na fonte do panorama |
 | Cobertura da terra | Barra horizontal nativa empilhada a 100%: somas de vegetação nativa e outras coberturas em uma única categoria constante, com os percentuais calculados por razão de somas abaixo da barra |
 | Leitura executiva | Três frases calculadas que acompanham os filtros: setores de conservação / total; participação de Horizontes na área minerada selecionada; barragens / quantidade de minas selecionadas |
@@ -68,3 +69,5 @@ Sem filtro, a rosca corresponde a 7 e 3 setores (70% e 30%); as áreas das alter
 Verificação da correção dos três quadros em 01/11/2026: a exportação CSV da própria rosca, sob seleção de Nova Lima, retornou conservação = 6 e ecoturismo = 2; a exportação da barra retornou uma categoria Cobertura com 14.012,2 ha nativos e 5.563,8 ha de outras coberturas. Os cartões de texto mostraram 6 de 8 setores, 76% de participação de Horizontes, 16 barragens em 2 áreas, 71,6% nativos e 28,4% de outras coberturas. A imagem enviada pelo responsável confirmou a renderização da rosca nativa em seu navegador. No navegador integrado usado para edição, os dois gráficos nativos em iframe não renderizaram; a validação das consultas usou as exportações CSV, além da conferência dos parâmetros e dos textos na página.
 
 A seleção individual de Horizontes também foi conferida nos cartões: 1 mina, 5 setores, 10 barragens, 3 de 5 setores de conservação, participação de Horizontes de 100%, cobertura nativa de 71,1% e outras coberturas de 28,9%. A frase de barragens trata singular/plural conforme a quantidade de minas selecionadas.
+
+O filtro de município foi verificado em 01/11/2026: Nova Lima mostrou somente Horizontes (3.173,3 ha) e Abóboras (1.001,9 ha), com 2 minas e 8 setores; Sabará mostrou somente Trindade (194,5 ha), com 1 mina e 2 setores. O controle substitui a comparação agregada de área por cidade; os dados originais de município continuam na fonte.
