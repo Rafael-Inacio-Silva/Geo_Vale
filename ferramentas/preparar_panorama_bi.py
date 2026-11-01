@@ -39,7 +39,43 @@ def preparar():
         escrita = csv.DictWriter(arquivo, fieldnames=list(minas[0]))
         escrita.writeheader()
         escrita.writerows(minas)
+    preparar_comparacao_usos(minas, setores, ler('notas_uso.csv'))
     print(f'{destino.name}: {len(minas)} minas, {sum(int(m["setores"]) for m in minas)} setores, {sum(int(m["barragens"]) for m in minas)} registros de barragens por recorte.')
+
+
+
+def preparar_comparacao_usos(minas, setores, notas):
+    """Resume as quatro notas por mina, ponderando pela área dos seus setores."""
+    usos = {'Conservação e restauração', 'Ecoturismo e lazer', 'Silvicultura', 'Energia solar e infraestrutura'}
+    areas = {(s['mina_id'], s['setor']): Decimal(s['area_ha']) for s in setores}
+    if len(areas) != len(setores) or any(not a.is_finite() or a <= 0 for a in areas.values()):
+        raise ValueError('Setores repetidos ou com área inválida.')
+    valores = {}
+    for nota in notas:
+        chave = (nota['mina_id'], nota['setor'], nota['uso'])
+        valor = Decimal(nota['nota'])
+        if chave in valores or chave[:2] not in areas or chave[2] not in usos or not valor.is_finite() or not 0 <= valor <= 100:
+            raise ValueError(f'Nota inválida, repetida ou sem setor: {chave}.')
+        valores[chave] = valor
+    esperados = {(m, s, u) for m, s in areas for u in usos}
+    if set(valores) != esperados:
+        raise ValueError('As quatro opções precisam ter nota para todos os setores.')
+    linhas = []
+    for mina in minas:
+        identificador = mina['mina_id']
+        grupo = {k: a for k, a in areas.items() if k[0] == identificador}
+        area_total = sum(grupo.values(), Decimal(0))
+        for uso in sorted(usos):
+            soma = sum((a * valores[(m, s, uso)] for (m, s), a in grupo.items()), Decimal(0))
+            linhas.append({'mina_id': identificador, 'uso': uso,
+                           'nota_ponderada': (soma / area_total).quantize(Decimal('0.1')),
+                           'area_setores_ha': area_total, 'quantidade_setores': len(grupo)})
+    destino = RAIZ / 'bi' / 'comparacao_usos.csv'
+    with destino.open('w', encoding='utf-8', newline='') as arquivo:
+        escrita = csv.DictWriter(arquivo, fieldnames=list(linhas[0]))
+        escrita.writeheader()
+        escrita.writerows(linhas)
+    print(f'{destino.name}: {len(linhas)} combinações de mina e uso.')
 
 
 if __name__ == '__main__':

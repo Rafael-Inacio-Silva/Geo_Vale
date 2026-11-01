@@ -10,6 +10,7 @@ Versão 4.9.0, 29/10/2026. `ferramentas/exportar_bi.py` grava em `bi/` seis CSVs
 | `cobertura_terra.csv` | 1 por mina e classe | Área e % de cada classe MapBiomas no recorte |
 | `pesos.csv` | 1 por critério | Peso AHP |
 | `fatos_relatorio.csv` | 1 por dado das fichas | Tema, dado, resumo, valor em texto e origem |
+| `comparacao_usos.csv` | 1 linha por mina e uso (12 linhas) | Média das notas de cada uma das quatro alternativas, ponderada pela área dos setores; preparada por `ferramentas/preparar_panorama_bi.py` |
 | `panorama.csv` | 1 linha por mina | Campos de `minas.csv`, contagens de setores por uso e áreas de cobertura nativa e outras coberturas, consolidadas por `ferramentas/preparar_panorama_bi.py` |
 
 ## Decisões e porquês
@@ -38,7 +39,7 @@ Os cartões, a comparação por mina, o filtro de município, a cobertura e as l
 | Filtrar por município | Lista suspensa nativa sobre `municipio` da fonte `GeoVale_Panorama`, com seleção única e sem métricas/contagens visíveis. Selecionar Nova Lima ou Sabará filtra a lista de minas acima e mantém os demais indicadores sincronizados. O botão Redefinir remove a seleção |
 | Uso futuro mais bem avaliado por setor | Rosca nativa: proporção das contagens de setores por `uso_1`. Total de setores no centro; legenda com contagem e hectares de cada alternativa, calculados na fonte do panorama |
 | Cobertura da terra | Barra horizontal nativa empilhada a 100%: somas de vegetação nativa e outras coberturas em uma única categoria constante, com os percentuais calculados por razão de somas abaixo da barra |
-| Uso recomendado e pontuação por setor | Barras horizontais nativas: uma por `mina_setor`, ordenadas de forma crescente para manter juntas as linhas de cada mina. A nota do primeiro uso (`nota_1`) fica na escala fixa de 0 a 100, com rótulo numérico; `uso_1` define verde para conservação e amarelo para ecoturismo |
+| Pontuação dos quatro usos por mina | Colunas verticais agrupadas: uma categoria por mina e quatro séries de usos, com as notas acima das colunas. Média ponderada pela área dos setores, na escala de 0 a 100 |
 
 Sem filtro: **3 minas, 10 setores, 17 registros de barragens e 24.104,9 ha de recortes**. Clique em Nova Lima: **2 minas, 8 setores, 16 registros e 19.574,9 ha**; os usos somam 6 setores de conservação e 2 de ecoturismo. Clique em Horizontes: **1 mina, 5 setores, 10 registros e 15.308,5 ha**, com 3 setores de conservação e 2 de ecoturismo. Esses fluxos foram conferidos na página de leitura. O botão Redefinir restaura o panorama. O gráfico usado para selecionar destaca a seleção; os outros componentes recebem o filtro.
 
@@ -72,12 +73,22 @@ A seleção individual de Horizontes também foi conferida nos cartões: 1 mina,
 
 O filtro de município foi verificado em 01/11/2026: Nova Lima mostrou somente Horizontes (3.173,3 ha) e Abóboras (1.001,9 ha), com 2 minas e 8 setores; Sabará mostrou somente Trindade (194,5 ha), com 1 mina e 2 setores. O controle substitui a comparação agregada de área por cidade; os dados originais de município continuam na fonte.
 
-## Pontuação individual dos setores
+## Comparação dos quatro usos por mina
 
-O quadro inferior chama-se **Uso recomendado e pontuação por setor**. A rosca acima continua resumindo a quantidade de setores por alternativa; o quadro inferior mostra a nota individual do uso mais bem avaliado de cada setor. A nota é pontuação multicritério de 0 a 100, não probabilidade, percentual de área nem percentagem do total. Não se normalizam as notas para somarem 100.
+O quadro inferior chama-se **Pontuação dos quatro usos por mina**. Cada mina ocupa um grupo no eixo horizontal, com quatro colunas lado a lado: **Conservação e restauração**, **Ecoturismo e lazer**, **Silvicultura** e **Energia solar e infraestrutura**. Os valores ficam acima das colunas; o eixo vertical vai de 0 a 100 e as colunas não são empilhadas. A nota não é probabilidade, percentual de área nem percentagem do total; os quatro valores não devem somar 100.
 
-A identificação usa `mina_setor`, por exemplo **Mina Horizontes · S1** e **Mina Abóboras · S1**. Setores com o mesmo número em minas distintas nunca são agrupados. A ordenação crescente desse identificador mantém os setores agrupados por mina; o gráfico tem dez barras, legenda de usos, rótulos numéricos e eixo fixo entre 0 e 100. Verde (`#007f73`) representa Conservação e restauração; amarelo (`#ffc329`), Ecoturismo e lazer. O empilhamento comum permite uma barra por setor, colorida pela única alternativa vencedora; empilhamento a 100% fica desativado.
+Para consolidar os setores de uma mina, usa-se **Σ(nota do setor para o uso × área do setor) / Σ(área dos setores da mina)**. Todas as quatro notas de `notas_uso.csv` entram no cálculo, inclusive alternativas que não venceram o ranqueamento; as áreas vêm de `setores.csv`. Usa-se a área dos setores efetivamente avaliados, não toda a área de influência nem a área minerada total. A ponderação evita dar o mesmo peso a setores de tamanhos diferentes. Ela resume as notas existentes, sem executar novamente o modelo multicritério ou gerar uma nova recomendação para a mina inteira. Por isso pode diferir da alternativa predominante por área e das contagens da rosca, que continuam calculadas setor a setor.
 
-O gráfico usa uma combinação separada, **GeoVale_Pontuacao_Setores**, copiada da combinação da rosca para preservar o quadro existente. Mantém a ligação externa à esquerda somente por `mina_id`, com `Mina`/`municipio` da fonte do panorama para receber os filtros já existentes. A tabela de setores acrescenta `mina_setor` às dimensões e `nota_1` às métricas, com agregação Máx. no preparo da combinação e no gráfico. Com uma linha por mina/setor, essa operação conserva a nota original; ela não soma nem calcula média entre setores. Os cartões de totais permanecem na fonte de uma linha por mina.
+`ferramentas/preparar_panorama_bi.py` gera `bi/comparacao_usos.csv`, com uma linha por mina/alternativa e arredondamento final para uma casa decimal. Recusa setores repetidos ou com área inválida, notas duplicadas/fora de 0–100, registros sem setor correspondente e ausência de qualquer das quatro notas por setor. As notas e áreas originais permanecem intactas.
 
-Verificação em 01/11/2026: exportações CSV do próprio gráfico retornaram **10 linhas sem filtro**, **8 em Nova Lima** e **5 ao selecionar Horizontes**. Cada identificador, uso e nota foi comparado por igualdade com `bi/setores.csv`, incluindo a ordem crescente e ausência de duplicados. Exemplos: Horizontes S1 = 74,4; S2 = 66,6; S3 = 80,2; S4 = 84,0; S5 = 87,9. O eixo mínimo 0 e máximo 100 foi conferido no editor. Os filtros foram removidos ao concluir. O navegador integrado continua sem desenhar os gráficos nativos em iframe; a consulta foi validada pelas exportações e configurações, sem afirmar validação visual das barras nesse navegador.
+No Looker, a fonte **GeoVale_Comparacao_Usos** recebe esse CSV. A combinação **GeoVale_Notas_por_Mina** liga-a à fonte **GeoVale_Panorama**, externamente à esquerda e somente por `mina_id`; conserva os campos `Mina` e `municipio` do panorama para receber os filtros existentes. O gráfico usa `Mina` como dimensão, `uso` como série e Máx. de `nota_ponderada`, preservando a nota única de cada mina/uso sem somá-la. Os cartões e a rosca continuam com suas fontes e cálculos próprios.
+
+| Mina | Conservação | Ecoturismo | Silvicultura | Energia solar/infraestrutura |
+|---|---:|---:|---:|---:|
+| Horizontes | 67,8 | 73,2 | 51,8 | 36,6 |
+| Abóboras | 70,4 | 61,9 | 48,4 | 32,9 |
+| Trindade | 82,3 | 80,0 | 47,0 | 36,7 |
+
+Na atualização do BI, executar o preparo e substituir também o arquivo da fonte **GeoVale_Comparacao_Usos** por `bi/comparacao_usos.csv`, sem anexar cópias. O CSV tem 12 linhas: quatro alternativas para cada uma das três minas. Os filtros selecionam grupos completos de quatro notas e não recalculam a nota da mina com apenas parte dos setores.
+
+Verificação em 01/11/2026: as exportações nativas do gráfico retornaram 12 pares mina/uso sem filtro, 8 sob Nova Lima e 4 sob Horizontes. Todas as notas foram recalculadas independentemente a partir dos setores e comparadas por igualdade, após o arredondamento final. Foram conferidos orientação vertical, empilhamento desativado, rótulos acima e eixo 0–100. Os filtros foram retirados ao concluir. A prévia dos gráficos nativos permanece sem renderizar no navegador integrado; a validação dos valores usou as exportações do Looker.
