@@ -1,12 +1,36 @@
-# GeoVale
+# GeoVale · IA para o pós-mineração
 
-MVP de caracterização territorial e sugestão multicritério para apoiar a ressignificação de áreas pós-mineração. Abre um mapa mundial em **Minas Gerais**, com contorno oficial estadual e três minas da Vale no catálogo: **Horizontes** e **Abóboras** (Nova Lima/MG) e **Trindade** (Sabará/MG) ([Catálogo de minas](docs/MINAS.md)).
+**Sistema de apoio à decisão** que junta geoprocessamento, análise multicritério e **IA generativa com guarda-corpos** para sugerir e explicar usos futuros de áreas mineradas. O engenheiro escolhe a mina, o sistema ordena os usos possíveis em cada setor da área minerada e a IA explica, pelo terreno, por que cada uso ficou em 1º.
 
-Selecionar a mina pelo cartão ou pela bolinha mostra automaticamente seu contorno. O engenheiro ativa **Influência** para conhecer o território maior. O mapa mostra o contorno, a mina sombreada e os sete temas/dezoito bases somente dentro desse território. Marcar uma camada à direita amplia sua visualização para além da influência; desmarcar volta ao recorte. **Ver relatório**, disponível ao selecionar a mina mesmo sem ativar Influência, abre um PDF GeoVale com visão geral, sete mapas temáticos, dados objetivos separados entre área minerada e entorno, comentários com a implicação de cada dado e uma ficha de dados técnicos simulados com pontos no mapa e asterisco. É possível navegar pelas páginas e baixar o mesmo documento. **Sugerir uso** abre um modo próprio no mesmo mapa: as camadas saem, os setores da área minerada aparecem pelo uso que ficou em 1º e a barra direita mostra ranking e porquê; o engenheiro ajusta os pesos dos critérios e o relatório ganha a ficha Sugestão multicritério com esses pesos. A tela permanece centrada no mapa, sem tabelas de atributos ou instruções de procedimento.
+**[Abrir o GeoVale no ar](https://geo-vale.vercel.app)** · [Painel BI](https://lookerstudio.google.com/reporting/3dca8a93-d660-4d28-9f93-e3a3e53ff813/page/BCbCG) · `Python` · `FastAPI` · `React` · `TypeScript` · `OpenAI` · `Geoprocessamento` · `AHP`
 
-Os dados são consultados automaticamente e guardados por mina em SQLite local. A aplicação conserva todos os atributos dos registros vetoriais recortados e as células dos dois rasters, com fontes, datas e metadados. Novas bases integradas ao catálogo entram no mesmo processamento. Fundos OpenStreetMap/Esri, WMS e trilhas continuam oferecendo exploração visual independente.
+![Modo sugestão na Mina Horizontes: setores coloridos pelo 1º uso, ranking por setor, pesos ajustáveis e a explicação escrita pela IA em "Por que (IA)"](docs/imagens/sugestao-ia.jpg)
 
-O link **Painel BI** no cabeçalho abre a primeira página de visão geral das três minas no Looker Studio, com o visual GeoVale. [Conteúdo e atualização dos dados](docs/BI.md).
+*Mina Horizontes (Nova Lima/MG) no modo **Sugerir uso**: cada setor da área minerada aparece pelo uso que ficou em 1º; à esquerda, o ranking do setor S1 e a explicação gerada pela IA; à direita, os pesos dos critérios, que o engenheiro pode mudar.*
+
+## Onde está a IA
+
+| Peça | O que faz | Como é controlada |
+|---|---|---|
+| **Explicação da sugestão** · "Por que (IA)" | Escreve por que o 1º uso combina com cada setor (trilhas, vegetação, declividade…), na tela e no PDF | Recebe só fatos já calculados do setor; a frase sobre os demais usos fica por regras |
+| **Leitura contextual do relatório** | Interpreta cada dado das sete fichas temáticas (água, solos, barragens, conservação…) | Um guia por tema ensina o modelo a ler Q7,10, APP, ZAS, grupos de UC e barragens a montante |
+| **Guarda-corpos** | Impede que um texto plausível, mas errado, chegue ao engenheiro | Structured Outputs com JSON Schema estrito; **número que não foi enviado ao modelo é recusado**; recusa, erro ou truncamento voltam ao texto por regras; “(IA)” aparece só quando o texto veio do modelo |
+| **Privacidade e custo** | Mantém o dado e a chave sob controle | Só texto calculado sai do servidor (sem geometrias), `store=false`, temperatura 0,2, cache das respostas; a chave nunca vai ao navegador |
+
+**A IA explica, não decide.** O ranking vem de um método auditável: restrições legais excluem usos (SNUC, Código Florestal, ZAS de barragens), sete critérios ponderados por **AHP** (razão de consistência 0,012) somam a nota de cada uso e um teste de **sensibilidade ±20%** marca os setores em que a ordem é frágil. O modelo de linguagem (`gpt-4.1-mini`, Responses API) só transforma esse resultado em uma explicação legível. [Método completo](docs/MULTICRITERIO.md).
+
+## Como funciona
+
+```
+18 bases públicas ─► recorte da mina ─► setores da área ─► restrições ─► 7 critérios ─► ranking + ─► IA explica ─► mapa, PDF
+(WFS, WCS, ArcGIS)   e área minerada    minerada ≥ 20 ha    legais        pesos AHP      sensibilidade  (com conferência)   e Painel BI
+```
+
+1. **Conhecer.** Selecionar a mina mostra o contorno. **Influência** recorta sete temas e dezoito bases (relevo, água, solos, vegetação, infraestrutura, barragens, trilhas) no território da mina. **Ver relatório** gera um PDF com sete mapas temáticos, dados separados entre área minerada e entorno e a leitura de cada dado.
+2. **Conceber.** **Sugerir uso** divide a área minerada em setores, aplica as restrições legais e ordena quatro usos: conservação e restauração, ecoturismo e lazer, silvicultura, energia solar e infraestrutura. O engenheiro move os pesos, o mapa recalcula e o relatório ganha a ficha da sugestão com esses pesos.
+3. **Explicar.** Para cada setor, a IA escreve o porquê do 1º lugar; o texto passa pela conferência antes de aparecer.
+
+Os dados são consultados automaticamente e guardados por mina em SQLite, com fontes, datas e metadados. Três minas da Vale estão no catálogo: **Horizontes** e **Abóboras** (Nova Lima/MG) e **Trindade** (Sabará/MG) ([Catálogo de minas](docs/MINAS.md)). O **Painel BI** no cabeçalho abre a visão geral das três minas no Looker Studio ([conteúdo do BI](docs/BI.md)).
 
 ## Executar
 
